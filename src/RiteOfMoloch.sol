@@ -2,9 +2,9 @@
 // @author st4rgard3n, bitbeckers, MrDeadce11 / Raid Guild
 pragma solidity ^0.8.4;
 
-import "lib/openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-import "lib/openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
-import "lib/openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
+import "lib/openzeppelin-contracts/contracts/access/AccessControl.sol";
+import "lib/openzeppelin-contracts/contracts/utils/Counters.sol";
+import "lib/openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
 import "./InitializationData.sol";
 
 interface MolochDAO {
