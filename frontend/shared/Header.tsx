@@ -1,44 +1,41 @@
+import React, { ReactNode } from "react";
 import {
   Flex,
   Image,
   Text,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
+  // Popover,
+  // PopoverTrigger,
+  // PopoverContent,
   Button,
-} from "@chakra-ui/react";
+  ConnectButton,
+} from "@raidguild/design-system";
 import Link from "next/link";
 import styled from "@emotion/styled";
 import { useContext } from "react";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 
-import { AppContext } from "../context/AppContext";
-import { useWallet } from "../hooks/useWallet";
+// import { AppContext } from "../context/AppContext";
 
-import { SUPPORTED_NETWORK_IDS } from "../config";
+// import { SUPPORTED_NETWORK_IDS } from "../config";
 
-const getAccountString = (account) => {
-  const len = account.length;
-  return `0x${account.substr(2, 3).toUpperCase()}...${account
-    .substr(len - 3, len - 1)
-    .toUpperCase()}`;
-};
+// const getAccountString = (account: string) => {
+//   const len = account.length;
+//   return `0x${account.substr(2, 3).toUpperCase()}...${account
+//     .substr(len - 3, len - 1)
+//     .toUpperCase()}`;
+// };
 
-const StyledPrimaryButton = styled(Button)`
-  min-width: 160px;
-  height: 50px;
-  text-transform: uppercase;
-  color: black;
-  border-radius: 2px;
-  padding-left: 24px;
-  padding-right: 24px;
-`;
+// const StyledPrimaryButton = styled(Button)`
+//   min-width: 160px;
+//   height: 50px;
+//   text-transform: uppercase;
+//   color: black;
+//   border-radius: 2px;
+//   padding-left: 24px;
+//   padding-right: 24px;
+// `;
 
 export const Header = () => {
-  const context = useContext(AppContext);
-  const { connectWallet, disconnect } = useWallet();
-  const router = useRouter();
-
   return (
     <Flex
       h="100px"
@@ -54,29 +51,10 @@ export const Header = () => {
             alt="logo"
             w={{ lg: "50px", sm: "25px" }}
           />
-          {router.pathname === "/deploy-cohort" ? (
-            <Text
-              color="red"
-              fontFamily="uncial"
-              fontSize={{ lg: "1.5rem", sm: "1rem" }}
-              ml="5px"
-            >
-              Moloch Cohort Deployer
-            </Text>
-          ) : (
-            <Text
-              color="red"
-              fontFamily="uncial"
-              fontSize={{ lg: "1.5rem", sm: "1rem" }}
-              ml="5px"
-            >
-              Rite of Moloch
-            </Text>
-          )}
         </Flex>
       </Link>
-
-      {!context.signerAddress && (
+      <ConnectButton />
+      {/* {!context.signerAddress && (
         <StyledPrimaryButton
           bg="red"
           onClick={connectWallet}
@@ -118,7 +96,7 @@ export const Header = () => {
             </PopoverContent>
           </Popover>
         </Flex>
-      )}
+      )} */}
     </Flex>
   );
 };

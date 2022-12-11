@@ -1,4 +1,4 @@
-import { Page404 } from '../shared/404.jsx';
+import { Page404 } from "../shared/404";
 
 const NotFound = () => {
   return <Page404 />;

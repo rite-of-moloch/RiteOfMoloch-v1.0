@@ -1,6 +1,6 @@
 import { Contract, utils } from "ethers";
 
-import { CONTRACT_ADDRESSES } from "../utils/constants";
+import { CONTRACT_ADDRESSES } from "./constants";
 
 export const approveRaid = async (
   ethersProvider,

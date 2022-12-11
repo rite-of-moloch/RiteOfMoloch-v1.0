@@ -1,10 +1,15 @@
+import React, { ReactNode } from "react";
 import { Flex, Box } from "@chakra-ui/react";
 
 import { Meta } from "./Meta";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 
-export const Layout = ({ children }) => {
+interface LayoutProps {
+  children: ReactNode;
+}
+
+export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <Box
       background="radial-gradient(97.27% 170.54% at 98.7% 2.73%, #24003A 0%, rgba(0, 0, 0, 0) 100%),
