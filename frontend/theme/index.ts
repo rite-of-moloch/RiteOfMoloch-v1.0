@@ -1,9 +1,11 @@
 import { extendTheme } from "@chakra-ui/react";
 import { HStack } from "./components/HStack";
+import { Button } from "./components/Button";
 
 export const theme = extendTheme({
   components: {
     HStack,
+    Button,
   },
   colors: {
     transparent: "transparent",

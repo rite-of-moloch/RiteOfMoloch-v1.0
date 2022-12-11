@@ -1,7 +1,16 @@
-import { Chain, getDefaultWallets } from "@rainbow-me/rainbowkit";
-import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
+import { Chain, connectorsForWallets } from "@rainbow-me/rainbowkit";
+import { chain, configureChains, createClient } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
+import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
+import {
+  injectedWallet,
+  rainbowWallet,
+  metaMaskWallet,
+  coinbaseWallet,
+  walletConnectWallet,
+  ledgerWallet,
+} from "@rainbow-me/rainbowkit/wallets";
 
 const gnosis: Chain = {
   id: 100,
@@ -28,17 +37,28 @@ const gnosis: Chain = {
 };
 
 export const { chains, provider } = configureChains(
-  [gnosis, chain.goerli, chain.sepolia],
+  [gnosis, chain.goerli, chain.sepolia, chain.mainnet],
   [
-    alchemyProvider({ apiKey: process.env.REACT_APP_INFURA_ID }),
+    alchemyProvider({ apiKey: process.env.REACT_APP_ALCHEMY_ID }),
+    infuraProvider({ apiKey: process.env.REACT_APP_INFURA_ID }),
     publicProvider(),
-  ]
+  ],
+  { stallTimeout: 5000 }
 );
 
-const { connectors } = getDefaultWallets({
-  appName: "Rite Of Moloch",
-  chains,
-});
+const connectors = connectorsForWallets([
+  {
+    groupName: "Recommended",
+    wallets: [
+      injectedWallet({ chains }),
+      ledgerWallet({ chains }),
+      metaMaskWallet({ chains }),
+      coinbaseWallet({ chains, appName: "Rite Of Moloch" }),
+      walletConnectWallet({ chains }),
+      rainbowWallet({ chains }),
+    ],
+  },
+]);
 
 export const wagmiClient = createClient({
   autoConnect: true,
