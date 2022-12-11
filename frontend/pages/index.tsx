@@ -27,9 +27,9 @@ import { ethers, utils } from "ethers";
 // import { NetworkError } from "../shared/NetworkError";
 // import { RiteStaked } from "../shared/RiteStaked";
 // import { StakingFlow } from "../shared/StakingFlow";
-import { CohortHeader } from "../shared/CohortHeader";
+import { CohortHeader } from "../components/CohortHeader";
 // import { PreStake } from "../shared/PreStake";
-import { HeaderOne } from "../shared/Header0ne";
+import { HeaderOne } from "../components/Header0ne";
 // import { DeployCohortButton } from "../shared/DeployCohortButton";
 
 export default function Home() {

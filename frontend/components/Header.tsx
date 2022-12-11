@@ -7,11 +7,12 @@ import {
   // PopoverTrigger,
   // PopoverContent,
   Button,
-  ConnectButton,
+  // ConnectButton,
 } from "@raidguild/design-system";
 import Link from "next/link";
 import styled from "@emotion/styled";
 import { useContext } from "react";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 // import { useRouter } from "next/router";
 
 // import { AppContext } from "../context/AppContext";

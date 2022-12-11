@@ -1,4 +1,4 @@
-import { Page404 } from "../shared/404";
+import { Page404 } from "../components/404";
 
 const NotFound = () => {
   return <Page404 />;

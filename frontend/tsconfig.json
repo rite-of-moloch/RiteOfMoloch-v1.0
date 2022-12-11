@@ -1,7 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "target": "es2015",
+    "target": "es6",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -23,8 +23,13 @@
     "importHelpers": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@/components": ["./components"],
+      "@/hooks": ["./hooks"],
+      "@/theme": ["./theme"],
+      "@/utils": ["./utils"]
+    }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "utils/web3.js"],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "next-env.d.ts"],
   "exclude": ["node_modules"]
 }

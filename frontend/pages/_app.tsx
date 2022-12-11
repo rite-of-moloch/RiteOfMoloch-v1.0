@@ -1,12 +1,13 @@
+import { QueryClient, QueryClientProvider } from "react-query";
 import { RGThemeProvider } from "@raidguild/design-system";
 import { theme } from "../theme";
-import { Layout } from "../shared/Layout";
+import { Layout } from "../components/Layout";
 import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
 import { WagmiConfig } from "wagmi";
 import { wagmiClient, chains } from "../utils/wagmiConfig";
 import "@rainbow-me/rainbowkit/styles.css";
 
-console.log(chains);
+const queryClient = new QueryClient();
 
 interface AppProps {
   Component: any;
@@ -16,13 +17,15 @@ interface AppProps {
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <RGThemeProvider theme={theme}>
-      <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider chains={chains} theme={darkTheme()}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </RainbowKitProvider>
-      </WagmiConfig>
+      <QueryClientProvider client={queryClient}>
+        <WagmiConfig client={wagmiClient}>
+          <RainbowKitProvider chains={chains} theme={darkTheme()}>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </RainbowKitProvider>
+        </WagmiConfig>
+      </QueryClientProvider>
     </RGThemeProvider>
   );
 };

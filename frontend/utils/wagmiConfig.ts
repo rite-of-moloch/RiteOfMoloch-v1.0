@@ -1,5 +1,11 @@
 import { getDefaultWallets } from "@rainbow-me/rainbowkit";
-import { mainnet, goerli, Chain, configureChains, createClient } from "wagmi";
+import {
+  chain,
+  Chain,
+  configureChains,
+  createClient,
+  WagmiConfig,
+} from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 
@@ -14,7 +20,7 @@ const gnosis: Chain = {
     symbol: "xDAI",
   },
   rpcUrls: {
-    default: { http: ["https://rpc.gnosischain.com"] },
+    default: "https://rpc.gnosischain.com",
   },
   blockExplorers: {
     blockscount: {
@@ -27,9 +33,9 @@ const gnosis: Chain = {
 };
 
 export const { chains, provider } = configureChains(
-  [gnosis, mainnet, goerli],
+  [gnosis, chain.goerli, chain.sepolia],
   [
-    // alchemyProvider({ apiKey: process.env.REACT_APP_INFURA_ID }),
+    alchemyProvider({ apiKey: process.env.REACT_APP_INFURA_ID }),
     publicProvider(),
   ]
 );
