@@ -1,11 +1,5 @@
-import { getDefaultWallets } from "@rainbow-me/rainbowkit";
-import {
-  chain,
-  Chain,
-  configureChains,
-  createClient,
-  WagmiConfig,
-} from "wagmi";
+import { Chain, getDefaultWallets } from "@rainbow-me/rainbowkit";
+import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 
@@ -13,7 +7,8 @@ const gnosis: Chain = {
   id: 100,
   name: "Gnosis",
   network: "xdai",
-
+  iconUrl: "https://i.imgur.com/lL4RlAZ.png",
+  iconBackground: "white",
   nativeCurrency: {
     decimals: 18,
     name: "Gnosis",
@@ -46,7 +41,7 @@ const { connectors } = getDefaultWallets({
 });
 
 export const wagmiClient = createClient({
-  autoConnect: false,
+  autoConnect: true,
   connectors,
   provider,
 });
