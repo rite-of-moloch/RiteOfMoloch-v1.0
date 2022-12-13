@@ -4,6 +4,8 @@ const nextConfig = {
   swcMinify: true,
 };
 
-const withTM = require("next-transpile-modules")(["@raidguild/design-system"]);
+module.exports = nextConfig;
 
-module.exports = withTM(nextConfig); // withPlugins([withNx, withTM], nextConfig);
+// const withTM = require("next-transpile-modules")(["@raidguild/design-system"]);
+
+// module.exports = withTM(nextConfig); // withPlugins([withNx, withTM], nextConfig);

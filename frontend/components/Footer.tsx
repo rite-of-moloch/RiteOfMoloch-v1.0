@@ -1,30 +1,11 @@
-import { Flex, Link, Text } from "@chakra-ui/react";
+import React from "react";
 
-export const Footer = () => {
-  return (
-    <Flex
-      direction={{ base: "column-reverse", md: "row", lg: "row" }}
-      alignItems="flex-start"
-      justifyContent="space-between"
-      w="100%"
-    >
-      <Text
-        mb="1rem"
-        fontSize="sm"
-        fontWeight={"bold"}
-        fontFamily="jetbrains"
-        color="greyLight"
-        mx="auto"
-      >
-        Built by{" "}
-        <Link
-          href="https://raidguild.org"
-          isExternal
-          textDecoration="underline"
-        >
-          RaidGuild
-        </Link>
-      </Text>
-    </Flex>
-  );
+import { BuiltByRaidGuildComponent, Box } from "@raidguild/design-system";
+
+interface FooterProps {
+  children?: React.ReactNode;
+}
+
+export const Footer: React.FC<FooterProps> = ({ children }) => {
+  return <BuiltByRaidGuildComponent />;
 };
