@@ -1,9 +1,14 @@
+import React, { ReactNode } from "react";
 import { Text } from "@chakra-ui/react";
 
-export const CohortHeader = () => {
+interface BoxHeaderProps {
+  text: string;
+}
+
+export const BoxHeader: React.FC<BoxHeaderProps> = ({ text }) => {
   return (
     <Text
-      w="100%"
+      w="full"
       bg="purple"
       p="15px"
       fontFamily="rubik"
@@ -11,7 +16,7 @@ export const CohortHeader = () => {
       mb="2rem"
       textAlign="center"
     >
-      Cohort - Season 5
+      {text}
     </Text>
   );
 };

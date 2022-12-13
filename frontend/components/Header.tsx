@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import { Flex, Image, Button } from "@raidguild/design-system";
 import Link from "next/link";
-import ConnectBtn from "./ConnectBtn";
+import ConnectBtn from "./ConnectWallet";
 
 interface HeaderProps {
   children: ReactNode;

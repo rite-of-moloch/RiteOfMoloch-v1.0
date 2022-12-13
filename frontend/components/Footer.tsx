@@ -1,25 +1,26 @@
-import { Flex, Link, Text } from '@chakra-ui/react';
+import { Flex, Link, Text } from "@chakra-ui/react";
 
 export const Footer = () => {
   return (
     <Flex
-      direction={{ base: 'column-reverse', md: 'row', lg: 'row' }}
-      alignItems='flex-start'
-      justifyContent='space-between'
-      w='100%'
+      direction={{ base: "column-reverse", md: "row", lg: "row" }}
+      alignItems="flex-start"
+      justifyContent="space-between"
+      w="100%"
     >
       <Text
-        mb='1rem'
-        fontSize='sm'
-        fontFamily='jetbrains'
-        color='greyLight'
-        mx='auto'
+        mb="1rem"
+        fontSize="sm"
+        fontWeight={"bold"}
+        fontFamily="jetbrains"
+        color="greyLight"
+        mx="auto"
       >
-        Built by{' '}
+        Built by{" "}
         <Link
-          href='https://raidguild.org'
+          href="https://raidguild.org"
           isExternal
-          textDecoration='underline'
+          textDecoration="underline"
         >
           RaidGuild
         </Link>

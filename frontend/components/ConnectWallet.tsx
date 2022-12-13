@@ -27,7 +27,7 @@ import { FiKey, FiChevronDown, FiXCircle } from "react-icons/fi";
 const truncateAddress = (address: string): string =>
   `${address.slice(0, 4)}...${address.slice(-4)}`;
 
-const ConnectBtn = () => {
+const ConnectWallet = () => {
   const { isConnecting } = useAccount();
   const { disconnect } = useDisconnect();
 
@@ -128,4 +128,4 @@ const ConnectBtn = () => {
   );
 };
 
-export default ConnectBtn;
+export default ConnectWallet;

@@ -27,7 +27,7 @@ import { ethers, utils } from "ethers";
 // import { NetworkError } from "../shared/NetworkError";
 // import { RiteStaked } from "../shared/RiteStaked";
 // import { StakingFlow } from "../shared/StakingFlow";
-import { CohortHeader } from "../components/CohortHeader";
+import { BoxHeader } from "../components/BoxHeader";
 // import { PreStake } from "../shared/PreStake";
 import { HeaderOne } from "../components/Header0ne";
 // import { DeployCohortButton } from "../shared/DeployCohortButton";
@@ -271,7 +271,8 @@ export default function Home() {
       px="2rem"
     >
       <HeaderOne />
-      <CohortHeader />
+
+      <BoxHeader text="Commit your stake to the cohort!" />
       {/* {!context.signerAddress && <PreStake />}
 
       {!context.signerAddress ? <DeployCohortButton /> : null}
