@@ -1,4 +1,3 @@
-import React from "react";
 import {
   useNetwork,
   usePrepareContractWrite,
@@ -7,6 +6,7 @@ import {
 } from "wagmi";
 import abi from "../contracts/erc20TokenAddress.json";
 import { CONTRACT_ADDRESSES } from "utils/constants";
+import { TransactionDescription } from "ethers/lib/utils";
 
 /**
  *
@@ -14,37 +14,52 @@ import { CONTRACT_ADDRESSES } from "utils/constants";
  * @param functionName - pass name of function
  * @returns
  */
+
 export const useWriteContract = (
   contractName: string,
   functionName: string,
   args?: any
 ) => {
-  const { chain } = useNetwork();
+  // console.log(abi, contractName, functionName, args);
 
+  const { chain } = useNetwork();
   const address: string = CONTRACT_ADDRESSES?.[chain?.id]?.[contractName];
 
-  const { config, error } = usePrepareContractWrite({
-    address,
-    abi,
+  const {
+    config,
+    error,
+    // isSuccess: prepareSuccess,
+  } = usePrepareContractWrite({
+    addressOrName: address || "",
+    contractInterface: abi,
     functionName,
+    chainId: chain?.id,
     args,
   });
 
   const { data, write } = useContractWrite({
     ...config,
+    request: config.request,
     onSuccess(data) {
       console.log("Success", data);
-      return data;
     },
     onError(error) {
       console.log("Error", error);
-      return error;
     },
   });
 
-  const { isLoading, isSuccess } = useWaitForTransaction({
+  const {
+    data: txData,
+    isLoading,
+    isSuccess,
+  } = useWaitForTransaction({
     hash: data?.hash,
+    onError(error) {
+      console.log("Error", error);
+    },
   });
 
-  return { write, isLoading, isSuccess };
+  // console.log(isSuccess);
+
+  return { write, txData, isLoading, isSuccess };
 };

@@ -10,10 +10,11 @@ import {
   Link as ChakraLink,
   useToast,
 } from "@chakra-ui/react";
-
+import { useAccount, useNetwork } from "wagmi";
 import { useWriteContract } from "hooks/useWriteContract";
-
 import { ethers, utils } from "ethers";
+import { CONTRACT_ADDRESSES } from "utils/constants";
+import { getAllowance } from "utils/web3";
 
 // import {
 //   getMinimumStake,
@@ -30,34 +31,47 @@ import { ethers, utils } from "ethers";
 // import { NetworkError } from "../shared/NetworkError";
 // import { RiteStaked } from "../shared/RiteStaked";
 // import { StakingFlow } from "../shared/StakingFlow";
-import { BoxHeader } from "../components/BoxHeader";
 // import { PreStake } from "../shared/PreStake";
-import { HeaderOne } from "../components/Header0ne";
 // import { DeployCohortButton } from "../shared/DeployCohortButton";
+import { BoxHeader } from "../components/BoxHeader";
+import { HeaderOne } from "../components/Header0ne";
 
 export default function Home() {
+  const { chain } = useNetwork();
+  const { address, isConnected } = useAccount();
+
+  const getAddress = (contractName: string): string => {
+    if (typeof chain?.id === "string") {
+      return CONTRACT_ADDRESSES?.[chain?.id]?.[contractName];
+    } else return "";
+  };
+
   // const context = useContext(AppContext);
   // const toast = useToast();
 
-  const [minimumStake, setMinimumStake] = useState(0);
-  const [riteBalance, setRiteBalance] = useState(0);
-  const [raidBalance, setRaidBalance] = useState(0);
-  const [stakeDeadline, setStakeDeadline] = useState(0);
-  const [allowance, setAllowance] = useState(0);
+  // const [minimumStake, setMinimumStake] = useState(0);
+  // const [riteBalance, setRiteBalance] = useState(0);
+  // const [raidBalance, setRaidBalance] = useState(0);
+  // const [stakeDeadline, setStakeDeadline] = useState(0);
+  // const [allowance, setAllowance] = useState(0);
 
-  // const [isLoading, setIsLoading] = useState(false);
-  const [isApproveTxPending, setIsApproveTxPending] = useState(false);
-  const [isStakeTxPending, setIsStakeTxPending] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  // const [isApproveTxPending, setIsApproveTxPending] = useState(false);
+  // const [isStakeTxPending, setIsStakeTxPending] = useState(false);
 
-  const [isChecked, setIsChecked] = useState(false);
-  const [displaySponsorCohort, setDisplaySponsorCohort] = useState(false);
-  const [cohortAddress, setCohortAddress] = useState("");
+  // const [isChecked, setIsChecked] = useState(false);
+  // const [displaySponsorCohort, setDisplaySponsorCohort] = useState(false);
+  // const [cohortAddress, setCohortAddress] = useState("");
 
   // DELETE - only here to test hook
-  const { write, isLoading, isSuccess } = useWriteContract(
-    "erc20TokenAddress",
-    "allowance"
-  );
+  // useWriteContract("erc20TokenAddress", "allowance");
+
+  if (isConnected && address) {
+    getAllowance("erc20TokenAddress", "allowance", [
+      "0x50589c90DA71600B06fCcDe89c79469aFe12ea65",
+      "0xe9da154834d8c9a8030b175eb3bfd974130ac0a0",
+    ]);
+  }
 
   // const initialFetch = async () => {
   //   setIsLoading(true);
