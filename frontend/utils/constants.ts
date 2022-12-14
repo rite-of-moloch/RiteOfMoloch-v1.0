@@ -6,7 +6,7 @@ export const SIGNATURE_MESSAGE =
   "This signature is only required for authentication.";
 
 export const CONTRACT_ADDRESSES = {
-  4: {
+  5: {
     erc20TokenAddress: "0x50589c90DA71600B06fCcDe89c79469aFe12ea65",
     riteOfMolochAddress: "0x35e02D20B12E7002B1B8c13D35Eb59d8FC383d7b",
     riteOfMolochFactoryAddress: "0x885253B92fEE0F4a0B0eCA81846782ED68D5C3C1",
@@ -19,7 +19,7 @@ export const CONTRACT_ADDRESSES = {
 };
 
 export const TOKEN_TICKER = {
-  4: "mRAID",
+  5: "mRAID",
   100: "RAID",
 };
 

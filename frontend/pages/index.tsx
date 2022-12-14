@@ -3,12 +3,15 @@ import Link from "next/link";
 import React, { useState, useEffect, useContext } from "react";
 import {
   Flex,
+  Button,
   Box,
   Spinner,
   Heading,
   Link as ChakraLink,
   useToast,
 } from "@chakra-ui/react";
+
+import { useWriteContract } from "hooks/useWriteContract";
 
 import { ethers, utils } from "ethers";
 
@@ -42,13 +45,19 @@ export default function Home() {
   const [stakeDeadline, setStakeDeadline] = useState(0);
   const [allowance, setAllowance] = useState(0);
 
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const [isApproveTxPending, setIsApproveTxPending] = useState(false);
   const [isStakeTxPending, setIsStakeTxPending] = useState(false);
 
   const [isChecked, setIsChecked] = useState(false);
   const [displaySponsorCohort, setDisplaySponsorCohort] = useState(false);
   const [cohortAddress, setCohortAddress] = useState("");
+
+  // DELETE - only here to test hook
+  const { write, isLoading, isSuccess } = useWriteContract(
+    "erc20TokenAddress",
+    "allowance"
+  );
 
   // const initialFetch = async () => {
   //   setIsLoading(true);
@@ -273,6 +282,7 @@ export default function Home() {
       <HeaderOne />
 
       <BoxHeader text="Commit your stake to the cohort!" />
+
       {/* {!context.signerAddress && <PreStake />}
 
       {!context.signerAddress ? <DeployCohortButton /> : null}
