@@ -6,7 +6,6 @@ import {
 } from "wagmi";
 import abi from "../contracts/erc20TokenAddress.json";
 import { CONTRACT_ADDRESSES } from "utils/constants";
-import { TransactionDescription } from "ethers/lib/utils";
 
 /**
  *
@@ -23,28 +22,33 @@ export const useWriteContract = (
   // console.log(abi, contractName, functionName, args);
 
   const { chain } = useNetwork();
-  const address: string = CONTRACT_ADDRESSES?.[chain?.id]?.[contractName];
+  let address = "";
+  if (chain?.id) {
+    address = CONTRACT_ADDRESSES[chain.id][contractName];
+  }
 
-  const {
-    config,
-    error,
-    // isSuccess: prepareSuccess,
-  } = usePrepareContractWrite({
+  const { config, error } = usePrepareContractWrite({
     addressOrName: address || "",
     contractInterface: abi,
     functionName,
     chainId: chain?.id,
     args,
+    onSuccess(data) {
+      console.log("usePrepareContractWrite Success", data);
+    },
+    onError(err) {
+      console.log("usePrepareContractWrite error", err);
+    },
   });
 
   const { data, write } = useContractWrite({
     ...config,
     request: config.request,
     onSuccess(data) {
-      console.log("Success", data);
+      console.log("useContractWrite success", data);
     },
     onError(error) {
-      console.log("Error", error);
+      console.log("useContractWrite error", error);
     },
   });
 
