@@ -1,103 +1,78 @@
-// import { Contract, utils } from "ethers";
 import { useWriteContract } from "hooks/useWriteContract";
-// import { CONTRACT_ADDRESSES } from "./constants";
 
-// export const approveRaid = async (
-//   ethersProvider,
-//   contractAddress,
-//   addressTo,
-//   amount
-// ) => {
-//   const abiInterface = new utils.Interface([
-//     "function approve(address spender, uint256 amount) external returns (bool)",
-//   ]);
-//   const contract = new Contract(
-//     contractAddress,
-//     abiInterface,
-//     ethersProvider.getSigner()
-//   );
-//   return contract.approve(addressTo, amount);
-// };
-
-// export const joinInitiation = async (
-//   ethersProvider,
-//   contractAddress,
-//   userAddress
-// ) => {
-//   const abiInterface = new utils.Interface([
-//     "function joinInitiation(address user) public callerIsUser",
-//   ]);
-//   const contract = new Contract(
-//     contractAddress,
-//     abiInterface,
-//     ethersProvider.getSigner()
-//   );
-//   return contract.joinInitiation(userAddress);
-// };
-
-// export const getTokenBalance = async (
-//   ethersProvider,
-//   userAddress,
-//   tokenContractAddress
-// ) => {
-//   const abiInterface = new utils.Interface([
-//     "function balanceOf(address owner) external view returns (uint256)",
-//   ]);
-//   const contract = new Contract(
-//     tokenContractAddress,
-//     abiInterface,
-//     ethersProvider
-//   );
-//   return contract.balanceOf(userAddress);
-// };
-
-// export const getMinimumStake = async (ethersProvider, contractAddress) => {
-//   const abiInterface = new utils.Interface([
-//     "function minimumStake() external view returns (uint256)",
-//   ]);
-//   const contract = new Contract(contractAddress, abiInterface, ethersProvider);
-//   return contract.minimumStake();
-// };
-
-// export const getStakeDeadline = async (
-//   ethersProvider,
-//   contractAddress,
-//   userAddress
-// ) => {
-//   const abiInterface = new utils.Interface([
-//     "function getDeadline(address user) external view returns (uint256)",
-//   ]);
-//   const contract = new Contract(contractAddress, abiInterface, ethersProvider);
-//   return contract.getDeadline(userAddress);
-// };
-
-/*
-export const getAllowance = async (
-  ethersProvider,
-  tokenContractAddress,
-  ownerAddress,
-  spenderAddress
-) => {
-  const abiInterface = new utils.Interface([
-    "function allowance(address owner, address spender) external view returns (uint256)",
-  ]);
-  const contract = new Contract(
-    tokenContractAddress,
-    abiInterface,
-    ethersProvider
-  );
-  return contract.allowance(ownerAddress, spenderAddress);
-};
-*/
-
-export const getAllowance = (
-  contractName: string,
-  functionName: string,
-  args: string[]
-) => {
+/**
+ *
+ * @param args [address, to, address]
+ * @returns
+ */
+export const approveRaid = (args: string[]) => {
   const { write, txData, status } = useWriteContract(
-    contractName,
-    functionName,
+    "riteOfMolochAddress",
+    "approve",
+    args
+  );
+  return { write, txData, status };
+};
+
+/**
+ *
+ * @param args [address, user, address]
+ * @returns
+ */
+export const joinInitiation = (args: string[]) => {
+  const { write, txData, status } = useWriteContract(
+    "riteOfMolochAddress",
+    "joinInitiation",
+    args
+  );
+  return { write, txData, status };
+};
+
+/**
+ *
+ * @param args [address, account, address]
+ * @returns
+ */
+export const getBalanceOf = (args: string[]) => {
+  const { write, txData, status } = useWriteContract(
+    "erc20TokenAddress",
+    "balanceOf",
+    args
+  );
+  return { write, txData, status };
+};
+
+export const getMinimumStake = () => {
+  const { write, txData, status } = useWriteContract(
+    "riteOfMolochAddress",
+    "minimumStake"
+  );
+  return { write, txData, status };
+};
+
+/**
+ *
+ * @param args [address, user, address]
+ * @returns
+ */
+export const getStakeDeadline = (args: string[]) => {
+  const { write, txData, status } = useWriteContract(
+    "riteOfMolochAddress",
+    "getDeadline",
+    args
+  );
+  return { write, txData, status };
+};
+
+/**
+ *
+ * @param args [ownerAllowance, spenderAddress]
+ * @returns write function, tx data, tx status
+ */
+export const getAllowance = (args: string[]) => {
+  const { write, txData, status } = useWriteContract(
+    "erc20TokenAddress",
+    "allowance",
     args
   );
   return { write, txData, status };

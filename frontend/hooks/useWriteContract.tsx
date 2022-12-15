@@ -35,7 +35,7 @@ export const useWriteContract = (
     args,
   });
 
-  const { data, isLoading, isSuccess, write } = useContractWrite({
+  const { data, write } = useContractWrite({
     ...config,
     request: config.request,
     onSuccess(data) {

@@ -18,7 +18,7 @@ import { getAllowance } from "utils/web3";
 
 // import {
 //   getMinimumStake,
-//   getTokenBalance,
+//   getBalanceOf,
 //   getStakeDeadline,
 //   getAllowance,
 //   approveRaid,
@@ -66,14 +66,14 @@ export default function Home() {
   // DELETE - only here to test hook
   // useWriteContract("erc20TokenAddress", "allowance");
 
-  const { write, txData, status } = getAllowance(
-    "erc20TokenAddress",
-    "allowance",
-    [
-      "0xa99b5E50A817f31dbf8F3fCE6a3c47A5282BD972",
-      "0xe9da154834d8c9a8030b175eb3bfd974130ac0a0",
-    ]
-  );
+  const {
+    write: writeGetAllowance,
+    txData,
+    status,
+  } = getAllowance([
+    "0xa99b5E50A817f31dbf8F3fCE6a3c47A5282BD972",
+    "0xe9da154834d8c9a8030b175eb3bfd974130ac0a0",
+  ]);
 
   // const initialFetch = async () => {
   //   setIsLoading(true);
@@ -82,7 +82,7 @@ export default function Home() {
   // };
 
   // const fetchRiteBalance = async () => {
-  //   const _riteBalance = await getTokenBalance(
+  //   const _riteBalance = await getBalanceOf(
   //     context.ethersProvider,
   //     context.signerAddress,
   //     CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress
@@ -127,7 +127,7 @@ export default function Home() {
   // };
 
   // const fetchRaidBalance = async () => {
-  //   const _raidBalance = await getTokenBalance(
+  //   const _raidBalance = await getBalanceOf(
   //     context.ethersProvider,
   //     context.signerAddress,
   //     CONTRACT_ADDRESSES[context.chainId].erc20TokenAddress
@@ -298,8 +298,8 @@ export default function Home() {
       <HeaderOne />
       <Button
         onClick={() => {
-          console.log(!!write);
-          write ? write() : null;
+          console.log(!!writeGetAllowance);
+          writeGetAllowance ? writeGetAllowance() : null;
           console.log(txData, status);
         }}
       >
