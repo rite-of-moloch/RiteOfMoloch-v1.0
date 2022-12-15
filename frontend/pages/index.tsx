@@ -11,21 +11,17 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useAccount, useNetwork } from "wagmi";
-import { useWriteContract } from "hooks/useWriteContract";
-import { ethers, utils } from "ethers";
-import { CONTRACT_ADDRESSES } from "utils/constants";
-import { getAllowance } from "utils/web3";
+import { UserContext } from "context/UserContext";
 
-// import {
-//   getMinimumStake,
-//   getBalanceOf,
-//   getStakeDeadline,
-//   getAllowance,
-//   approveRaid,
-//   joinInitiation,
-// } from "../utils/web3";
+import {
+  approveRaid,
+  joinInitiation,
+  getBalanceOf,
+  getMinimumStake,
+  getStakeDeadline,
+  getAllowance,
+} from "../utils/web3";
 
-// import { AppContext } from "../context/AppContext";
 // import { CONTRACT_ADDRESSES, EXPLORER_URLS } from "../utils/constants";
 // import { SUPPORTED_NETWORK_IDS } from "../config";
 // import { NetworkError } from "../shared/NetworkError";
@@ -37,39 +33,60 @@ import { BoxHeader } from "../components/BoxHeader";
 import { HeaderOne } from "../components/Header0ne";
 
 export default function Home() {
+  const context = useContext(UserContext);
+  // console.log(context);
+
   const { chain } = useNetwork();
   const { address, isConnected } = useAccount();
 
-  // const getAddress = (contractName: string): string => {
-  //   if (typeof chain?.id === "string") {
-  //     return CONTRACT_ADDRESSES?.[chain?.id]?.[contractName];
-  //   } else return "";
-  // };
+  const toast = useToast();
 
-  // const context = useContext(AppContext);
-  // const toast = useToast();
+  const {
+    write: writeApproveRaid,
+    txData: txDataApproveRaid,
+    status: statusApproveRaid,
+  } = approveRaid([
+    "0xa99b5E50A817f31dbf8F3fCE6a3c47A5282BD972",
+    "0xe9da154834d8c9a8030b175eb3bfd974130ac0a0",
+  ]);
 
-  // const [minimumStake, setMinimumStake] = useState(0);
-  // const [riteBalance, setRiteBalance] = useState(0);
-  // const [raidBalance, setRaidBalance] = useState(0);
-  // const [stakeDeadline, setStakeDeadline] = useState(0);
-  // const [allowance, setAllowance] = useState(0);
+  const {
+    write: writeJoinInitiation,
+    txData: txDataJoinInitiation,
+    status: statusJoinInitiation,
+  } = joinInitiation([
+    "0xa99b5E50A817f31dbf8F3fCE6a3c47A5282BD972",
+    "0xe9da154834d8c9a8030b175eb3bfd974130ac0a0",
+  ]);
 
-  const [isLoading, setIsLoading] = useState(false);
-  // const [isApproveTxPending, setIsApproveTxPending] = useState(false);
-  // const [isStakeTxPending, setIsStakeTxPending] = useState(false);
+  const {
+    write: writeGetBalanceOf,
+    txData: txDataGetBalanceOf,
+    status: statusGetBalanceOf,
+  } = getBalanceOf([
+    "0xa99b5E50A817f31dbf8F3fCE6a3c47A5282BD972",
+    "0xe9da154834d8c9a8030b175eb3bfd974130ac0a0",
+  ]);
 
-  // const [isChecked, setIsChecked] = useState(false);
-  // const [displaySponsorCohort, setDisplaySponsorCohort] = useState(false);
-  // const [cohortAddress, setCohortAddress] = useState("");
+  const {
+    write: writeGetMinimumStake,
+    txData: txDataGetMinimumStake,
+    status: statusGetMinimumStake,
+  } = getMinimumStake();
 
-  // DELETE - only here to test hook
-  // useWriteContract("erc20TokenAddress", "allowance");
+  const {
+    write: writeGetStakeDeadline,
+    txData: txDataGetStakeDeadline,
+    status: statusGetStakeDeadline,
+  } = getStakeDeadline([
+    "0xa99b5E50A817f31dbf8F3fCE6a3c47A5282BD972",
+    "0xe9da154834d8c9a8030b175eb3bfd974130ac0a0",
+  ]);
 
   const {
     write: writeGetAllowance,
-    txData,
-    status,
+    txData: getAllowanceTxData,
+    status: getAllowanceStatus,
   } = getAllowance([
     "0xa99b5E50A817f31dbf8F3fCE6a3c47A5282BD972",
     "0xe9da154834d8c9a8030b175eb3bfd974130ac0a0",
@@ -300,7 +317,6 @@ export default function Home() {
         onClick={() => {
           console.log(!!writeGetAllowance);
           writeGetAllowance ? writeGetAllowance() : null;
-          console.log(txData, status);
         }}
       >
         Test function
@@ -315,7 +331,7 @@ export default function Home() {
         <NetworkError />
       )} */}
 
-      {isLoading && <Spinner color="red" size="xl" />}
+      {context.isLoading && <Spinner color="red" size="xl" />}
 
       {/* <Flex
         opacity={!show || isLoading ? 0 : 1}
