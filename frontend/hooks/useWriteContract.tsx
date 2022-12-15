@@ -27,21 +27,15 @@ export const useWriteContract = (
     address = CONTRACT_ADDRESSES[chain.id][contractName];
   }
 
-  const { config, error } = usePrepareContractWrite({
+  const { config } = usePrepareContractWrite({
     addressOrName: address || "",
     contractInterface: abi,
     functionName,
     chainId: chain?.id,
     args,
-    onSuccess(data) {
-      console.log("usePrepareContractWrite Success", data);
-    },
-    onError(err) {
-      console.log("usePrepareContractWrite error", err);
-    },
   });
 
-  const { data, write } = useContractWrite({
+  const { data, isLoading, isSuccess, write } = useContractWrite({
     ...config,
     request: config.request,
     onSuccess(data) {
@@ -52,18 +46,15 @@ export const useWriteContract = (
     },
   });
 
-  const {
-    data: txData,
-    isLoading,
-    isSuccess,
-  } = useWaitForTransaction({
+  const { data: txData, status } = useWaitForTransaction({
     hash: data?.hash,
     onError(error) {
       console.log("Error", error);
     },
+    onSuccess(data) {
+      console.log("Success", data);
+    },
   });
 
-  // console.log(isSuccess);
-
-  return { write, txData, isLoading, isSuccess };
+  return { write, txData, status };
 };

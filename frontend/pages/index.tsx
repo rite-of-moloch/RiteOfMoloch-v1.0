@@ -40,11 +40,11 @@ export default function Home() {
   const { chain } = useNetwork();
   const { address, isConnected } = useAccount();
 
-  const getAddress = (contractName: string): string => {
-    if (typeof chain?.id === "string") {
-      return CONTRACT_ADDRESSES?.[chain?.id]?.[contractName];
-    } else return "";
-  };
+  // const getAddress = (contractName: string): string => {
+  //   if (typeof chain?.id === "string") {
+  //     return CONTRACT_ADDRESSES?.[chain?.id]?.[contractName];
+  //   } else return "";
+  // };
 
   // const context = useContext(AppContext);
   // const toast = useToast();
@@ -66,12 +66,14 @@ export default function Home() {
   // DELETE - only here to test hook
   // useWriteContract("erc20TokenAddress", "allowance");
 
-  if (isConnected && address) {
-    getAllowance("erc20TokenAddress", "allowance", [
-      "0x50589c90DA71600B06fCcDe89c79469aFe12ea65",
+  const { write, txData, status } = getAllowance(
+    "erc20TokenAddress",
+    "allowance",
+    [
+      "0xa99b5E50A817f31dbf8F3fCE6a3c47A5282BD972",
       "0xe9da154834d8c9a8030b175eb3bfd974130ac0a0",
-    ]);
-  }
+    ]
+  );
 
   // const initialFetch = async () => {
   //   setIsLoading(true);
@@ -294,7 +296,15 @@ export default function Home() {
       px="2rem"
     >
       <HeaderOne />
-
+      <Button
+        onClick={() => {
+          console.log(!!write);
+          write ? write() : null;
+          console.log(txData, status);
+        }}
+      >
+        Test function
+      </Button>
       <BoxHeader text="Commit your stake to the cohort!" />
 
       {/* {!context.signerAddress && <PreStake />}

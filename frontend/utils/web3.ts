@@ -95,11 +95,10 @@ export const getAllowance = (
   functionName: string,
   args: string[]
 ) => {
-  const { write, isSuccess } = useWriteContract(
+  const { write, txData, status } = useWriteContract(
     contractName,
     functionName,
     args
   );
-  console.log(isSuccess);
-  return write;
+  return { write, txData, status };
 };
