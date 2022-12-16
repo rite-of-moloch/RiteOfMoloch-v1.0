@@ -20,6 +20,14 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [cohortAddress, setCohortAddress] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const handleIsChecked = (): void => {
+    setIsChecked(!isChecked);
+  };
+
+  const handleCohortAddress = (e: any): void => {
+    setCohortAddress(e.target.value);
+  };
+
   const value: any = {
     minimumStake,
     setMinimumStake,
@@ -35,8 +43,8 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     setIsApproveTxPending,
     isStakeTxPending,
     setIsStakeTxPending,
-    isChecked,
-    setIsChecked,
+    handleIsChecked,
+    handleCohortAddress,
     displaySponsorCohort,
     setDisplaySponsorCohort,
     cohortAddress,
