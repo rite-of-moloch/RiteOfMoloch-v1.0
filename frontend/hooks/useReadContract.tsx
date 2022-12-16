@@ -1,18 +1,12 @@
-import React from "react";
-import { useContract, useNetwork } from "wagmi";
-import abi from "../contracts/erc20TokenAddress.json";
+import { useContractRead, useNetwork } from "wagmi";
+import { setAbi } from "utils/general";
+import { CONTRACT_ADDRESSES } from "utils/constants";
 
-interface UseReactContractProps {
-  contractName: string;
-  functionName: string;
-  args?: any;
-}
-
-const UseReadContract: React.FC<UseReactContractProps> = ({
-  contractName,
-  functionName,
-  args,
-}) => {
+export const UseReadContract = (
+  contractName: string,
+  functionName: string,
+  args?: any
+) => {
   const { chain } = useNetwork();
 
   let address = "";
@@ -20,10 +14,19 @@ const UseReadContract: React.FC<UseReactContractProps> = ({
     address = CONTRACT_ADDRESSES[chain.id][contractName];
   }
 
-  const { data, isError, isLoading } = useContract({
+  const { data, isLoading } = useContractRead({
     addressOrName: address || "",
-    abi:
+    contractInterface: setAbi(contractName),
+    functionName,
+    args,
+    chainId: chain?.id,
+    onSuccess(data) {
+      console.log("Success", data);
+    },
+    onError(err) {
+      console.log("Error", err);
+    },
   });
-};
 
-export default UseReadContract;
+  return { data, isLoading };
+};
