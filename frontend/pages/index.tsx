@@ -31,13 +31,26 @@ import { CONTRACT_ADDRESSES, EXPLORER_URLS } from "../utils/constants";
 // import { NetworkError } from "../shared/NetworkError";
 // import { RiteStaked } from "../shared/RiteStaked";
 // import { StakingFlow } from "../shared/StakingFlow";
-// import { PreStake } from "../shared/PreStake";
+
 import { BoxHeader } from "../components/BoxHeader";
 import { HeaderOne } from "../components/Header0ne";
 import { NetworkError } from "components/NetworkError";
 import { BigNumber } from "ethers";
 
 export default function Home() {
+  const [minimumStake, setMinimumStake] = useState<number>(0);
+  const [riteBalance, setRiteBalance] = useState<number>(0);
+  const [raidBalance, setRaidBalance] = useState<number>(0);
+  const [stakeDeadline, setStakeDeadline] = useState<number>(0);
+  const [allowance, setAllowance] = useState<number>(0);
+  const [isApproveTxPending, setIsApproveTxPending] = useState<boolean>(false);
+  const [isStakeTxPending, setIsStakeTxPending] = useState<boolean>(false);
+  const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [displaySponsorCohort, setDisplaySponsorCohort] =
+    useState<boolean>(false);
+  const [cohortAddress, setCohortAddress] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const context = useContext(UserContext);
   // console.log(context);
   const { chain } = useNetwork();
@@ -62,64 +75,49 @@ export default function Home() {
     write: writeApproveRaid,
     txData: txDataApproveRaid,
     status: statusApproveRaid,
-  } = approveRaid([
-    getContractAddress("riteOfMolochAddress"),
-    userAddress(),
-    getContractAddress("riteOfMolochAddress"),
-  ]);
+  } = approveRaid([userAddress(), minimumStake]);
 
+  // ISSUES
   const {
     write: writeJoinInitiation,
     txData: txDataJoinInitiation,
     status: statusJoinInitiation,
-  } = joinInitiation([
-    getContractAddress("riteOfMolochAddress"),
-    userAddress(),
-    getContractAddress("riteOfMolochAddress"),
-  ]);
+  } = joinInitiation([userAddress()]);
 
   const {
     write: writeGetBalanceOf,
     txData: txDataGetBalanceOf,
     status: statusGetBalanceOf,
-  } = getBalanceOf([
-    getContractAddress("erc20TokenAddress"),
-    userAddress(),
-    getContractAddress("erc20TokenAddress"),
-  ]);
+  } = getBalanceOf([userAddress()]);
 
+  // ISSUE - CHANGE TO READ FUNCTION
   const {
     write: writeGetMinimumStake,
     txData: txDataGetMinimumStake,
     status: statusGetMinimumStake,
   } = getMinimumStake();
 
+  // ISSUE - CHANGE TO READ FUNCTION
   const {
     write: writeGetStakeDeadline,
     txData: txDataGetStakeDeadline,
     status: statusGetStakeDeadline,
-  } = getStakeDeadline([
-    getContractAddress("riteOfMolochAddress"),
-    userAddress(),
-    getContractAddress("riteOfMolochAddress"),
-  ]);
+  } = getStakeDeadline([userAddress()]);
 
   const {
     write: writeGetAllowance,
     txData: txDataGetAllowanceTxData,
     status: statusGetAllowanceStatus,
-  } = getAllowance([
-    userAddress(),
-    getContractAddress("erc20TokenAddress"),
-    userAddress(),
-  ]);
+  } = getAllowance([getContractAddress("erc20TokenAddress"), userAddress()]);
 
-  // elper functions
+  // helper functions
 
   const fetchMinimumStake = async () => {
     if (writeGetMinimumStake) {
       const _stake = await writeGetMinimumStake();
-      context.setMinimumStake(_stake);
+      if (_stake) {
+        setMinimumStake(_stake);
+      }
     }
   };
 
@@ -127,11 +125,7 @@ export default function Home() {
     write: writeGetRiteBalance,
     txData: txDataGetRiteBalance,
     status: statusGetRiteBalance,
-  } = getRiteBalance([
-    userAddress(),
-    getContractAddress("riteOfMolochAddress"),
-    userAddress(),
-  ]);
+  } = getRiteBalance([userAddress()]);
 
   // const fetchRiteBalance = async () => {
   //   const _riteBalance = await getBalanceOf(
@@ -152,25 +146,29 @@ export default function Home() {
   // };
 
   const initialFetch = async () => {
-    context.setIsLoading(true);
+    setIsLoading(true);
     // await fetchRiteBalance();
-    context.setIsLoading(false);
+    setIsLoading(false);
   };
 
   const fetchStakeDeadline = async () => {
     const _stakeDeadline = await writeGetStakeDeadline;
-    context.setStakeDeadline(Number(_stakeDeadline) + 60 * 60 * 24 * 30 * 6); // (6 months) for rinkeby testing
-    context.setStakeDeadline(Number(_stakeDeadline));
+    setStakeDeadline(Number(_stakeDeadline) + 60 * 60 * 24 * 30 * 6); // (6 months) for rinkeby testing
+    setStakeDeadline(Number(_stakeDeadline));
   };
 
   const fetchAllowance = async () => {
     const _allowance = await writeGetAllowance;
-    context.setAllowance(_allowance);
+    if (_allowance) {
+      setAllowance(_allowance);
+    }
   };
 
   const fetchRaidBalance = async () => {
     const _raidBalance = writeGetRiteBalance;
-    context.setRaidBalance(_raidBalance);
+    if (_raidBalance) {
+      setRaidBalance(_raidBalance);
+    }
   };
 
   // ADD DESIGN-SYSTEM CUSTOM TOAST:
@@ -313,15 +311,15 @@ export default function Home() {
       <HeaderOne />
       <Button
         onClick={() => {
-          console.log(!!writeGetAllowance);
-          writeGetAllowance ? writeGetAllowance() : null;
+          console.log(writeGetMinimumStake);
+          writeGetMinimumStake ? writeGetMinimumStake() : null;
         }}
       >
         Test function
       </Button>
-      <br />
-
-      <Button variant="outline">Commit your stake to the cohort!"</Button>
+      <Box w="full" m="auto" mt={5} textAlign="center">
+        <Button variant="outline">Commit your stake to the cohort!</Button>
+      </Box>
 
       {!isConnected && (
         <Text color="white" textAlign="center">
@@ -330,15 +328,15 @@ export default function Home() {
       )}
 
       {isConnected ? (
-        <>
+        <Box w="full" m="auto" mt={5} textAlign="center">
           <Button variant={"outline"}>Deploy your own cohort</Button>
           <Text mt={4}>Your journey starts here...</Text>
-        </>
+        </Box>
       ) : null}
 
       {isConnected && !chain?.id && <NetworkError />}
 
-      {context.isLoading && <Spinner color="red" size="xl" />}
+      {isLoading && <Spinner color="red" size="xl" />}
 
       {/* <Flex
         opacity={!show || isLoading ? 0 : 1}

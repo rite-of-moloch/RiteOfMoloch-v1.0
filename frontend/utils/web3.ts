@@ -3,12 +3,13 @@ import { useWriteContract } from "hooks/useWriteContract";
 
 /**
  *
- * @param args [address, to, address]
- * @returns
+ * @param args spender: address
+ * @param args amount: uint256
+ * @outputs (none)
  */
-export const approveRaid = (args: string[]) => {
+export const approveRaid = (args: [string, number]) => {
   const { write, txData, status } = useWriteContract(
-    "riteOfMolochAddress",
+    "erc20TokenAddress",
     "approve",
     args
   );
@@ -17,10 +18,12 @@ export const approveRaid = (args: string[]) => {
 
 /**
  *
- * @param args [address, user, address]
- * @returns
+ * write function
+ *
+ * @param args user: address
+ * @outputs (none)
  */
-export const joinInitiation = (args: string[]) => {
+export const joinInitiation = (args: [string]) => {
   const { write, txData, status } = useWriteContract(
     "riteOfMolochAddress",
     "joinInitiation",
@@ -31,12 +34,12 @@ export const joinInitiation = (args: string[]) => {
 
 /**
  *
- * @param args [address, account, address]
- * @returns
+ * @param args account: address
+ * @outputs uint256
  *
  * erc20TokenAddress
  */
-export const getBalanceOf = (args: string[]) => {
+export const getBalanceOf = (args: [string]) => {
   const { write, txData, status } = useWriteContract(
     "erc20TokenAddress",
     "balanceOf",
@@ -47,20 +50,10 @@ export const getBalanceOf = (args: string[]) => {
 
 /**
  *
- * @param args [address, owner, address]
- * @returns
+ * read function
  *
- * erc20TokenAddress
+ * @outputs uint256
  */
-export const getRiteBalance = (args: string[]) => {
-  const { write, txData, status } = useWriteContract(
-    "riteOfMolochAddress",
-    "balanceOf",
-    args
-  );
-  return { write, txData, status };
-};
-
 export const getMinimumStake = () => {
   const { write, txData, status } = useWriteContract(
     "riteOfMolochAddress",
@@ -71,10 +64,13 @@ export const getMinimumStake = () => {
 
 /**
  *
- * @param args [address, user, address]
+ * read function
+ *
+ * @param args user: address
+ * @outputs deadline: (uint256)
  * @returns
  */
-export const getStakeDeadline = (args: string[]) => {
+export const getStakeDeadline = (args: [string]) => {
   const { write, txData, status } = useWriteContract(
     "riteOfMolochAddress",
     "getDeadline",
@@ -85,13 +81,31 @@ export const getStakeDeadline = (args: string[]) => {
 
 /**
  *
- * @param args [address, owner, address],[address, spender, address]
+ * @param args owner: address
+ * @param args spender: address
+ * @outputs uint256
  * @returns write function, tx data, tx status
  */
-export const getAllowance = (args: string[]) => {
+export const getAllowance = (args: [string, string]) => {
   const { write, txData, status } = useWriteContract(
     "erc20TokenAddress",
     "allowance",
+    args
+  );
+  return { write, txData, status };
+};
+
+/**
+ *
+ * @param args owner: address
+ * @ outputs: uint256
+ *
+ * riteOfMolochAddress
+ */
+export const getRiteBalance = (args: [string]) => {
+  const { write, txData, status } = useWriteContract(
+    "riteOfMolochAddress",
+    "balanceOf",
     args
   );
   return { write, txData, status };

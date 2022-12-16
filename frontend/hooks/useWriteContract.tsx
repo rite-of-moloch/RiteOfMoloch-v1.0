@@ -4,7 +4,9 @@ import {
   useContractWrite,
   useWaitForTransaction,
 } from "wagmi";
-import abi from "../contracts/erc20TokenAddress.json";
+import abiERC20 from "../contracts/erc20TokenAddress.json";
+import abiROM from "../contracts/riteOfMolochAddress.json";
+import abiROMFac from "../contracts/riteOfMolochFactoryAddress.json";
 import { CONTRACT_ADDRESSES } from "utils/constants";
 
 /**
@@ -19,17 +21,26 @@ export const useWriteContract = (
   functionName: string,
   args?: any
 ) => {
-  // console.log(abi, contractName, functionName, args);
-
   const { chain } = useNetwork();
   let address = "";
   if (chain?.id) {
     address = CONTRACT_ADDRESSES[chain.id][contractName];
   }
+  let abi;
+  const setAbi = (): void => {
+    if (contractName === "erc20TokenAddress") {
+      abi = abiERC20;
+    } else if (contractName === "riteOfMolochAddress") {
+      abi = abiROM;
+    } else {
+      abi = abiROMFac;
+    }
+  };
+  setAbi();
 
   const { config } = usePrepareContractWrite({
     addressOrName: address || "",
-    contractInterface: abi,
+    contractInterface: abi || abiERC20,
     functionName,
     chainId: chain?.id,
     args,
