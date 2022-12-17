@@ -31,10 +31,11 @@ contract TestHelper is Test, InitializationData {
 		ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
 	}
 
+	// create initial data
 	function createInitData() public {
-		Data.membershipCriteria = address(0);
+		Data.membershipCriteria = deployer;
 		Data.stakingAsset = address(daoToken);
-		Data.treasury = address(0);
+		Data.treasury = deployer;
 		Data.threshold = 10;
 		Data.assetAmount = 10;
 		Data.duration = 10;
@@ -43,6 +44,7 @@ contract TestHelper is Test, InitializationData {
 		Data.baseUri = "";
 	}
 
+	// log deployment information
 	function testCloneDeployment() public {
 		emit log_named_address("ROM Contract", address(ROM));
 		emit log_named_address("ROM Treasury", ROM.treasury());
