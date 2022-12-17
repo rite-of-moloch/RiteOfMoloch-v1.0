@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-import { getReturnValues } from '../utils/constants';
+import { getReturnValues } from "../utils/constants";
 
-const useCountdown = (targetDate) => {
+const useCountdown = (targetDate: string) => {
   const countDownDate = new Date(targetDate).getTime();
 
   const [countDown, setCountDown] = useState(

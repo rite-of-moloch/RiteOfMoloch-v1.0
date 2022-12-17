@@ -15,16 +15,7 @@ import {
 } from "@raidguild/design-system";
 import { useAccount, useNetwork } from "wagmi";
 import { UserContext } from "context/UserContext";
-import {
-  approveRaid,
-  joinInitiation,
-  getBalanceOf,
-  getRiteBalance,
-  getMinimumStake,
-  getStakeDeadline,
-  getAllowance,
-  canStake,
-} from "../utils/web3";
+import { canStake } from "../utils/web3";
 
 import { CONTRACT_ADDRESSES, EXPLORER_URLS } from "../utils/constants";
 // import { SUPPORTED_NETWORK_IDS } from "../config";
@@ -32,7 +23,6 @@ import { CONTRACT_ADDRESSES, EXPLORER_URLS } from "../utils/constants";
 // import { RiteStaked } from "../shared/RiteStaked";
 // import { StakingFlow } from "../shared/StakingFlow";
 
-import { BoxHeader } from "../components/BoxHeader";
 import { HeaderOne } from "../components/Header0ne";
 import { NetworkError } from "components/NetworkError";
 import { BigNumber } from "ethers";
@@ -52,7 +42,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const context = useContext(UserContext);
-  // console.log(context);
+
   const { chain } = useNetwork();
   const { address, isConnected } = useAccount();
   const toast = useToast();
@@ -70,62 +60,101 @@ export default function Home() {
     else return "";
   };
 
-  // start web3 functions
-  const {
-    write: writeApproveRaid,
-    txData: txDataApproveRaid,
-    status: statusApproveRaid,
-  } = approveRaid([userAddress(), minimumStake]);
+  //////
+  //////
+  // START OF FUNCTIONS THAT WERE REFACTORED INTO HOOKS
+  //////
+  //////
 
-  // ISSUES
-  const {
-    write: writeJoinInitiation,
-    txData: txDataJoinInitiation,
-    status: statusJoinInitiation,
-  } = joinInitiation([userAddress()]);
+  // const getApproveRaid = () => {
+  //   const {
+  //     write: writeApproveRaid,
+  //     txData: txDataApproveRaid,
+  //     status: statusApproveRaid,
+  //   } = approveRaid([userAddress(), minimumStake]);
+  //   return {
+  //     writeApproveRaid,
+  //     txDataApproveRaid,
+  //     statusApproveRaid,
+  //   };
+  // };
 
-  const {
-    write: writeGetBalanceOf,
-    txData: txDataGetBalanceOf,
-    status: statusGetBalanceOf,
-  } = getBalanceOf([userAddress()]);
+  // // NOT WORKING CORRECTLY
+  // const getJoinInitiation = () => {
+  //   const {
+  //     write: writeJoinInitiation,
+  //     txData: txDataJoinInitiation,
+  //     status: statusJoinInitiation,
+  //   } = joinInitiation([userAddress()]);
+  //   return {
+  //     writeJoinInitiation,
+  //     txDataJoinInitiation,
+  //     statusJoinInitiation,
+  //   };
+  // };
 
-  // ISSUE - CHANGE TO READ FUNCTION
-  const {
-    write: writeGetMinimumStake,
-    txData: txDataGetMinimumStake,
-    status: statusGetMinimumStake,
-  } = getMinimumStake();
+  // const useGetBalanceOf = () => {
+  //   const {
+  //     write: writeGetBalanceOf,
+  //     txData: txDataGetBalanceOf,
+  //     status: statusGetBalanceOf,
+  //   } = getBalanceOf([userAddress()]);
+  //   return {
+  //     writeGetBalanceOf,
+  //     txDataGetBalanceOf,
+  //     statusGetBalanceOf,
+  //   };
+  // };
 
-  // ISSUE - CHANGE TO READ FUNCTION
-  const {
-    write: writeGetStakeDeadline,
-    txData: txDataGetStakeDeadline,
-    status: statusGetStakeDeadline,
-  } = getStakeDeadline([userAddress()]);
+  // const { data: dataGetMinimumStake, isLoading: isLoadingGetMinimumStake } =
+  //   getMinimumStake();
 
-  const {
-    write: writeGetAllowance,
-    txData: txDataGetAllowanceTxData,
-    status: statusGetAllowanceStatus,
-  } = getAllowance([getContractAddress("erc20TokenAddress"), userAddress()]);
+  // const { data: dataGetStakeDeadline, isLoading: isLoadingGetStakeDeadline } =
+  //   getStakeDeadline([userAddress()]);
 
-  // helper functions
+  // const useGetAllowance = () => {
+  //   const {
+  //     write: writeGetAllowance,
+  //     txData: txDataGetAllowanceTxData,
+  //     status: statusGetAllowanceStatus,
+  //   } = getAllowance([getContractAddress("erc20TokenAddress"), userAddress()]);
+  //   return {
+  //     writeGetAllowance,
+  //     txDataGetAllowanceTxData,
+  //     statusGetAllowanceStatus,
+  //   };
+  // };
 
-  const fetchMinimumStake = async () => {
-    if (writeGetMinimumStake) {
-      const _stake = await writeGetMinimumStake();
-      if (_stake) {
-        setMinimumStake(_stake);
-      }
-    }
-  };
+  // const useGetRiteBalance = () => {
+  //   const {
+  //     write: writeGetRiteBalance,
+  //     txData: txDataGetRiteBalance,
+  //     status: statusGetRiteBalance,
+  //   } = getRiteBalance([userAddress()]);
+  //   return {
+  //     writeGetRiteBalance,
+  //     txDataGetRiteBalance,
+  //     statusGetRiteBalance,
+  //   };
+  // };
 
-  const {
-    write: writeGetRiteBalance,
-    txData: txDataGetRiteBalance,
-    status: statusGetRiteBalance,
-  } = getRiteBalance([userAddress()]);
+  // // helper functions
+
+  // // NEED TO CHECK
+  // const fetchMinimumStake = async () => {
+  //   if (writeGetMinimumStake) {
+  //     const _stake = await getMinimumStake();
+  //     if (_stake) {
+  //       setMinimumStake(_stake);
+  //     }
+  //   }
+  // };
+
+  //////
+  //////
+  // END OF FUNCTIONS THAT WERE REFACTORED INTO HOOKS
+  //////
+  //////
 
   // const fetchRiteBalance = async () => {
   //   const _riteBalance = await getBalanceOf(
@@ -145,31 +174,31 @@ export default function Home() {
   //   }
   // };
 
-  const initialFetch = async () => {
-    setIsLoading(true);
-    // await fetchRiteBalance();
-    setIsLoading(false);
-  };
+  // const initialFetch = async () => {
+  //   setIsLoading(true);
+  //   // await fetchRiteBalance();
+  //   setIsLoading(false);
+  // };
 
-  const fetchStakeDeadline = async () => {
-    const _stakeDeadline = await writeGetStakeDeadline;
-    setStakeDeadline(Number(_stakeDeadline) + 60 * 60 * 24 * 30 * 6); // (6 months) for rinkeby testing
-    setStakeDeadline(Number(_stakeDeadline));
-  };
+  // const fetchStakeDeadline = async () => {
+  //   const _stakeDeadline = await getStakeDeadline;
+  //   setStakeDeadline(Number(_stakeDeadline) + 60 * 60 * 24 * 30 * 6); // (6 months) for rinkeby testing
+  //   setStakeDeadline(Number(_stakeDeadline));
+  // };
 
-  const fetchAllowance = async () => {
-    const _allowance = await writeGetAllowance;
-    if (_allowance) {
-      setAllowance(_allowance);
-    }
-  };
+  // const fetchAllowance = async () => {
+  //   const _allowance = await writeGetAllowance;
+  //   if (_allowance) {
+  //     setAllowance(_allowance);
+  //   }
+  // };
 
-  const fetchRaidBalance = async () => {
-    const _raidBalance = writeGetRiteBalance;
-    if (_raidBalance) {
-      setRaidBalance(_raidBalance);
-    }
-  };
+  // const fetchRaidBalance = async () => {
+  //   const _raidBalance = writeGetRiteBalance;
+  //   if (_raidBalance) {
+  //     setRaidBalance(_raidBalance);
+  //   }
+  // };
 
   // ADD DESIGN-SYSTEM CUSTOM TOAST:
   // const triggerToast = (txHash) => {
@@ -295,9 +324,9 @@ export default function Home() {
 
   // const show = isConnected && chain;
 
-  useEffect(() => {
-    isConnected ? initialFetch() : null;
-  }, [chain?.id]);
+  // useEffect(() => {
+  //   isConnected ? initialFetch() : null;
+  // }, [chain?.id]);
 
   return (
     <Flex
@@ -309,34 +338,29 @@ export default function Home() {
       px="2rem"
     >
       <HeaderOne />
-      <Button
-        onClick={() => {
-          console.log(writeGetMinimumStake);
-          writeGetMinimumStake ? writeGetMinimumStake() : null;
-        }}
-      >
-        Test function
-      </Button>
+
+      <Button onClick={() => null}>Test Write function</Button>
+
       <Box w="full" m="auto" mt={5} textAlign="center">
         <Button variant="outline">Commit your stake to the cohort!</Button>
       </Box>
 
-      {!isConnected && (
+      {/* {!isConnected && (
         <Text color="white" textAlign="center">
           Connect your wallet to stake & commit to our cohort!
         </Text>
-      )}
+      )} */}
 
-      {isConnected ? (
+      {/* {isConnected ? (
         <Box w="full" m="auto" mt={5} textAlign="center">
           <Button variant={"outline"}>Deploy your own cohort</Button>
           <Text mt={4}>Your journey starts here...</Text>
         </Box>
-      ) : null}
+      ) : null} */}
 
-      {isConnected && !chain?.id && <NetworkError />}
+      {/* {isConnected && !chain?.id && <NetworkError />} */}
 
-      {isLoading && <Spinner color="red" size="xl" />}
+      {/* {isLoading && <Spinner color="red" size="xl" />} */}
 
       {/* <Flex
         opacity={!show || isLoading ? 0 : 1}

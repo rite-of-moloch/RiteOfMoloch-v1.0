@@ -13,6 +13,7 @@ import {
   Image,
 } from "@raidguild/design-system";
 import { FiKey, FiChevronDown, FiXCircle } from "react-icons/fi";
+import { truncateAddress } from "utils/general";
 
 // const StyledPrimaryButton = styled(Button)`
 //   min-width: 160px;
@@ -23,9 +24,6 @@ import { FiKey, FiChevronDown, FiXCircle } from "react-icons/fi";
 //   padding-left: 24px;
 //   padding-right: 24px;
 // `;
-
-const truncateAddress = (address: string): string =>
-  `${address.slice(0, 4)}...${address.slice(-4)}`;
 
 const ConnectWallet = () => {
   const { isConnecting } = useAccount();

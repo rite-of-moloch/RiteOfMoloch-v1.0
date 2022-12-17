@@ -8,9 +8,9 @@ export const SIGNATURE_MESSAGE =
 export const CONTRACT_ADDRESSES: { [key: string]: { [key: string]: string } } =
   {
     5: {
-      erc20TokenAddress: "0x50589c90DA71600B06fCcDe89c79469aFe12ea65",
-      riteOfMolochAddress: "0x35e02D20B12E7002B1B8c13D35Eb59d8FC383d7b",
-      riteOfMolochFactoryAddress: "0x885253B92fEE0F4a0B0eCA81846782ED68D5C3C1",
+      erc20TokenAddress: "0x1A4B691738C9c8Db8f2EDf0b9207f6acb24ADF07",
+      riteOfMolochAddress: "0x898262D785eeB789601b0BF8580a05426D6bfa58",
+      riteOfMolochFactoryAddress: "0xEaB493C3282F49Bff75dE00fbe060ca7abD2d133",
     },
     100: {
       erc20TokenAddress: "0x18e9262e68cc6c6004db93105cc7c001bb103e49",

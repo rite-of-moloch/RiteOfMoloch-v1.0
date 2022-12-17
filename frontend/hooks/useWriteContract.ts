@@ -12,6 +12,7 @@ import { CONTRACT_ADDRESSES } from "utils/constants";
  *
  * @param contractName - pass in contract name
  * @param functionName - pass name of function
+ * @param args - option array of args
  * @returns
  */
 
