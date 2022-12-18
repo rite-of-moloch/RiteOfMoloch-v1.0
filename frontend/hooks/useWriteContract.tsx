@@ -16,22 +16,23 @@ import { CONTRACT_ADDRESSES } from "utils/constants";
  * @returns
  */
 
-export const useWriteContract = (
+const useWriteContract = (
   contractName: string,
   functionName: string,
   args?: any
 ) => {
-  const { chain } = useNetwork();
+  // const { chain } = useNetwork();
   let address = "";
-  if (chain?.id) {
-    address = CONTRACT_ADDRESSES[chain.id][contractName];
-  }
+  // if (chain?.id) {
+  // address = CONTRACT_ADDRESSES[chain.id][contractName];
+  address = CONTRACT_ADDRESSES[5][contractName];
+  // }
 
   const { config } = usePrepareContractWrite({
     addressOrName: address || "",
     contractInterface: setAbi(contractName) || abiERC20,
     functionName,
-    chainId: chain?.id,
+    // chainId: chain?.id,
     args,
   });
 
@@ -58,3 +59,5 @@ export const useWriteContract = (
 
   return { write, txData, status };
 };
+
+export default useWriteContract;

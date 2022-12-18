@@ -1,10 +1,9 @@
-import { useReadContract } from "./useReadContract";
-
+import useReadContract from "./useReadContract";
 /**
  *
  * @outputs uint256
  */
-const useMinimumStake = () => {
+export const useGetMinimumStake = () => {
   const { data: dataMinimumStake, isLoading: isLoadingMinimumStake } =
     useReadContract("riteOfMolochAddress", "minimumStake");
   return { dataMinimumStake, isLoadingMinimumStake };

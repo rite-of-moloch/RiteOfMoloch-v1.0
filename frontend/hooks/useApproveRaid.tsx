@@ -1,4 +1,4 @@
-import { useWriteContract } from "./useWriteContract";
+import useWriteContract from "./useWriteContract";
 
 /**
  *

@@ -10,7 +10,7 @@ import { CONTRACT_ADDRESSES } from "utils/constants";
  * @returns
  */
 
-export const useReadContract = (
+const useReadContract = (
   contractName: string,
   functionName: string,
   args?: any
@@ -37,3 +37,5 @@ export const useReadContract = (
 
   return { data, isLoading };
 };
+
+export default useReadContract;

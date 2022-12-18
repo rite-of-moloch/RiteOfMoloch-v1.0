@@ -26,26 +26,31 @@ import { CONTRACT_ADDRESSES, EXPLORER_URLS } from "../utils/constants";
 import { HeaderOne } from "../components/Header0ne";
 import { NetworkError } from "components/NetworkError";
 import { BigNumber } from "ethers";
+import { useRiteBalanceOf } from "hooks/useRiteBalanceOf";
+import { useBalanceOf } from "hooks/useBalanceOf";
+import { getAddress } from "ethers/lib/utils";
 
 export default function Home() {
-  const [minimumStake, setMinimumStake] = useState<number>(0);
-  const [riteBalance, setRiteBalance] = useState<number>(0);
-  const [raidBalance, setRaidBalance] = useState<number>(0);
-  const [stakeDeadline, setStakeDeadline] = useState<number>(0);
-  const [allowance, setAllowance] = useState<number>(0);
-  const [isApproveTxPending, setIsApproveTxPending] = useState<boolean>(false);
-  const [isStakeTxPending, setIsStakeTxPending] = useState<boolean>(false);
-  const [isChecked, setIsChecked] = useState<boolean>(false);
-  const [displaySponsorCohort, setDisplaySponsorCohort] =
-    useState<boolean>(false);
-  const [cohortAddress, setCohortAddress] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  // const [minimumStake, setMinimumStake] = useState<number>(0);
+  // const [riteBalance, setRiteBalance] = useState<number>(0);
+  // const [raidBalance, setRaidBalance] = useState<number>(0);
+  // const [stakeDeadline, setStakeDeadline] = useState<number>(0);
+  // const [allowance, setAllowance] = useState<number>(0);
+  // const [isApproveTxPending, setIsApproveTxPending] = useState<boolean>(false);
+  // const [isStakeTxPending, setIsStakeTxPending] = useState<boolean>(false);
+  // const [isChecked, setIsChecked] = useState<boolean>(false);
+  // const [displaySponsorCohort, setDisplaySponsorCohort] =
+  //   useState<boolean>(false);
+  // const [cohortAddress, setCohortAddress] = useState<string>("");
+  // const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const context = useContext(UserContext);
 
   const { chain } = useNetwork();
   const { address, isConnected } = useAccount();
   const toast = useToast();
+
+  const writeBalanceOf = useBalanceOf;
 
   const getContractAddress = (contract: string): string => {
     if (typeof chain?.id === "number") {
@@ -55,10 +60,10 @@ export default function Home() {
   };
 
   // type check address
-  const userAddress = (): string => {
+  function userAddress(): string {
     if (typeof address === "string") return address;
     else return "";
-  };
+  }
 
   //////
   //////
@@ -339,7 +344,13 @@ export default function Home() {
     >
       <HeaderOne />
 
-      <Button onClick={() => null}>Test Write function</Button>
+      <Button
+        onClick={() => {
+          useBalanceOf([userAddress()]);
+        }}
+      >
+        Test Write function
+      </Button>
 
       <Box w="full" m="auto" mt={5} textAlign="center">
         <Button variant="outline">Commit your stake to the cohort!</Button>

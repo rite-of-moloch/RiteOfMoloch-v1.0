@@ -1,4 +1,4 @@
-import { useWriteContract } from "./useWriteContract";
+import useWriteContract from "./useWriteContract";
 
 /**
  *
@@ -6,7 +6,7 @@ import { useWriteContract } from "./useWriteContract";
  * @outputs (none)
  */
 
-export const joinInitiation = (args: [string]) => {
+export const useJoinInitiation = (args: [string]) => {
   const {
     write: writeJoinInitiation,
     txData: txDataJoinInitiation,
