@@ -6,15 +6,17 @@ import useWriteContract from "./useWriteContract";
  * @outputs (none)
  */
 
-export const useApproveRaid = (args: [string, number]) => {
+const useApproveRaid = (args: [string, number]) => {
   const {
-    write: writeApprove,
+    write: writeApproveRaid,
     txData: txDataApprove,
-    status: statusApprove,
+    // status: statusApprove,
   } = useWriteContract("erc20TokenAddress", "approve", args);
   return {
-    writeApprove,
+    writeApproveRaid,
     txDataApprove,
-    statusApprove,
+    // statusApprove,
   };
 };
+
+export default useApproveRaid;

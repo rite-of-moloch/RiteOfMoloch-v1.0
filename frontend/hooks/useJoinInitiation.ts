@@ -10,11 +10,11 @@ export const useJoinInitiation = (args: [string]) => {
   const {
     write: writeJoinInitiation,
     txData: txDataJoinInitiation,
-    status: statusJoinInitiation,
+    // status
   } = useWriteContract("riteOfMolochAddress", "joinInitiation", args);
   return {
     writeJoinInitiation,
     txDataJoinInitiation,
-    statusJoinInitiation,
+    // status
   };
 };

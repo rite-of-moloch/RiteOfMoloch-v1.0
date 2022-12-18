@@ -1,6 +1,6 @@
 import { useContractRead, useNetwork } from "wagmi";
-import { setAbi } from "utils/general";
-import { CONTRACT_ADDRESSES } from "utils/constants";
+import useAbi from "./useAbi";
+import useContractAddress from "./useContractAddress";
 
 /**
  *
@@ -16,22 +16,21 @@ const useReadContract = (
   args?: any
 ) => {
   const { chain } = useNetwork();
-  let address = "";
-  if (chain?.id) {
-    address = CONTRACT_ADDRESSES[chain.id][contractName];
-  }
+  let contractAddress = useContractAddress(contractName);
+
+  const abi = useAbi(contractName);
 
   const { data, isLoading } = useContractRead({
-    addressOrName: address || "",
-    contractInterface: setAbi(contractName),
+    addressOrName: contractAddress,
+    contractInterface: abi,
     functionName,
     args,
     chainId: chain?.id,
     onSuccess(data) {
-      // console.log("Success", data);
+      console.log("useContractRead success", data);
     },
     onError(err) {
-      console.log("Error", err);
+      console.log("useContractRead Error", err);
     },
   });
 

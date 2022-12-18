@@ -24,11 +24,16 @@ import { CONTRACT_ADDRESSES, EXPLORER_URLS } from "../utils/constants";
 // import { StakingFlow } from "../shared/StakingFlow";
 
 import { HeaderOne } from "../components/Header0ne";
-import { NetworkError } from "components/NetworkError";
-import { BigNumber } from "ethers";
+
+import useWriteContract from "hooks/useWriteContract";
+import useApproveRaid from "hooks/useApproveRaid";
+import useBalanceOf from "hooks/useBalanceOf";
+import useGetAllowance from "hooks/useGetAllowance";
+import useContractAddress from "hooks/useContractAddress";
+import { useGetDeadline } from "hooks/useGetDeadline";
+import { useJoinInitiation } from "hooks/useJoinInitiation";
+import { useMinimumStake } from "hooks/useMinimumStake";
 import { useRiteBalanceOf } from "hooks/useRiteBalanceOf";
-import { useBalanceOf } from "hooks/useBalanceOf";
-import { getAddress } from "ethers/lib/utils";
 
 export default function Home() {
   // const [minimumStake, setMinimumStake] = useState<number>(0);
@@ -46,18 +51,8 @@ export default function Home() {
 
   const context = useContext(UserContext);
 
-  const { chain } = useNetwork();
   const { address, isConnected } = useAccount();
   const toast = useToast();
-
-  const writeBalanceOf = useBalanceOf;
-
-  const getContractAddress = (contract: string): string => {
-    if (typeof chain?.id === "number") {
-      const address: string = CONTRACT_ADDRESSES[chain.id][contract];
-      return address;
-    } else return "";
-  };
 
   // type check address
   function userAddress(): string {
@@ -65,101 +60,38 @@ export default function Home() {
     else return "";
   }
 
-  //////
-  //////
-  // START OF FUNCTIONS THAT WERE REFACTORED INTO HOOKS
-  //////
-  //////
+  /**
+   * Web3 functions (smart contract calls)
+   */
 
-  // const getApproveRaid = () => {
-  //   const {
-  //     write: writeApproveRaid,
-  //     txData: txDataApproveRaid,
-  //     status: statusApproveRaid,
-  //   } = approveRaid([userAddress(), minimumStake]);
-  //   return {
-  //     writeApproveRaid,
-  //     txDataApproveRaid,
-  //     statusApproveRaid,
-  //   };
-  // };
+  const { writeApproveRaid, txDataApprove } = useApproveRaid([
+    userAddress(),
+    0,
+  ]);
 
-  // // NOT WORKING CORRECTLY
-  // const getJoinInitiation = () => {
-  //   const {
-  //     write: writeJoinInitiation,
-  //     txData: txDataJoinInitiation,
-  //     status: statusJoinInitiation,
-  //   } = joinInitiation([userAddress()]);
-  //   return {
-  //     writeJoinInitiation,
-  //     txDataJoinInitiation,
-  //     statusJoinInitiation,
-  //   };
-  // };
+  const { writeBalanceOf, txDataBalanceOf } = useBalanceOf([userAddress()]);
 
-  // const useGetBalanceOf = () => {
-  //   const {
-  //     write: writeGetBalanceOf,
-  //     txData: txDataGetBalanceOf,
-  //     status: statusGetBalanceOf,
-  //   } = getBalanceOf([userAddress()]);
-  //   return {
-  //     writeGetBalanceOf,
-  //     txDataGetBalanceOf,
-  //     statusGetBalanceOf,
-  //   };
-  // };
+  const { writeAllowance, txDataAllowance } = useGetAllowance([
+    userAddress(),
+    useContractAddress("erc20TokenAddress"),
+  ]);
 
-  // const { data: dataGetMinimumStake, isLoading: isLoadingGetMinimumStake } =
-  //   getMinimumStake();
+  const { dataGetDeadline, isLoadingGetDeadline } = useGetDeadline([
+    userAddress(),
+  ]);
 
-  // const { data: dataGetStakeDeadline, isLoading: isLoadingGetStakeDeadline } =
-  //   getStakeDeadline([userAddress()]);
+  // Not working
+  const { writeJoinInitiation, txDataJoinInitiation } = useJoinInitiation([
+    userAddress(),
+  ]);
 
-  // const useGetAllowance = () => {
-  //   const {
-  //     write: writeGetAllowance,
-  //     txData: txDataGetAllowanceTxData,
-  //     status: statusGetAllowanceStatus,
-  //   } = getAllowance([getContractAddress("erc20TokenAddress"), userAddress()]);
-  //   return {
-  //     writeGetAllowance,
-  //     txDataGetAllowanceTxData,
-  //     statusGetAllowanceStatus,
-  //   };
-  // };
+  const { dataMinimumStake } = useMinimumStake();
 
-  // const useGetRiteBalance = () => {
-  //   const {
-  //     write: writeGetRiteBalance,
-  //     txData: txDataGetRiteBalance,
-  //     status: statusGetRiteBalance,
-  //   } = getRiteBalance([userAddress()]);
-  //   return {
-  //     writeGetRiteBalance,
-  //     txDataGetRiteBalance,
-  //     statusGetRiteBalance,
-  //   };
-  // };
+  const { writeRiteBalanceOf, txDataRiteBalanceOf } = useRiteBalanceOf([
+    userAddress(),
+  ]);
 
-  // // helper functions
-
-  // // NEED TO CHECK
-  // const fetchMinimumStake = async () => {
-  //   if (writeGetMinimumStake) {
-  //     const _stake = await getMinimumStake();
-  //     if (_stake) {
-  //       setMinimumStake(_stake);
-  //     }
-  //   }
-  // };
-
-  //////
-  //////
-  // END OF FUNCTIONS THAT WERE REFACTORED INTO HOOKS
-  //////
-  //////
+  console.log(writeRiteBalanceOf);
 
   // const fetchRiteBalance = async () => {
   //   const _riteBalance = await getBalanceOf(
@@ -344,11 +276,7 @@ export default function Home() {
     >
       <HeaderOne />
 
-      <Button
-        onClick={() => {
-          useBalanceOf([userAddress()]);
-        }}
-      >
+      <Button onClick={() => writeRiteBalanceOf && writeRiteBalanceOf()}>
         Test Write function
       </Button>
 

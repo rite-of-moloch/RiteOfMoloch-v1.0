@@ -8,11 +8,11 @@ export const useRiteBalanceOf = (args: [string]) => {
   const {
     write: writeRiteBalanceOf,
     txData: txDataRiteBalanceOf,
-    status: statusRiteBalanceOf,
+    // status: statusRiteBalanceOf,
   } = useWriteContract("riteOfMolochAddress", "balanceOf", args);
   return {
     writeRiteBalanceOf,
     txDataRiteBalanceOf,
-    statusRiteBalanceOf,
+    // statusRiteBalanceOf,
   };
 };
