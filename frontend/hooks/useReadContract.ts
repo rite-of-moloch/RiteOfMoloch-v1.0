@@ -1,6 +1,7 @@
 import { useContractRead, useNetwork, useTransaction } from "wagmi";
 import useAbi from "./useAbi";
 import useContractAddress from "./useContractAddress";
+import { useCustomToast } from "@raidguild/design-system";
 
 /**
  *
@@ -16,6 +17,7 @@ const useReadContract = (
   args?: any
 ) => {
   const { chain } = useNetwork();
+  const toast = useCustomToast();
   let contractAddress = useContractAddress(contractName);
 
   const abi = useAbi(contractName);
@@ -26,11 +28,18 @@ const useReadContract = (
     functionName,
     args,
     chainId: chain?.id,
-    onSuccess(data) {
-      // console.log("useContractRead success", data);
-    },
+    // onSuccess(data) {
+    //   toast.loading({
+    //     status: "loading",
+    //     title: `Pending transaction ${data?.hash}`,
+    //   });
+    // },
     onError(err) {
-      // console.log("useContractRead Error", err);
+      console.log(err);
+      toast.loading({
+        status: "error",
+        title: `Transaction Error... ${err.message}`,
+      });
     },
   });
 
@@ -42,9 +51,17 @@ const useReadContract = (
     hash: data?.hash,
     onSuccess(data) {
       console.log("Success", data);
+      toast.success({
+        status: "success",
+        title: `Transaction hash: ${data?.hash}`,
+      });
     },
     onError(err) {
       console.log("Error", err);
+      toast.error({
+        status: "error",
+        title: `Transaction Error... ${err.message}`,
+      });
     },
   });
 

@@ -8,8 +8,7 @@ import {
 import useContractAddress from "./useContractAddress";
 import abiERC20 from "../contracts/erc20TokenAddress.json";
 import useAbi from "./useAbi";
-import { useRainbowKitChainsById } from "@rainbow-me/rainbowkit/dist/components/RainbowKitProvider/RainbowKitChainContext";
-
+import { useCustomToast } from "@raidguild/design-system";
 /**
  *
  * @param contractName - pass in contract name
@@ -24,6 +23,7 @@ const useWriteContract = (
   args?: any
 ) => {
   const { chain } = useNetwork();
+  const toast = useCustomToast();
 
   const contractAddress = useContractAddress(contractName);
 
@@ -37,14 +37,24 @@ const useWriteContract = (
     args,
   });
 
-  const { data, write } = useContractWrite({
+  const {
+    data,
+    write,
+    status: initStatus,
+  } = useContractWrite({
     ...config,
     request: config.request,
-    onSuccess(data) {
-      // console.log("useContractWrite success", data);
-    },
-    onError(error) {
-      // console.log("useContractWrite error", error);
+    // onSuccess(data) {
+    //   toast.success({
+    //     status: "loading",
+    //     title: `Pending transaction...`,
+    //   });
+    // },
+    onError(err) {
+      toast.error({
+        status: "error",
+        title: `Transaction Error... ${err.message}`,
+      });
     },
   });
 
@@ -67,7 +77,21 @@ const useWriteContract = (
     onSettled(data, error) {
       console.log("Settled", { data, error });
     },
+    onSuccess(data) {
+      toast.success({
+        status: "success",
+        title: `Transaction success!`,
+      });
+    },
+    onError(err) {
+      toast.success({
+        status: "error",
+        title: `Transaction Error... ${err.message}`,
+      });
+    },
   });
+
+  console.log("txResponse", txResponse);
 
   /**
    * txResponse?.value is output

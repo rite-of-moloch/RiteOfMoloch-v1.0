@@ -75,7 +75,7 @@ const Home: React.FC<HomeProps> = ({ children }) => {
 
   const { writeBalanceOf, txDataBalanceOf } = useBalanceOf([userAddress()]);
 
-  const { writeAllowance, txDataAllowance } = useGetAllowance([
+  const { writeAllowance, txRespAllowance } = useGetAllowance([
     userAddress(),
     useContractAddress("erc20TokenAddress"),
   ]);
@@ -96,7 +96,7 @@ const Home: React.FC<HomeProps> = ({ children }) => {
   ]);
   dataMinimumStake;
 
-  console.log(convertBigNumber(0x00));
+  // console.log(convertBigNumber(0x596888db));
 
   // console.log(dataMinimumStake);
 
@@ -287,7 +287,12 @@ const Home: React.FC<HomeProps> = ({ children }) => {
         <Button
           onClick={() => {
             writeAllowance && writeAllowance();
-            // console.log(respMinimumStake);
+            console.log(txRespAllowance);
+            let value = txRespAllowance?.value._hex;
+            if (typeof value === "number") {
+              const allowance = convertBigNumber(value);
+              console.log(allowance);
+            }
           }}
         >
           Test Write function

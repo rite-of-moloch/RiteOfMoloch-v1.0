@@ -5,15 +5,11 @@ import useWriteContract from "./useWriteContract";
  * @outputs uint256
  */
 const useGetAllowance = (args: [string, string]) => {
-  const {
-    write: writeAllowance,
-    txData: txDataAllowance,
-    // status,
-  } = useWriteContract("erc20TokenAddress", "allowance", args);
+  const { write: writeAllowance, txResponse: txRespAllowance } =
+    useWriteContract("erc20TokenAddress", "allowance", args);
   return {
     writeAllowance,
-    txDataAllowance,
-    // status,
+    txRespAllowance,
   };
 };
 
