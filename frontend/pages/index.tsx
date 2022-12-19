@@ -15,7 +15,7 @@ import {
 } from "@raidguild/design-system";
 import { useAccount, useNetwork } from "wagmi";
 import { UserContext } from "context/UserContext";
-import { canStake } from "../utils/web3";
+import { canStake, convertBigNumber } from "../utils/web3";
 
 import { CONTRACT_ADDRESSES, EXPLORER_URLS } from "../utils/constants";
 // import { SUPPORTED_NETWORK_IDS } from "../config";
@@ -34,6 +34,7 @@ import { useGetDeadline } from "hooks/useGetDeadline";
 import { useJoinInitiation } from "hooks/useJoinInitiation";
 import { useMinimumStake } from "hooks/useMinimumStake";
 import { useRiteBalanceOf } from "hooks/useRiteBalanceOf";
+import { BigNumber } from "ethers";
 
 interface HomeProps {
   children: React.ReactNode;
@@ -94,7 +95,9 @@ const Home: React.FC<HomeProps> = ({ children }) => {
     userAddress(),
   ]);
   dataMinimumStake;
-  console.log(respMinimumStake);
+
+  console.log(convertBigNumber(0x00));
+
   // console.log(dataMinimumStake);
 
   // const fetchRiteBalance = async () => {

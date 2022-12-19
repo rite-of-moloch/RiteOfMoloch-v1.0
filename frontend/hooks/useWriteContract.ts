@@ -58,23 +58,21 @@ const useWriteContract = (
     },
   });
 
-  let transactionHash: any;
-  transactionHash = txData?.blockHash;
-
   const {
     data: txResponse,
     isError,
     isLoading,
   } = useTransaction({
-    hash: transactionHash,
+    hash: (txData?.transactionHash as `0x${string}`) || "",
     onSettled(data, error) {
       console.log("Settled", { data, error });
     },
   });
-  // console.log(transactionHash, txResponse);
-  // console.log("return data:", JSON.stringify(txResponse));
 
-  return { write, txData, status };
+  /**
+   * txResponse?.value is output
+   */
+  return { write, txData, status, txResponse };
 };
 
 export default useWriteContract;
