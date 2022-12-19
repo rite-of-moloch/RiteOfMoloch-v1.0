@@ -6,7 +6,7 @@ import useReadContract from "./useReadContract";
  * @returns
  */
 export const useGetDeadline = (args: [string]) => {
-  const { data: dataGetDeadline, isLoading: isLoadingGetDeadline } =
+  const { data: dataGetDeadline, txResponse: txRespGetDeadline } =
     useReadContract("riteOfMolochAddress", "getDeadline", args);
-  return { dataGetDeadline, isLoadingGetDeadline };
+  return { dataGetDeadline, txRespGetDeadline };
 };

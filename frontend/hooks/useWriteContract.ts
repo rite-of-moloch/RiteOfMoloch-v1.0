@@ -37,11 +37,7 @@ const useWriteContract = (
     args,
   });
 
-  const {
-    data,
-    write,
-    status: initStatus,
-  } = useContractWrite({
+  const { data, write } = useContractWrite({
     ...config,
     request: config.request,
     // onSuccess(data) {
@@ -68,11 +64,7 @@ const useWriteContract = (
     },
   });
 
-  const {
-    data: txResponse,
-    isError,
-    isLoading,
-  } = useTransaction({
+  const { data: txResponse } = useTransaction({
     hash: (txData?.transactionHash as `0x${string}`) || "",
     onSettled(data, error) {
       console.log("Settled", { data, error });
@@ -80,7 +72,7 @@ const useWriteContract = (
     onSuccess(data) {
       toast.success({
         status: "success",
-        title: `Transaction success!`,
+        title: `Transaction success! ${data?.hash}`,
       });
     },
     onError(err) {

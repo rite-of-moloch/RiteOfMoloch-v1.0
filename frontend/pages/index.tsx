@@ -68,19 +68,16 @@ const Home: React.FC<HomeProps> = ({ children }) => {
   /**
    * Web3 functions (smart contract calls)
    */
-  const { writeApproveRaid, txDataApprove } = useApproveRaid([
-    userAddress(),
-    0,
-  ]);
+  const { writeApproveRaid } = useApproveRaid([userAddress(), 0]);
 
-  const { writeBalanceOf, txDataBalanceOf } = useBalanceOf([userAddress()]);
+  const { writeBalanceOf, txRespBalanceOf } = useBalanceOf([userAddress()]);
 
   const { writeAllowance, txRespAllowance } = useGetAllowance([
     userAddress(),
     useContractAddress("erc20TokenAddress"),
   ]);
 
-  const { dataGetDeadline, isLoadingGetDeadline } = useGetDeadline([
+  const { dataGetDeadline, txRespGetDeadline } = useGetDeadline([
     userAddress(),
   ]);
 
@@ -91,10 +88,9 @@ const Home: React.FC<HomeProps> = ({ children }) => {
 
   const { dataMinimumStake, respMinimumStake } = useMinimumStake();
 
-  const { writeRiteBalanceOf, txDataRiteBalanceOf } = useRiteBalanceOf([
+  const { writeRiteBalanceOf, txRespRiteBalanceOf } = useRiteBalanceOf([
     userAddress(),
   ]);
-  dataMinimumStake;
 
   // console.log(convertBigNumber(0x596888db));
 
@@ -287,7 +283,6 @@ const Home: React.FC<HomeProps> = ({ children }) => {
         <Button
           onClick={() => {
             writeAllowance && writeAllowance();
-            console.log(txRespAllowance);
             let value = txRespAllowance?.value._hex;
             if (typeof value === "number") {
               const allowance = convertBigNumber(value);
@@ -298,24 +293,24 @@ const Home: React.FC<HomeProps> = ({ children }) => {
           Test Write function
         </Button>
 
-        <Box w="full" m="auto" mt={5} textAlign="center">
-          <Button variant="outline">Commit your stake to the cohort!</Button>
-        </Box>
+        {isConnected && (
+          <Box w="full" m="auto" mt={5} textAlign="center">
+            <Button variant="outline">Commit your stake to the cohort!</Button>
+          </Box>
+        )}
 
-        {/* {!isConnected && (
-        <Text color="white" textAlign="center">
-          Connect your wallet to stake & commit to our cohort!
-        </Text>
-      )} */}
+        {!isConnected && (
+          <Text color="white" textAlign="center">
+            Connect your wallet to stake & commit to our cohort!
+          </Text>
+        )}
 
-        {/* {isConnected ? (
-        <Box w="full" m="auto" mt={5} textAlign="center">
-          <Button variant={"outline"}>Deploy your own cohort</Button>
-          <Text mt={4}>Your journey starts here...</Text>
-        </Box>
-      ) : null} */}
-
-        {/* {isConnected && !chain?.id && <NetworkError />} */}
+        {isConnected ? (
+          <Box w="full" m="auto" mt={5} textAlign="center">
+            <Button variant={"outline"}>Deploy your own cohort</Button>
+            <Text mt={4}>Your journey starts here...</Text>
+          </Box>
+        ) : null}
 
         {/* {isLoading && <Spinner color="red" size="xl" />} */}
 

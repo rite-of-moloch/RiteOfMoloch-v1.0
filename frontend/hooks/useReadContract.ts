@@ -43,11 +43,7 @@ const useReadContract = (
     },
   });
 
-  const {
-    data: txResponse,
-    isError,
-    isLoading: respLoading,
-  } = useTransaction({
+  const { data: txResponse } = useTransaction({
     hash: data?.hash,
     onSuccess(data) {
       console.log("Success", data);

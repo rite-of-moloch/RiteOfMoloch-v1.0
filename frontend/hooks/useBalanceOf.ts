@@ -10,12 +10,11 @@ const useBalanceOf = (args: [string]) => {
   const {
     write: writeBalanceOf,
     txData: txDataBalanceOf,
-    // status: statusBalanceOf,
+    txResponse: txRespBalanceOf,
   } = useWriteContract("erc20TokenAddress", "balanceOf", args);
   return {
     writeBalanceOf,
-    txDataBalanceOf,
-    // statusBalanceOf,
+    txRespBalanceOf,
   };
 };
 
