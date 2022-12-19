@@ -2,7 +2,7 @@ import useWriteContract from "./useWriteContract";
 
 /**
  *
- * @param args user: address
+ * @param args user: user address
  * @outputs (none)
  */
 

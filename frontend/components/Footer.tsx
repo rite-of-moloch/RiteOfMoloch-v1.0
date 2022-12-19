@@ -1,6 +1,10 @@
 import React from "react";
 
-import { BuiltByRaidGuildComponent } from "@raidguild/design-system";
+import {
+  BuiltByRaidGuildComponent,
+  Text,
+  HStack,
+} from "@raidguild/design-system";
 
 interface FooterProps {
   children?: React.ReactNode;

@@ -35,7 +35,11 @@ import { useJoinInitiation } from "hooks/useJoinInitiation";
 import { useMinimumStake } from "hooks/useMinimumStake";
 import { useRiteBalanceOf } from "hooks/useRiteBalanceOf";
 
-export default function Home() {
+interface HomeProps {
+  children: React.ReactNode;
+}
+
+const Home: React.FC<HomeProps> = ({ children }) => {
   // const [minimumStake, setMinimumStake] = useState<number>(0);
   // const [riteBalance, setRiteBalance] = useState<number>(0);
   // const [raidBalance, setRaidBalance] = useState<number>(0);
@@ -52,7 +56,7 @@ export default function Home() {
   const context = useContext(UserContext);
 
   const { address, isConnected } = useAccount();
-  const toast = useToast();
+  // const toast = useToast();
 
   // type check address
   function userAddress(): string {
@@ -63,7 +67,6 @@ export default function Home() {
   /**
    * Web3 functions (smart contract calls)
    */
-
   const { writeApproveRaid, txDataApprove } = useApproveRaid([
     userAddress(),
     0,
@@ -85,13 +88,14 @@ export default function Home() {
     userAddress(),
   ]);
 
-  const { dataMinimumStake } = useMinimumStake();
+  const { dataMinimumStake, respMinimumStake } = useMinimumStake();
 
   const { writeRiteBalanceOf, txDataRiteBalanceOf } = useRiteBalanceOf([
     userAddress(),
   ]);
-
-  console.log(writeRiteBalanceOf);
+  dataMinimumStake;
+  console.log(respMinimumStake);
+  // console.log(dataMinimumStake);
 
   // const fetchRiteBalance = async () => {
   //   const _riteBalance = await getBalanceOf(
@@ -266,47 +270,53 @@ export default function Home() {
   // }, [chain?.id]);
 
   return (
-    <Flex
-      minH="350px"
-      minW="80%"
-      direction="column"
-      alignItems="center"
-      fontFamily="spaceMono"
-      px="2rem"
-    >
-      <HeaderOne />
+    <>
+      <Flex
+        minH="350px"
+        minW="80%"
+        direction="column"
+        alignItems="center"
+        fontFamily="spaceMono"
+        px="2rem"
+      >
+        <HeaderOne />
 
-      <Button onClick={() => writeRiteBalanceOf && writeRiteBalanceOf()}>
-        Test Write function
-      </Button>
+        <Button
+          onClick={() => {
+            writeAllowance && writeAllowance();
+            // console.log(respMinimumStake);
+          }}
+        >
+          Test Write function
+        </Button>
 
-      <Box w="full" m="auto" mt={5} textAlign="center">
-        <Button variant="outline">Commit your stake to the cohort!</Button>
-      </Box>
+        <Box w="full" m="auto" mt={5} textAlign="center">
+          <Button variant="outline">Commit your stake to the cohort!</Button>
+        </Box>
 
-      {/* {!isConnected && (
+        {/* {!isConnected && (
         <Text color="white" textAlign="center">
           Connect your wallet to stake & commit to our cohort!
         </Text>
       )} */}
 
-      {/* {isConnected ? (
+        {/* {isConnected ? (
         <Box w="full" m="auto" mt={5} textAlign="center">
           <Button variant={"outline"}>Deploy your own cohort</Button>
           <Text mt={4}>Your journey starts here...</Text>
         </Box>
       ) : null} */}
 
-      {/* {isConnected && !chain?.id && <NetworkError />} */}
+        {/* {isConnected && !chain?.id && <NetworkError />} */}
 
-      {/* {isLoading && <Spinner color="red" size="xl" />} */}
+        {/* {isLoading && <Spinner color="red" size="xl" />} */}
 
-      {/* <Flex
+        {/* <Flex
         opacity={!show || isLoading ? 0 : 1}
         transition="opacity 0.25s"
         w="100%"
       > */}
-      {/* {!isLoading &&
+        {/* {!isLoading &&
           (riteBalance > 0 ? (
             <RiteStaked
               // deadline={stakeDeadline}
@@ -335,6 +345,10 @@ export default function Home() {
             />
           ))}
        </Flex> */}
-    </Flex>
+      </Flex>
+      {children}
+    </>
   );
-}
+};
+
+export default Home;

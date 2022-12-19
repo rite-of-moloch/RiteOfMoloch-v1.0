@@ -1,4 +1,4 @@
-import { useContractRead, useNetwork } from "wagmi";
+import { useContractRead, useNetwork, useTransaction } from "wagmi";
 import useAbi from "./useAbi";
 import useContractAddress from "./useContractAddress";
 
@@ -27,14 +27,28 @@ const useReadContract = (
     args,
     chainId: chain?.id,
     onSuccess(data) {
-      console.log("useContractRead success", data);
+      // console.log("useContractRead success", data);
     },
     onError(err) {
-      console.log("useContractRead Error", err);
+      // console.log("useContractRead Error", err);
     },
   });
 
-  return { data, isLoading };
+  const {
+    data: txResponse,
+    isError,
+    isLoading: respLoading,
+  } = useTransaction({
+    hash: data?.hash,
+    onSuccess(data) {
+      console.log("Success", data);
+    },
+    onError(err) {
+      console.log("Error", err);
+    },
+  });
+
+  return { data, isLoading, txResponse };
 };
 
 export default useReadContract;

@@ -3,10 +3,12 @@ import {
   usePrepareContractWrite,
   useContractWrite,
   useWaitForTransaction,
+  useTransaction,
 } from "wagmi";
 import useContractAddress from "./useContractAddress";
 import abiERC20 from "../contracts/erc20TokenAddress.json";
 import useAbi from "./useAbi";
+import { useRainbowKitChainsById } from "@rainbow-me/rainbowkit/dist/components/RainbowKitProvider/RainbowKitChainContext";
 
 /**
  *
@@ -39,22 +41,38 @@ const useWriteContract = (
     ...config,
     request: config.request,
     onSuccess(data) {
-      console.log("useContractWrite success", data);
+      // console.log("useContractWrite success", data);
     },
     onError(error) {
-      console.log("useContractWrite error", error);
+      // console.log("useContractWrite error", error);
     },
   });
 
   const { data: txData, status } = useWaitForTransaction({
     hash: data?.hash,
     onError(error) {
-      console.log("Error", error);
+      // console.log("Error", error);
     },
     onSuccess(data) {
-      console.log("Success", data);
+      // console.log("Success", data);
     },
   });
+
+  let transactionHash: any;
+  transactionHash = txData?.blockHash;
+
+  const {
+    data: txResponse,
+    isError,
+    isLoading,
+  } = useTransaction({
+    hash: transactionHash,
+    onSettled(data, error) {
+      console.log("Settled", { data, error });
+    },
+  });
+  // console.log(transactionHash, txResponse);
+  // console.log("return data:", JSON.stringify(txResponse));
 
   return { write, txData, status };
 };
