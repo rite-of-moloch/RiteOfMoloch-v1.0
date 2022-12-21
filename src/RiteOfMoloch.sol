@@ -31,9 +31,10 @@ interface Token {
 }
 
 contract RiteOfMoloch is InitializationData, ERC721Upgradeable, AccessControlUpgradeable {
+// contract RiteOfMoloch is InitializationData, ERC721Upgradeable, HatsAccessControl {
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
-    // role constants
+    // role constants ** OLD ACCESS CONTROL **
     bytes32 public constant ADMIN = keccak256("ADMIN");
     bytes32 public constant OPERATOR = keccak256("OPERATOR");
 
@@ -130,12 +131,12 @@ contract RiteOfMoloch is InitializationData, ERC721Upgradeable, AccessControlUpg
         // Set the minimum shares
         minimumShare = initData.threshold;
 
-        // grant roles
-        _grantRole(DEFAULT_ADMIN_ROLE, caller_);
-        _grantRole(ADMIN, msg.sender);
-        _grantRole(OPERATOR, msg.sender);
+        // grant roles ** OLD ACCESS CONTROL **
+        _grantRole(DEFAULT_ADMIN_ROLE, caller_); // Origin caller
+        _grantRole(ADMIN, msg.sender); // ROM-Factory
+        _grantRole(OPERATOR, msg.sender); // ROM-Factory
 
-        // setup the ADMIN role to manage the OPERATOR role
+        // setup the ADMIN role to manage the OPERATOR role ** OLD ACCESS CONTROL **
         _setRoleAdmin(OPERATOR, ADMIN);
 
         // set the minimum stake requirement

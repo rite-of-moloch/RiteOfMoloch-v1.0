@@ -9,6 +9,7 @@ import "./InitializationData.sol";
 
 contract RiteOfMolochFactory is InitializationData, AccessControl {
 
+    // ** OLD ACCESS CONTROL **
     bytes32 public constant ADMIN = keccak256("ADMIN");
  
     event NewRiteOfMoloch(
@@ -87,6 +88,7 @@ contract RiteOfMolochFactory is InitializationData, AccessControl {
     * @param implementation the contract address for new cohort format logic
     */
 
+    // ** OLD ACCESS CONTROL **
     function addImplementation(address implementation) external onlyRole(ADMIN) {
         iid++;
         implementations[iid] = implementation;

@@ -2,10 +2,11 @@
 pragma solidity ^0.8.4;
 
 import "forge-std/Script.sol";
+import "forge-std/Test.sol";
 import { RiteOfMolochFactory } from "src/RiteOfMolochFactory.sol";
 import "src/InitializationData.sol";
 
-contract CloneROMScript is Script, InitializationData {
+contract CloneROMScript is Script, InitializationData, Test {
 	RiteOfMolochFactory public ROMF = RiteOfMolochFactory(0xd13A6B033F98994B1897CeFCCae673D3d1BF0892);
 	InitData Data;
 	uint256 id; // implementatin id
@@ -24,8 +25,8 @@ contract CloneROMScript is Script, InitializationData {
 		id = id + 1;
 
 		// call createCohort on ROMF w/ InitData
-		ROMF.createCohort(Data, id);
-		
+		emit log_named_address("ROM Contract", ROMF.createCohort(Data, id));
+
 		vm.stopBroadcast();
 	}
 
