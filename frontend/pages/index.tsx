@@ -78,8 +78,6 @@ const Home: React.FC<HomeProps> = ({ children }) => {
     userAddress(),
   ]);
 
-  console.log(writeJoinInitiation);
-
   // const fetchRiteBalance = async () => {
   //   const _riteBalance = await getBalanceOf(
   //     context.ethersProvider,

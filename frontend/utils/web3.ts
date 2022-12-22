@@ -14,7 +14,7 @@ export const canStake = (
 };
 
 export const convertBigNumber = (txHash: TxHash | undefined): number => {
-  const value = txHash?.data?.value?._hex;
+  const value = txHash?.value?._hex;
   if (typeof value !== "number") return 0;
   return Number(BigNumber.from(value));
 };
