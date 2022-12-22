@@ -31,7 +31,7 @@ import useBalanceOf from "hooks/useBalanceOf";
 import useGetAllowance from "hooks/useGetAllowance";
 import useContractAddress from "hooks/useContractAddress";
 import { useGetDeadline } from "hooks/useGetDeadline";
-import { useJoinInitiation } from "hooks/useJoinInitiation";
+import useJoinInitiation from "hooks/useJoinInitiation";
 import { useMinimumStake } from "hooks/useMinimumStake";
 import { useRiteBalanceOf } from "hooks/useRiteBalanceOf";
 import { BigNumber } from "ethers";
@@ -41,20 +41,8 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ children }) => {
-  // const [minimumStake, setMinimumStake] = useState<number>(0);
-  // const [riteBalance, setRiteBalance] = useState<number>(0);
-  // const [raidBalance, setRaidBalance] = useState<number>(0);
-  // const [stakeDeadline, setStakeDeadline] = useState<number>(0);
-  // const [allowance, setAllowance] = useState<number>(0);
-  // const [isApproveTxPending, setIsApproveTxPending] = useState<boolean>(false);
-  // const [isStakeTxPending, setIsStakeTxPending] = useState<boolean>(false);
-  // const [isChecked, setIsChecked] = useState<boolean>(false);
-  // const [displaySponsorCohort, setDisplaySponsorCohort] =
-  //   useState<boolean>(false);
-  // const [cohortAddress, setCohortAddress] = useState<string>("");
-  // const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const context = useContext(UserContext);
+  // const context = useContext(UserContext);
+  // console.log(context.riteBalance);
 
   const { address, isConnected } = useAccount();
   // const toast = useToast();
@@ -66,7 +54,7 @@ const Home: React.FC<HomeProps> = ({ children }) => {
   }
 
   /**
-   * Web3 functions (smart contract calls)
+   * Smart contract function calls:
    */
   const { writeApproveRaid } = useApproveRaid([userAddress(), 0]);
 
@@ -82,9 +70,7 @@ const Home: React.FC<HomeProps> = ({ children }) => {
   ]);
 
   // Not working
-  const { writeJoinInitiation, txDataJoinInitiation } = useJoinInitiation([
-    userAddress(),
-  ]);
+  const { writeJoinInitiation } = useJoinInitiation([userAddress()]);
 
   const { dataMinimumStake, respMinimumStake } = useMinimumStake();
 
@@ -92,9 +78,7 @@ const Home: React.FC<HomeProps> = ({ children }) => {
     userAddress(),
   ]);
 
-  // console.log(convertBigNumber(0x596888db));
-
-  // console.log(dataMinimumStake);
+  console.log(writeJoinInitiation);
 
   // const fetchRiteBalance = async () => {
   //   const _riteBalance = await getBalanceOf(
@@ -113,6 +97,13 @@ const Home: React.FC<HomeProps> = ({ children }) => {
   //     await fetchRaidBalance();
   //   }
   // };
+
+  const fetchRiteBalance = async () => {
+    writeRiteBalanceOf && writeRiteBalanceOf();
+    const _raidBalance = await convertBigNumber(
+      txRespRiteBalanceOf?.value._hex
+    );
+  };
 
   // const initialFetch = async () => {
   //   setIsLoading(true);
@@ -282,35 +273,31 @@ const Home: React.FC<HomeProps> = ({ children }) => {
 
         <Button
           onClick={() => {
-            writeAllowance && writeAllowance();
-            let value = txRespAllowance?.value._hex;
-            if (typeof value === "number") {
-              const allowance = convertBigNumber(value);
-              console.log(allowance);
-            }
+            writeBalanceOf && writeBalanceOf();
+            txRespBalanceOf;
           }}
         >
           Test Write function
         </Button>
 
-        {isConnected && (
+        {/* {isConnected ? (
           <Box w="full" m="auto" mt={5} textAlign="center">
             <Button variant="outline">Commit your stake to the cohort!</Button>
           </Box>
-        )}
+        ) : null} */}
 
-        {!isConnected && (
+        {/* {!isConnected && (
           <Text color="white" textAlign="center">
             Connect your wallet to stake & commit to our cohort!
           </Text>
-        )}
+        )} */}
 
-        {isConnected ? (
+        {/* {isConnected && (
           <Box w="full" m="auto" mt={5} textAlign="center">
             <Button variant={"outline"}>Deploy your own cohort</Button>
             <Text mt={4}>Your journey starts here...</Text>
           </Box>
-        ) : null}
+        )} */}
 
         {/* {isLoading && <Spinner color="red" size="xl" />} */}
 

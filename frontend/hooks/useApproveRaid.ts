@@ -2,15 +2,16 @@ import useWriteContract from "./useWriteContract";
 
 /**
  *
- * @param args [spender: address, amount: uint256]
+ * @param args spender: address,
+ * @param args amount: uint256
  * @outputs (none)
  */
 
 const useApproveRaid = (args: [string, number]) => {
   const { write: writeApproveRaid } = useWriteContract(
     "erc20TokenAddress",
-    "approve",
-    args
+    "approve"
+    // args
   );
   return {
     writeApproveRaid,

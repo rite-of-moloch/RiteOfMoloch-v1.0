@@ -9,6 +9,8 @@ import useContractAddress from "./useContractAddress";
 import abiERC20 from "../contracts/erc20TokenAddress.json";
 import useAbi from "./useAbi";
 import { useCustomToast } from "@raidguild/design-system";
+import { convertBigNumber } from "utils/web3";
+
 /**
  *
  * @param contractName - pass in contract name
@@ -24,10 +26,9 @@ const useWriteContract = (
 ) => {
   const { chain } = useNetwork();
   const toast = useCustomToast();
-
   const contractAddress = useContractAddress(contractName);
-
   const abi = useAbi(contractName);
+  let output: number = 0;
 
   const { config } = usePrepareContractWrite({
     addressOrName: contractAddress,
@@ -83,12 +84,17 @@ const useWriteContract = (
     },
   });
 
-  console.log("txResponse", txResponse);
+  // console.log(typeof txResponse, txResponse);
+
+  if (txResponse) {
+    output = convertBigNumber(txResponse);
+  }
+  console.log(typeof output, output);
 
   /**
    * txResponse?.value is output
    */
-  return { write, txData, status, txResponse };
+  return { write, txData, status, txResponse, output };
 };
 
 export default useWriteContract;

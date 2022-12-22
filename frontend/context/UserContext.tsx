@@ -4,7 +4,21 @@ interface UserProviderProps {
   children: React.ReactNode;
 }
 
-const UserContext = createContext({});
+export const UserContext = createContext<{
+  minimumStake: number;
+  setMinimumStake: Dispatch<any>;
+  riteBalance: number;
+  raidBalance: number;
+  stakeDeadline: number;
+  allowance: number;
+}>({
+  minimumStake: 0,
+  setMinimumStake: null,
+  riteBalance: 0,
+  raidBalance: 0,
+  stakeDeadline: 0,
+  allowance: 0,
+});
 // const UserContext = createContext<{
 //   minimumStake: number;
 //   setStakeDeadline: Dispatch<any>;
@@ -54,53 +68,43 @@ const UserContext = createContext({});
 // });
 
 const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  // const [minimumStake, setMinimumStake] = useState<number>(0);
-  // const [riteBalance, setRiteBalance] = useState<number>(0);
-  // const [raidBalance, setRaidBalance] = useState<number>(0);
-  // const [stakeDeadline, setStakeDeadline] = useState<number>(0);
-  // const [allowance, setAllowance] = useState<number>(0);
-  // const [isApproveTxPending, setIsApproveTxPending] = useState<boolean>(false);
-  // const [isStakeTxPending, setIsStakeTxPending] = useState<boolean>(false);
-  // const [isChecked, setIsChecked] = useState<boolean>(false);
-  // const [displaySponsorCohort, setDisplaySponsorCohort] =
-  //   useState<boolean>(false);
-  // const [cohortAddress, setCohortAddress] = useState<string>("");
-  // const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [minimumStake, setMinimumStake] = useState<number>(0);
+  const [riteBalance, setRiteBalance] = useState<number>(0);
+  const [raidBalance, setRaidBalance] = useState<number>(0);
+  const [stakeDeadline, setStakeDeadline] = useState<number>(0);
+  const [allowance, setAllowance] = useState<number>(0);
+  const [isApproveTxPending, setIsApproveTxPending] = useState<boolean>(false);
+  const [isStakeTxPending, setIsStakeTxPending] = useState<boolean>(false);
+  const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [displaySponsorCohort, setDisplaySponsorCohort] =
+    useState<boolean>(false);
+  const [cohortAddress, setCohortAddress] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // const handleIsChecked = (): void => {
-  //   setIsChecked(!isChecked);
-  // };
-
-  // const handleCohortAddress = (e: any): void => {
-  //   setCohortAddress(e.target.value);
-  // };
-
-  const value = {
-    // minimumStake,
-    // setMinimumStake,
-    // riteBalance,
-    // setRiteBalance,
-    // raidBalance,
-    // setRaidBalance,
-    // stakeDeadline,
-    // setStakeDeadline,
-    // allowance,
-    // setAllowance,
-    // isApproveTxPending,
-    // setIsApproveTxPending,
-    // isStakeTxPending,
-    // setIsStakeTxPending,
-    // handleIsChecked,
-    // handleCohortAddress,
-    // displaySponsorCohort,
-    // setDisplaySponsorCohort,
-    // cohortAddress,
-    // setCohortAddress,
-    // isLoading,
-    // setIsLoading,
+  const handleIsChecked = (): void => {
+    setIsChecked(!isChecked);
   };
 
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+  const handleCohortAddress = (e: any): void => {
+    setCohortAddress(e.target.value);
+  };
+
+  return (
+    <UserContext.Provider
+      value={
+        {
+          // minimumStake,
+          // setMinimumStake,
+          // riteBalance,
+          // raidBalance,
+          // stakeDeadline,
+          // allowance,
+        }
+      }
+    >
+      {children}
+    </UserContext.Provider>
+  );
 };
 
-export { UserContext, UserProvider };
+export { UserProvider };

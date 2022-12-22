@@ -1,4 +1,5 @@
 import { BigNumber, utils } from "ethers";
+import { TxHash } from "./types";
 
 export const canStake = (
   allowance: BigNumber,
@@ -12,10 +13,8 @@ export const canStake = (
     !utils.isAddress(cohortAddress);
 };
 
-// value: BigNumber
-// _hex: "0x00",
-// _isBigNumber: true,
-export const convertBigNumber = (bigNumber: number): number => {
-  if (typeof bigNumber !== "number") return 0;
-  return Number(bigNumber.toString());
+export const convertBigNumber = (txHash: TxHash | undefined): number => {
+  const value = txHash?.data?.value?._hex;
+  if (typeof value !== "number") return 0;
+  return Number(BigNumber.from(value));
 };
