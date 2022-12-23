@@ -39,7 +39,7 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ children }): any => {
-  const { cohortAddress, isChecked, displaySponsorCohort } =
+  const { willSponsor, cohortAddress, displaySponsorCohort } =
     useContext(UserContext);
 
   const { address, isConnected } = useAccount();
@@ -71,8 +71,6 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
     Number(minimumStake),
   ]);
 
-  console.log(approveRaid);
-
   const { riteBalanceOf } = useRiteBalanceOf([userAddress()]);
 
   // const fetchStakeDeadline = async () => {
@@ -81,17 +79,31 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
   //   setStakeDeadline(Number(_stakeDeadline));
   // };
 
-  const canStake: boolean = true;
-  // utils.formatEther(allowance) >= utils.formatEther(minimumStake) &&
-  // utils.formatEther(raidBalance) >= utils.formatEther(minimumStake) &&
-  // !utils.isAddress(cohortAddress);
+  const canStake = (): boolean => {
+    if (
+      typeof allowance === "string" &&
+      typeof minimumStake === "string" &&
+      typeof balanceOf === "string"
+    ) {
+      return (
+        utils.formatEther(allowance) >= utils.formatEther(minimumStake) &&
+        utils.formatEther(balanceOf) >= utils.formatEther(minimumStake) &&
+        !utils.isAddress(cohortAddress)
+      );
+    }
+    return false;
+  };
 
-  // pass into StakingFlow
-  const cantStakeTooltipLabel: string | null = !utils.isAddress(cohortAddress)
-    ? "Please input a valid wallet address"
-    : utils.formatEther(allowance) < utils.formatEther(minimumStake)
-    ? "Allowance is smaller than the minimum stake amount."
-    : "Your RAID balance is too low";
+  const stakeTooltipLabel = (): string | null => {
+    if (willSponsor) {
+      return !utils.isAddress(cohortAddress)
+        ? "Please input a valid wallet address"
+        : utils.formatEther(allowance) < utils.formatEther(minimumStake)
+        ? "Allowance is smaller than the minimum stake amount."
+        : "Your RAID balance is too low";
+    }
+    return null;
+  };
 
   return (
     <Flex
@@ -103,7 +115,6 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
       px="2rem"
     >
       <HeaderOne />
-
       {!isConnected && (
         <BoxHeader text="Connect your wallet and stake to our cohort!" />
       )}
@@ -114,7 +125,7 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
           raidBalance={balanceOf}
           approveRaid={approveRaid}
           canStake={canStake}
-          cantStakeTooltipLabel={cantStakeTooltipLabel}
+          stakeTooltipLabel={stakeTooltipLabel}
           joinInitiation={writeJoinInitiation}
           allowance={allowance}
         />
@@ -125,7 +136,7 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
           raidBalance={balanceOf}
           approveRaid={approveRaid}
           canStake={canStake}
-          cantStakeTooltipLabel={cantStakeTooltipLabel}
+          stakeTooltipLabel={stakeTooltipLabel}
           joinInitiation={writeJoinInitiation}
           allowance={allowance}
         />

@@ -8,8 +8,8 @@ export const UserContext = createContext<{
   isApproveTxPending: boolean;
   cohortAddress: string;
   isStakeTxPending: boolean;
-  isChecked: boolean;
-  handleIsChecked: any;
+  willSponsor: boolean;
+  handleWillSponsor: any;
   handleCohortAddress: any;
   displaySponsorCohort: boolean;
   setDisplaySponsorCohort: Dispatch<any>;
@@ -17,8 +17,8 @@ export const UserContext = createContext<{
   isApproveTxPending: false,
   cohortAddress: "",
   isStakeTxPending: false,
-  isChecked: false,
-  handleIsChecked: null,
+  willSponsor: false,
+  handleWillSponsor: null,
   handleCohortAddress: null,
   displaySponsorCohort: false,
   setDisplaySponsorCohort: null,
@@ -31,14 +31,14 @@ interface UserProviderProps {
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [isApproveTxPending, setIsApproveTxPending] = useState<boolean>(false);
   const [isStakeTxPending, setIsStakeTxPending] = useState<boolean>(false);
-  const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [willSponsor, setWillSponsor] = useState<boolean>(false);
   const [displaySponsorCohort, setDisplaySponsorCohort] =
     useState<boolean>(false);
   const [cohortAddress, setCohortAddress] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleIsChecked = (): void => {
-    setIsChecked(!isChecked);
+  const handleWillSponsor = (): void => {
+    setWillSponsor(!willSponsor);
   };
 
   const handleCohortAddress = (e: any): void => {
@@ -48,8 +48,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const value: UserValues = {
     isApproveTxPending,
     cohortAddress,
-    isChecked,
-    handleIsChecked,
+    willSponsor,
+    handleWillSponsor,
     handleCohortAddress,
     displaySponsorCohort,
     setDisplaySponsorCohort,

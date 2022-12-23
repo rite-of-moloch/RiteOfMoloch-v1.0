@@ -1,15 +1,13 @@
-import React, { ReactNode, useContext } from "react";
+import React, { useContext } from "react";
 import {
   Flex,
   Box,
-  SimpleGrid,
   Text,
   Button,
   HStack,
   Checkbox,
   Input,
   Tooltip,
-  Link,
   Stack,
 } from "@raidguild/design-system";
 import { useNetwork } from "wagmi";
@@ -21,8 +19,8 @@ interface StakingFlowProps {
   minimumStake: string;
   raidBalance: string;
   approveRaid: Function;
-  canStake: boolean;
-  cantStakeTooltipLabel: string;
+  canStake: Function;
+  stakeTooltipLabel: Function;
   // `joinInitiation` replaced `depositStake`
   joinInitiation: any;
   allowance: string;
@@ -33,7 +31,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
   raidBalance,
   approveRaid,
   canStake,
-  cantStakeTooltipLabel,
+  stakeTooltipLabel,
   joinInitiation,
   allowance,
 }) => {
@@ -41,8 +39,8 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
     isApproveTxPending,
     isStakeTxPending,
     handleCohortAddress,
-    isChecked,
-    handleIsChecked,
+    willSponsor,
+    handleWillSponsor,
     cohortAddress,
     displaySponsorCohort,
   } = useContext(UserContext);
@@ -51,6 +49,9 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
     if (chain?.id) return chain?.id;
     else return 100;
   };
+  const canUserStake: boolean = canStake();
+  const stakeToolTip: string = stakeTooltipLabel();
+  console.log(stakeToolTip);
 
   return (
     <>
@@ -84,8 +85,8 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
             defaultValue={["false"]}
             value="Sponsor an Initiate"
             options={[{ label: "Sponsor an Initiate", value: "false" }]}
-            isChecked={isChecked}
-            onChange={handleIsChecked}
+            isChecked={willSponsor}
+            onChange={handleWillSponsor}
           />
         </Stack>
 
@@ -97,9 +98,11 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
           // placeholder="Sponsored initiate's wallet address"
           // value={cohortAddress}
         /> */}
-        <SimpleGrid columns={2} spacing="1.5rem" mt="2rem" w="100%">
-          <Box>
+
+        <HStack spacing="1.5rem" mt="2rem" w="100%">
+          <Box w="50%">
             <Button
+              w="full"
               isLoading={isApproveTxPending}
               loadingText="Approving..."
               disabled={
@@ -111,23 +114,20 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
               Approve
             </Button>
           </Box>
-          <Tooltip
-            isDisabled={canStake}
-            label={cantStakeTooltipLabel}
-            shouldWrapChildren
-          >
-            <Box>
+          <Box w="50%">
+            <Tooltip isDisabled={canUserStake} label={stakeToolTip}>
               <Button
+                w="full"
                 isLoading={isStakeTxPending}
                 loadingText="Staking..."
-                disabled={!canStake}
+                disabled={!canUserStake}
                 onClick={joinInitiation}
               >
                 Stake
               </Button>
-            </Box>
-          </Tooltip>
-        </SimpleGrid>
+            </Tooltip>
+          </Box>
+        </HStack>
       </Flex>
     </>
   );

@@ -12,7 +12,7 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ children }) => {
   return (
-    <footer>
+    <footer style={{ marginBottom: "1rem", marginTop: "1rem" }}>
       <BuiltByRaidGuildComponent />
     </footer>
   );

@@ -1,15 +1,15 @@
 import React, { useState, useContext } from "react";
 import { Flex, Image, Text, Checkbox } from "@chakra-ui/react";
 import { CountdownTimer } from "./CountdownTimer";
-import { StakingFlow } from "./StakingFlow";
+import StakingFlow from "./StakingFlow";
 import { UserContext } from "context/UserContext";
 
 interface RiteStakedProps {
   minimumStake: string;
   raidBalance: string;
   approveRaid: Function;
-  canStake: boolean;
-  cantStakeTooltipLabel: string;
+  canStake: Function;
+  stakeTooltipLabel: Function;
   joinInitiation: Function;
   allowance: string;
   riteBalanceOf: string;
@@ -21,7 +21,7 @@ const RiteStaked: React.FC<RiteStakedProps> = ({
   raidBalance,
   approveRaid,
   canStake,
-  cantStakeTooltipLabel,
+  stakeTooltipLabel,
   joinInitiation,
   allowance,
   riteBalanceOf,
@@ -64,10 +64,10 @@ const RiteStaked: React.FC<RiteStakedProps> = ({
       {displaySponsorCohort && (
         <StakingFlow
           minimumStake={minimumStake}
-          raidBalance={balanceOf}
+          raidBalance={raidBalance}
           approveRaid={approveRaid}
           canStake={canStake}
-          cantStakeTooltipLabel={cantStakeTooltipLabel}
+          stakeTooltipLabel={stakeTooltipLabel}
           joinInitiation={writeJoinInitiation}
           allowance={allowance}
         />
