@@ -66,7 +66,7 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
 
   const { writeBalanceOf, outputBalanceOf } = useBalanceOf([userAddress()]);
 
-  // refactored makeAnAllowance
+  // refactored from makeAnAllowance
   const { writeAllowance, outputAllowance } = useGetAllowance([
     useContractAddress("erc20TokenAddress"),
     userAddress(),
@@ -77,6 +77,8 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
   const { writeJoinInitiation } = useJoinInitiation([userAddress()]);
 
   const { outputMinimumStake } = useMinimumStake();
+
+  console.log(outputMinimumStake);
 
   const { outputRiteBalanceOf } = useRiteBalanceOf([userAddress()]);
 
@@ -168,9 +170,9 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
     ? "Allowance is smaller than the minimum stake amount."
     : "Your RAID balance is too low";
 
-  useEffect(() => {
-    isConnected ? initialFetch() : null;
-  }, []);
+  // useEffect(() => {
+  //   isConnected ? initialFetch() : null;
+  // }, []);
 
   return (
     <Flex

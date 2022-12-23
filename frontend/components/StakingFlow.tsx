@@ -46,10 +46,12 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
     else return 100;
   };
 
+  // console.log(outputMinimumStake);
+
   return (
     <>
       <Flex w="100%" direction="column" alignItems="flex-start" p="15px">
-        <HStack mb="1rem">
+        <HStack mb="1rem" justify="space-between" align="space-between">
           <Text color="red">Required Stake</Text>
           <Text color="white">
             {utils.formatUnits(minimumStake, "ether")} {TOKEN_TICKER[chainId()]}
@@ -71,24 +73,24 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
             {utils.formatUnits(allowance, "ether")} {TOKEN_TICKER[chainId()]}
           </Text>
         </HStack>
-        <HStack alignItems="center" justifyContent="center" mt="2em">
-          {/* <Checkbox
+        {/* <HStack alignItems="center" justifyContent="center" mt="2em">
+          <Checkbox
             // defaultValue={[0]}
             defaultChecked
             isChecked={isChecked}
             onChange={handleIsChecked}
             display={checkboxDisplay}
-          /> */}
+          />
           <Text
             color="red"
             fontFamily="jetbrains"
             fontSize=".8rem"
             ml="1em"
-            // display={sponsorCohortTextDisplay}
+            display={sponsorCohortTextDisplay}
           >
             Sponsor an Initiate
           </Text>
-        </HStack>
+        </HStack> */}
         {/* <Input
           onChange={handleCohortAddress}
           placeholder="Sponsored initiate's wallet address"

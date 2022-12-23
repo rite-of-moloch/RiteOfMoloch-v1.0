@@ -1,5 +1,9 @@
 import React, { createContext, useState, Dispatch } from "react";
 
+type UserValues = {
+  [key: string]: any;
+};
+
 export const UserContext = createContext<{
   minimumStake: number;
   setMinimumStake: Dispatch<any>;
@@ -40,7 +44,7 @@ interface UserProviderProps {
   children: React.ReactNode;
 }
 
-const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
+export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [minimumStake, setMinimumStake] = useState<number>(0);
   const [riteBalance, setRiteBalance] = useState<number>(0);
   const [raidBalance, setRaidBalance] = useState<number>(0);
@@ -62,29 +66,23 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     setCohortAddress(e.target.value);
   };
 
-  return (
-    <UserContext.Provider
-      value={{
-        minimumStake,
-        setMinimumStake,
-        riteBalance,
-        setRiteBalance,
-        raidBalance,
-        stakeDeadline,
-        allowance,
-        isApproveTxPending,
-        setIsApproveTxPending,
-        cohortAddress,
-        isStakeTxPending,
-        isChecked,
-        handleIsChecked,
-        setIsStakeTxPending,
-        handleCohortAddress,
-      }}
-    >
-      {children}
-    </UserContext.Provider>
-  );
-};
+  const value: UserValues = {
+    minimumStake,
+    setMinimumStake,
+    riteBalance,
+    setRiteBalance,
+    raidBalance,
+    stakeDeadline,
+    allowance,
+    isApproveTxPending,
+    setIsApproveTxPending,
+    cohortAddress,
+    isStakeTxPending,
+    isChecked,
+    handleIsChecked,
+    setIsStakeTxPending,
+    handleCohortAddress,
+  };
 
-export { UserProvider };
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+};
