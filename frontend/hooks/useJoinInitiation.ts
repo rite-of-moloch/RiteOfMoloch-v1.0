@@ -3,7 +3,6 @@ import useWriteContract from "./useWriteContract";
 /**
  *
  * @param args user: user address
- * @outputs (none)
  */
 
 export const useJoinInitiation = (args: [string]) => {
@@ -13,5 +12,5 @@ export const useJoinInitiation = (args: [string]) => {
     args
   );
 
-  return { writeJoinInitiation };
+  return writeJoinInitiation;
 };

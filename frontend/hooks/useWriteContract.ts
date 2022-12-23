@@ -28,7 +28,7 @@ const useWriteContract = (
   const toast = useCustomToast();
   const contractAddress = useContractAddress(contractName);
   const abi = useAbi(contractName);
-  let output: number;
+  // let output: string;
 
   const { config } = usePrepareContractWrite({
     addressOrName: contractAddress,
@@ -84,13 +84,10 @@ const useWriteContract = (
     },
   });
 
-  if (txResponse?.value) output = convertBigNumber(txResponse);
-  else output = 0;
+  // if (txResponse?.value) output = convertBigNumber(txResponse?.value);
+  // else output = "";
 
-  /**
-   * txResponse?.value is output
-   */
-  return { write, txData, status, txResponse, output };
+  return { write };
 };
 
 export default useWriteContract;

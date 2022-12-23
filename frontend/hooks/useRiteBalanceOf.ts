@@ -5,10 +5,12 @@ import useReadContract from "./useReadContract";
  * @ outputs: uint256
  */
 export const useRiteBalanceOf = (args: [string]) => {
-  const { status: statusRiteBalanceOf, output: outputRiteBalanceOf } =
-    useReadContract("riteOfMolochAddress", "balanceOf", args);
+  const { output: riteBalanceOf } = useReadContract(
+    "riteOfMolochAddress",
+    "balanceOf",
+    args
+  );
   return {
-    statusRiteBalanceOf,
-    outputRiteBalanceOf,
+    riteBalanceOf,
   };
 };

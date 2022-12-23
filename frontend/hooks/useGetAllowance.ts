@@ -1,4 +1,4 @@
-import useWriteContract from "./useWriteContract";
+import useReadContract from "./useReadContract";
 /**
  *
  * @param args owner: address
@@ -6,15 +6,13 @@ import useWriteContract from "./useWriteContract";
  * @outputs uint256
  */
 export const useGetAllowance = (args: [string, string]) => {
-  const {
-    write: writeAllowance,
-    txResponse: txRespAllowance,
-    output: outputAllowance,
-  } = useWriteContract("erc20TokenAddress", "allowance", args);
+  const { output: allowance } = useReadContract(
+    "erc20TokenAddress",
+    "allowance",
+    args
+  );
 
   return {
-    writeAllowance,
-    txRespAllowance,
-    outputAllowance,
+    allowance,
   };
 };

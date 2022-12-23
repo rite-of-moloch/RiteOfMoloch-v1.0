@@ -20,7 +20,7 @@ const useReadContract = (
 
   let contractAddress = useContractAddress(contractName);
   const abi = useAbi(contractName);
-  let output: string = "";
+  let output: string;
 
   const { data } = useContractRead({
     addressOrName: contractAddress,
@@ -28,18 +28,15 @@ const useReadContract = (
     functionName,
     args,
     chainId: chain?.id,
-    onSuccess(data) {
-      output = convertBigNumber(data);
-      console.log(output);
-    },
     onError(err) {
       console.log(err);
     },
   });
 
   if (data) output = convertBigNumber(data);
+  else output = "";
 
-  return { data, output };
+  return { output };
 };
 
 export default useReadContract;

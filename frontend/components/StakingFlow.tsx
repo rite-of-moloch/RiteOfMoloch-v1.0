@@ -10,6 +10,7 @@ import {
   Input,
   Tooltip,
   Link,
+  Stack,
 } from "@raidguild/design-system";
 import { useNetwork } from "wagmi";
 import { utils } from "ethers";
@@ -17,28 +18,33 @@ import { TOKEN_TICKER } from "../utils/constants";
 import { UserContext } from "context/UserContext";
 
 interface StakingFlowProps {
+  minimumStake: string;
+  raidBalance: string;
+  approveRaid: Function;
   canStake: boolean;
   cantStakeTooltipLabel: string;
-  depositStake: any;
-  writeAllowance: any;
+  // `joinInitiation` replaced `depositStake`
+  joinInitiation: any;
+  allowance: string;
 }
 
 const StakingFlow: React.FC<StakingFlowProps> = ({
+  minimumStake,
+  raidBalance,
+  approveRaid,
   canStake,
   cantStakeTooltipLabel,
-  depositStake,
-  writeAllowance,
+  joinInitiation,
+  allowance,
 }) => {
   const {
-    allowance,
-    minimumStake,
-    raidBalance,
     isApproveTxPending,
     isStakeTxPending,
     handleCohortAddress,
     isChecked,
     handleIsChecked,
     cohortAddress,
+    displaySponsorCohort,
   } = useContext(UserContext);
   const { chain } = useNetwork();
   const chainId = (): number => {
@@ -46,15 +52,13 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
     else return 100;
   };
 
-  // console.log(outputMinimumStake);
-
   return (
     <>
       <Flex w="100%" direction="column" alignItems="flex-start" p="15px">
-        <HStack mb="1rem" justify="space-between" align="space-between">
+        <HStack mb="1rem">
           <Text color="red">Required Stake</Text>
           <Text color="white">
-            {utils.formatUnits(minimumStake, "ether")} {TOKEN_TICKER[chainId()]}
+            {utils.formatEther(minimumStake)} {TOKEN_TICKER[chainId()]}
           </Text>
         </HStack>
         <HStack>
@@ -70,31 +74,28 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
             Your {TOKEN_TICKER[chainId()]} allowance
           </Text>
           <Text color="white" fontSize=".8rem">
-            {utils.formatUnits(allowance, "ether")} {TOKEN_TICKER[chainId()]}
+            {utils.formatEther(allowance)} {TOKEN_TICKER[chainId()]}
           </Text>
         </HStack>
-        {/* <HStack alignItems="center" justifyContent="center" mt="2em">
+
+        <Stack mt={8}>
           <Checkbox
-            // defaultValue={[0]}
-            defaultChecked
+            size="md"
+            defaultValue={["false"]}
+            value="Sponsor an Initiate"
+            options={[{ label: "Sponsor an Initiate", value: "false" }]}
             isChecked={isChecked}
             onChange={handleIsChecked}
-            display={checkboxDisplay}
           />
-          <Text
-            color="red"
-            fontFamily="jetbrains"
-            fontSize=".8rem"
-            ml="1em"
-            display={sponsorCohortTextDisplay}
-          >
-            Sponsor an Initiate
-          </Text>
-        </HStack> */}
+        </Stack>
+
         {/* <Input
-          onChange={handleCohortAddress}
-          placeholder="Sponsored initiate's wallet address"
-          value={cohortAddress}
+          label={`sponsored initiate's wallet address`}
+          name={"wallet address"}
+          localForm={}
+          // onChange={handleCohortAddress}
+          // placeholder="Sponsored initiate's wallet address"
+          // value={cohortAddress}
         /> */}
         <SimpleGrid columns={2} spacing="1.5rem" mt="2rem" w="100%">
           <Box>
@@ -105,7 +106,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
                 utils.formatUnits(allowance, "ether") >=
                 utils.formatUnits(minimumStake, "ether")
               }
-              // onClick={writeAllowance && writeAllowance()}
+              onClick={() => approveRaid()}
             >
               Approve
             </Button>
@@ -120,7 +121,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
                 isLoading={isStakeTxPending}
                 loadingText="Staking..."
                 disabled={!canStake}
-                // onClick={depositStake}
+                onClick={joinInitiation}
               >
                 Stake
               </Button>

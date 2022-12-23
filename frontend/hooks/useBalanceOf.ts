@@ -1,5 +1,4 @@
-import useWriteContract from "./useWriteContract";
-
+import useReadContract from "./useReadContract";
 /**
  *
  * @param args account: address
@@ -7,14 +6,12 @@ import useWriteContract from "./useWriteContract";
  *
  */
 export const useBalanceOf = (args: [string]) => {
-  const {
-    write: writeBalanceOf,
-    txResponse: txRespBalanceOf,
-    output: outputBalanceOf,
-  } = useWriteContract("erc20TokenAddress", "balanceOf", args);
+  const { output: balanceOf } = useReadContract(
+    "erc20TokenAddress",
+    "balanceOf",
+    args
+  );
   return {
-    writeBalanceOf,
-    txRespBalanceOf,
-    outputBalanceOf,
+    balanceOf,
   };
 };

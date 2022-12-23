@@ -32,24 +32,15 @@ import { useMinimumStake } from "hooks/useMinimumStake";
 import { useRiteBalanceOf } from "hooks/useRiteBalanceOf";
 import { utils } from "ethers";
 import { BoxHeader } from "components/BoxHeader";
+import RiteStaked from "components/RiteStaked";
 
 interface HomeProps {
   children: React.ReactNode;
 }
 
 const Home: React.FC<HomeProps> = ({ children }): any => {
-  const {
-    setRiteBalance,
-    riteBalance,
-    allowance,
-    minimumStake,
-    raidBalance,
-    setMinimumStake,
-    cohortAddress,
-    isChecked,
-    setIsStakeTxPending,
-    setIsLoading,
-  } = useContext(UserContext);
+  const { cohortAddress, isChecked, displaySponsorCohort } =
+    useContext(UserContext);
 
   const { address, isConnected } = useAccount();
   const toast = useCustomToast();
@@ -62,63 +53,27 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
   /**
    * Smart contract function calls:
    */
-  const { writeApproveRaid } = useApproveRaid([userAddress(), 0]);
 
-  const { writeBalanceOf, outputBalanceOf } = useBalanceOf([userAddress()]);
+  const { balanceOf } = useBalanceOf([userAddress()]);
 
-  // refactored from makeAnAllowance
-  const { writeAllowance, outputAllowance } = useGetAllowance([
+  const { allowance } = useGetAllowance([
     useContractAddress("erc20TokenAddress"),
     userAddress(),
   ]);
 
-  const { outputGetDeadline } = useGetDeadline([userAddress()]);
+  const getDeadline = useGetDeadline([userAddress()]);
 
-  const { writeJoinInitiation } = useJoinInitiation([userAddress()]);
+  const writeJoinInitiation = useJoinInitiation([userAddress()]);
 
-  const { outputMinimumStake } = useMinimumStake();
+  const minimumStake = useMinimumStake();
+  const { approveRaid } = useApproveRaid([
+    useContractAddress("erc20TokenAddress"),
+    Number(minimumStake),
+  ]);
 
-  console.log(outputMinimumStake);
+  console.log(approveRaid);
 
-  const { outputRiteBalanceOf } = useRiteBalanceOf([userAddress()]);
-
-  //*************** */
-  //
-  // start fetchRiteBalance:
-  //
-  //****************
-
-  // const fetchAllowance = async () => {
-  //   const _allowance = await writeGetAllowance;
-  //   if (_allowance) {
-  //     setAllowance(_allowance);
-  //   }
-  // };
-
-  // const fetchRaidBalance = async () => {
-  //   const _raidBalance = writeGetRiteBalance;
-  //   if (_raidBalance) {
-  //     setRaidBalance(_raidBalance);
-  //   }
-  // };
-
-  // const fetchRiteBalance = async () => {
-  //   writeBalanceOf && (await writeBalanceOf());
-  //   const _riteBalance = outputBalanceOf;
-  //   if (_riteBalance > 0) {
-  //     setRiteBalance(_riteBalance);
-  //   } else {
-  //     await fetchMinimumStake();
-  //     await fetchAllowance();
-  //     await fetchRaidBalance();
-  //   }
-  // };
-
-  const initialFetch = async () => {
-    // setIsLoading(true);
-    // await fetchRiteBalance();
-    // setIsLoading(false);
-  };
+  const { riteBalanceOf } = useRiteBalanceOf([userAddress()]);
 
   // const fetchStakeDeadline = async () => {
   //   const _stakeDeadline = await getStakeDeadline;
@@ -126,53 +81,17 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
   //   setStakeDeadline(Number(_stakeDeadline));
   // };
 
-  //**************** */
-  //
-  // end fetchRiteBalance
-  //
-  //**************** */
-
-  // pass into StakingFlow
-  const depositStake = async () => {
-    //Check if cohortAddress is an actual address
-    if (cohortAddress !== "" && isChecked) {
-      if (!utils.isAddress(cohortAddress)) {
-        toast.success({
-          status: "error",
-          title: "invalid address",
-        });
-        return;
-      }
-    }
-    //Start stake process
-    setIsStakeTxPending(true);
-    try {
-      writeJoinInitiation && writeJoinInitiation();
-    } catch (err) {
-      console.log(err);
-    }
-    setIsStakeTxPending(false);
-  };
-
-  // pass into StakingFlow
-  const canStake: boolean =
-    utils.formatUnits(allowance, "ether") >=
-      utils.formatUnits(minimumStake, "ether") &&
-    utils.formatUnits(raidBalance, "ether") >=
-      utils.formatUnits(minimumStake, "ether") &&
-    !utils.isAddress(cohortAddress);
+  const canStake: boolean = true;
+  // utils.formatEther(allowance) >= utils.formatEther(minimumStake) &&
+  // utils.formatEther(raidBalance) >= utils.formatEther(minimumStake) &&
+  // !utils.isAddress(cohortAddress);
 
   // pass into StakingFlow
   const cantStakeTooltipLabel: string | null = !utils.isAddress(cohortAddress)
     ? "Please input a valid wallet address"
-    : utils.formatUnits(allowance, "ether") <
-      utils.formatUnits(minimumStake, "ether")
+    : utils.formatEther(allowance) < utils.formatEther(minimumStake)
     ? "Allowance is smaller than the minimum stake amount."
     : "Your RAID balance is too low";
-
-  // useEffect(() => {
-  //   isConnected ? initialFetch() : null;
-  // }, []);
 
   return (
     <Flex
@@ -189,12 +108,26 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
         <BoxHeader text="Connect your wallet and stake to our cohort!" />
       )}
       {isConnected && <BoxHeader text="Join our cohort!" />}
-      {isConnected && (
-        <StakingFlow
+      {isConnected && displaySponsorCohort ? (
+        <RiteStaked
+          minimumStake={minimumStake}
+          raidBalance={balanceOf}
+          approveRaid={approveRaid}
           canStake={canStake}
           cantStakeTooltipLabel={cantStakeTooltipLabel}
-          depositStake={depositStake}
-          writeAllowance={writeAllowance}
+          joinInitiation={writeJoinInitiation}
+          allowance={allowance}
+        />
+      ) : null}
+      {isConnected && (
+        <StakingFlow
+          minimumStake={minimumStake}
+          raidBalance={balanceOf}
+          approveRaid={approveRaid}
+          canStake={canStake}
+          cantStakeTooltipLabel={cantStakeTooltipLabel}
+          joinInitiation={writeJoinInitiation}
+          allowance={allowance}
         />
       )}
     </Flex>
