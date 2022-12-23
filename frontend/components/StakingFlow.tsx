@@ -18,14 +18,16 @@ import { UserContext } from "context/UserContext";
 
 interface StakingFlowProps {
   canStake: boolean;
-  canNotStakeTooltipLabel: string;
+  cantStakeTooltipLabel: string;
   depositStake: any;
+  writeAllowance: any;
 }
 
 const StakingFlow: React.FC<StakingFlowProps> = ({
   canStake,
-  canNotStakeTooltipLabel,
+  cantStakeTooltipLabel,
   depositStake,
+  writeAllowance,
 }) => {
   const {
     allowance,
@@ -33,6 +35,10 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
     raidBalance,
     isApproveTxPending,
     isStakeTxPending,
+    handleCohortAddress,
+    isChecked,
+    handleIsChecked,
+    cohortAddress,
   } = useContext(UserContext);
   const { chain } = useNetwork();
   const chainId = (): number => {
@@ -65,33 +71,28 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
             {utils.formatUnits(allowance, "ether")} {TOKEN_TICKER[chainId()]}
           </Text>
         </HStack>
-        {/* <Flex
-          flexDirection="row"
-          alignItems="center"
-          justifyContent="center"
-          mt="2em"
-        >
-          <Checkbox
+        <HStack alignItems="center" justifyContent="center" mt="2em">
+          {/* <Checkbox
+            // defaultValue={[0]}
             defaultChecked
             isChecked={isChecked}
             onChange={handleIsChecked}
             display={checkboxDisplay}
-          />
+          /> */}
           <Text
             color="red"
             fontFamily="jetbrains"
             fontSize=".8rem"
             ml="1em"
-            display={sponsorCohortTextDisplay}
+            // display={sponsorCohortTextDisplay}
           >
             Sponsor an Initiate
           </Text>
-        </Flex>
-        <Input
+        </HStack>
+        {/* <Input
           onChange={handleCohortAddress}
           placeholder="Sponsored initiate's wallet address"
           value={cohortAddress}
-
         /> */}
         <SimpleGrid columns={2} spacing="1.5rem" mt="2rem" w="100%">
           <Box>
@@ -102,14 +103,14 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
                 utils.formatUnits(allowance, "ether") >=
                 utils.formatUnits(minimumStake, "ether")
               }
-              // onClick={null}
+              // onClick={writeAllowance && writeAllowance()}
             >
               Approve
             </Button>
           </Box>
           <Tooltip
             isDisabled={canStake}
-            label={canNotStakeTooltipLabel}
+            label={cantStakeTooltipLabel}
             shouldWrapChildren
           >
             <Box>
@@ -117,7 +118,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
                 isLoading={isStakeTxPending}
                 loadingText="Staking..."
                 disabled={!canStake}
-                onClick={depositStake}
+                // onClick={depositStake}
               >
                 Stake
               </Button>
@@ -130,48 +131,3 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
 };
 
 export default StakingFlow;
-
-//------------------------------------
-/**
- * refactor the following here:
-
-const makeAnAllowance = async () => {
-    setIsApproveTxPending(true);
-    try {
-      const tx = await approveRaid(
-        context.ethersProvider,
-        CONTRACT_ADDRESSES[context.chainId].erc20TokenAddress,
-        CONTRACT_ADDRESSES[context.chainId].riteOfMolochAddress,
-        minimumStake
-      );
-      if (tx) {
-        triggerToast(tx.hash);
-        const { status } = await tx.wait();
-        if (status === 1) {
-          await fetchAllowance();
-        } else {
-          toast({
-            position: "bottom-left",
-            render: () => (
-              <Box color="white" p={3} bg="red.500">
-                Transaction failed.
-              </Box>
-            ),
-          });
-        }
-      }
-    } catch (err) {
-      toast({
-        position: "bottom-left",
-        render: () => (
-          <Box color="white" p={3} bg="red.500">
-            {err.message}
-          </Box>
-        ),
-      });
-    }
-    setIsApproveTxPending(false);
-  };
-
- */
-//------------------------------------

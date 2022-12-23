@@ -10,10 +10,13 @@ export const UserContext = createContext<{
   allowance: number;
   isApproveTxPending: boolean;
   setIsApproveTxPending: Dispatch<any>;
-  cohortAddress: string | null;
+  cohortAddress: string;
   isStakeTxPending: boolean;
   isChecked: boolean;
+  handleIsChecked: any;
   setIsStakeTxPending: Dispatch<any>;
+  handleCohortAddress: any;
+  setIsLoading: Dispatch<any>;
 }>({
   minimumStake: 0,
   setMinimumStake: null,
@@ -24,10 +27,13 @@ export const UserContext = createContext<{
   allowance: 0,
   isApproveTxPending: false,
   setIsApproveTxPending: null,
-  cohortAddress: null,
+  cohortAddress: "",
   isStakeTxPending: false,
   isChecked: false,
+  handleIsChecked: null,
   setIsStakeTxPending: null,
+  handleCohortAddress: null,
+  setIsLoading: null,
 });
 
 interface UserProviderProps {
@@ -45,7 +51,7 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [displaySponsorCohort, setDisplaySponsorCohort] =
     useState<boolean>(false);
-  const [cohortAddress, setCohortAddress] = useState<string | null>(null);
+  const [cohortAddress, setCohortAddress] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleIsChecked = (): void => {
@@ -71,7 +77,9 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         cohortAddress,
         isStakeTxPending,
         isChecked,
+        handleIsChecked,
         setIsStakeTxPending,
+        handleCohortAddress,
       }}
     >
       {children}

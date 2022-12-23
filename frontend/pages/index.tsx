@@ -16,8 +16,7 @@ import { useAccount } from "wagmi";
 import { UserContext } from "context/UserContext";
 
 import { CONTRACT_ADDRESSES, EXPLORER_URLS } from "../utils/constants";
-// import { SUPPORTED_NETWORK_IDS } from "../config";
-// import { NetworkError } from "../shared/NetworkError";
+
 // import { RiteStaked } from "../shared/RiteStaked";
 import StakingFlow from "components/StakingFlow";
 
@@ -49,6 +48,7 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
     cohortAddress,
     isChecked,
     setIsStakeTxPending,
+    setIsLoading,
   } = useContext(UserContext);
 
   const { address, isConnected } = useAccount();
@@ -66,6 +66,7 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
 
   const { writeBalanceOf, outputBalanceOf } = useBalanceOf([userAddress()]);
 
+  // refactored makeAnAllowance
   const { writeAllowance, outputAllowance } = useGetAllowance([
     useContractAddress("erc20TokenAddress"),
     userAddress(),
@@ -79,29 +80,11 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
 
   const { outputRiteBalanceOf } = useRiteBalanceOf([userAddress()]);
 
-  // const fetchRiteBalance = async () => {
-  //   writeBalanceOf && (await writeBalanceOf());
-  //   const _riteBalance = outputBalanceOf;
-  //   if (_riteBalance > 0) {
-  //     setRiteBalance(_riteBalance);
-  //   } else {
-  //     await fetchMinimumStake();
-  //     await fetchAllowance();
-  //     await fetchRaidBalance();
-  //   }
-  // };
-
-  // const initialFetch = async () => {
-  //   setIsLoading(true);
-  //   // await fetchRiteBalance();
-  //   setIsLoading(false);
-  // };
-
-  // const fetchStakeDeadline = async () => {
-  //   const _stakeDeadline = await getStakeDeadline;
-  //   setStakeDeadline(Number(_stakeDeadline) + 60 * 60 * 24 * 30 * 6); // (6 months) for rinkeby testing
-  //   setStakeDeadline(Number(_stakeDeadline));
-  // };
+  //*************** */
+  //
+  // start fetchRiteBalance:
+  //
+  //****************
 
   // const fetchAllowance = async () => {
   //   const _allowance = await writeGetAllowance;
@@ -117,13 +100,44 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
   //   }
   // };
 
+  // const fetchRiteBalance = async () => {
+  //   writeBalanceOf && (await writeBalanceOf());
+  //   const _riteBalance = outputBalanceOf;
+  //   if (_riteBalance > 0) {
+  //     setRiteBalance(_riteBalance);
+  //   } else {
+  //     await fetchMinimumStake();
+  //     await fetchAllowance();
+  //     await fetchRaidBalance();
+  //   }
+  // };
+
+  const initialFetch = async () => {
+    // setIsLoading(true);
+    // await fetchRiteBalance();
+    // setIsLoading(false);
+  };
+
+  // const fetchStakeDeadline = async () => {
+  //   const _stakeDeadline = await getStakeDeadline;
+  //   setStakeDeadline(Number(_stakeDeadline) + 60 * 60 * 24 * 30 * 6); // (6 months) for rinkeby testing
+  //   setStakeDeadline(Number(_stakeDeadline));
+  // };
+
+  //**************** */
+  //
+  // end fetchRiteBalance
+  //
+  //**************** */
+
+  // pass into StakingFlow
   const depositStake = async () => {
     //Check if cohortAddress is an actual address
-    if (cohortAddress && isChecked) {
+    if (cohortAddress !== "" && isChecked) {
       if (!utils.isAddress(cohortAddress)) {
         toast.success({
           status: "error",
-          title: `Wrong sponsor's address`,
+          title: "invalid address",
         });
         return;
       }
@@ -132,15 +146,13 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
     setIsStakeTxPending(true);
     try {
       writeJoinInitiation && writeJoinInitiation();
-    } catch (err: any) {
-      toast.success({
-        status: "error",
-        title: `${err?.message}`,
-      });
+    } catch (err) {
+      console.log(err);
     }
     setIsStakeTxPending(false);
   };
 
+  // pass into StakingFlow
   const canStake: boolean =
     utils.formatUnits(allowance, "ether") >=
       utils.formatUnits(minimumStake, "ether") &&
@@ -148,7 +160,8 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
       utils.formatUnits(minimumStake, "ether") &&
     !utils.isAddress(cohortAddress);
 
-  const canNotStakeTooltipLabel: string = !utils.isAddress(cohortAddress)
+  // pass into StakingFlow
+  const cantStakeTooltipLabel: string | null = !utils.isAddress(cohortAddress)
     ? "Please input a valid wallet address"
     : utils.formatUnits(allowance, "ether") <
       utils.formatUnits(minimumStake, "ether")
@@ -156,7 +169,7 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
     : "Your RAID balance is too low";
 
   useEffect(() => {
-    // isConnected ? initialFetch() : null;
+    isConnected ? initialFetch() : null;
   }, []);
 
   return (
@@ -171,14 +184,15 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
       <HeaderOne />
 
       {!isConnected && (
-        <BoxHeader text="Connect your wallet to stake & commit to our cohort!" />
+        <BoxHeader text="Connect your wallet and stake to our cohort!" />
       )}
       {isConnected && <BoxHeader text="Join our cohort!" />}
       {isConnected && (
         <StakingFlow
           canStake={canStake}
-          canNotStakeTooltipLabel={canNotStakeTooltipLabel}
+          cantStakeTooltipLabel={cantStakeTooltipLabel}
           depositStake={depositStake}
+          writeAllowance={writeAllowance}
         />
       )}
     </Flex>
