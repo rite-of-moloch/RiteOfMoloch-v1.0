@@ -5,7 +5,7 @@ import {
   useWaitForTransaction,
   useTransaction,
 } from "wagmi";
-import useContractAddress from "./useContractAddress";
+import { useContractAddress } from "./useContractAddress";
 import abiERC20 from "../contracts/erc20TokenAddress.json";
 import useAbi from "./useAbi";
 import { useCustomToast } from "@raidguild/design-system";

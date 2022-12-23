@@ -1,7 +1,8 @@
 import { useContractRead, useNetwork, useTransaction } from "wagmi";
 import useAbi from "./useAbi";
-import useContractAddress from "./useContractAddress";
+import { useContractAddress } from "./useContractAddress";
 import { useCustomToast } from "@raidguild/design-system";
+import { convertBigNumber } from "utils/web3";
 
 /**
  *
@@ -19,10 +20,10 @@ const useReadContract = (
   const { chain } = useNetwork();
   const toast = useCustomToast();
   let contractAddress = useContractAddress(contractName);
-
   const abi = useAbi(contractName);
+  let output: number | undefined;
 
-  const { data, isLoading } = useContractRead({
+  const { data } = useContractRead({
     addressOrName: contractAddress,
     contractInterface: abi,
     functionName,
@@ -43,7 +44,7 @@ const useReadContract = (
     },
   });
 
-  const { data: txResponse } = useTransaction({
+  const { data: txResponse, status } = useTransaction({
     hash: data?.hash,
     onSuccess(data) {
       console.log("Success", data);
@@ -61,7 +62,10 @@ const useReadContract = (
     },
   });
 
-  return { data, isLoading, txResponse };
+  if (txResponse?.value) output = convertBigNumber(txResponse);
+  else output = undefined;
+
+  return { status, output };
 };
 
 export default useReadContract;

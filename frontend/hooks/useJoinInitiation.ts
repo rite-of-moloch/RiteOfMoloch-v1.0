@@ -6,13 +6,12 @@ import useWriteContract from "./useWriteContract";
  * @outputs (none)
  */
 
-const useJoinInitiation = (args: [string]) => {
+export const useJoinInitiation = (args: [string]) => {
   const { write: writeJoinInitiation } = useWriteContract(
     "riteOfMolochAddress",
     "joinInitiation",
     args
   );
+
   return { writeJoinInitiation };
 };
-
-export default useJoinInitiation;

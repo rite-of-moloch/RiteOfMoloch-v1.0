@@ -1,8 +1,8 @@
-export const IPFS_ENDPOINT = "https://ipfs.infura.io";
+export const IPFS_ENDPOINT: string = "https://ipfs.infura.io";
 
-export const BOX_ENDPOINT = "https://ipfs.3box.io";
+export const BOX_ENDPOINT: string = "https://ipfs.3box.io";
 
-export const SIGNATURE_MESSAGE =
+export const SIGNATURE_MESSAGE: string =
   "This signature is only required for authentication.";
 
 export const CONTRACT_ADDRESSES: { [key: string]: { [key: string]: string } } =
@@ -19,17 +19,17 @@ export const CONTRACT_ADDRESSES: { [key: string]: { [key: string]: string } } =
     },
   };
 
-export const TOKEN_TICKER = {
+export const TOKEN_TICKER: { [k: number]: string } = {
   5: "mRAID",
   100: "RAID",
 };
 
-export const EXPLORER_URLS = {
-  4: "https://rinkeby.etherscan.io",
+export const EXPLORER_URLS: { [k: number]: string } = {
+  5: "https://goerli.etherscan.io",
   100: "https://blockscout.com/xdai/mainnet",
 };
 
-const secondsInADay = 60 * 60 * 24;
+const secondsInADay: number = 60 * 60 * 24;
 
 export const msInADay = secondsInADay * 1000;
 

@@ -1,38 +1,24 @@
-import { useContext } from "react";
 import { VStack, Heading, Image } from "@chakra-ui/react";
 
-export const HeaderOne = () => {
+const HeaderOne = () => {
   return (
-    <>
-      {/* {!context.signerAddress && ( */}
-      <VStack justifyContent="center" m="auto" mb="rem">
-        <Heading
-          as="h1"
-          fontFamily="uncial"
-          color="red"
-          textAlign="center"
-          mb="-2rem"
-        >
-          SLAY OR BE SLAIN...
-        </Heading>
-        <Image
-          src="assets/season-v-token.svg"
-          alt="SLAY OR BE SLAIN..."
-          boxSize="50%"
-        />
-      </VStack>
-      {/* )} */}
-      {/* {context.signerAddress ? ( */}
+    <VStack justifyContent="center" m="auto">
       <Heading
         as="h1"
         fontFamily="uncial"
         color="red"
         textAlign="center"
-        mb="2rem"
+        mb="-2rem"
       >
         SLAY OR BE SLAIN...
       </Heading>
-      {/* ) : null} */}
-    </>
+      <Image
+        src="assets/season-v-token.svg"
+        alt="SLAY OR BE SLAIN..."
+        boxSize="50%"
+      />
+    </VStack>
   );
 };
+
+export default HeaderOne;

@@ -6,16 +6,15 @@ import useWriteContract from "./useWriteContract";
  * @outputs uint256
  *
  */
-const useBalanceOf = (args: [string]) => {
+export const useBalanceOf = (args: [string]) => {
   const {
     write: writeBalanceOf,
-    txData: txDataBalanceOf,
     txResponse: txRespBalanceOf,
+    output: outputBalanceOf,
   } = useWriteContract("erc20TokenAddress", "balanceOf", args);
   return {
     writeBalanceOf,
     txRespBalanceOf,
+    outputBalanceOf,
   };
 };
-
-export default useBalanceOf;
