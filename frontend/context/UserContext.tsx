@@ -35,7 +35,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [displaySponsorCohort, setDisplaySponsorCohort] =
     useState<boolean>(false);
   const [cohortAddress, setCohortAddress] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleWillSponsor = (): void => {
     setWillSponsor(!willSponsor);

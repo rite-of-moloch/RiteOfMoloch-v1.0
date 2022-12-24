@@ -1,24 +1,27 @@
 import React, { ReactNode } from "react";
-import { Text } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 
 interface BoxHeaderProps {
   text: string;
+  color?: string;
 }
 
-export const BoxHeader: React.FC<BoxHeaderProps> = ({ text }) => {
+const BoxHeader: React.FC<BoxHeaderProps> = ({ text, color = "white" }) => {
   return (
-    <Text
+    <Box
       w="full"
       bg="purple"
-      color="black"
-      p="15px"
+      py="1rem"
+      px="1.5rem"
       fontFamily="rubik"
       fontSize={{ lg: "1.2rem", sm: "1rem" }}
       mb="2rem"
       textAlign="center"
       opacity={0.85}
     >
-      {text}
-    </Text>
+      <Text color={color}>{text}</Text>
+    </Box>
   );
 };
+
+export default BoxHeader;

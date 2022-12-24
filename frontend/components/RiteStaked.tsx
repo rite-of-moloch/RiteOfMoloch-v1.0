@@ -5,30 +5,23 @@ import StakingFlow from "./StakingFlow";
 import { UserContext } from "context/UserContext";
 
 interface RiteStakedProps {
-  minimumStake: string;
-  raidBalance: string;
-  approveRaid: Function | undefined;
-  joinInitiation: Function | undefined;
-  allowance: string;
   riteBalance: string;
   deadline: string;
 }
 
-const RiteStaked: React.FC<RiteStakedProps> = ({
-  minimumStake,
-  raidBalance,
-  approveRaid,
-  joinInitiation,
-  allowance,
-  riteBalance,
-  deadline,
-}) => {
+const RiteStaked: React.FC<RiteStakedProps> = ({ riteBalance, deadline }) => {
   const { displaySponsorCohort, setDisplaySponsorCohort } =
     useContext(UserContext);
 
   const handleSponsorCohort = () => {
     setDisplaySponsorCohort(!displaySponsorCohort);
   };
+
+  // const fetchStakeDeadline = async () => {
+  //   const _stakeDeadline = await getStakeDeadline;
+  //   setStakeDeadline(Number(_stakeDeadline) + 60 * 60 * 24 * 30 * 6); // (6 months) for rinkeby testing
+  //   setStakeDeadline(Number(_stakeDeadline));
+  // };
 
   return (
     <Flex
@@ -59,15 +52,7 @@ const RiteStaked: React.FC<RiteStakedProps> = ({
           Sponsor an Initiate
         </Text>
       </Flex>
-      {displaySponsorCohort && (
-        <StakingFlow
-          minimumStake={minimumStake}
-          raidBalance={raidBalance}
-          approveRaid={approveRaid}
-          joinInitiation={joinInitiation}
-          allowance={allowance}
-        />
-      )}
+      {displaySponsorCohort && <StakingFlow />}
     </Flex>
   );
 };

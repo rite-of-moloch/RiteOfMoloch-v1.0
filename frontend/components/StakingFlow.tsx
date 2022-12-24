@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, ReactNode } from "react";
 import {
   Flex,
   Box,
@@ -10,27 +10,23 @@ import {
   Tooltip,
   Stack,
 } from "@raidguild/design-system";
-import { useNetwork } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 import { utils } from "ethers";
 import { TOKEN_TICKER } from "../utils/constants";
 import { UserContext } from "context/UserContext";
 import { canStake, stakeTooltipLabel } from "utils/general";
+import { useMinimumStake } from "hooks/useMinimumStake";
+import { useBalanceOf } from "hooks/useBalanceOf";
+import { useApproveRaid } from "hooks/useApproveRaid";
+import { useContractAddress } from "hooks/useContractAddress";
+import { useJoinInitiation } from "hooks/useJoinInitiation";
+import { useGetAllowance } from "hooks/useGetAllowance";
 
 interface StakingFlowProps {
-  minimumStake: string;
-  raidBalance: string;
-  approveRaid: Function | undefined;
-  joinInitiation: Function | undefined;
-  allowance: string;
+  children?: ReactNode;
 }
 
-const StakingFlow: React.FC<StakingFlowProps> = ({
-  minimumStake,
-  raidBalance,
-  approveRaid,
-  joinInitiation,
-  allowance,
-}) => {
+const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
   const {
     isApproveTxPending,
     isStakeTxPending,
@@ -40,16 +36,43 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
     cohortAddress,
     displaySponsorCohort,
   } = useContext(UserContext);
+  const { address } = useAccount();
   const { chain } = useNetwork();
   const chainId = (): number => {
     if (chain?.id) return chain?.id;
     else return 100;
   };
+  function userAddress(): string {
+    if (typeof address === "string") return address;
+    else return "";
+  }
 
+  /**
+   * web3 functions:
+   */
+  const minimumStake: string = useMinimumStake();
+
+  const balanceOf: string = useBalanceOf([userAddress()]);
+
+  const approveRaid = useApproveRaid([
+    useContractAddress("erc20TokenAddress"),
+    minimumStake,
+  ]);
+
+  const writeJoinInitiation = useJoinInitiation([userAddress()]);
+
+  const allowance: string = useGetAllowance([
+    useContractAddress("erc20TokenAddress"),
+    userAddress(),
+  ]);
+
+  /**
+   * general functions:
+   */
   const canUserStake = canStake(
     allowance,
     minimumStake,
-    raidBalance,
+    balanceOf,
     cohortAddress
   );
 
@@ -74,7 +97,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
             Your {TOKEN_TICKER[chainId()]} balance
           </Text>
           <Text color="white" fontSize=".8rem">
-            {utils.formatUnits(raidBalance, "ether")} {TOKEN_TICKER[chainId()]}
+            {utils.formatUnits(balanceOf, "ether")} {TOKEN_TICKER[chainId()]}
           </Text>
         </HStack>
         <HStack>
@@ -85,7 +108,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
             {utils.formatEther(allowance)} {TOKEN_TICKER[chainId()]}
           </Text>
         </HStack>
-
         <Stack mt={8}>
           <Checkbox
             size="md"
@@ -96,16 +118,15 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
             onChange={handleWillSponsor}
           />
         </Stack>
-
         {/* <Input
           label={`sponsored initiate's wallet address`}
           name={"wallet address"}
+          type="text"
           localForm={}
-          // onChange={handleCohortAddress}
-          // placeholder="Sponsored initiate's wallet address"
-          // value={cohortAddress}
-        /> */}
-
+        ></Input> */}
+        {/* // onChange={handleCohortAddress} */}
+        {/* // placeholder="Sponsored initiate's wallet address" // value= */}
+        {cohortAddress}
         <HStack spacing="1.5rem" mt="2rem" w="100%">
           <Box w="50%">
             <Button
@@ -128,7 +149,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
                 isLoading={isStakeTxPending}
                 loadingText="Staking..."
                 disabled={!canUserStake}
-                onClick={joinInitiation && joinInitiation()}
+                onClick={() => writeJoinInitiation && writeJoinInitiation()}
               >
                 Stake
               </Button>
@@ -136,6 +157,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
           </Box>
         </HStack>
       </Flex>
+      {children}
     </>
   );
 };
