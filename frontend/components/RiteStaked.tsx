@@ -8,7 +8,6 @@ interface RiteStakedProps {
   minimumStake: string;
   raidBalance: string;
   approveRaid: Function | undefined;
-  balanceOf: string;
   joinInitiation: Function | undefined;
   allowance: string;
   riteBalance: string;
@@ -19,7 +18,6 @@ const RiteStaked: React.FC<RiteStakedProps> = ({
   minimumStake,
   raidBalance,
   approveRaid,
-  balanceOf,
   joinInitiation,
   allowance,
   riteBalance,
@@ -44,9 +42,11 @@ const RiteStaked: React.FC<RiteStakedProps> = ({
         You own a stake for {Number(riteBalance)} RITE
       </Text>
       <Text color="white" fontFamily="jetbrains" fontSize=".8rem">
-        Deadline - {new Date(deadline * 1000).toLocaleString()}
+        Deadline - {new Date(Number(deadline) * 1000).toLocaleString()}
       </Text>
-      <CountdownTimer targetDate={new Date(deadline * 1000).getTime()} />
+      <CountdownTimer
+        targetDate={new Date(Number(deadline) * 1000).getTime()}
+      />
 
       <Flex
         flexDirection="row"
@@ -64,8 +64,6 @@ const RiteStaked: React.FC<RiteStakedProps> = ({
           minimumStake={minimumStake}
           raidBalance={raidBalance}
           approveRaid={approveRaid}
-          balanceOf={balanceOf}
-          stakeTooltipLabel={stakeTooltipLabel}
           joinInitiation={joinInitiation}
           allowance={allowance}
         />

@@ -14,14 +14,12 @@ import { useNetwork } from "wagmi";
 import { utils } from "ethers";
 import { TOKEN_TICKER } from "../utils/constants";
 import { UserContext } from "context/UserContext";
-import { canStake } from "utils/web3";
-import { stakeTooltipLabel } from "utils/web3";
+import { canStake, stakeTooltipLabel } from "utils/general";
 
 interface StakingFlowProps {
   minimumStake: string;
   raidBalance: string;
   approveRaid: Function | undefined;
-  balanceOf: string;
   joinInitiation: Function | undefined;
   allowance: string;
 }
@@ -30,7 +28,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
   minimumStake,
   raidBalance,
   approveRaid,
-  balanceOf,
   joinInitiation,
   allowance,
 }) => {
@@ -52,7 +49,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
   const canUserStake = canStake(
     allowance,
     minimumStake,
-    balanceOf,
+    raidBalance,
     cohortAddress
   );
 
@@ -62,8 +59,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
     allowance,
     minimumStake
   );
-
-  console.log(canUserStake, stakingToolTip);
 
   return (
     <>
@@ -133,7 +128,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
                 isLoading={isStakeTxPending}
                 loadingText="Staking..."
                 disabled={!canUserStake}
-                onClick={joinInitiation}
+                onClick={joinInitiation && joinInitiation()}
               >
                 Stake
               </Button>

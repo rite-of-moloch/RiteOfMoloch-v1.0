@@ -1,12 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import Link from "next/link";
-import React, { useState, useEffect, useContext, ReactElement } from "react";
+
+import React, { useContext } from "react";
 // import { Flex, Button, Box, Spinner, Heading, Link as ChakraLink,useToast } from "@chakra-ui/react";
-import { Flex, Link as ChakraLink } from "@raidguild/design-system";
+import { Flex } from "@raidguild/design-system";
 import { useAccount } from "wagmi";
 import { UserContext } from "context/UserContext";
 
-// import { RiteStaked } from "../shared/RiteStaked";
 import StakingFlow from "components/StakingFlow";
 
 import HeaderOne from "../components/Header0ne";
@@ -19,7 +18,6 @@ import { useGetDeadline } from "hooks/useGetDeadline";
 import { useJoinInitiation } from "hooks/useJoinInitiation";
 import { useMinimumStake } from "hooks/useMinimumStake";
 import { useRiteBalanceOf } from "hooks/useRiteBalanceOf";
-import { utils } from "ethers";
 import { BoxHeader } from "components/BoxHeader";
 import RiteStaked from "components/RiteStaked";
 
@@ -28,8 +26,7 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ children }): any => {
-  const { willSponsor, cohortAddress, displaySponsorCohort } =
-    useContext(UserContext);
+  const { displaySponsorCohort } = useContext(UserContext);
   const { address, isConnected } = useAccount();
 
   function userAddress(): string {
@@ -40,7 +37,6 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
   /**
    * Smart contract function calls:
    */
-
   const balanceOf: string = useBalanceOf([userAddress()]);
 
   const allowance: string = useGetAllowance([
@@ -67,17 +63,6 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
   //   setStakeDeadline(Number(_stakeDeadline));
   // };
 
-  // const stakeTooltipLabel = (): string | null => {
-  //   if (willSponsor) {
-  //     return !utils.isAddress(cohortAddress)
-  //       ? "Please input a valid wallet address"
-  //       : utils.formatEther(allowance) < utils.formatEther(minimumStake)
-  //       ? "Allowance is smaller than the minimum stake amount."
-  //       : "Your RAID balance is too low";
-  //   }
-  //   return null;
-  // };
-
   return (
     <Flex
       minH="350px"
@@ -87,7 +72,6 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
       fontFamily="spaceMono"
       px="2rem"
     >
-      {/* <Button onClick={() => getDeadline && getDeadline}>Test</Button> */}
       <HeaderOne />
       {!isConnected && (
         <BoxHeader text="Connect your wallet and stake to our cohort!" />
@@ -98,7 +82,6 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
           minimumStake={minimumStake}
           raidBalance={balanceOf}
           approveRaid={approveRaid}
-          balanceOf={balanceOf}
           joinInitiation={writeJoinInitiation}
           allowance={allowance}
           riteBalance={riteBalance}
@@ -110,7 +93,6 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
           minimumStake={minimumStake}
           raidBalance={balanceOf}
           approveRaid={approveRaid}
-          balanceOf={balanceOf}
           joinInitiation={writeJoinInitiation}
           allowance={allowance}
         />

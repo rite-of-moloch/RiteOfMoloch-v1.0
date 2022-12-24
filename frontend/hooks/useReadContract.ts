@@ -1,7 +1,7 @@
 import { useContractRead, useNetwork, useTransaction } from "wagmi";
 import useAbi from "./useAbi";
 import { useContractAddress } from "./useContractAddress";
-import { convertBigNumber } from "utils/web3";
+import { convertBigNumber } from "utils/general";
 
 /**
  *

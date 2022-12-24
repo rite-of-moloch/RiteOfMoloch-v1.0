@@ -9,7 +9,6 @@ import { useContractAddress } from "./useContractAddress";
 import abiERC20 from "../contracts/erc20TokenAddress.json";
 import useAbi from "./useAbi";
 import { useCustomToast } from "@raidguild/design-system";
-import { convertBigNumber } from "utils/web3";
 
 /**
  *
@@ -83,9 +82,6 @@ const useWriteContract = (
       });
     },
   });
-
-  // if (txResponse?.value) output = convertBigNumber(txResponse?.value);
-  // else output = "";
 
   return { write };
 };
