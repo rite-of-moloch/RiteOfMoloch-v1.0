@@ -7,24 +7,22 @@ import { UserContext } from "context/UserContext";
 interface RiteStakedProps {
   minimumStake: string;
   raidBalance: string;
-  approveRaid: Function;
-  canStake: Function;
-  stakeTooltipLabel: Function;
-  joinInitiation: Function;
+  approveRaid: Function | undefined;
+  balanceOf: string;
+  joinInitiation: Function | undefined;
   allowance: string;
-  riteBalanceOf: string;
-  deadline: number;
+  riteBalance: string;
+  deadline: string;
 }
 
 const RiteStaked: React.FC<RiteStakedProps> = ({
   minimumStake,
   raidBalance,
   approveRaid,
-  canStake,
-  stakeTooltipLabel,
+  balanceOf,
   joinInitiation,
   allowance,
-  riteBalanceOf,
+  riteBalance,
   deadline,
 }) => {
   const { displaySponsorCohort, setDisplaySponsorCohort } =
@@ -43,7 +41,7 @@ const RiteStaked: React.FC<RiteStakedProps> = ({
       p="15px"
     >
       <Text color="red" fontSize={{ lg: "1.2rem", sm: "1rem" }} mb="5px">
-        You own a stake for {Number(riteBalanceOf)} RITE
+        You own a stake for {Number(riteBalance)} RITE
       </Text>
       <Text color="white" fontFamily="jetbrains" fontSize=".8rem">
         Deadline - {new Date(deadline * 1000).toLocaleString()}
@@ -66,9 +64,9 @@ const RiteStaked: React.FC<RiteStakedProps> = ({
           minimumStake={minimumStake}
           raidBalance={raidBalance}
           approveRaid={approveRaid}
-          canStake={canStake}
+          balanceOf={balanceOf}
           stakeTooltipLabel={stakeTooltipLabel}
-          joinInitiation={writeJoinInitiation}
+          joinInitiation={joinInitiation}
           allowance={allowance}
         />
       )}

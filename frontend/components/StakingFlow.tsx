@@ -14,15 +14,15 @@ import { useNetwork } from "wagmi";
 import { utils } from "ethers";
 import { TOKEN_TICKER } from "../utils/constants";
 import { UserContext } from "context/UserContext";
+import { canStake } from "utils/web3";
+import { stakeTooltipLabel } from "utils/web3";
 
 interface StakingFlowProps {
   minimumStake: string;
   raidBalance: string;
-  approveRaid: Function;
-  canStake: Function;
-  stakeTooltipLabel: Function;
-  // `joinInitiation` replaced `depositStake`
-  joinInitiation: any;
+  approveRaid: Function | undefined;
+  balanceOf: string;
+  joinInitiation: Function | undefined;
   allowance: string;
 }
 
@@ -30,8 +30,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
   minimumStake,
   raidBalance,
   approveRaid,
-  canStake,
-  stakeTooltipLabel,
+  balanceOf,
   joinInitiation,
   allowance,
 }) => {
@@ -49,9 +48,22 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
     if (chain?.id) return chain?.id;
     else return 100;
   };
-  const canUserStake: boolean = canStake();
-  const stakeToolTip: string = stakeTooltipLabel();
-  console.log(stakeToolTip);
+
+  const canUserStake = canStake(
+    allowance,
+    minimumStake,
+    balanceOf,
+    cohortAddress
+  );
+
+  const stakingToolTip: string | null = stakeTooltipLabel(
+    willSponsor,
+    cohortAddress,
+    allowance,
+    minimumStake
+  );
+
+  console.log(canUserStake, stakingToolTip);
 
   return (
     <>
@@ -109,13 +121,13 @@ const StakingFlow: React.FC<StakingFlowProps> = ({
                 utils.formatUnits(allowance, "ether") >=
                 utils.formatUnits(minimumStake, "ether")
               }
-              onClick={() => approveRaid()}
+              onClick={() => approveRaid && approveRaid()}
             >
               Approve
             </Button>
           </Box>
           <Box w="50%">
-            <Tooltip isDisabled={canUserStake} label={stakeToolTip}>
+            <Tooltip isDisabled={canUserStake} label={stakingToolTip}>
               <Button
                 w="full"
                 isLoading={isStakeTxPending}

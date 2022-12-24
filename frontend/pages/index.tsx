@@ -2,20 +2,9 @@
 import Link from "next/link";
 import React, { useState, useEffect, useContext, ReactElement } from "react";
 // import { Flex, Button, Box, Spinner, Heading, Link as ChakraLink,useToast } from "@chakra-ui/react";
-import {
-  Flex,
-  Button,
-  Box,
-  Spinner,
-  Heading,
-  Link as ChakraLink,
-  useCustomToast,
-  Text,
-} from "@raidguild/design-system";
+import { Flex, Link as ChakraLink } from "@raidguild/design-system";
 import { useAccount } from "wagmi";
 import { UserContext } from "context/UserContext";
-
-import { CONTRACT_ADDRESSES, EXPLORER_URLS } from "../utils/constants";
 
 // import { RiteStaked } from "../shared/RiteStaked";
 import StakingFlow from "components/StakingFlow";
@@ -41,9 +30,7 @@ interface HomeProps {
 const Home: React.FC<HomeProps> = ({ children }): any => {
   const { willSponsor, cohortAddress, displaySponsorCohort } =
     useContext(UserContext);
-
   const { address, isConnected } = useAccount();
-  const toast = useCustomToast();
 
   function userAddress(): string {
     if (typeof address === "string") return address;
@@ -54,24 +41,25 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
    * Smart contract function calls:
    */
 
-  const { balanceOf } = useBalanceOf([userAddress()]);
+  const balanceOf: string = useBalanceOf([userAddress()]);
 
-  const { allowance } = useGetAllowance([
+  const allowance: string = useGetAllowance([
     useContractAddress("erc20TokenAddress"),
     userAddress(),
   ]);
 
-  const getDeadline = useGetDeadline([userAddress()]);
+  const deadline: string = useGetDeadline([userAddress()]);
 
   const writeJoinInitiation = useJoinInitiation([userAddress()]);
 
-  const minimumStake = useMinimumStake();
-  const { approveRaid } = useApproveRaid([
+  const minimumStake: string = useMinimumStake();
+
+  const approveRaid = useApproveRaid([
     useContractAddress("erc20TokenAddress"),
-    Number(minimumStake),
+    minimumStake,
   ]);
 
-  const { riteBalanceOf } = useRiteBalanceOf([userAddress()]);
+  const riteBalance: string = useRiteBalanceOf([userAddress()]);
 
   // const fetchStakeDeadline = async () => {
   //   const _stakeDeadline = await getStakeDeadline;
@@ -79,31 +67,16 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
   //   setStakeDeadline(Number(_stakeDeadline));
   // };
 
-  const canStake = (): boolean => {
-    if (
-      typeof allowance === "string" &&
-      typeof minimumStake === "string" &&
-      typeof balanceOf === "string"
-    ) {
-      return (
-        utils.formatEther(allowance) >= utils.formatEther(minimumStake) &&
-        utils.formatEther(balanceOf) >= utils.formatEther(minimumStake) &&
-        !utils.isAddress(cohortAddress)
-      );
-    }
-    return false;
-  };
-
-  const stakeTooltipLabel = (): string | null => {
-    if (willSponsor) {
-      return !utils.isAddress(cohortAddress)
-        ? "Please input a valid wallet address"
-        : utils.formatEther(allowance) < utils.formatEther(minimumStake)
-        ? "Allowance is smaller than the minimum stake amount."
-        : "Your RAID balance is too low";
-    }
-    return null;
-  };
+  // const stakeTooltipLabel = (): string | null => {
+  //   if (willSponsor) {
+  //     return !utils.isAddress(cohortAddress)
+  //       ? "Please input a valid wallet address"
+  //       : utils.formatEther(allowance) < utils.formatEther(minimumStake)
+  //       ? "Allowance is smaller than the minimum stake amount."
+  //       : "Your RAID balance is too low";
+  //   }
+  //   return null;
+  // };
 
   return (
     <Flex
@@ -114,6 +87,7 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
       fontFamily="spaceMono"
       px="2rem"
     >
+      {/* <Button onClick={() => getDeadline && getDeadline}>Test</Button> */}
       <HeaderOne />
       {!isConnected && (
         <BoxHeader text="Connect your wallet and stake to our cohort!" />
@@ -124,10 +98,11 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
           minimumStake={minimumStake}
           raidBalance={balanceOf}
           approveRaid={approveRaid}
-          canStake={canStake}
-          stakeTooltipLabel={stakeTooltipLabel}
+          balanceOf={balanceOf}
           joinInitiation={writeJoinInitiation}
           allowance={allowance}
+          riteBalance={riteBalance}
+          deadline={deadline}
         />
       ) : null}
       {isConnected && (
@@ -135,8 +110,7 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
           minimumStake={minimumStake}
           raidBalance={balanceOf}
           approveRaid={approveRaid}
-          canStake={canStake}
-          stakeTooltipLabel={stakeTooltipLabel}
+          balanceOf={balanceOf}
           joinInitiation={writeJoinInitiation}
           allowance={allowance}
         />
