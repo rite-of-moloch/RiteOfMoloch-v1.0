@@ -12,7 +12,6 @@ export const useGetAllowance = (args: [string, string]): string => {
     args
   );
 
-  console.log("allowance:", allowance);
   if (allowance) return allowance;
   else return "";
 };

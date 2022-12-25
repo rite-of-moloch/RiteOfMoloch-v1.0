@@ -6,7 +6,6 @@ import useReadContract from "./useReadContract";
  */
 const useIsMember = (args: [string]): boolean => {
   const data = useReadContract("riteOfMolochAddress", "isMember", args);
-  console.log(data);
 
   return Boolean(data);
 };

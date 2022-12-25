@@ -25,11 +25,14 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
   }
 
   const deadline: string = useGetDeadline([userAddress()]);
-
   const riteBalance: string = useRiteBalanceOf([userAddress()]);
-
   const isMember: boolean = useIsMember([userAddress()]);
-  console.log("isMember", isMember, typeof isMember);
+
+  /**
+   *
+   * iteStaked shown if user has already staked, but wants to sponsor another address. RiteStaked also renders StakingFlow
+   *
+   */
 
   return (
     <Flex
@@ -45,8 +48,6 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
         <BoxHeader text="Connect your wallet and stake to our cohort!" />
       )}
       {isConnected && <BoxHeader text="Join our cohort!" />}
-
-      {/* RiteStaked shown if user has already staked, but wants to sponsor another address. RiteStaked also renders StakingFlow */}
 
       {isConnected && isMember ? (
         <RiteStaked riteBalance={riteBalance} deadline={deadline} />

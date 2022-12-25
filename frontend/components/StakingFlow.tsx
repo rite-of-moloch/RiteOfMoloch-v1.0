@@ -176,10 +176,12 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
                   },
                 })}
               />
-              {!isValid && (
+              {!isValid && initiateAddress && (
                 <Box w="full" color="red" mt={3}>
                   <HStack justifyContent="center">
-                    <FiAlertTriangle />
+                    <span>
+                      <FiAlertTriangle />
+                    </span>
                     <Text>{errors.initiateAddress?.message}</Text>
                   </HStack>
                 </Box>
@@ -188,7 +190,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
           </VStack>
         </Stack>
 
-        {initiateAddress}
         <HStack spacing="1.5rem" mt="2rem" w="100%">
           <Box w="50%">
             <Button
