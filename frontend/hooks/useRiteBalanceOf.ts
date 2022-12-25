@@ -10,5 +10,6 @@ export const useRiteBalanceOf = (args: [string]): string => {
     "balanceOf",
     args
   );
+
   return riteBalance;
 };

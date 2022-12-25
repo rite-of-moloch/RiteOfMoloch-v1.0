@@ -4,7 +4,7 @@ import useReadContract from "./useReadContract";
  *
  * @outputs uint256
  */
-export const useMinimumStake = (): string => {
+const useMinimumStake = (): any => {
   const { output: minimumStake } = useReadContract(
     "riteOfMolochAddress",
     "minimumStake"
@@ -12,3 +12,5 @@ export const useMinimumStake = (): string => {
 
   return minimumStake;
 };
+
+export default useMinimumStake;

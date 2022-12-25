@@ -16,8 +16,8 @@ import { useAccount, useNetwork } from "wagmi";
 import { utils } from "ethers";
 import { TOKEN_TICKER } from "../utils/constants";
 import { UserContext } from "context/UserContext";
-import { canStake, stakeTooltipLabel } from "utils/general";
-import { useMinimumStake } from "hooks/useMinimumStake";
+import { stakeTooltipLabel } from "utils/general";
+import useMinimumStake from "hooks/useMinimumStake";
 import { useBalanceOf } from "hooks/useBalanceOf";
 import { useApproveRaid } from "hooks/useApproveRaid";
 import { useContractAddress } from "hooks/useContractAddress";
@@ -38,57 +38,10 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
   const {
     isApproveTxPending,
     isStakeTxPending,
-    handleCohortAddress,
     willSponsor,
     handleWillSponsor,
-    cohortAddress,
     displaySponsorCohort,
   } = useContext(UserContext);
-
-  const { address } = useAccount();
-  const { chain } = useNetwork();
-
-  const minimumStake: string = useMinimumStake();
-
-  const balanceOf: string = useBalanceOf([userAddress()]);
-
-  const approveRaid = useApproveRaid([
-    useContractAddress("erc20TokenAddress"),
-    minimumStake,
-  ]);
-
-  const writeJoinInitiation = useJoinInitiation([userAddress()]);
-
-  const allowance: string = useGetAllowance([
-    useContractAddress("erc20TokenAddress"),
-    userAddress(),
-  ]);
-
-  const chainId = (): number => {
-    if (chain?.id) return chain?.id;
-    else return 100;
-  };
-  function userAddress(): string {
-    if (typeof address === "string") return address;
-    else return "";
-  }
-
-  /**
-   * general functions:
-   */
-  const canUserStake = canStake(
-    allowance,
-    minimumStake,
-    balanceOf,
-    cohortAddress
-  );
-
-  const stakingToolTip: string | null = stakeTooltipLabel(
-    willSponsor,
-    cohortAddress,
-    allowance,
-    minimumStake
-  );
 
   // react-hook-form
   const localForm = useForm<FormValues>({
@@ -108,14 +61,60 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
   } = localForm;
 
   const values = getValues();
-  const initiate: string = values.initiateAddress;
+  let initiateAddress: string = "";
+  initiateAddress = values?.initiateAddress;
 
-  console.log("isValid", isValid);
+  // console.log("isValid", isValid);
 
-  useEffect(() => {
-    console.log("Errors", errors);
-    console.log("isValid", isValid);
-  }, [formState]);
+  const { address } = useAccount();
+  const { chain } = useNetwork();
+
+  const chainId = (): number => {
+    if (chain?.id) return chain?.id;
+    else return 100;
+  };
+
+  function userAddress(): string {
+    if (typeof address === "string") return address;
+    else return "";
+  }
+
+  const minimumStake: string = useMinimumStake();
+
+  const balanceOf: string = useBalanceOf([userAddress()]);
+
+  const approveRaid = useApproveRaid([
+    useContractAddress("erc20TokenAddress"),
+    minimumStake,
+  ]);
+
+  const writeJoinInitiation = useJoinInitiation([userAddress()]);
+
+  const allowance = useGetAllowance([
+    useContractAddress("erc20TokenAddress"),
+    userAddress(),
+  ]);
+
+  console.log(allowance);
+
+  const canStake = (): boolean => {
+    const canStakeLogic =
+      utils.formatEther(allowance) >= utils.formatEther(minimumStake) &&
+      utils.formatEther(balanceOf) >= utils.formatEther(minimumStake);
+
+    const logic = willSponsor
+      ? canStakeLogic
+      : canStakeLogic && utils.isAddress(initiateAddress);
+
+    return logic;
+  };
+
+  const stakingToolTip: string | null = stakeTooltipLabel(
+    willSponsor,
+    initiateAddress,
+    allowance,
+    minimumStake
+  );
 
   return (
     <>
@@ -189,7 +188,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
           </VStack>
         </Stack>
 
-        {cohortAddress}
+        {initiateAddress}
         <HStack spacing="1.5rem" mt="2rem" w="100%">
           <Box w="50%">
             <Button
@@ -206,12 +205,12 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
             </Button>
           </Box>
           <Box w="50%">
-            <Tooltip isDisabled={canUserStake} label={stakingToolTip}>
+            <Tooltip isDisabled={canStake()} label={stakingToolTip}>
               <Button
                 w="full"
                 isLoading={isStakeTxPending}
                 loadingText="Staking..."
-                disabled={!canUserStake}
+                disabled={!canStake()}
                 onClick={() => writeJoinInitiation && writeJoinInitiation()}
               >
                 Stake

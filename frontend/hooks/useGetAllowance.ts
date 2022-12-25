@@ -1,9 +1,9 @@
 import useReadContract from "./useReadContract";
 /**
  *
- * @param args owner: address
- * @param args spender: address
- * @outputs uint256
+ * @param args _owner: address
+ * @param args _spender: address
+ * @outputs uint256 (string)
  */
 export const useGetAllowance = (args: [string, string]): string => {
   const { output: allowance } = useReadContract(
@@ -12,5 +12,7 @@ export const useGetAllowance = (args: [string, string]): string => {
     args
   );
 
-  return allowance;
+  console.log("allowance:", allowance);
+  if (allowance) return allowance;
+  else return "";
 };

@@ -5,6 +5,7 @@ import { useAccount } from "wagmi";
 import { UserContext } from "context/UserContext";
 import { useGetDeadline } from "hooks/useGetDeadline";
 import { useRiteBalanceOf } from "hooks/useRiteBalanceOf";
+// import useIsMember from "hooks/useIsMember";
 import BoxHeader from "components/BoxHeader";
 import HeaderOne from "../components/Header0ne";
 import RiteStaked from "components/RiteStaked";
@@ -15,7 +16,7 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ children }): any => {
-  const { displaySponsorCohort } = useContext(UserContext);
+  const { willSponsor } = useContext(UserContext);
   const { address, isConnected } = useAccount();
 
   function userAddress(): string {
@@ -23,13 +24,13 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
     else return "";
   }
 
-  /**
-   * Smart contract function calls:
-   */
-
   const deadline: string = useGetDeadline([userAddress()]);
 
   const riteBalance: string = useRiteBalanceOf([userAddress()]);
+
+  let isMember = false;
+  // const dataIsMember = useIsMember([userAddress()]);
+  // console.log("isMember", dataIsMember);
 
   return (
     <Flex
@@ -46,9 +47,9 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
       )}
       {isConnected && <BoxHeader text="Join our cohort!" />}
 
-      {/* RiteStaked shown if user has already staked, but wants to sponsor another address. RiteStaked renders StakingFlow */}
+      {/* RiteStaked shown if user has already staked, but wants to sponsor another address. RiteStaked also renders StakingFlow */}
 
-      {isConnected && displaySponsorCohort ? (
+      {isConnected && isMember ? (
         <RiteStaked riteBalance={riteBalance} deadline={deadline} />
       ) : null}
       {isConnected && <StakingFlow />}

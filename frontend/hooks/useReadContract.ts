@@ -1,4 +1,4 @@
-import { useContractRead, useNetwork, useTransaction } from "wagmi";
+import { useContractRead, useNetwork } from "wagmi";
 import useAbi from "./useAbi";
 import { useContractAddress } from "./useContractAddress";
 import { convertBigNumber } from "utils/general";
@@ -33,8 +33,13 @@ const useReadContract = (
     },
   });
 
-  if (data) output = convertBigNumber(data);
-  else output = "";
+  console.log("functionName:", functionName, "data:", data);
+
+  if (data) {
+    output = convertBigNumber(data);
+  } else {
+    output = "";
+  }
 
   return { output };
 };
