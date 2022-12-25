@@ -7,18 +7,20 @@ import { UserContext } from "context/UserContext";
  * @param args user: user address
  */
 
-export const useJoinInitiation = (args: [string]) => {
+const useJoinInitiation = (args: [string]) => {
   const {
     write: writeJoinInitiation,
-    txResponse,
+    isLoading,
     isSuccess,
     isError,
   } = useWriteContract("riteOfMolochAddress", "joinInitiation", args);
 
   const { setIsStakeTxPending } = useContext(UserContext);
 
-  if (txResponse) setIsStakeTxPending(true);
+  if (isLoading) setIsStakeTxPending(true);
   if (isSuccess || isError) setIsStakeTxPending(false);
 
   return writeJoinInitiation;
 };
+
+export default useJoinInitiation;

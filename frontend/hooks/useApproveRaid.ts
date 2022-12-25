@@ -9,10 +9,9 @@ import { UserContext } from "context/UserContext";
  * @Returns bool
  */
 
-export const useApproveRaid = (args: [string, string]) => {
+const useApproveRaid = (args: [string, string]) => {
   const {
     write: approveRaid,
-    txResponse,
     isLoading,
     isSuccess,
     isError,
@@ -22,5 +21,7 @@ export const useApproveRaid = (args: [string, string]) => {
   if (isLoading) setIsApproveTxPending(true);
   if (isSuccess || isError) setIsApproveTxPending(false);
 
-  return { approveRaid };
+  return approveRaid;
 };
+
+export default useApproveRaid;

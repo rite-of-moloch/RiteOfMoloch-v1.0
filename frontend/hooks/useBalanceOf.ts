@@ -1,3 +1,4 @@
+import { useBalance } from "wagmi";
 import useReadContract from "./useReadContract";
 /**
  *
@@ -5,14 +6,15 @@ import useReadContract from "./useReadContract";
  * @outputs uint256
  *
  */
-export const useBalanceOf = (args: [string]): string => {
+const useBalanceOf = (args: [string]): string => {
   const { output: balanceOf } = useReadContract(
     "erc20TokenAddress",
     "balanceOf",
     args
   );
 
-  console.log("balanceOf:", balanceOf);
   if (!balanceOf) return "0";
   else return balanceOf;
 };
+
+export default useBalanceOf;

@@ -1,6 +1,6 @@
 import { useContractRead, useNetwork } from "wagmi";
 import useAbi from "./useAbi";
-import { useContractAddress } from "./useContractAddress";
+import useContractAddress from "./useContractAddress";
 import { convertBigNumber } from "utils/general";
 
 /**
@@ -33,7 +33,6 @@ const useReadContract = (
   });
 
   if (typeof data === "boolean") {
-    console.log("typeOf:", "data:", data, typeof data);
     return data;
   } else if (data) {
     output = convertBigNumber(data);

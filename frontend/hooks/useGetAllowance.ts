@@ -5,7 +5,7 @@ import useReadContract from "./useReadContract";
  * @param args _spender: address
  * @outputs uint256 (string)
  */
-export const useGetAllowance = (args: [string, string]): string => {
+const useGetAllowance = (args: [string, string]): string => {
   const { output: allowance } = useReadContract(
     "erc20TokenAddress",
     "allowance",
@@ -15,3 +15,5 @@ export const useGetAllowance = (args: [string, string]): string => {
   if (allowance) return allowance;
   else return "0";
 };
+
+export default useGetAllowance;

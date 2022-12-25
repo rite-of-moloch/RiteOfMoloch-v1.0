@@ -18,11 +18,11 @@ import { TOKEN_TICKER } from "../utils/constants";
 import { UserContext } from "context/UserContext";
 import { stakeTooltipLabel } from "utils/general";
 import useMinimumStake from "hooks/useMinimumStake";
-import { useBalanceOf } from "hooks/useBalanceOf";
-import { useApproveRaid } from "hooks/useApproveRaid";
-import { useContractAddress } from "hooks/useContractAddress";
-import { useJoinInitiation } from "hooks/useJoinInitiation";
-import { useGetAllowance } from "hooks/useGetAllowance";
+import useBalanceOf from "hooks/useBalanceOf";
+import useApproveRaid from "hooks/useApproveRaid";
+import useContractAddress from "hooks/useContractAddress";
+import useJoinInitiation from "hooks/useJoinInitiation";
+import useGetAllowance from "hooks/useGetAllowance";
 import { useForm, Controller, FieldValues } from "react-hook-form";
 import { FiAlertTriangle } from "react-icons/fi";
 
@@ -40,9 +40,8 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
     willSponsor,
     handleWillSponsor,
     isStakeTxPending,
+    setIsApproveTxPending,
   } = useContext(UserContext);
-
-  console.log(isApproveTxPending);
 
   // react-hook-form
   const localForm = useForm<FormValues>({
@@ -84,25 +83,27 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
 
   const balanceOf: string = useBalanceOf([userAddress()]);
 
-  const { approveRaid } = useApproveRaid([
+  const approveRaid = useApproveRaid([
     useContractAddress("erc20TokenAddress"),
     minimumStake,
   ]);
-
-  const writeJoinInitiation = useJoinInitiation([userAddress()]);
-
-  console.log(writeJoinInitiation, userAddress());
 
   const allowance = useGetAllowance([
     useContractAddress("erc20TokenAddress"),
     userAddress(),
   ]);
 
+  const writeJoinInitiation = useJoinInitiation([userAddress()]);
+
+  console.log("allowance", allowance);
+  console.log("writeJoinInitiation:", writeJoinInitiation);
+
   const canStake = (): boolean => {
-    const canStakeLogic =
-      utils.formatEther(allowance) >= utils.formatEther(minimumStake) &&
-      utils.formatEther(balanceOf) >= utils.formatEther(minimumStake);
-    const logic = willSponsor
+    let format = utils.formatEther;
+    let canStakeLogic =
+      format(allowance) >= format(minimumStake) &&
+      format(balanceOf) >= format(minimumStake);
+    let logic = willSponsor
       ? canStakeLogic
       : canStakeLogic && utils.isAddress(initiateAddress);
     return logic;
@@ -116,6 +117,10 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
     allowance,
     minimumStake
   );
+
+  useEffect(() => {
+    setIsApproveTxPending(false);
+  }, [chain?.id]);
 
   return (
     <>

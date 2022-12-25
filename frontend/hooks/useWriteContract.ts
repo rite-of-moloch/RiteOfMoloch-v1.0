@@ -5,7 +5,7 @@ import {
   useWaitForTransaction,
   useTransaction,
 } from "wagmi";
-import { useContractAddress } from "./useContractAddress";
+import useContractAddress from "./useContractAddress";
 import abiERC20 from "../contracts/erc20TokenAddress.json";
 import useAbi from "./useAbi";
 import { useCustomToast } from "@raidguild/design-system";
@@ -35,17 +35,12 @@ const useWriteContract = (
     functionName,
     chainId: chain?.id,
     args,
+    cacheTime: 2_000,
   });
 
   const { data, write } = useContractWrite({
     ...config,
     request: config.request,
-    // onSuccess(data) {
-    //   toast.success({
-    //     status: "loading",
-    //     title: `Pending transaction...`,
-    //   });
-    // },
     onError(err) {
       toast.error({
         status: "error",
@@ -62,10 +57,7 @@ const useWriteContract = (
   } = useWaitForTransaction({
     hash: data?.hash,
     onError(error) {
-      // console.log("Error", error);
-    },
-    onSuccess(data) {
-      // console.log("Success", data);
+      console.log("Error", error);
     },
   });
 

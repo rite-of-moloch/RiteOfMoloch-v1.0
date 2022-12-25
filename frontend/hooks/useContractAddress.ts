@@ -1,7 +1,7 @@
 import { useNetwork } from "wagmi";
 import { CONTRACT_ADDRESSES } from "utils/constants";
 
-export const useContractAddress = (contract: string): string => {
+const useContractAddress = (contract: string): string => {
   const { chain } = useNetwork();
   let contractAddress: string = "";
   if (typeof chain?.id === "number") {
@@ -9,3 +9,5 @@ export const useContractAddress = (contract: string): string => {
     return contractAddress;
   } else return "";
 };
+
+export default useContractAddress;
