@@ -8,7 +8,6 @@ import { convertBigNumber } from "utils/general";
  * @param contractName - pass in contract name
  * @param functionName - pass name of function
  * @param args - option array of args
- * @returns
  */
 
 const useReadContract = (

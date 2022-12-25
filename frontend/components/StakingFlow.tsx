@@ -35,8 +35,14 @@ type FormValues = {
 };
 
 const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
-  const { isApproveTxPending, willSponsor, handleWillSponsor } =
-    useContext(UserContext);
+  const {
+    isApproveTxPending,
+    willSponsor,
+    handleWillSponsor,
+    isStakeTxPending,
+  } = useContext(UserContext);
+
+  console.log(isApproveTxPending);
 
   // react-hook-form
   const localForm = useForm<FormValues>({
@@ -78,31 +84,31 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
 
   const balanceOf: string = useBalanceOf([userAddress()]);
 
-  const approveRaid = useApproveRaid([
+  const { approveRaid } = useApproveRaid([
     useContractAddress("erc20TokenAddress"),
     minimumStake,
   ]);
 
   const writeJoinInitiation = useJoinInitiation([userAddress()]);
 
+  console.log(writeJoinInitiation, userAddress());
+
   const allowance = useGetAllowance([
     useContractAddress("erc20TokenAddress"),
     userAddress(),
   ]);
 
-  console.log(balanceOf);
-
   const canStake = (): boolean => {
     const canStakeLogic =
       utils.formatEther(allowance) >= utils.formatEther(minimumStake) &&
       utils.formatEther(balanceOf) >= utils.formatEther(minimumStake);
-
     const logic = willSponsor
       ? canStakeLogic
       : canStakeLogic && utils.isAddress(initiateAddress);
-
     return logic;
   };
+
+  console.log("canStake?", canStake());
 
   const stakingToolTip: string | null = stakeTooltipLabel(
     willSponsor,
@@ -205,7 +211,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
             <Tooltip isDisabled={canStake()} label={stakingToolTip}>
               <Button
                 w="full"
-                // isLoading={isStakeTxPending}
+                isLoading={isStakeTxPending}
                 loadingText="Staking..."
                 disabled={!canStake()}
                 onClick={() => writeJoinInitiation && writeJoinInitiation()}

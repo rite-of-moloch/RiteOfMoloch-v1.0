@@ -54,7 +54,12 @@ const useWriteContract = (
     },
   });
 
-  const { data: txData, status } = useWaitForTransaction({
+  const {
+    data: txData,
+    isLoading,
+    isSuccess,
+    isError,
+  } = useWaitForTransaction({
     hash: data?.hash,
     onError(error) {
       // console.log("Error", error);
@@ -70,9 +75,11 @@ const useWriteContract = (
       console.log("Settled", { data, error });
     },
     onSuccess(data) {
+      console.log("success", data);
       toast.success({
         status: "success",
         title: `Transaction success! ${data?.hash}`,
+        size: "base",
       });
     },
     onError(err) {
@@ -83,7 +90,7 @@ const useWriteContract = (
     },
   });
 
-  return { write };
+  return { write, txResponse, isLoading, isSuccess, isError };
 };
 
 export default useWriteContract;
