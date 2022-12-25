@@ -33,9 +33,10 @@ const useReadContract = (
     },
   });
 
-  console.log("functionName:", functionName, "data:", data);
-
-  if (data) {
+  if (typeof data === "boolean") {
+    console.log("typeOf:", typeof data, "data:", data);
+    return data;
+  } else if (data) {
     output = convertBigNumber(data);
   } else {
     output = "";

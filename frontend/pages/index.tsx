@@ -5,7 +5,7 @@ import { useAccount } from "wagmi";
 import { UserContext } from "context/UserContext";
 import { useGetDeadline } from "hooks/useGetDeadline";
 import { useRiteBalanceOf } from "hooks/useRiteBalanceOf";
-// import useIsMember from "hooks/useIsMember";
+import useIsMember from "hooks/useIsMember";
 import BoxHeader from "components/BoxHeader";
 import HeaderOne from "../components/Header0ne";
 import RiteStaked from "components/RiteStaked";
@@ -28,9 +28,8 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
 
   const riteBalance: string = useRiteBalanceOf([userAddress()]);
 
-  let isMember = false;
-  // const dataIsMember = useIsMember([userAddress()]);
-  // console.log("isMember", dataIsMember);
+  const isMember: boolean = useIsMember([userAddress()]);
+  console.log("isMember", isMember, typeof isMember);
 
   return (
     <Flex
@@ -52,7 +51,7 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
       {isConnected && isMember ? (
         <RiteStaked riteBalance={riteBalance} deadline={deadline} />
       ) : null}
-      {isConnected && <StakingFlow />}
+      {isConnected && !isMember ? <StakingFlow /> : null}
     </Flex>
   );
 };

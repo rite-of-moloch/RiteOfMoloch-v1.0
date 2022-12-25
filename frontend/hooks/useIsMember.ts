@@ -1,18 +1,14 @@
-// import useReadContract from "./useReadContract";
-// /**
-//  *
-//  * @param args user: address
-//  * @outputs deadline: bool
-//  */
-// const useIsMember = (args: [string]) => {
-//   const { output: memberStatus, data: dataIsMember } = useReadContract(
-//     "riteOfMolochAddress",
-//     "isMember",
-//     args
-//   );
-//   console.log(dataIsMember);
+import useReadContract from "./useReadContract";
+/**
+ *
+ * @param args user: address
+ * @outputs deadline: bool
+ */
+const useIsMember = (args: [string]): boolean => {
+  const data = useReadContract("riteOfMolochAddress", "isMember", args);
+  console.log(data);
 
-//   return dataIsMember;
-// };
+  return Boolean(data);
+};
 
-// export default useIsMember;
+export default useIsMember;
