@@ -1,4 +1,4 @@
-import React, { useContext, ReactNode } from "react";
+import React, { useContext, useEffect, ReactNode } from "react";
 import {
   Flex,
   Box,
@@ -9,7 +9,9 @@ import {
   Input,
   Tooltip,
   Stack,
+  VStack,
 } from "@raidguild/design-system";
+
 import { useAccount, useNetwork } from "wagmi";
 import { utils } from "ethers";
 import { TOKEN_TICKER } from "../utils/constants";
@@ -21,10 +23,16 @@ import { useApproveRaid } from "hooks/useApproveRaid";
 import { useContractAddress } from "hooks/useContractAddress";
 import { useJoinInitiation } from "hooks/useJoinInitiation";
 import { useGetAllowance } from "hooks/useGetAllowance";
+import { useForm, Controller, FieldValues } from "react-hook-form";
+import { FiAlertTriangle } from "react-icons/fi";
 
 interface StakingFlowProps {
   children?: ReactNode;
 }
+
+type FormValues = {
+  initiateAddress: string;
+};
 
 const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
   const {
@@ -36,20 +44,10 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
     cohortAddress,
     displaySponsorCohort,
   } = useContext(UserContext);
+
   const { address } = useAccount();
   const { chain } = useNetwork();
-  const chainId = (): number => {
-    if (chain?.id) return chain?.id;
-    else return 100;
-  };
-  function userAddress(): string {
-    if (typeof address === "string") return address;
-    else return "";
-  }
 
-  /**
-   * web3 functions:
-   */
   const minimumStake: string = useMinimumStake();
 
   const balanceOf: string = useBalanceOf([userAddress()]);
@@ -65,6 +63,15 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
     useContractAddress("erc20TokenAddress"),
     userAddress(),
   ]);
+
+  const chainId = (): number => {
+    if (chain?.id) return chain?.id;
+    else return 100;
+  };
+  function userAddress(): string {
+    if (typeof address === "string") return address;
+    else return "";
+  }
 
   /**
    * general functions:
@@ -82,6 +89,33 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
     allowance,
     minimumStake
   );
+
+  // react-hook-form
+  const localForm = useForm<FormValues>({
+    defaultValues: {
+      initiateAddress: "",
+    },
+  });
+
+  const {
+    register,
+    getValues,
+    control,
+    setError,
+    clearErrors,
+    formState,
+    formState: { errors, isValid },
+  } = localForm;
+
+  const values = getValues();
+  const initiate: string = values.initiateAddress;
+
+  console.log("isValid", isValid);
+
+  useEffect(() => {
+    console.log("Errors", errors);
+    console.log("isValid", isValid);
+  }, [formState]);
 
   return (
     <>
@@ -108,24 +142,53 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
             {utils.formatEther(allowance)} {TOKEN_TICKER[chainId()]}
           </Text>
         </HStack>
-        <Stack mt={8}>
-          <Checkbox
-            size="md"
-            defaultValue={["false"]}
-            value="Sponsor an Initiate"
-            options={[{ label: "Sponsor an Initiate", value: "false" }]}
-            isChecked={willSponsor}
-            onChange={handleWillSponsor}
-          />
+        <Stack mt={8} w="full">
+          <VStack alignItems={"start"}>
+            <Checkbox
+              size="md"
+              defaultValue={["false"]}
+              value="Sponsor an Initiate"
+              options={[{ label: "Sponsor an Initiate", value: "false" }]}
+              isChecked={willSponsor}
+              onChange={handleWillSponsor}
+            />
+            <Box w="full" hidden={!willSponsor ? true : false}>
+              <Input
+                label="Enter address below:"
+                // name="initiateAddress"
+                placeholder="enter wallet address"
+                type="text"
+                localForm={localForm}
+                {...register("initiateAddress", {
+                  required: {
+                    value: willSponsor ? true : false,
+                    message: "Enter valid Ethereum address",
+                  },
+                  validate: (initiate) => utils.isAddress(initiate),
+                  onChange: () => {
+                    if (isValid) {
+                      clearErrors();
+                    } else {
+                      setError("initiateAddress", {
+                        type: "validate",
+                        message: "Address is invalid!",
+                      });
+                    }
+                  },
+                })}
+              />
+              {!isValid && (
+                <Box w="full" color="red" mt={3}>
+                  <HStack justifyContent="center">
+                    <FiAlertTriangle />
+                    <Text>{errors.initiateAddress?.message}</Text>
+                  </HStack>
+                </Box>
+              )}
+            </Box>
+          </VStack>
         </Stack>
-        {/* <Input
-          label={`sponsored initiate's wallet address`}
-          name={"wallet address"}
-          type="text"
-          localForm={}
-        ></Input> */}
-        {/* // onChange={handleCohortAddress} */}
-        {/* // placeholder="Sponsored initiate's wallet address" // value= */}
+
         {cohortAddress}
         <HStack spacing="1.5rem" mt="2rem" w="100%">
           <Box w="50%">
