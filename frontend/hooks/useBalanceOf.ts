@@ -12,5 +12,7 @@ export const useBalanceOf = (args: [string]): string => {
     args
   );
 
-  return balanceOf;
+  console.log("balanceOf:", balanceOf);
+  if (!balanceOf) return "0";
+  else return balanceOf;
 };

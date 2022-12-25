@@ -1,10 +1,14 @@
 import React from "react";
 import { useCountdown } from "../hooks/useCountdown";
-import { Box, Flex, Text, Image, Heading } from "@chakra-ui/react";
+import { Box, Flex, Text, Image, Heading } from "@raidguild/design-system";
 import { sixMonthsInSeconds } from "../utils/constants";
 
-export const CountdownTimer = ({ targetDate }) => {
-  const [days, hours, minutes, seconds, secondsLeft] = useCountdown(targetDate);
+interface CountdownTimerProps {
+  deadline: any;
+}
+
+export const CountdownTimer: React.FC<CountdownTimerProps> = ({ deadline }) => {
+  const [days, hours, minutes, seconds, secondsLeft] = useCountdown(deadline);
 
   const color = `hsl(347, ${Math.floor(
     (secondsLeft / sixMonthsInSeconds) * 100
@@ -27,11 +31,27 @@ export const CountdownTimer = ({ targetDate }) => {
 
 const ExpiredNotice = () => {
   return (
-    <Box textAlign="center" my={6} color="red.600" fontSize={30}>
+    <Box
+      textAlign="center"
+      my={6}
+      color="red.600"
+      fontSize={["lg", "xl", "2xl", "2xl"]}
+    >
       <Text>Your deeds have not been proven worthy, mortal. </Text>
       <Text>
         Your soul has been sacrificed to Moloch and your jewels slashed.
       </Text>
+    </Box>
+  );
+};
+
+const DateTimeDisplay = ({ value, type, color }) => {
+  return (
+    <Box textAlign="center" display={"flex"} gap={2}>
+      <Text color={color} fontWeight="bold">
+        {value}
+      </Text>
+      <Text color={color}>{type}</Text>
     </Box>
   );
 };
@@ -85,13 +105,8 @@ const ShowCounter = ({ days, hours, minutes, seconds, color }) => {
   );
 };
 
-const DateTimeDisplay = ({ value, type, color }) => {
-  return (
-    <Box textAlign="center" display={"flex"} gap={2}>
-      <Text color={color} fontWeight="bold">
-        {value}
-      </Text>
-      <Text color={color}>{type}</Text>
-    </Box>
-  );
-};
+// const fetchStakeDeadline = async () => {
+//   const _stakeDeadline = await getStakeDeadline;
+//   setStakeDeadline(Number(_stakeDeadline) + 60 * 60 * 24 * 30 * 6); // (6 months) for rinkeby testing
+//   setStakeDeadline(Number(_stakeDeadline));
+// };

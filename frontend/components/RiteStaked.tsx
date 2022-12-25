@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
-import { Flex, Image, Text, Checkbox } from "@chakra-ui/react";
+import React, { useContext } from "react";
+import { Flex, Image, Text, Checkbox } from "@raidguild/design-system";
 import { CountdownTimer } from "./CountdownTimer";
 import StakingFlow from "./StakingFlow";
 import { UserContext } from "context/UserContext";
@@ -10,18 +10,7 @@ interface RiteStakedProps {
 }
 
 const RiteStaked: React.FC<RiteStakedProps> = ({ riteBalance, deadline }) => {
-  const { displaySponsorCohort, setDisplaySponsorCohort } =
-    useContext(UserContext);
-
-  const handleSponsorCohort = () => {
-    setDisplaySponsorCohort(!displaySponsorCohort);
-  };
-
-  // const fetchStakeDeadline = async () => {
-  //   const _stakeDeadline = await getStakeDeadline;
-  //   setStakeDeadline(Number(_stakeDeadline) + 60 * 60 * 24 * 30 * 6); // (6 months) for rinkeby testing
-  //   setStakeDeadline(Number(_stakeDeadline));
-  // };
+  const { handleWillSponsor, willSponsor } = useContext(UserContext);
 
   return (
     <Flex
@@ -37,22 +26,21 @@ const RiteStaked: React.FC<RiteStakedProps> = ({ riteBalance, deadline }) => {
       <Text color="white" fontFamily="jetbrains" fontSize=".8rem">
         Deadline - {new Date(Number(deadline) * 1000).toLocaleString()}
       </Text>
-      <CountdownTimer
-        targetDate={new Date(Number(deadline) * 1000).getTime()}
-      />
+      <CountdownTimer deadline={new Date(Number(deadline) * 1000).getTime()} />
 
-      <Flex
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="center"
-        mt="2em"
-      >
-        <Checkbox onChange={handleSponsorCohort} />
-        <Text color="red" fontFamily="jetbrains" fontSize=".8rem" ml="1em">
-          Sponsor an Initiate
-        </Text>
+      <Flex mt="1em">
+        <Checkbox
+          size="md"
+          color="red"
+          defaultValue={["false"]}
+          value="Sponsor an Initiate"
+          options={[{ label: "Sponsor an Initiate", value: "false" }]}
+          isChecked={willSponsor}
+          onChange={handleWillSponsor}
+          hidden={willSponsor ? true : false}
+        />
       </Flex>
-      {displaySponsorCohort && <StakingFlow />}
+      {willSponsor && <StakingFlow />}
     </Flex>
   );
 };

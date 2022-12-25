@@ -34,7 +34,7 @@ const useReadContract = (
   });
 
   if (typeof data === "boolean") {
-    console.log("typeOf:", typeof data, "data:", data);
+    console.log("typeOf:", "data:", data, typeof data);
     return data;
   } else if (data) {
     output = convertBigNumber(data);

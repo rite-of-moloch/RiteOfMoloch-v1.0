@@ -35,13 +35,8 @@ type FormValues = {
 };
 
 const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
-  const {
-    isApproveTxPending,
-    isStakeTxPending,
-    willSponsor,
-    handleWillSponsor,
-    displaySponsorCohort,
-  } = useContext(UserContext);
+  const { isApproveTxPending, willSponsor, handleWillSponsor } =
+    useContext(UserContext);
 
   // react-hook-form
   const localForm = useForm<FormValues>({
@@ -95,7 +90,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
     userAddress(),
   ]);
 
-  console.log(allowance);
+  console.log(balanceOf);
 
   const canStake = (): boolean => {
     const canStakeLogic =
@@ -145,6 +140,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
           <VStack alignItems={"start"}>
             <Checkbox
               size="md"
+              color="red"
               defaultValue={["false"]}
               value="Sponsor an Initiate"
               options={[{ label: "Sponsor an Initiate", value: "false" }]}
@@ -209,7 +205,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
             <Tooltip isDisabled={canStake()} label={stakingToolTip}>
               <Button
                 w="full"
-                isLoading={isStakeTxPending}
+                // isLoading={isStakeTxPending}
                 loadingText="Staking..."
                 disabled={!canStake()}
                 onClick={() => writeJoinInitiation && writeJoinInitiation()}

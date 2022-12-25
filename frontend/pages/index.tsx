@@ -27,6 +27,7 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
   const deadline: string = useGetDeadline([userAddress()]);
   const riteBalance: string = useRiteBalanceOf([userAddress()]);
   const isMember: boolean = useIsMember([userAddress()]);
+  // let isMember = true;
 
   /**
    *

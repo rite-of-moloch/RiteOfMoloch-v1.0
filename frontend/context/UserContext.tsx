@@ -7,21 +7,19 @@ type UserValues = {
 export const UserContext = createContext<{
   isApproveTxPending: boolean;
   cohortAddress: string;
-  isStakeTxPending: boolean;
+  // isStakeTxPending: boolean;
   willSponsor: boolean;
   handleWillSponsor: any;
   handleCohortAddress: any;
   displaySponsorCohort: boolean;
-  setDisplaySponsorCohort: Dispatch<any>;
 }>({
   isApproveTxPending: false,
   cohortAddress: "",
-  isStakeTxPending: false,
+  // isStakeTxPending: false,
   willSponsor: false,
   handleWillSponsor: null,
   handleCohortAddress: null,
   displaySponsorCohort: false,
-  setDisplaySponsorCohort: null,
 });
 
 interface UserProviderProps {
@@ -30,7 +28,7 @@ interface UserProviderProps {
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [isApproveTxPending, setIsApproveTxPending] = useState<boolean>(false);
-  const [isStakeTxPending, setIsStakeTxPending] = useState<boolean>(false);
+  // const [isStakeTxPending, setIsStakeTxPending] = useState<boolean>(false);
   const [willSponsor, setWillSponsor] = useState<boolean>(false);
   const [displaySponsorCohort, setDisplaySponsorCohort] =
     useState<boolean>(false);
@@ -44,14 +42,14 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     setCohortAddress(e.target.value);
   };
 
-  const value: UserValues = {
+  const value = {
     isApproveTxPending,
     cohortAddress,
     willSponsor,
     handleWillSponsor,
     handleCohortAddress,
     displaySponsorCohort,
-    setDisplaySponsorCohort,
+    // isStakeTxPending,
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

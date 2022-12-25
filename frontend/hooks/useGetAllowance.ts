@@ -13,5 +13,5 @@ export const useGetAllowance = (args: [string, string]): string => {
   );
 
   if (allowance) return allowance;
-  else return "";
+  else return "0";
 };
