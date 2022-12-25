@@ -61,8 +61,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
   } = localForm;
 
   const values = getValues();
-  let initiateAddress: string = "";
-  initiateAddress = values?.initiateAddress;
+  const initiateAddress: string = values?.initiateAddress || "";
 
   // console.log("isValid", isValid);
 
@@ -84,19 +83,18 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
   const balanceOf: string = useBalanceOf([userAddress()]);
 
   const approveRaid = useApproveRaid([
-    useContractAddress("erc20TokenAddress"),
+    useContractAddress("riteOfMolochAddress"),
     minimumStake,
   ]);
 
   const allowance = useGetAllowance([
-    useContractAddress("erc20TokenAddress"),
     userAddress(),
+    useContractAddress("erc20TokenAddress"),
   ]);
 
-  const writeJoinInitiation = useJoinInitiation([userAddress()]);
-
-  console.log("allowance", allowance);
-  console.log("writeJoinInitiation:", writeJoinInitiation);
+  const writeJoinInitiation = useJoinInitiation(
+    !willSponsor ? [userAddress()] : [initiateAddress]
+  );
 
   const canStake = (): boolean => {
     let format = utils.formatEther;
@@ -213,7 +211,11 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
             </Button>
           </Box>
           <Box w="50%">
-            <Tooltip isDisabled={canStake()} label={stakingToolTip}>
+            <Tooltip
+              isDisabled={canStake()}
+              label={stakingToolTip}
+              placement="top-start"
+            >
               <Button
                 w="full"
                 isLoading={isStakeTxPending}

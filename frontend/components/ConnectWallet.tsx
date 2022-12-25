@@ -88,6 +88,7 @@ const ConnectWallet = () => {
 
                   <MenuButton
                     as={Button}
+                    variant="solid"
                     rightIcon={
                       <Icon as={FiChevronDown} color="brand.primary.600" />
                     }
