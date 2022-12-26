@@ -80,6 +80,8 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
 
   const minimumStake: string = useMinimumStake();
 
+  console.log("minimumStake:", minimumStake, utils.formatEther(minimumStake));
+
   const balanceOf: string = useBalanceOf([userAddress()]);
 
   const approveRaid = useApproveRaid([
@@ -101,13 +103,14 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
     let canStakeLogic =
       format(allowance) >= format(minimumStake) &&
       format(balanceOf) >= format(minimumStake);
-    let logic = willSponsor
+    let willSponsorlogic = willSponsor
       ? canStakeLogic
       : canStakeLogic && utils.isAddress(initiateAddress);
-    return logic;
+    if (willSponsor) return willSponsorlogic;
+    else return canStakeLogic;
   };
 
-  console.log("canStake?", canStake());
+  // console.log("canStake?", canStake());
 
   const stakingToolTip: string | null = stakeTooltipLabel(
     willSponsor,

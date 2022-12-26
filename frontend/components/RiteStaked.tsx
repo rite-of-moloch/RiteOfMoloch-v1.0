@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Flex, Image, Text, Checkbox } from "@raidguild/design-system";
+import { Flex, Image, Text, Checkbox, Box } from "@raidguild/design-system";
 import { CountdownTimer } from "./CountdownTimer";
 import StakingFlow from "./StakingFlow";
 import { UserContext } from "context/UserContext";
@@ -20,12 +20,14 @@ const RiteStaked: React.FC<RiteStakedProps> = ({ riteBalance, deadline }) => {
       justifyContent="space-between"
       p="15px"
     >
-      <Text color="red" fontSize={{ lg: "1.2rem", sm: "1rem" }} mb="5px">
-        You own a stake for {Number(riteBalance)} RITE
-      </Text>
-      <Text color="white" fontFamily="jetbrains" fontSize=".8rem">
-        Deadline - {new Date(Number(deadline) * 1000).toLocaleString()}
-      </Text>
+      <Box w="full" textAlign="center">
+        <Text color="red" fontSize={{ lg: "1.2rem", sm: "1rem" }} mb="5px">
+          You own a stake for {Number(riteBalance)} RITE
+        </Text>
+        <Text color="white" fontFamily="jetbrains" fontSize=".8rem">
+          Deadline - {new Date(Number(deadline) * 1000).toLocaleString()}
+        </Text>
+      </Box>
       <CountdownTimer deadline={new Date(Number(deadline) * 1000).getTime()} />
 
       <Flex mt="1em">

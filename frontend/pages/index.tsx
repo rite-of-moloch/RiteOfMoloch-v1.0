@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useContext, ReactNode } from "react";
+import React, { useContext, ReactNode, useEffect } from "react";
 import { Flex } from "@raidguild/design-system";
 import { useAccount } from "wagmi";
 import { UserContext } from "context/UserContext";
@@ -16,7 +16,7 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ children }): any => {
-  const { willSponsor } = useContext(UserContext);
+  // const { willSponsor } = useContext(UserContext);
   const { address, isConnected } = useAccount();
 
   function userAddress(): string {
@@ -27,12 +27,13 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
   const deadline: string = useGetDeadline([userAddress()]);
   const riteBalance: string = useRiteBalanceOf([userAddress()]);
   const isMember: boolean = useIsMember([userAddress()]);
-  // let isMember = true;
+
+  console.log("isMember", isMember);
 
   /**
    *
-   * iteStaked shown if user has already staked, but wants to sponsor another address. RiteStaked also renders StakingFlow
-   *
+   * RiteStaked shown if user has staked, but wants to sponsor another address.
+   * RiteStaked also renders StakingFlow
    */
 
   return (
@@ -48,12 +49,15 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
       {!isConnected && (
         <BoxHeader text="Connect your wallet and stake to our cohort!" />
       )}
-      {isConnected && <BoxHeader text="Join our cohort!" />}
+      {isConnected && (
+        <BoxHeader text="Commit Your Stake To Join Our Cohort!" />
+      )}
 
-      {isConnected && isMember ? (
+      {isConnected && isMember && (
         <RiteStaked riteBalance={riteBalance} deadline={deadline} />
-      ) : null}
-      {isConnected && !isMember ? <StakingFlow /> : null}
+      )}
+      {isConnected && !isMember && <StakingFlow />}
+      {children}
     </Flex>
   );
 };

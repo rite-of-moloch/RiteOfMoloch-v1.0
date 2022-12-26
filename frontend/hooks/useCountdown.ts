@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { getReturnValues } from "../utils/constants";
 
-export const useCountdown = (targetDate: string) => {
+const useCountdown = (targetDate: Date): number[] => {
   const countDownDate = new Date(targetDate).getTime();
 
   const [countDown, setCountDown] = useState(
@@ -19,3 +19,5 @@ export const useCountdown = (targetDate: string) => {
 
   return getReturnValues(countDown);
 };
+
+export default useCountdown;

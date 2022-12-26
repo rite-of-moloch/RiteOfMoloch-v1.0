@@ -1,10 +1,10 @@
 import React from "react";
-import { useCountdown } from "../hooks/useCountdown";
+import useCountdown from "../hooks/useCountdown";
 import { Box, Flex, Text, Image, Heading } from "@raidguild/design-system";
 import { sixMonthsInSeconds } from "../utils/constants";
 
 interface CountdownTimerProps {
-  deadline: any;
+  deadline: Date;
 }
 
 export const CountdownTimer: React.FC<CountdownTimerProps> = ({ deadline }) => {
