@@ -1,15 +1,21 @@
 import React from "react";
 import useCountdown from "../hooks/useCountdown";
-import { Box, Flex, Text, Image, Heading } from "@raidguild/design-system";
+import { Box, Flex, Text, Image } from "@raidguild/design-system";
 import { sixMonthsInSeconds } from "../utils/constants";
 
 interface CountdownTimerProps {
-  deadline: number;
+  deadline: string;
 }
 
 const hourglassImage = (
   <Image src="/assets/hourglass.png" alt="citipati" w={12} opacity={0.13} />
 );
+// const citiPatiImage = (
+//   <Image src="/assets/citipati.png" alt="citipati" w={16} opacity={0.13} />
+// );
+// const triskeleImage = (
+//   <Image src="/assets/triskele.png" alt="citipati" w={16} opacity={0.13} />
+// );
 
 const ExpiredNotice = () => {
   return (
@@ -27,10 +33,17 @@ const ExpiredNotice = () => {
   );
 };
 
-const DateTimeDisplay = ({
+interface DateTimeDisplayProps {
+  value: Number;
+  type: string;
+  isDanger: Boolean;
+  color: string;
+}
+
+const DateTimeDisplay: React.FC<DateTimeDisplayProps> = ({
   value,
   type,
-  // isDanger,
+  isDanger,
   color,
 }) => {
   return (
@@ -43,7 +56,21 @@ const DateTimeDisplay = ({
   );
 };
 
-const ShowCounter = ({ days, hours, minutes, seconds, color }) => {
+interface ShowCounterProps {
+  days: Number;
+  hours: Number;
+  minutes: Number;
+  seconds: Number;
+  color: string;
+}
+
+const ShowCounter: React.FC<ShowCounterProps> = ({
+  days,
+  hours,
+  minutes,
+  seconds,
+  color,
+}) => {
   return (
     <Flex
       fontSize="large"
@@ -58,42 +85,44 @@ const ShowCounter = ({ days, hours, minutes, seconds, color }) => {
       gap={6}
       mt={6}
     >
-      {/* <Image src="/assets/citipati.png" alt="citipati" w={16} opacity={0.13} /> */}
+      {/* {citiPatiImage} */}
       {hourglassImage}
       <Flex gap={6}>
         <DateTimeDisplay
           value={days}
           type="D"
-          // isDanger={days <= 3}
+          isDanger={days <= 3}
           color={color}
         />
         <DateTimeDisplay
           value={hours}
           type="H"
-          // isDanger={false}
+          isDanger={false}
           color={color}
         />
         <DateTimeDisplay
           value={minutes}
           type="M"
-          // isDanger={false}
+          isDanger={false}
           color={color}
         />
         <DateTimeDisplay
           value={seconds}
           type="S"
-          // isDanger={false}
+          isDanger={false}
           color={color}
         />
       </Flex>
       {hourglassImage}
-      {/* <Image src="/assets/triskele.png" alt="citipati" w={16} opacity={0.13} /> */}
+      {/* {triskeleImage} */}
     </Flex>
   );
 };
 
 const CountdownTimer: React.FC<CountdownTimerProps> = ({ deadline }) => {
-  const [days, hours, minutes, seconds, secondsLeft] = useCountdown(deadline);
+  const [days, hours, minutes, seconds, secondsLeft] = useCountdown(
+    Number(deadline)
+  );
 
   const color = `hsl(347, ${Math.floor(
     (secondsLeft / sixMonthsInSeconds) * 100
@@ -115,9 +144,3 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ deadline }) => {
 };
 
 export default CountdownTimer;
-
-// const fetchStakeDeadline = async () => {
-//   const _stakeDeadline = await getStakeDeadline;
-//   setStakeDeadline(Number(_stakeDeadline) + 60 * 60 * 24 * 30 * 6); // (6 months) for rinkeby testing
-//   setStakeDeadline(Number(_stakeDeadline));
-// };

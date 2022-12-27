@@ -30,14 +30,10 @@ export const EXPLORER_URLS: { [k: number]: string } = {
 };
 
 const secondsInADay: number = 60 * 60 * 24;
-
 export const msInADay = secondsInADay * 1000;
-
 export const sixMonthsInSeconds = secondsInADay * 30 * 6;
 
-export const sixMonthConversion = 1000 * 60 * 60 * 24 * 30 * 6;
-
-export const getReturnValues = (countDown: any) => {
+export const getReturnValues = (countDown: number): number[] => {
   const days = Math.floor(countDown / msInADay);
   const hours = Math.floor((countDown % msInADay) / (1000 * 60 * 60));
   const minutes = Math.floor((countDown % (1000 * 60 * 60)) / (1000 * 60));

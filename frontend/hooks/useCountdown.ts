@@ -1,25 +1,28 @@
 import { useEffect, useState } from "react";
 
 import { getReturnValues } from "../utils/constants";
+/**
+ *
+ * @param deadline - unix timestamp
+ * @returns [days, hours, minutes, seconds, secondsLeft]
+ */
 
-const useCountdown = (targetDate: number): number[] => {
-  const countDownDate = new Date(targetDate).getTime();
-  // console.log(targetDate);
+const useCountdown = (deadline: number): number[] => {
+  const timeLeft = deadline - new Date().getTime();
 
-  const [countDown, setCountDown] = useState(
-    countDownDate - new Date().getTime()
-  );
+  const [countDown, setCountDown] = useState(timeLeft);
+
+  // console.log(new Date(countDown));
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCountDown(countDownDate - new Date().getTime());
+      setCountDown(timeLeft);
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [countDownDate]);
+  }, [countDown]);
 
-  // console.log(getReturnValues(countDown));
-
+  console.log(getReturnValues(countDown));
   return getReturnValues(countDown);
 };
 

@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useContext, ReactNode, useEffect } from "react";
+import React, { ReactNode } from "react";
 import { Flex } from "@raidguild/design-system";
 import { useAccount } from "wagmi";
-import { UserContext } from "context/UserContext";
 import { useGetDeadline } from "hooks/useGetDeadline";
 import { useRiteBalanceOf } from "hooks/useRiteBalanceOf";
 import BoxHeader from "components/BoxHeader";
@@ -15,7 +14,6 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ children }): any => {
-  const { willSponsor } = useContext(UserContext);
   const { address, isConnected } = useAccount();
 
   function userAddress(): string {
@@ -28,11 +26,14 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
 
   const hasRite = (): boolean => {
     let rites = Number(riteBalance);
-    if (rites > 0) return true;
-    if (rites === 0 || !rites) return false;
+    if (rites > 0) {
+      return true;
+    } else if (rites === 0 || !rites) {
+      return false;
+    } else {
+      return false;
+    }
   };
-
-  console.log("riteBalance", hasRite());
 
   /**
    *
