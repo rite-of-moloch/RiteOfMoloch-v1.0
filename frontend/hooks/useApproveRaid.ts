@@ -1,6 +1,4 @@
-import { useContext } from "react";
 import useWriteContract from "./useWriteContract";
-import { UserContext } from "context/UserContext";
 
 /**
  *
@@ -12,16 +10,12 @@ import { UserContext } from "context/UserContext";
 const useApproveRaid = (args: [string, string]) => {
   const {
     write: approveRaid,
-    isLoading,
-    isSuccess,
-    isError,
+    isLoading: isLoadingApprove,
+    isSuccess: isSuccessApprove,
+    isError: isErrorApprove,
   } = useWriteContract("erc20TokenAddress", "approve", args);
-  const { setIsApproveTxPending } = useContext(UserContext);
 
-  if (isLoading) setIsApproveTxPending(true);
-  if (isSuccess || isError) setIsApproveTxPending(false);
-
-  return approveRaid;
+  return { approveRaid, isLoadingApprove, isSuccessApprove, isErrorApprove };
 };
 
 export default useApproveRaid;

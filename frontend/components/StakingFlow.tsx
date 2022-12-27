@@ -35,13 +35,7 @@ type FormValues = {
 };
 
 const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
-  const {
-    isApproveTxPending,
-    willSponsor,
-    handleWillSponsor,
-    isStakeTxPending,
-    setIsApproveTxPending,
-  } = useContext(UserContext);
+  const { willSponsor, handleWillSponsor } = useContext(UserContext);
 
   // react-hook-form
   const localForm = useForm<FormValues>({
@@ -82,19 +76,16 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
 
   const balanceOf: string = useBalanceOf([userAddress()]);
 
-  const approveRaid = useApproveRaid([
-    useContractAddress("riteOfMolochAddress"),
-    minimumStake,
-  ]);
+  const { approveRaid, isLoadingApprove, isSuccessApprove, isErrorApprove } =
+    useApproveRaid([useContractAddress("riteOfMolochAddress"), minimumStake]);
 
   const allowance = useGetAllowance([
     userAddress(),
     useContractAddress("erc20TokenAddress"),
   ]);
 
-  const writeJoinInitiation = useJoinInitiation(
-    !willSponsor ? [userAddress()] : [initiateAddress]
-  );
+  const { writeJoinInitiation, isLoadingStake, isSuccessStake, isErrorStake } =
+    useJoinInitiation(!willSponsor ? [userAddress()] : [initiateAddress]);
 
   const canUserStake: boolean = canStake(
     allowance,
@@ -117,10 +108,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
     allowance,
     minimumStake
   );
-
-  useEffect(() => {
-    setIsApproveTxPending(false);
-  }, [chain?.id]);
 
   return (
     <>
@@ -207,7 +194,11 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
               <Button
                 variant="solid"
                 w="full"
-                isLoading={isApproveTxPending}
+                isLoading={
+                  isLoadingApprove
+                    ? isLoadingApprove
+                    : isSuccessApprove || isErrorApprove
+                }
                 loadingText="Approving..."
                 disabled={
                   utils.formatUnits(allowance, "ether") <
@@ -228,7 +219,11 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
               <Button
                 w="full"
                 variant="solid"
-                isLoading={isStakeTxPending}
+                isLoading={
+                  isLoadingStake
+                    ? isLoadingStake
+                    : isSuccessStake || isErrorStake
+                }
                 loadingText="Staking..."
                 disabled={!canUserStake}
                 onClick={() => writeJoinInitiation && writeJoinInitiation()}

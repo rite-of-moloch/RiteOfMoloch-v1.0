@@ -1,6 +1,4 @@
-import { useContext } from "react";
 import useWriteContract from "./useWriteContract";
-import { UserContext } from "context/UserContext";
 
 /**
  *
@@ -10,17 +8,12 @@ import { UserContext } from "context/UserContext";
 const useJoinInitiation = (args: [string]) => {
   const {
     write: writeJoinInitiation,
-    isLoading,
-    isSuccess,
-    isError,
+    isLoading: isLoadingStake,
+    isSuccess: isSuccessStake,
+    isError: isErrorStake,
   } = useWriteContract("riteOfMolochAddress", "joinInitiation", args);
 
-  const { setIsStakeTxPending } = useContext(UserContext);
-
-  if (isLoading) setIsStakeTxPending(true);
-  if (isSuccess || isError) setIsStakeTxPending(false);
-
-  return writeJoinInitiation;
+  return { writeJoinInitiation, isLoadingStake, isSuccessStake, isErrorStake };
 };
 
 export default useJoinInitiation;
