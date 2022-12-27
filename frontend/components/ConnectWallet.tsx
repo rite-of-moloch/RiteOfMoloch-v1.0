@@ -15,16 +15,6 @@ import {
 import { FiKey, FiChevronDown, FiXCircle } from "react-icons/fi";
 import { truncateAddress } from "utils/general";
 
-// const StyledPrimaryButton = styled(Button)`
-//   min-width: 160px;
-//   height: 50px;
-//   text-transform: uppercase;
-//   color: black;
-//   border-radius: 2px;
-//   padding-left: 24px;
-//   padding-right: 24px;
-// `;
-
 const ConnectWallet = () => {
   const { isConnecting } = useAccount();
   const { disconnect } = useDisconnect();

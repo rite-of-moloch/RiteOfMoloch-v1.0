@@ -5,7 +5,6 @@ import { useAccount } from "wagmi";
 import { UserContext } from "context/UserContext";
 import { useGetDeadline } from "hooks/useGetDeadline";
 import { useRiteBalanceOf } from "hooks/useRiteBalanceOf";
-import useIsMember from "hooks/useIsMember";
 import BoxHeader from "components/BoxHeader";
 import HeaderOne from "../components/Header0ne";
 import RiteStaked from "components/RiteStaked";
@@ -16,7 +15,7 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ children }): any => {
-  // const { willSponsor } = useContext(UserContext);
+  const { willSponsor } = useContext(UserContext);
   const { address, isConnected } = useAccount();
 
   function userAddress(): string {
@@ -26,9 +25,14 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
 
   const deadline: string = useGetDeadline([userAddress()]);
   const riteBalance: string = useRiteBalanceOf([userAddress()]);
-  const isMember: boolean = useIsMember([userAddress()]);
 
-  console.log("isMember", isMember);
+  const hasRite = (): boolean => {
+    let rites = Number(riteBalance);
+    if (rites > 0) return true;
+    if (rites === 0 || !rites) return false;
+  };
+
+  console.log("riteBalance", hasRite());
 
   /**
    *
@@ -52,11 +56,11 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
       {isConnected && (
         <BoxHeader text="Commit Your Stake To Join Our Cohort!" />
       )}
-
-      {isConnected && isMember && (
+      {isConnected && !hasRite() && <StakingFlow />}
+      {isConnected && hasRite() && (
         <RiteStaked riteBalance={riteBalance} deadline={deadline} />
       )}
-      {isConnected && !isMember && <StakingFlow />}
+
       {children}
     </Flex>
   );

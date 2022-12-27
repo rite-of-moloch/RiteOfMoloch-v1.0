@@ -16,7 +16,7 @@ import { useAccount, useNetwork } from "wagmi";
 import { utils } from "ethers";
 import { TOKEN_TICKER } from "../utils/constants";
 import { UserContext } from "context/UserContext";
-import { stakeTooltipLabel } from "utils/general";
+import { approveTooltip, stakeTooltip } from "utils/general";
 import useMinimumStake from "hooks/useMinimumStake";
 import useBalanceOf from "hooks/useBalanceOf";
 import useApproveRaid from "hooks/useApproveRaid";
@@ -80,8 +80,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
 
   const minimumStake: string = useMinimumStake();
 
-  console.log("minimumStake:", minimumStake, utils.formatEther(minimumStake));
-
   const balanceOf: string = useBalanceOf([userAddress()]);
 
   const approveRaid = useApproveRaid([
@@ -110,11 +108,16 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
     else return canStakeLogic;
   };
 
-  // console.log("canStake?", canStake());
+  const approveTooltiplabel = approveTooltip(
+    allowance,
+    minimumStake,
+    balanceOf
+  );
 
-  const stakingToolTip: string | null = stakeTooltipLabel(
+  const stakeToolTipLabel: string | null = stakeTooltip(
     willSponsor,
     initiateAddress,
+    balanceOf,
     allowance,
     minimumStake
   );
@@ -200,27 +203,35 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
 
         <HStack spacing="1.5rem" mt="2rem" w="100%">
           <Box w="50%">
-            <Button
-              w="full"
-              isLoading={isApproveTxPending}
-              loadingText="Approving..."
-              disabled={
-                utils.formatUnits(allowance, "ether") >=
-                utils.formatUnits(minimumStake, "ether")
-              }
-              onClick={() => approveRaid && approveRaid()}
+            <Tooltip
+              isDisabled={canStake()}
+              label={approveTooltiplabel}
+              placement="top-start"
             >
-              Approve
-            </Button>
+              <Button
+                variant="solid"
+                w="full"
+                isLoading={isApproveTxPending}
+                loadingText="Approving..."
+                disabled={
+                  utils.formatUnits(allowance, "ether") <
+                  utils.formatUnits(minimumStake, "ether")
+                }
+                onClick={() => approveRaid && approveRaid()}
+              >
+                Approve
+              </Button>
+            </Tooltip>
           </Box>
           <Box w="50%">
             <Tooltip
               isDisabled={canStake()}
-              label={stakingToolTip}
+              label={stakeToolTipLabel}
               placement="top-start"
             >
               <Button
                 w="full"
+                variant="solid"
                 isLoading={isStakeTxPending}
                 loadingText="Staking..."
                 disabled={!canStake()}

@@ -8,18 +8,45 @@ export const convertBigNumber = (data: TxHash): string => {
   return data.toString();
 };
 
-export const stakeTooltipLabel = (
+export const stakeTooltip = (
   willSponsor: boolean,
   initiateAddress: string,
+  balanceOf: string,
   allowance: string,
   minimumStake: string
 ): string | null => {
+  let label: string = "";
   if (willSponsor) {
-    return !utils.isAddress(initiateAddress)
-      ? "Please input a valid wallet address"
-      : utils.formatEther(allowance) < utils.formatEther(minimumStake)
-      ? "Allowance is smaller than the minimum stake amount."
-      : "Your RAID balance is too low";
-  }
-  return null;
+    if (!utils.isAddress(initiateAddress)) {
+      label = "Please input a valid wallet address";
+    } else if (utils.formatEther(allowance) < utils.formatEther(minimumStake)) {
+      label =
+        "Allowance is smaller than the minimum stake amount. Please approve allowance.";
+    } else if (utils.formatEther(balanceOf) < utils.formatEther(minimumStake)) {
+      label = "Your RAID balance is too low";
+    }
+  } else if (!willSponsor) {
+    if (utils.formatEther(balanceOf) < utils.formatEther(minimumStake)) {
+      label = "Your RAID balance is too low";
+    } else if (utils.formatEther(allowance) < utils.formatEther(minimumStake)) {
+      label =
+        "Allowance is smaller than the minimum stake amount. Please approve allowance.";
+    }
+  } else return null;
+  return label;
+};
+
+export const approveTooltip = (
+  allowance: string,
+  minimumStake: string,
+  balanceOf: string
+): string | null => {
+  let label: string = "";
+  if (utils.formatEther(balanceOf) < utils.formatEther(minimumStake)) {
+    label = "Your RAID balance is too low";
+  } else if (utils.formatEther(allowance) < utils.formatEther(minimumStake)) {
+    label =
+      "Allowance is smaller than the minimum stake amount. Please approve allowance.";
+  } else return null;
+  return label;
 };

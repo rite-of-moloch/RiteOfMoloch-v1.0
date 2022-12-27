@@ -35,6 +35,8 @@ export const msInADay = secondsInADay * 1000;
 
 export const sixMonthsInSeconds = secondsInADay * 30 * 6;
 
+export const sixMonthConversion = 1000 * 60 * 60 * 24 * 30 * 6;
+
 export const getReturnValues = (countDown: any) => {
   const days = Math.floor(countDown / msInADay);
   const hours = Math.floor((countDown % msInADay) / (1000 * 60 * 60));

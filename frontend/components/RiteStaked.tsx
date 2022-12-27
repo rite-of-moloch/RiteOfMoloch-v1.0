@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
 import { Flex, Image, Text, Checkbox, Box } from "@raidguild/design-system";
-import { CountdownTimer } from "./CountdownTimer";
+import CountdownTimer from "./CountdownTimer";
 import StakingFlow from "./StakingFlow";
 import { UserContext } from "context/UserContext";
+import { sixMonthConversion } from "utils/constants";
 
 interface RiteStakedProps {
   riteBalance: string;
@@ -11,7 +12,7 @@ interface RiteStakedProps {
 
 const RiteStaked: React.FC<RiteStakedProps> = ({ riteBalance, deadline }) => {
   const { handleWillSponsor, willSponsor } = useContext(UserContext);
-
+  console.log(deadline);
   return (
     <Flex
       w="100%"
@@ -28,7 +29,10 @@ const RiteStaked: React.FC<RiteStakedProps> = ({ riteBalance, deadline }) => {
           Deadline - {new Date(Number(deadline) * 1000).toLocaleString()}
         </Text>
       </Box>
-      <CountdownTimer deadline={new Date(Number(deadline) * 1000).getTime()} />
+      <CountdownTimer
+        // deadline={new Date(Number(deadline) * sixMonthConversion)}
+        deadline={Number(deadline) + sixMonthConversion}
+      />
 
       <Flex mt="1em">
         <Checkbox
