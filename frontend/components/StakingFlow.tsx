@@ -16,7 +16,7 @@ import { useAccount, useNetwork } from "wagmi";
 import { utils } from "ethers";
 import { TOKEN_TICKER } from "../utils/constants";
 import { UserContext } from "context/UserContext";
-import { approveTooltip, stakeTooltip } from "utils/general";
+import { approveTooltip, canStake, stakeTooltip } from "utils/general";
 import useMinimumStake from "hooks/useMinimumStake";
 import useBalanceOf from "hooks/useBalanceOf";
 import useApproveRaid from "hooks/useApproveRaid";
@@ -96,17 +96,13 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
     !willSponsor ? [userAddress()] : [initiateAddress]
   );
 
-  const canStake = (): boolean => {
-    let format = utils.formatEther;
-    let canStakeLogic =
-      format(allowance) >= format(minimumStake) &&
-      format(balanceOf) >= format(minimumStake);
-    let willSponsorlogic = willSponsor
-      ? canStakeLogic
-      : canStakeLogic && utils.isAddress(initiateAddress);
-    if (willSponsor) return willSponsorlogic;
-    else return canStakeLogic;
-  };
+  const canUserStake: boolean = canStake(
+    allowance,
+    minimumStake,
+    balanceOf,
+    initiateAddress,
+    willSponsor
+  );
 
   const approveTooltiplabel = approveTooltip(
     allowance,
@@ -204,7 +200,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
         <HStack spacing="1.5rem" mt="2rem" w="100%">
           <Box w="50%">
             <Tooltip
-              isDisabled={canStake()}
+              isDisabled={canUserStake}
               label={approveTooltiplabel}
               placement="top-start"
             >
@@ -225,7 +221,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
           </Box>
           <Box w="50%">
             <Tooltip
-              isDisabled={canStake()}
+              isDisabled={canUserStake}
               label={stakeToolTipLabel}
               placement="top-start"
             >
@@ -234,7 +230,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
                 variant="solid"
                 isLoading={isStakeTxPending}
                 loadingText="Staking..."
-                disabled={!canStake()}
+                disabled={!canUserStake}
                 onClick={() => writeJoinInitiation && writeJoinInitiation()}
               >
                 Stake

@@ -8,6 +8,24 @@ export const convertBigNumber = (data: TxHash): string => {
   return data.toString();
 };
 
+export const canStake = (
+  allowance: string,
+  minimumStake: string,
+  balanceOf: string,
+  initiateAddress: string,
+  willSponsor: boolean
+): boolean => {
+  let format = utils.formatEther;
+  let canStakeLogic =
+    format(allowance) >= format(minimumStake) &&
+    format(balanceOf) >= format(minimumStake);
+  let willSponsorlogic = willSponsor
+    ? canStakeLogic
+    : canStakeLogic && utils.isAddress(initiateAddress);
+  if (willSponsor) return willSponsorlogic;
+  else return canStakeLogic;
+};
+
 export const stakeTooltip = (
   willSponsor: boolean,
   initiateAddress: string,

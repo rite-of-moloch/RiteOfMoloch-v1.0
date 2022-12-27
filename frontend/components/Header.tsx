@@ -4,7 +4,7 @@ import Link from "next/link";
 import ConnectBtn from "./ConnectWallet";
 
 interface HeaderProps {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 export const Header: React.FC<HeaderProps> = ({ children }) => {
@@ -31,7 +31,6 @@ export const Header: React.FC<HeaderProps> = ({ children }) => {
         </Flex>
       </Link>
       <ConnectBtn />
-      {children}
     </Flex>
   );
 };

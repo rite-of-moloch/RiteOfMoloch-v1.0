@@ -22,7 +22,7 @@ const useCountdown = (deadline: number): number[] => {
     return () => clearInterval(interval);
   }, [countDown]);
 
-  console.log(getReturnValues(countDown));
+  // console.log(getReturnValues(countDown));
   return getReturnValues(countDown);
 };
 
