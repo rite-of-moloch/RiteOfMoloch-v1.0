@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, ReactNode } from "react";
+import React, { useContext, ReactNode } from "react";
+import { useForm } from "react-hook-form";
 import {
   Flex,
   Box,
@@ -10,6 +11,7 @@ import {
   Tooltip,
   Stack,
   VStack,
+  FormControl,
 } from "@raidguild/design-system";
 
 import { useAccount, useNetwork } from "wagmi";
@@ -23,41 +25,54 @@ import useApproveRaid from "hooks/useApproveRaid";
 import useContractAddress from "hooks/useContractAddress";
 import useJoinInitiation from "hooks/useJoinInitiation";
 import useGetAllowance from "hooks/useGetAllowance";
-import { useForm, Controller, FieldValues } from "react-hook-form";
+
 import { FiAlertTriangle } from "react-icons/fi";
 
 interface StakingFlowProps {
   children?: ReactNode;
 }
 
-type FormValues = {
-  initiateAddress: string;
-};
-
 const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
   const { willSponsor, handleWillSponsor } = useContext(UserContext);
 
-  // react-hook-form
-  const localForm = useForm<FormValues>({
-    defaultValues: {
-      initiateAddress: "",
-    },
+  // start react-hook-form
+  // const localForm = useForm<FieldValues>({
+  //   defaultValues: {
+  //     initiateAddress: "",
+  //   },
+  // });
+
+  const localForm = useForm({
+    mode: "all",
   });
 
   const {
     register,
     getValues,
-    control,
     setError,
     clearErrors,
-    formState,
     formState: { errors, isValid },
   } = localForm;
 
+  const customValidations = {
+    validate: (initiate: string) => utils.isAddress(initiate),
+    onChange: () => {
+      if (isValid) {
+        clearErrors();
+      } else {
+        setError("initiateAddress", {
+          type: "validate",
+          message: "Address is invalid!",
+        });
+      }
+    },
+  };
+
+  console.log("isValid", isValid);
+
   const values = getValues();
   const initiateAddress: string = values?.initiateAddress || "";
-
-  // console.log("isValid", isValid);
+  // end react-hook-form
 
   const { address } = useAccount();
   const { chain } = useNetwork();
@@ -148,28 +163,14 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
             <Box w="full" hidden={!willSponsor ? true : false}>
               <Input
                 label="Enter address below:"
-                // name="initiateAddress"
+                id="initiateAddress"
                 placeholder="enter wallet address"
                 type="text"
+                // @ts-ignore
                 localForm={localForm}
-                {...register("initiateAddress", {
-                  required: {
-                    value: willSponsor ? true : false,
-                    message: "Enter valid Ethereum address",
-                  },
-                  validate: (initiate) => utils.isAddress(initiate),
-                  onChange: () => {
-                    if (isValid) {
-                      clearErrors();
-                    } else {
-                      setError("initiateAddress", {
-                        type: "validate",
-                        message: "Address is invalid!",
-                      });
-                    }
-                  },
-                })}
+                {...register("initiateAddress", customValidations)}
               />
+
               {!isValid && initiateAddress && (
                 <Box w="full" color="red" mt={3}>
                   <HStack justifyContent="center">
