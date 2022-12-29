@@ -1,4 +1,4 @@
-import React, { useContext, ReactNode, useEffect } from "react";
+import React, { useContext, ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import {
   Flex,
@@ -33,17 +33,11 @@ interface StakingFlowProps {
 }
 
 const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
+  const { address } = useAccount();
+  const { chain } = useNetwork();
   const { willSponsor, handleWillSponsor } = useContext(UserContext);
 
-  // start react-hook-form
-  // const localForm = useForm<FieldValues>({
-  //   defaultValues: {
-  //     initiateAddress: "",
-  //   },
-  // });
-
   const localForm = useForm({
-    // mode: "all",
     defaultValues: {
       initiateAddress: "",
     },
@@ -75,16 +69,8 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
     },
   };
 
-  // console.log("isValid", isValid);
-
   const values = getValues();
-
-  console.log(values, "errors", errors);
-
   const initiateAddress: string = values?.initiateAddress || "";
-
-  const { address } = useAccount();
-  const { chain } = useNetwork();
 
   const chainId = (): number => {
     if (chain?.id) return chain?.id;
