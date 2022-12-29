@@ -1,4 +1,4 @@
-import React, { useContext, ReactNode } from "react";
+import React, { useContext, ReactNode, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   Flex,
@@ -43,7 +43,10 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
   // });
 
   const localForm = useForm({
-    mode: "all",
+    // mode: "all",
+    defaultValues: {
+      initiateAddress: "",
+    },
   });
 
   const {
@@ -55,8 +58,12 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
   } = localForm;
 
   const customValidations = {
-    validate: (initiate: string) => utils.isAddress(initiate),
+    required: true,
+    validate: (initiate: string) => {
+      return utils.isAddress(initiate);
+    },
     onChange: () => {
+      console.log(isValid);
       if (isValid) {
         clearErrors();
       } else {
@@ -68,11 +75,13 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
     },
   };
 
-  console.log("isValid", isValid);
+  // console.log("isValid", isValid);
 
   const values = getValues();
+
+  console.log(values, "errors", errors);
+
   const initiateAddress: string = values?.initiateAddress || "";
-  // end react-hook-form
 
   const { address } = useAccount();
   const { chain } = useNetwork();
