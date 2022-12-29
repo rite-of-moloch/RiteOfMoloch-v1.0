@@ -1,11 +1,13 @@
 import { extendTheme } from "@chakra-ui/react";
-import { HStack } from "./components/HStack";
-import { Button } from "./components/Button";
+import HStack from "./components/HStack";
+import Button from "./components/Button";
+import Progress from "./components/Progress";
 
 export const theme = extendTheme({
   components: {
     HStack,
     Button,
+    Progress,
   },
   colors: {
     transparent: "transparent",
@@ -30,6 +32,8 @@ export const theme = extendTheme({
     "red.900": "#63171B",
     yellow: "#F2E857",
     yellowDark: "#DCCF11",
+    gradient1:
+      "linear-gradient(94.89deg, #f78040 0%, #dd459b 70.2%, #ad3bad 100%)",
   },
   fonts: {
     texturina: `'Texturina', serif`,

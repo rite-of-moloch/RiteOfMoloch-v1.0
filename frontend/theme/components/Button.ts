@@ -1,4 +1,4 @@
-export const Button = {
+const Button = {
   baseStyles: {},
   variants: {
     solid: () => ({
@@ -66,3 +66,5 @@ export const Button = {
     fontFamily: "texturina",
   },
 };
+
+export default Button;

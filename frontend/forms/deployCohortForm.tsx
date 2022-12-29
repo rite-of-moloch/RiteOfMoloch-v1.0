@@ -33,75 +33,102 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
     formState: { errors, isValid },
   } = localForm;
 
-  const nameValidations = {
-    required: true,
-    validate: (e: any) => e.target.value.length > 0,
-    onChange: () => {
-      if (isValid) {
-        clearErrors();
-      } else {
-        setError("nameCohort", {
-          type: "validate",
-          message: "Address is invalid!",
-        });
-      }
-    },
-  };
-
   return (
     <FormControl>
       <SimpleGrid columns={2} spacingX={4} spacingY={3}>
         <Box>
           <Input
             label="Name cohort"
-            name="nameCohort"
+            id="nameCohort"
             placeholder="Name cohort"
+            borderColor="red"
             // @ts-ignore
             localForm={localForm}
-            borderColor="red"
+            {...register("nameCohort", {
+              required: true,
+              minLength: {
+                value: 3,
+                message: "Minimum length is 3",
+              },
+              maxLength: {
+                value: 25,
+                message: "Maximum length is 25",
+              },
+            })}
           />
         </Box>
         <Box>
           <Input
             label="Upload SBT image"
             type="image"
-            name="sbtImage"
+            id="sbtImage"
             placeholder="Upload image for SBT"
+            borderColor="red"
             // @ts-ignore
             localForm={localForm}
-            borderColor="red"
+            {...register("sbtImage", {
+              required: true,
+            })}
           />
         </Box>
 
         <Box>
           <Input
             label="Name SBT"
-            name="nameSBT"
+            id="nameSBT"
             placeholder="Name SBT"
+            borderColor="red"
             // @ts-ignore
             localForm={localForm}
-            borderColor="red"
+            {...register("nameSBT", {
+              required: true,
+              minLength: {
+                value: 2,
+                message: "Minimum length is 3",
+              },
+              maxLength: {
+                value: 15,
+                message: "Maximum length is 15",
+              },
+            })}
           />
         </Box>
         <Box>
           <Input
             label="Symbol SBT"
-            name="symbolSBT"
+            id="symbolSBT"
             placeholder="SBT Symbol"
+            borderColor="red"
             // @ts-ignore
             localForm={localForm}
-            borderColor="red"
+            {...register("symbolSBT", {
+              required: true,
+              minLength: {
+                value: 2,
+                message: "Minimum length is 3",
+              },
+              maxLength: {
+                value: 4,
+                message: "Maximum length is 4",
+              },
+            })}
           />
         </Box>
         <Box>
           <Input
             label="URI SBT"
-            name="uriSBT"
+            id="uriSBT"
             placeholder="uriSBT"
+            borderColor="red"
             // @ts-ignore
             localForm={localForm}
-            borderColor="red"
-            w="full"
+            {...register("uriSBT", {
+              required: true,
+              minLength: {
+                value: 5,
+                message: "Minimum length is 5",
+              },
+            })}
           />
         </Box>
         <Box alignSelf="end">

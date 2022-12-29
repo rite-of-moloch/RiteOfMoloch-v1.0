@@ -1,4 +1,4 @@
-export const HStack = {
+const HStack = {
   baseStyle: {
     width: "100%",
     justifyContent: "center",
@@ -6,3 +6,5 @@ export const HStack = {
     alignItems: "center",
   },
 };
+
+export default HStack;
