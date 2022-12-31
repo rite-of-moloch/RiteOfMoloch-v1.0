@@ -34,6 +34,8 @@ export const theme = extendTheme({
     yellowDark: "#DCCF11",
     gradient1:
       "linear-gradient(94.89deg, #f78040 0%, #dd459b 70.2%, #ad3bad 100%)",
+    gradientSBTPrev:
+      "linear-gradient(90deg, #290009 -0.56%, #060606 82.19%, #25003A 100%)",
   },
   fonts: {
     texturina: `'Texturina', serif`,

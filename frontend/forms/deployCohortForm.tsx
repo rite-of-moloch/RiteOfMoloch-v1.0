@@ -10,6 +10,7 @@ import {
   VStack,
 } from "@raidguild/design-system";
 import ProgressBar from "../components/ProgressBar";
+import PreviewModal from "components/PreviewModal";
 
 interface DeployCohortFormProps {
   children?: ReactNode;
@@ -41,10 +42,10 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
       nameSBT: "",
       symbolSBT: "",
       uriSBT: "",
-      stakePerMember: 0,
-      cohortSize: 0,
-      onboardingPeriod: 0,
-      stakingPeriod: 0,
+      // stakePerMember: 0,
+      // cohortSize: 0,
+      // onboardingPeriod: 0,
+      // stakingPeriod: 0,
       tophat: false,
       addAdmin: false,
     },
@@ -91,7 +92,7 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
     setDisplayPart2(true);
   };
 
-  const handleBackInputs1to5 = (): void => {
+  const handleBackInputs6to9 = (): void => {
     setDisplayPart1(true);
     setDisplayPart2(false);
   };
@@ -100,12 +101,6 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
     setDisplayPart1(false);
     setDisplayPart2(false);
     setDisplayPart3(true);
-  };
-
-  const handleBackInputs6to9 = (): void => {
-    setDisplayPart1(true);
-    setDisplayPart2(false);
-    setDisplayPart3(false);
   };
 
   const handleBackInputs10to11 = (): void => {
@@ -224,9 +219,7 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
               />
             </Box>
             <Box alignSelf="end">
-              <Button variant="outline" w="full">
-                PREVIEW SBT
-              </Button>
+              <PreviewModal sbtImageURL={sbtImage} sbtName={nameSBT} />
             </Box>
             <Box />
             <Box textAlign="right">
