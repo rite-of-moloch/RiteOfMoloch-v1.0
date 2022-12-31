@@ -32,12 +32,16 @@ interface StakingFlowProps {
   children?: ReactNode;
 }
 
+type FormValues = {
+  initiateAddress: string;
+};
+
 const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
   const { address } = useAccount();
   const { chain } = useNetwork();
   const { willSponsor, handleWillSponsor } = useContext(UserContext);
 
-  const localForm = useForm({
+  const localForm = useForm<FormValues>({
     defaultValues: {
       initiateAddress: "",
     },

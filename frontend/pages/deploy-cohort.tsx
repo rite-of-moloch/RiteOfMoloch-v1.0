@@ -1,7 +1,7 @@
-import React, { useState, ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { useAccount } from "wagmi";
-import { Box, Flex, FormControl } from "@raidguild/design-system";
-import ProgressBar from "../components/ProgressBar";
+import { Box, Flex } from "@raidguild/design-system";
+
 import DeployCohortForm from "forms/deployCohortForm";
 import BoxHeader from "components/BoxHeader";
 
@@ -10,7 +10,6 @@ interface DeployCohortProps {
 }
 
 const DeployCohort: React.FC<DeployCohortProps> = ({ children }) => {
-  const [percent, setPercent] = useState<number>(1);
   const { isConnected } = useAccount();
   return (
     <Flex
@@ -23,17 +22,13 @@ const DeployCohort: React.FC<DeployCohortProps> = ({ children }) => {
     >
       {isConnected && (
         <Box>
-          <Box my={10}>
-            <ProgressBar progress={percent} />
-          </Box>
-          <Box>
-            <DeployCohortForm />
-          </Box>
+          <DeployCohortForm />
         </Box>
       )}
       {!isConnected && (
         <BoxHeader text="Connect your wallet to deploy a cohort" />
       )}
+      {children}
     </Flex>
   );
 };
