@@ -1,5 +1,5 @@
 import React, { useState, ReactNode } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import {
   Box,
@@ -35,6 +35,7 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
   const [displayPart1, setDisplayPart1] = useState(true);
   const [displayPart2, setDisplayPart2] = useState(false);
   const [displayPart3, setDisplayPart3] = useState(false);
+  const [nextError, setNextError] = useState<string>("");
 
   const localForm = useForm<FormValues>({
     defaultValues: {
@@ -48,16 +49,13 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
 
   const {
     register,
-    control,
     watch,
     trigger,
-    getValues,
-    setError,
     handleSubmit,
     formState: { errors, isValid },
   } = localForm;
 
-  const values = getValues();
+  console.log(errors);
 
   const nameCohort = watch("nameCohort");
   const nameSBT = watch("nameSBT");
@@ -92,12 +90,16 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
     ]);
     console.log(validations);
     if (validations) {
+      setNextError("");
       setDisplayPart1(false);
       setDisplayPart2(true);
+    } else {
+      setNextError("Double check inputs");
     }
   };
 
   const handleBackInputs6to9 = (): void => {
+    setNextError("");
     setDisplayPart1(true);
     setDisplayPart2(false);
   };
@@ -109,14 +111,18 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
       "onboardingPeriod",
       "stakingPeriod",
     ]);
+    // console.log(validations);
     if (validations) {
       setDisplayPart1(false);
       setDisplayPart2(false);
       setDisplayPart3(true);
+    } else {
+      setNextError("Double check inputs");
     }
   };
 
   const handleBackInputs10to11 = (): void => {
+    setNextError("");
     setDisplayPart1(false);
     setDisplayPart2(true);
     setDisplayPart3(false);
@@ -162,7 +168,6 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                     value: 25,
                     message: "Maximum length is 25",
                   },
-                  validate: (val) => val.length >= 3 && val.length <= 25,
                   onChange: () => trigger("nameCohort"),
                 })}
               />
@@ -309,17 +314,15 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                 // @ts-ignore
                 localForm={localForm}
                 {...register("stakePerMember", {
-                  valueAsNumber: true,
                   required: {
                     value: true,
-                    message: "Value required",
+                    message: "Input cannot be blank",
                   },
                   min: {
                     value: 1,
-                    message: "Minimum stake must be 1",
+                    message: "Minimum of 1 required",
                   },
-                  validate: (value: number) => value > 0,
-                  onChange: () => trigger("stakePerMember"),
+                  validate: (val) => val > 0,
                 })}
               />
               <ErrorMessage
@@ -330,7 +333,7 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
             </Box>
             <Box>
               <Input
-                label="Cohort Size"
+                label="Cohort size"
                 id="cohortSize"
                 placeholder="enter cohort size..."
                 borderColor="red"
@@ -338,17 +341,15 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                 // @ts-ignore
                 localForm={localForm}
                 {...register("cohortSize", {
-                  valueAsNumber: true,
                   required: {
                     value: true,
-                    message: "Value is required",
+                    message: "Input cannot be blank",
                   },
                   min: {
                     value: 1,
-                    message: "Minimum size must be 1",
+                    message: "Minimum of 1 required",
                   },
-                  validate: (value) => value > 0,
-                  onChange: () => trigger("cohortSize"),
+                  validate: (val) => val > 0,
                 })}
               />
               <ErrorMessage
@@ -367,17 +368,15 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                 // @ts-ignore
                 localForm={localForm}
                 {...register("onboardingPeriod", {
-                  valueAsNumber: true,
                   required: {
                     value: true,
-                    message: "Value is required",
+                    message: "Input cannot be blank",
                   },
                   min: {
                     value: 1,
-                    message: "Minimum must be 1",
+                    message: "Minimum of 1 required",
                   },
-                  validate: (value) => value > 0,
-                  onChange: () => trigger("onboardingPeriod"),
+                  validate: (val) => val > 0,
                 })}
               />
               <ErrorMessage
@@ -396,17 +395,15 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                 // @ts-ignore
                 localForm={localForm}
                 {...register("stakingPeriod", {
-                  valueAsNumber: true,
                   required: {
                     value: true,
-                    message: "Value is required",
+                    message: "Input cannot be blank",
                   },
                   min: {
                     value: 1,
-                    message: "Minimum must be 1 day",
+                    message: "Minimum of 1 required",
                   },
-                  validate: (value) => value > 0,
-                  onChange: () => trigger("stakingPeriod"),
+                  validate: (val) => val > 0,
                 })}
               />
               <ErrorMessage
@@ -417,7 +414,6 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
             </Box>
             <Box />
             <Box />
-
             <Box>
               <Button
                 variant="ghost"
