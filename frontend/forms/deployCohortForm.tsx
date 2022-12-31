@@ -1,5 +1,5 @@
 import React, { useState, ReactNode } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import {
   Box,
@@ -8,6 +8,7 @@ import {
   HStack,
   Input,
   SimpleGrid,
+  Switch,
   Text,
 } from "@raidguild/design-system";
 import ProgressBar from "../components/ProgressBar";
@@ -44,18 +45,23 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
       nameSBT: "",
       symbolSBT: "",
       uriSBT: "",
+      hasTophat: false,
+      addAdmin: false,
     },
   });
 
   const {
     register,
     watch,
+    getValues,
     trigger,
     handleSubmit,
     formState: { errors, isValid },
   } = localForm;
 
   console.log(errors);
+  const values = getValues().hasTophat;
+  console.log(values);
 
   const nameCohort = watch("nameCohort");
   const nameSBT = watch("nameSBT");
@@ -88,7 +94,7 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
       "symbolSBT",
       "uriSBT",
     ]);
-    console.log(validations);
+
     if (validations) {
       setNextError("");
       setDisplayPart1(false);
@@ -444,48 +450,21 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
           <SimpleGrid columns={1} spacingX={4} spacingY={3}>
             <Box>
               {/* replace with yes/no switch */}
-              <Input
+              <Switch
                 label="Does the DAO have a TOP HAT?"
-                id="hasTophat"
-                placeholder="Does the DAO have a TOP HAT?"
-                borderColor="red"
                 // @ts-ignore
                 localForm={localForm}
                 {...register("hasTophat", {
-                  required: {
-                    value: true,
-                    message: "Value is required",
-                  },
-                  min: {
-                    value: 1,
-                    message: "Minimum of 1 share required",
-                  },
+                  onChange: () => watch("hasTophat"),
                 })}
               />
             </Box>
             <Box>
               {/* replace with yes/no switch */}
-              <Input
+              <Switch
                 label="Want to add additional administrators?"
-                id="addAdmin"
-                placeholder="Want to add additional administrators?"
-                borderColor="red"
                 // @ts-ignore
                 localForm={localForm}
-                {...register("addAdmin", {
-                  required: {
-                    value: true,
-                    message: "Value is required",
-                  },
-                  minLength: {
-                    value: 2,
-                    message: "Minimum length is 3",
-                  },
-                  maxLength: {
-                    value: 4,
-                    message: "Maximum length is 4",
-                  },
-                })}
               />
             </Box>
 
