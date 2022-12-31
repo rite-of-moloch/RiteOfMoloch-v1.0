@@ -29,16 +29,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent
-          alignSelf="center"
-          border="1px"
-          borderColor="red"
-          fontFamily="spaceMono"
-          w={["70%", "70%", "45%", "30%"]}
-          h="50%"
-          bg="gradientSBTPrev"
-          translateY={"50%"}
-        >
+        <ModalContent>
           <ModalCloseButton />
           <ModalBody>{sbtImageURL}</ModalBody>
 

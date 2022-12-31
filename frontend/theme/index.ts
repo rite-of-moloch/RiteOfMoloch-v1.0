@@ -2,12 +2,14 @@ import { extendTheme } from "@chakra-ui/react";
 import HStack from "./components/HStack";
 import Button from "./components/Button";
 import Progress from "./components/Progress";
+import Modal from "./components/Modal";
 
 export const theme = extendTheme({
   components: {
     HStack,
     Button,
     Progress,
+    Modal,
   },
   colors: {
     transparent: "transparent",

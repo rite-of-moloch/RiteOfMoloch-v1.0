@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hookform/error-message": "^2.0.1",
     "@raidguild/design-system": "^0.4.18",
     "@rainbow-me/rainbowkit": "^0.7.3",
     "ethers": "^5.7.2",

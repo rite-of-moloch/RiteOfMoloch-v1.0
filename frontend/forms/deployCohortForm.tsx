@@ -1,5 +1,6 @@
 import React, { useState, ReactNode } from "react";
 import { useForm } from "react-hook-form";
+import { ErrorMessage } from "@hookform/error-message";
 import {
   Box,
   Button,
@@ -7,7 +8,7 @@ import {
   HStack,
   Input,
   SimpleGrid,
-  VStack,
+  Text,
 } from "@raidguild/design-system";
 import ProgressBar from "../components/ProgressBar";
 import PreviewModal from "components/PreviewModal";
@@ -26,7 +27,7 @@ type FormValues = {
   cohortSize: number;
   onboardingPeriod: number;
   stakingPeriod: number;
-  tophat: boolean;
+  hasTophat: boolean;
   addAdmin: boolean;
 };
 
@@ -42,12 +43,6 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
       nameSBT: "",
       symbolSBT: "",
       uriSBT: "",
-      // stakePerMember: 0,
-      // cohortSize: 0,
-      // onboardingPeriod: 0,
-      // stakingPeriod: 0,
-      tophat: false,
-      addAdmin: false,
     },
   });
 
@@ -55,15 +50,14 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
     register,
     control,
     watch,
+    trigger,
     getValues,
     setError,
-    clearErrors,
     handleSubmit,
     formState: { errors, isValid },
   } = localForm;
 
-  console.log(errors);
-  console.log(isValid);
+  const values = getValues();
 
   const nameCohort = watch("nameCohort");
   const nameSBT = watch("nameSBT");
@@ -74,7 +68,7 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
   const cohortSize = watch("cohortSize");
   const onboardingPeriod = watch("onboardingPeriod");
   const stakingPeriod = watch("stakingPeriod");
-  const tophat = watch("tophat");
+  const hasTophat = watch("hasTophat");
   const addAdmin = watch("addAdmin");
 
   const progressLogic = (): number => {
@@ -87,9 +81,20 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
     }
   };
 
-  const handleNextInputs1to5 = (): void => {
-    setDisplayPart1(false);
-    setDisplayPart2(true);
+  const handleNextInputs1to5 = async (): Promise<void> => {
+    // trigger checks validations
+    const validations = await trigger([
+      "nameCohort",
+      "sbtImage",
+      "nameSBT",
+      "symbolSBT",
+      "uriSBT",
+    ]);
+    console.log(validations);
+    if (validations) {
+      setDisplayPart1(false);
+      setDisplayPart2(true);
+    }
   };
 
   const handleBackInputs6to9 = (): void => {
@@ -97,10 +102,18 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
     setDisplayPart2(false);
   };
 
-  const handleNextInputs6to9 = (): void => {
-    setDisplayPart1(false);
-    setDisplayPart2(false);
-    setDisplayPart3(true);
+  const handleNextInputs6to9 = async (): Promise<void> => {
+    const validations = await trigger([
+      "stakePerMember",
+      "cohortSize",
+      "onboardingPeriod",
+      "stakingPeriod",
+    ]);
+    if (validations) {
+      setDisplayPart1(false);
+      setDisplayPart2(false);
+      setDisplayPart3(true);
+    }
   };
 
   const handleBackInputs10to11 = (): void => {
@@ -110,8 +123,12 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
   };
 
   const handleSaveCohort = (e: any): void => {
-    // if everything is valid, submit form
-    console.log();
+    try {
+      isValid;
+    } catch {
+      console.log("not valid");
+    }
+    console.log("Cohort saved");
   };
 
   return (
@@ -119,6 +136,7 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
       <Box my={10}>
         <ProgressBar progress={progressLogic()} />
       </Box>
+
       <FormControl>
         {/* form part 1 */}
         <Box display={!displayPart1 ? "none" : "inline"}>
@@ -132,7 +150,10 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                 // @ts-ignore
                 localForm={localForm}
                 {...register("nameCohort", {
-                  required: { value: true, message: "Value is required" },
+                  required: {
+                    value: true,
+                    message: "Value is required",
+                  },
                   minLength: {
                     value: 3,
                     message: "Minimum length is 3",
@@ -141,21 +162,34 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                     value: 25,
                     message: "Maximum length is 25",
                   },
+                  validate: (val) => val.length >= 3 && val.length <= 25,
+                  onChange: () => trigger("nameCohort"),
                 })}
+              />
+              <ErrorMessage
+                errors={errors}
+                name="nameCohort"
+                render={({ message }) => <Text color="red">{message}</Text>}
               />
             </Box>
             <Box>
               <Input
                 label="Upload SBT image"
-                type="image"
+                type="file"
                 id="sbtImage"
+                accept=".png, .jpg, .jpeg, .gif"
                 placeholder="Upload image for SBT"
                 borderColor="red"
                 // @ts-ignore
                 localForm={localForm}
                 {...register("sbtImage", {
-                  required: { value: true, message: "Value is required" },
+                  required: false,
                 })}
+              />
+              <ErrorMessage
+                errors={errors}
+                name="sbtImage"
+                render={({ message }) => <Text color="red">{message}</Text>}
               />
             </Box>
 
@@ -168,37 +202,55 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                 // @ts-ignore
                 localForm={localForm}
                 {...register("nameSBT", {
-                  required: { value: true, message: "Value is required" },
+                  required: {
+                    value: true,
+                    message: "Value is required",
+                  },
                   minLength: {
                     value: 2,
-                    message: "Minimum length is 3",
+                    message: "Minimum length is 2",
                   },
                   maxLength: {
-                    value: 15,
-                    message: "Maximum length is 15",
+                    value: 6,
+                    message: "Maximum length is 6",
                   },
+                  onChange: () => trigger("nameSBT"),
                 })}
+              />
+              <ErrorMessage
+                errors={errors}
+                name="nameSBT"
+                render={({ message }) => <Text color="red">{message}</Text>}
               />
             </Box>
             <Box>
               <Input
-                label="Symbol SBT"
+                label="SBT Symbol"
                 id="symbolSBT"
                 placeholder="SBT Symbol"
                 borderColor="red"
                 // @ts-ignore
                 localForm={localForm}
                 {...register("symbolSBT", {
-                  required: { value: true, message: "Value is required" },
+                  required: {
+                    value: true,
+                    message: "Value is required",
+                  },
                   minLength: {
                     value: 2,
                     message: "Minimum length is 3",
                   },
                   maxLength: {
-                    value: 4,
-                    message: "Maximum length is 4",
+                    value: 6,
+                    message: "Maximum length is 6",
                   },
+                  onChange: () => trigger("symbolSBT"),
                 })}
+              />
+              <ErrorMessage
+                errors={errors}
+                name="symbolSBT"
+                render={({ message }) => <Text color="red">{message}</Text>}
               />
             </Box>
             <Box>
@@ -210,12 +262,21 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                 // @ts-ignore
                 localForm={localForm}
                 {...register("uriSBT", {
-                  required: { value: true, message: "Value is required" },
+                  required: {
+                    value: true,
+                    message: "Value is required",
+                  },
                   minLength: {
                     value: 5,
                     message: "Minimum length is 5",
                   },
+                  onChange: () => trigger("uriSBT"),
                 })}
+              />
+              <ErrorMessage
+                errors={errors}
+                name="uriSBT"
+                render={({ message }) => <Text color="red">{message}</Text>}
               />
             </Box>
             <Box alignSelf="end">
@@ -242,72 +303,116 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
               <Input
                 label="Stake per member"
                 id="stakePerMember"
-                placeholder="Stake per member"
+                placeholder="enter minimum stake..."
                 borderColor="red"
+                type="number"
                 // @ts-ignore
                 localForm={localForm}
                 {...register("stakePerMember", {
-                  required: { value: true, message: "Value is required" },
+                  valueAsNumber: true,
+                  required: {
+                    value: true,
+                    message: "Value required",
+                  },
                   min: {
                     value: 1,
-                    message: "Minimum of 1 share required",
+                    message: "Minimum stake must be 1",
                   },
+                  validate: (value: number) => value > 0,
+                  onChange: () => trigger("stakePerMember"),
                 })}
+              />
+              <ErrorMessage
+                errors={errors}
+                name="stakePerMember"
+                render={({ message }) => <Text color="red">{message}</Text>}
               />
             </Box>
             <Box>
               <Input
                 label="Cohort Size"
                 id="cohortSize"
-                placeholder="Cohort Size"
+                placeholder="enter cohort size..."
                 borderColor="red"
+                type="number"
                 // @ts-ignore
                 localForm={localForm}
                 {...register("cohortSize", {
-                  required: { value: true, message: "Value is required" },
+                  valueAsNumber: true,
+                  required: {
+                    value: true,
+                    message: "Value is required",
+                  },
                   min: {
                     value: 1,
-                    message: "Minimum of 1 share required",
+                    message: "Minimum size must be 1",
                   },
+                  validate: (value) => value > 0,
+                  onChange: () => trigger("cohortSize"),
                 })}
+              />
+              <ErrorMessage
+                errors={errors}
+                name="cohortSize"
+                render={({ message }) => <Text color="red">{message}</Text>}
               />
             </Box>
             <Box>
               <Input
-                label="Symbol SBT"
-                id="symbolSBT"
-                placeholder="SBT Symbol"
+                label="Onboarding period in days"
+                id="onboardindPeriod"
+                placeholder="enter time in days..."
                 borderColor="red"
+                type="number"
                 // @ts-ignore
                 localForm={localForm}
-                {...register("symbolSBT", {
-                  required: { value: true, message: "Value is required" },
-                  minLength: {
-                    value: 2,
-                    message: "Minimum length is 3",
+                {...register("onboardingPeriod", {
+                  valueAsNumber: true,
+                  required: {
+                    value: true,
+                    message: "Value is required",
                   },
-                  maxLength: {
-                    value: 4,
-                    message: "Maximum length is 4",
+                  min: {
+                    value: 1,
+                    message: "Minimum must be 1",
                   },
+                  validate: (value) => value > 0,
+                  onChange: () => trigger("onboardingPeriod"),
                 })}
+              />
+              <ErrorMessage
+                errors={errors}
+                name="onboardingPeriod"
+                render={({ message }) => <Text color="red">{message}</Text>}
               />
             </Box>
             <Box>
               <Input
-                label="URI SBT"
-                id="uriSBT"
-                placeholder="uriSBT"
+                label="Staking period in days"
+                id="stakingPeriod"
+                placeholder="enter duration in days..."
                 borderColor="red"
+                type="number"
                 // @ts-ignore
                 localForm={localForm}
-                {...register("uriSBT", {
-                  required: { value: true, message: "Value is required" },
-                  minLength: {
-                    value: 5,
-                    message: "Minimum length is 5",
+                {...register("stakingPeriod", {
+                  valueAsNumber: true,
+                  required: {
+                    value: true,
+                    message: "Value is required",
                   },
+                  min: {
+                    value: 1,
+                    message: "Minimum must be 1 day",
+                  },
+                  validate: (value) => value > 0,
+                  onChange: () => trigger("stakingPeriod"),
                 })}
+              />
+              <ErrorMessage
+                errors={errors}
+                name="stakingPeriod"
+                render={({ message }) => <Text color="red">{message}</Text>}
               />
             </Box>
             <Box />
@@ -344,14 +449,17 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
             <Box>
               {/* replace with yes/no switch */}
               <Input
-                label="DOes the DAO have a TOP HAT?"
-                id="cohortSize"
-                placeholder="DOes the DAO have a TOP HAT?"
+                label="Does the DAO have a TOP HAT?"
+                id="hasTophat"
+                placeholder="Does the DAO have a TOP HAT?"
                 borderColor="red"
                 // @ts-ignore
                 localForm={localForm}
-                {...register("cohortSize", {
-                  required: { value: true, message: "Value is required" },
+                {...register("hasTophat", {
+                  required: {
+                    value: true,
+                    message: "Value is required",
+                  },
                   min: {
                     value: 1,
                     message: "Minimum of 1 share required",
@@ -362,14 +470,17 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
             <Box>
               {/* replace with yes/no switch */}
               <Input
-                label="Do you want to add additional administrators?"
-                id="symbolSBT"
-                placeholder="SBT Symbol"
+                label="Want to add additional administrators?"
+                id="addAdmin"
+                placeholder="Want to add additional administrators?"
                 borderColor="red"
                 // @ts-ignore
                 localForm={localForm}
-                {...register("symbolSBT", {
-                  required: { value: true, message: "Value is required" },
+                {...register("addAdmin", {
+                  required: {
+                    value: true,
+                    message: "Value is required",
+                  },
                   minLength: {
                     value: 2,
                     message: "Minimum length is 3",
