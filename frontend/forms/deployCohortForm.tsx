@@ -10,9 +10,11 @@ import {
   SimpleGrid,
   Switch,
   Text,
+  VStack,
 } from "@raidguild/design-system";
 import ProgressBar from "../components/ProgressBar";
 import PreviewModal from "components/PreviewModal";
+import { utils } from "ethers";
 
 interface DeployCohortFormProps {
   children?: ReactNode;
@@ -29,7 +31,11 @@ type FormValues = {
   onboardingPeriod: number;
   stakingPeriod: number;
   hasTophat: boolean;
+  tophatOwnerAddress: string;
+  tophatID: string;
   addAdmin: boolean;
+  admin2: string;
+  admin3: string;
 };
 
 const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
@@ -46,7 +52,11 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
       symbolSBT: "",
       uriSBT: "",
       hasTophat: false,
+      tophatOwnerAddress: "",
+      tophatID: "",
       addAdmin: false,
+      admin2: "",
+      admin3: "",
     },
   });
 
@@ -54,14 +64,13 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
     register,
     watch,
     getValues,
+    setValue,
+    setError,
+    clearErrors,
     trigger,
     handleSubmit,
     formState: { errors, isValid },
   } = localForm;
-
-  console.log(errors);
-  const values = getValues().hasTophat;
-  console.log(values);
 
   const nameCohort = watch("nameCohort");
   const nameSBT = watch("nameSBT");
@@ -74,6 +83,14 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
   const stakingPeriod = watch("stakingPeriod");
   const hasTophat = watch("hasTophat");
   const addAdmin = watch("addAdmin");
+  const tophatOwnerAddress = watch("tophatOwnerAddress");
+  const tophatID = watch("tophatID");
+  const admin2 = watch("admin2");
+  const admin3 = watch("admin3");
+
+  // console.log("hasTophat", hasTophat);
+  console.log(errors);
+  console.log(tophatOwnerAddress, utils.isAddress(tophatOwnerAddress));
 
   const progressLogic = (): number => {
     if (displayPart1) {
@@ -117,7 +134,6 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
       "onboardingPeriod",
       "stakingPeriod",
     ]);
-    // console.log(validations);
     if (validations) {
       setDisplayPart1(false);
       setDisplayPart2(false);
@@ -134,7 +150,27 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
     setDisplayPart3(false);
   };
 
-  const handleSaveCohort = (e: any): void => {
+  const handleSaveCohort = async (): Promise<void> => {
+    const tophatValidations = await trigger(["tophatOwnerAddress", "tophatID"]);
+    const addAdminValidations = await trigger(["admin2", "admin3"]);
+    if (hasTophat && !addAdmin) {
+      if (tophatValidations) {
+        setDisplayPart3(false);
+      }
+    } else if (addAdmin && !hasTophat) {
+      if (addAdminValidations) {
+        setDisplayPart3(false);
+      }
+    } else if (hasTophat && addAdmin) {
+      if (tophatValidations && addAdminValidations) {
+        setDisplayPart3(false);
+      }
+    } else {
+      setDisplayPart3(false);
+    }
+  };
+
+  const handleDeployCohort = (e: any): void => {
     try {
       isValid;
     } catch {
@@ -169,10 +205,6 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                   minLength: {
                     value: 3,
                     message: "Minimum length is 3",
-                  },
-                  maxLength: {
-                    value: 25,
-                    message: "Maximum length is 25",
                   },
                   onChange: () => trigger("nameCohort"),
                 })}
@@ -446,57 +478,178 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
           </SimpleGrid>
         </Box>
         {/* form part 3 */}
-        <Box display={displayPart3 ? "inline" : "none"}>
-          <SimpleGrid columns={1} spacingX={4} spacingY={3}>
+        <VStack display={displayPart3 ? "inline" : "none"}>
+          <Box>
+            <Switch
+              label="Does the DAO have a TOP HAT?"
+              // @ts-ignore
+              localForm={localForm}
+              {...register("hasTophat", {
+                onChange: () => setValue("hasTophat", !hasTophat),
+              })}
+            />
+          </Box>
+          <HStack>
             <Box>
-              {/* replace with yes/no switch */}
-              <Switch
-                label="Does the DAO have a TOP HAT?"
+              <Input
+                label="TOP HAT owner address"
+                id="tophatOwnerAddress"
+                placeholder="TOP HAT owner address"
+                borderColor="red"
                 // @ts-ignore
                 localForm={localForm}
-                {...register("hasTophat", {
-                  onChange: () => watch("hasTophat"),
+                {...register("tophatOwnerAddress", {
+                  required: {
+                    value: true,
+                    message: "value required",
+                  },
+                  validate: () => utils.isAddress(tophatOwnerAddress),
+                  onChange: () => {
+                    const validAddress = utils.isAddress(tophatOwnerAddress);
+                    if (!validAddress) {
+                      setError("tophatOwnerAddress", {
+                        type: "custom",
+                        message: `Address isn't valid`,
+                      });
+                    } else if (validAddress) {
+                      clearErrors("tophatOwnerAddress");
+                    }
+                  },
                 })}
               />
-            </Box>
-            <Box>
-              {/* replace with yes/no switch */}
-              <Switch
-                label="Want to add additional administrators?"
-                // @ts-ignore
-                localForm={localForm}
+              <ErrorMessage
+                errors={errors}
+                name="tophatOwnerAddress"
+                render={({ message }) => <Text color="red">{message}</Text>}
               />
             </Box>
+            <Box>
+              <Input
+                label="TOP HAT ID"
+                id="tophatID"
+                placeholder="TOP HAT ID"
+                borderColor="red"
+                // @ts-ignore
+                localForm={localForm}
+                {...register("tophatID", {
+                  required: {
+                    value: true,
+                    message: "Value is required",
+                  },
+                  onChange: () => trigger("tophatID"),
+                })}
+              />
+              <ErrorMessage
+                errors={errors}
+                name="tophatID"
+                render={({ message }) => <Text color="red">{message}</Text>}
+              />
+            </Box>
+          </HStack>
+          <Box>
+            <Switch
+              label="Want to add additional administrators?"
+              // @ts-ignore
+              localForm={localForm}
+              {...register("addAdmin")}
+            />
+          </Box>
+          <HStack>
+            <Box>
+              <Input
+                label="Input address 1"
+                id="admin2"
+                placeholder="Input address 1"
+                borderColor="red"
+                // @ts-ignore
+                localForm={localForm}
+                {...register("admin2", {
+                  required: {
+                    value: true,
+                    message: "value required,",
+                  },
+                  validate: (e) => utils.isAddress(admin2),
+                  onChange: () => {
+                    const validAddress = utils.isAddress(admin2);
+                    if (!validAddress) {
+                      setError("admin2", {
+                        type: "custom",
+                        message: `Address isn't valid`,
+                      });
+                    } else if (validAddress) {
+                      clearErrors("admin2");
+                    }
+                  },
+                })}
+              />
+              <ErrorMessage
+                errors={errors}
+                name="admin2"
+                render={({ message }) => <Text color="red">{message}</Text>}
+              />
+            </Box>
+            <Box>
+              <Input
+                label="Input address 2"
+                id="admin3"
+                placeholder="Input address 2"
+                borderColor="red"
+                // @ts-ignore
+                localForm={localForm}
+                {...register("admin3", {
+                  required: {
+                    value: true,
+                    message: "value required,",
+                  },
+                  validate: (e) => utils.isAddress(admin3),
+                  onChange: () => {
+                    const validAddress = utils.isAddress(admin3);
+                    if (!validAddress) {
+                      setError("admin3", {
+                        type: "custom",
+                        message: `Address isn't valid`,
+                      });
+                    }
+                    if (validAddress) {
+                      clearErrors("admin3");
+                    }
+                  },
+                })}
+              />
+              <ErrorMessage
+                errors={errors}
+                name="admin3"
+                render={({ message }) => <Text color="red">{message}</Text>}
+              />
+            </Box>
+          </HStack>
 
-            <Box />
-            <Box />
-            <HStack>
-              <Box w="50%">
-                <Button
-                  variant="ghost"
-                  w="full"
-                  color="red"
-                  border="1px"
-                  mt={10}
-                  onClick={handleBackInputs10to11}
-                >
-                  BACK
-                </Button>
-              </Box>
-              <Box w="50%">
-                <Button
-                  variant="solid"
-                  w="full"
-                  color="black"
-                  mt={10}
-                  onClick={handleSaveCohort}
-                >
-                  Save Cohort
-                </Button>
-              </Box>
-            </HStack>
-          </SimpleGrid>
-        </Box>
+          <HStack>
+            <Box w="50%">
+              <Button
+                variant="ghost"
+                w="full"
+                color="red"
+                border="1px"
+                mt={10}
+                onClick={handleBackInputs10to11}
+              >
+                BACK
+              </Button>
+            </Box>
+            <Box w="50%">
+              <Button
+                variant="solid"
+                w="full"
+                color="black"
+                mt={10}
+                onClick={handleSaveCohort}
+              >
+                Save Cohort
+              </Button>
+            </Box>
+          </HStack>
+        </VStack>
       </FormControl>
     </>
   );
