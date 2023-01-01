@@ -42,7 +42,7 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
   const [displayPart1, setDisplayPart1] = useState(true);
   const [displayPart2, setDisplayPart2] = useState(false);
   const [displayPart3, setDisplayPart3] = useState(false);
-  const [nextError, setNextError] = useState<string>("");
+  const [nextError, setNextError] = useState("");
 
   const localForm = useForm<FormValues>({
     defaultValues: {
@@ -90,7 +90,15 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
 
   // console.log("hasTophat", hasTophat);
   console.log(errors);
-  console.log(tophatOwnerAddress, utils.isAddress(tophatOwnerAddress));
+  console.log(
+    "tophatOwnerAddress",
+    utils.isAddress(tophatOwnerAddress),
+    "admin2:",
+    utils.isAddress(admin2),
+    "admin3:",
+    utils.isAddress(admin3)
+  );
+  console.log("hasTophat:", hasTophat, "addAdmin:", addAdmin);
 
   const progressLogic = (): number => {
     if (displayPart1) {
@@ -482,16 +490,17 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
           <Box>
             <Switch
               label="Does the DAO have a TOP HAT?"
+              id="hasTophat"
               // @ts-ignore
               localForm={localForm}
               {...register("hasTophat", {
                 onChange: () => {
-                  // setValue("hasTophat", !hasTophat);
+                  setValue("hasTophat", !hasTophat);
                 },
               })}
             />
           </Box>
-          <HStack>
+          <HStack display={hasTophat ? "flex" : "none"}>
             <Box>
               <Input
                 label="TOP HAT owner address"
@@ -553,10 +562,15 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
               label="Want to add additional administrators?"
               // @ts-ignore
               localForm={localForm}
-              {...register("addAdmin")}
+              {...(register("addAdmin"),
+              {
+                onChange: () => {
+                  setValue("addAdmin", !addAdmin);
+                },
+              })}
             />
           </Box>
-          <HStack>
+          <HStack display={addAdmin ? "flex" : "none"}>
             <Box>
               <Input
                 label="Input address 1"
