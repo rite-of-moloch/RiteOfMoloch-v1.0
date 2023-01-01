@@ -485,7 +485,9 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
               // @ts-ignore
               localForm={localForm}
               {...register("hasTophat", {
-                onChange: () => setValue("hasTophat", !hasTophat),
+                onChange: () => {
+                  // setValue("hasTophat", !hasTophat);
+                },
               })}
             />
           </Box>
@@ -503,15 +505,15 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                     value: true,
                     message: "value required",
                   },
-                  validate: () => utils.isAddress(tophatOwnerAddress),
+                  validate: () => tophatOwnerAddress || "address isn't valid",
                   onChange: () => {
-                    const validAddress = utils.isAddress(tophatOwnerAddress);
-                    if (!validAddress) {
+                    // should be "if true, set errors." RHF has weird behavior
+                    if (!!tophatOwnerAddress) {
                       setError("tophatOwnerAddress", {
                         type: "custom",
                         message: `Address isn't valid`,
                       });
-                    } else if (validAddress) {
+                    } else {
                       clearErrors("tophatOwnerAddress");
                     }
                   },
@@ -568,15 +570,15 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                     value: true,
                     message: "value required,",
                   },
-                  validate: (e) => utils.isAddress(admin2),
+                  validate: () => admin2 || "address isn't valid",
                   onChange: () => {
-                    const validAddress = utils.isAddress(admin2);
-                    if (!validAddress) {
+                    // should be "if true, set errors." RHF has weird behavior
+                    if (!!admin2) {
                       setError("admin2", {
                         type: "custom",
                         message: `Address isn't valid`,
                       });
-                    } else if (validAddress) {
+                    } else {
                       clearErrors("admin2");
                     }
                   },
@@ -601,16 +603,15 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                     value: true,
                     message: "value required,",
                   },
-                  validate: (e) => utils.isAddress(admin3),
+                  validate: () => admin3 || "address isn't valid",
                   onChange: () => {
-                    const validAddress = utils.isAddress(admin3);
-                    if (!validAddress) {
+                    // error updates if you delete a character from correct address, but doesn't update if you undo char deletion
+                    if (!!admin3) {
                       setError("admin3", {
                         type: "custom",
                         message: `Address isn't valid`,
                       });
-                    }
-                    if (validAddress) {
+                    } else {
                       clearErrors("admin3");
                     }
                   },
