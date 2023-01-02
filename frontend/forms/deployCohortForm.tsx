@@ -8,6 +8,7 @@ import {
   HStack,
   Input,
   SimpleGrid,
+  Spacer,
   Switch,
   Text,
   VStack,
@@ -88,18 +89,6 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
   const admin2 = watch("admin2");
   const admin3 = watch("admin3");
 
-  // console.log("hasTophat", hasTophat);
-  console.log(errors);
-  console.log(
-    "tophatOwnerAddress",
-    utils.isAddress(tophatOwnerAddress),
-    "admin2:",
-    utils.isAddress(admin2),
-    "admin3:",
-    utils.isAddress(admin3)
-  );
-  console.log("hasTophat:", hasTophat, "addAdmin:", addAdmin);
-
   const progressLogic = (): number => {
     if (displayPart1) {
       return 33;
@@ -165,7 +154,7 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
       if (tophatValidations) {
         setDisplayPart3(false);
       }
-    } else if (addAdmin && !hasTophat) {
+    } else if (!hasTophat && addAdmin) {
       if (addAdminValidations) {
         setDisplayPart3(false);
       }
@@ -214,7 +203,6 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                     value: 3,
                     message: "Minimum length is 3",
                   },
-                  onChange: () => trigger("nameCohort"),
                 })}
               />
               <ErrorMessage
@@ -261,11 +249,6 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                     value: 2,
                     message: "Minimum length is 2",
                   },
-                  maxLength: {
-                    value: 6,
-                    message: "Maximum length is 6",
-                  },
-                  onChange: () => trigger("nameSBT"),
                 })}
               />
               <ErrorMessage
@@ -295,7 +278,6 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                     value: 6,
                     message: "Maximum length is 6",
                   },
-                  onChange: () => trigger("symbolSBT"),
                 })}
               />
               <ErrorMessage
@@ -321,7 +303,6 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                     value: 5,
                     message: "Minimum length is 5",
                   },
-                  onChange: () => trigger("uriSBT"),
                 })}
               />
               <ErrorMessage
@@ -360,6 +341,7 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                 // @ts-ignore
                 localForm={localForm}
                 {...register("stakePerMember", {
+                  validate: (val) => val > 0,
                   required: {
                     value: true,
                     message: "Input cannot be blank",
@@ -368,7 +350,6 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                     value: 1,
                     message: "Minimum of 1 required",
                   },
-                  validate: (val) => val > 0,
                 })}
               />
               <ErrorMessage
@@ -387,6 +368,7 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                 // @ts-ignore
                 localForm={localForm}
                 {...register("cohortSize", {
+                  validate: (val) => val > 0,
                   required: {
                     value: true,
                     message: "Input cannot be blank",
@@ -395,7 +377,6 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                     value: 1,
                     message: "Minimum of 1 required",
                   },
-                  validate: (val) => val > 0,
                 })}
               />
               <ErrorMessage
@@ -414,6 +395,7 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                 // @ts-ignore
                 localForm={localForm}
                 {...register("onboardingPeriod", {
+                  validate: (val) => val > 0,
                   required: {
                     value: true,
                     message: "Input cannot be blank",
@@ -422,7 +404,6 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                     value: 1,
                     message: "Minimum of 1 required",
                   },
-                  validate: (val) => val > 0,
                 })}
               />
               <ErrorMessage
@@ -441,6 +422,7 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                 // @ts-ignore
                 localForm={localForm}
                 {...register("stakingPeriod", {
+                  validate: (val) => val > 0,
                   required: {
                     value: true,
                     message: "Input cannot be blank",
@@ -449,7 +431,6 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                     value: 1,
                     message: "Minimum of 1 required",
                   },
-                  validate: (val) => val > 0,
                 })}
               />
               <ErrorMessage
@@ -460,24 +441,22 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
             </Box>
             <Box />
             <Box />
-            <Box>
+            <Box mt={10}>
               <Button
                 variant="ghost"
                 w="full"
                 color="red"
                 border="1px"
-                mt={10}
                 onClick={handleBackInputs6to9}
               >
                 BACK
               </Button>
             </Box>
-            <Box>
+            <Box mt={10}>
               <Button
                 variant="solid"
                 w="full"
                 color="black"
-                mt={10}
                 onClick={handleNextInputs6to9}
               >
                 NEXT
@@ -486,22 +465,26 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
           </SimpleGrid>
         </Box>
         {/* form part 3 */}
-        <VStack display={displayPart3 ? "inline" : "none"}>
-          <Box>
-            <Switch
-              label="Does the DAO have a TOP HAT?"
-              id="hasTophat"
-              // @ts-ignore
-              localForm={localForm}
-              {...register("hasTophat", {
-                onChange: () => {
-                  setValue("hasTophat", !hasTophat);
-                },
-              })}
-            />
-          </Box>
-          <HStack display={hasTophat ? "flex" : "none"}>
+        <Box display={displayPart3 ? "inline" : "none"}>
+          <HStack justifyContent="space-between" mb={4}>
             <Box>
+              <Text>Does the DAO have a TOP HAT?</Text>
+            </Box>
+            <Box>
+              <Switch
+                label=""
+                // @ts-ignore
+                localForm={localForm}
+                {...register("hasTophat", {
+                  onChange: () => {
+                    setValue("hasTophat", !hasTophat);
+                  },
+                })}
+              />
+            </Box>
+          </HStack>
+          <SimpleGrid columns={2} spacingX={4} spacingY={3}>
+            <Box display={hasTophat ? "flex" : "none"} flexDir="column">
               <Input
                 label="TOP HAT owner address"
                 id="tophatOwnerAddress"
@@ -514,18 +497,8 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                     value: true,
                     message: "value required",
                   },
-                  validate: () => tophatOwnerAddress || "address isn't valid",
-                  onChange: () => {
-                    // should be "if true, set errors." RHF has weird behavior
-                    if (!!tophatOwnerAddress) {
-                      setError("tophatOwnerAddress", {
-                        type: "custom",
-                        message: `Address isn't valid`,
-                      });
-                    } else {
-                      clearErrors("tophatOwnerAddress");
-                    }
-                  },
+                  validate: () =>
+                    utils.isAddress(tophatOwnerAddress) || "invalid address",
                 })}
               />
               <ErrorMessage
@@ -534,7 +507,7 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                 render={({ message }) => <Text color="red">{message}</Text>}
               />
             </Box>
-            <Box>
+            <Box display={hasTophat ? "flex" : "none"} flexDir="column">
               <Input
                 label="TOP HAT ID"
                 id="tophatID"
@@ -547,7 +520,6 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                     value: true,
                     message: "Value is required",
                   },
-                  onChange: () => trigger("tophatID"),
                 })}
               />
               <ErrorMessage
@@ -556,22 +528,28 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                 render={({ message }) => <Text color="red">{message}</Text>}
               />
             </Box>
-          </HStack>
-          <Box>
-            <Switch
-              label="Want to add additional administrators?"
-              // @ts-ignore
-              localForm={localForm}
-              {...(register("addAdmin"),
-              {
-                onChange: () => {
-                  setValue("addAdmin", !addAdmin);
-                },
-              })}
-            />
-          </Box>
-          <HStack display={addAdmin ? "flex" : "none"}>
+          </SimpleGrid>
+          <HStack justifyContent="space-between" mb={4}>
             <Box>
+              <Text>Want to add additional administrators?</Text>
+            </Box>
+            <Box>
+              <Switch
+                my={4}
+                label=""
+                // @ts-ignore
+                localForm={localForm}
+                {...(register("addAdmin"),
+                {
+                  onChange: () => {
+                    setValue("addAdmin", !addAdmin);
+                  },
+                })}
+              />
+            </Box>
+          </HStack>
+          <SimpleGrid columns={2} spacingX={4} spacingY={3}>
+            <Box display={addAdmin ? "flex" : "none"} flexDir="column">
               <Input
                 label="Input address 1"
                 id="admin2"
@@ -582,20 +560,9 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                 {...register("admin2", {
                   required: {
                     value: true,
-                    message: "value required,",
+                    message: "value required",
                   },
-                  validate: () => admin2 || "address isn't valid",
-                  onChange: () => {
-                    // should be "if true, set errors." RHF has weird behavior
-                    if (!!admin2) {
-                      setError("admin2", {
-                        type: "custom",
-                        message: `Address isn't valid`,
-                      });
-                    } else {
-                      clearErrors("admin2");
-                    }
-                  },
+                  validate: () => utils.isAddress(admin2) || "invalid address",
                 })}
               />
               <ErrorMessage
@@ -604,7 +571,7 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                 render={({ message }) => <Text color="red">{message}</Text>}
               />
             </Box>
-            <Box>
+            <Box display={addAdmin ? "flex" : "none"} flexDir="column">
               <Input
                 label="Input address 2"
                 id="admin3"
@@ -613,17 +580,13 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                 // @ts-ignore
                 localForm={localForm}
                 {...register("admin3", {
-                  required: {
-                    value: true,
-                    message: "value required,",
-                  },
-                  validate: () => admin3 || "address isn't valid",
+                  // validate: () => utils.isAddress(admin3) || "invalid address",
+                  required: false,
                   onChange: () => {
-                    // error updates if you delete a character from correct address, but doesn't update if you undo char deletion
-                    if (!!admin3) {
+                    if (!!utils.isAddress(admin3)) {
                       setError("admin3", {
                         type: "custom",
-                        message: `Address isn't valid`,
+                        message: "invalid address",
                       });
                     } else {
                       clearErrors("admin3");
@@ -637,10 +600,8 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                 render={({ message }) => <Text color="red">{message}</Text>}
               />
             </Box>
-          </HStack>
 
-          <HStack>
-            <Box w="50%">
+            <Box>
               <Button
                 variant="ghost"
                 w="full"
@@ -652,7 +613,7 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                 BACK
               </Button>
             </Box>
-            <Box w="50%">
+            <Box>
               <Button
                 variant="solid"
                 w="full"
@@ -663,8 +624,8 @@ const DeployCohortForm: React.FC<DeployCohortFormProps> = ({ children }) => {
                 Save Cohort
               </Button>
             </Box>
-          </HStack>
-        </VStack>
+          </SimpleGrid>
+        </Box>
       </FormControl>
     </>
   );
