@@ -12,7 +12,7 @@ import {
 import { Modal } from "@chakra-ui/modal";
 
 interface PreviewModalProps {
-  sbtImageURL: string;
+  sbtImageURL: any;
   sbtName: string;
 }
 

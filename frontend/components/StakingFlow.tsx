@@ -57,7 +57,8 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
 
   const customValidations = {
     required: true,
-    validate: (initiate: string) => utils.isAddress(initiate),
+    validate: (initiate: string) =>
+      utils.isAddress(initiate) || "invalid address",
     onChange: () => {
       // console.log(isValid);
       if (isValid) {
