@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, FC, ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import {
@@ -9,23 +9,16 @@ import {
   SimpleGrid,
   Text,
 } from "@raidguild/design-system";
-
+import { useFormContext } from "context/FormContext";
 import PreviewModal from "components/PreviewModal";
 
 interface deployCohortPt1Props {
-  setDisplay: Dispatch<boolean>;
+  children?: ReactNode;
 }
 
-// type FormValues = {
-//   nameCohort: string;
-//   sbtImage: HTMLInputElement;
-//   sbtPreview: string;
-//   nameSBT: string;
-//   symbolSBT: string;
-//   uriSBT: string;
-// };
+const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
+  const { setDisplayPart1 } = useFormContext();
 
-const DeployCohortPt1: React.FC<deployCohortPt1Props> = ({ setDisplay }) => {
   const localForm = useForm({
     defaultValues: {
       nameCohort: "",
@@ -52,12 +45,12 @@ const DeployCohortPt1: React.FC<deployCohortPt1Props> = ({ setDisplay }) => {
 
   const handleNext = async (): Promise<void> => {
     await trigger();
-    isValid && setDisplay(true);
+    isValid && setDisplayPart1(true);
   };
 
   return (
     <FormControl onSubmit={handleSubmit(handleNext)}>
-      <Box display={!setDisplay ? "none" : "inline"}>
+      <Box display={!setDisplayPart1 ? "none" : "inline"}>
         <SimpleGrid columns={2} spacingX={4} spacingY={3}>
           <Box>
             <Input
@@ -70,7 +63,7 @@ const DeployCohortPt1: React.FC<deployCohortPt1Props> = ({ setDisplay }) => {
               {...register("nameCohort", {
                 required: {
                   value: true,
-                  message: "Cannot be blank",
+                  message: "Value required",
                 },
               })}
             />
@@ -92,11 +85,6 @@ const DeployCohortPt1: React.FC<deployCohortPt1Props> = ({ setDisplay }) => {
               localForm={localForm}
               {...register("sbtImage", {
                 required: false,
-                // onChange: (e) => {
-                //   const file = e.target.files[0];
-                //   setValue("sbtImage", file);
-                //   // console.log(sbtImage);
-                // },
               })}
             />
             <ErrorMessage
@@ -117,11 +105,7 @@ const DeployCohortPt1: React.FC<deployCohortPt1Props> = ({ setDisplay }) => {
               {...register("nameSBT", {
                 required: {
                   value: true,
-                  message: "Value is required",
-                },
-                minLength: {
-                  value: 2,
-                  message: "Minimum length is 2",
+                  message: "Value required",
                 },
               })}
             />
@@ -142,15 +126,7 @@ const DeployCohortPt1: React.FC<deployCohortPt1Props> = ({ setDisplay }) => {
               {...register("symbolSBT", {
                 required: {
                   value: true,
-                  message: "Value is required",
-                },
-                minLength: {
-                  value: 2,
-                  message: "Minimum length is 3",
-                },
-                maxLength: {
-                  value: 6,
-                  message: "Maximum length is 6",
+                  message: "Value required",
                 },
               })}
             />
@@ -171,11 +147,7 @@ const DeployCohortPt1: React.FC<deployCohortPt1Props> = ({ setDisplay }) => {
               {...register("uriSBT", {
                 required: {
                   value: true,
-                  message: "Value is required",
-                },
-                minLength: {
-                  value: 5,
-                  message: "Minimum length is 5",
+                  message: "Value required",
                 },
               })}
             />

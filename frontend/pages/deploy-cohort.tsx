@@ -1,9 +1,11 @@
 import React, { useState, ReactNode } from "react";
 import { useAccount } from "wagmi";
 import { Box, Flex } from "@raidguild/design-system";
-import DeployCohortPt1 from "forms/deployCohortPt1";
+import DeployCohortPt1 from "../forms/deployCohortPt1";
+import DeployCohortPt2 from "../forms/deployCohortPt2";
+import DeployCohortPt3 from "../forms/deployCohortPt3";
+import { useFormContext } from "context/FormContext";
 
-// import DeployCohortForm from "forms/deployCohortForm";
 import BoxHeader from "components/BoxHeader";
 
 interface DeployCohortProps {
@@ -11,10 +13,9 @@ interface DeployCohortProps {
 }
 
 const DeployCohort: React.FC<DeployCohortProps> = ({ children }) => {
-  const [displayPart1, setDisplayPart1] = useState(true);
-  const [displayPart2, setDisplayPart2] = useState(false);
-  const [displayPart3, setDisplayPart3] = useState(false);
   const { isConnected } = useAccount();
+  const { setDisplayPart1, setDisplayPart2, setDisplayPart3 } =
+    useFormContext();
   return (
     <Flex
       minH="350px"
@@ -26,7 +27,9 @@ const DeployCohort: React.FC<DeployCohortProps> = ({ children }) => {
     >
       {isConnected && (
         <Box>
-          <DeployCohortPt1 setDisplay={setDisplayPart1} />
+          <DeployCohortPt1 />
+          <DeployCohortPt2 />
+          <DeployCohortPt3 />
         </Box>
       )}
       {!isConnected && (
