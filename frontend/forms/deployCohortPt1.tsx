@@ -1,5 +1,5 @@
-import React, { Dispatch, FC, ReactNode, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import React, { FC, ReactNode, useEffect } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import {
   Box,
@@ -18,11 +18,6 @@ interface deployCohortPt1Props {
 
 const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
   const {
-    nameCohort,
-    sbtImage,
-    nameSBT,
-    symbolSBT,
-    uriSBT,
     setNameCohort,
     setSbtImage,
     setNameSBT,
@@ -54,7 +49,8 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
   } = localForm;
 
   const values = getValues();
-  const watchSbtImage = watch("sbtImage");
+  const watchAllValues = watch();
+  console.log(watchAllValues);
 
   const handleNext = async (): Promise<void> => {
     await trigger();
@@ -70,9 +66,15 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    console.log(values.sbtImage);
-  }, [values.sbtImage]);
+  // useEffect(() => {
+  //   const subscription = watch((data) => {
+  //     console.log(data);
+  //   });
+
+  //   return () => {
+  //     subscription.unsubscribe();
+  //   };
+  // }, [watch]);
 
   return (
     <FormControl onSubmit={handleSubmit(handleNext)}>
@@ -110,12 +112,14 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               // @ts-ignore
               localForm={localForm}
               {...register("sbtImage", {
-                required: false,
+                required: {
+                  value: true,
+                  message: "Image required",
+                },
                 onChange(e) {
                   const file = e.target.files[0];
                   const url = URL.createObjectURL(file);
                   setValue("sbtImage", url);
-                  console.log(sbtImage);
                 },
               })}
             />
@@ -190,7 +194,10 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
             />
           </Box>
           <Box alignSelf="end">
-            <PreviewModal sbtImageURL={watchSbtImage} sbtName={nameSBT} />
+            <PreviewModal
+              sbtImageURL={values.sbtImage}
+              sbtName={values.nameSBT}
+            />
           </Box>
           <Box />
           <Box textAlign="right">

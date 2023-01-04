@@ -66,7 +66,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
   const values = getValues();
   const hasTophat = values.hasTophat;
   const addAdmin = values.addAdmin;
-  watch(["hasTophat", "addAdmin"]);
+  watch(["hasTophat", "tophatOwnerAddress", "addAdmin", "admin2", "admin3"]);
 
   const handleNext = async (): Promise<void> => {
     const validations = await trigger();
@@ -98,10 +98,8 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               // @ts-ignore
               localForm={localForm}
               {...register("hasTophat", {
-                onChange: () => {
-                  setValue("hasTophat", !hasTophat);
-                  console.log(hasTophat);
-                },
+                onChange: () =>
+                  setValue("hasTophat", !hasTophat ? true : false),
               })}
             />
           </Box>
@@ -165,10 +163,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               localForm={localForm}
               {...(register("addAdmin"),
               {
-                onChange: () => {
-                  setValue("addAdmin", !addAdmin);
-                  console.log(addAdmin);
-                },
+                onChange: () => setValue("addAdmin", !addAdmin ? true : false),
               })}
             />
           </Box>

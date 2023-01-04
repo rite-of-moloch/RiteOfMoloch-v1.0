@@ -33,6 +33,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
     formState: { errors, isValid },
   } = localForm;
 
+  watch(["stakePerMember", "cohortSize", "onboardingPeriod", "stakingPeriod"]);
   // const values = getValues();
 
   const handleBack = (): void => {

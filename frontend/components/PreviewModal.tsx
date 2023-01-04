@@ -7,10 +7,9 @@ import {
   ModalOverlay,
   useDisclosure,
   Text,
-  Box,
   Image,
 } from "@raidguild/design-system";
-import { Modal } from "@chakra-ui/modal";
+import { Modal, ModalHeader } from "@chakra-ui/modal";
 
 interface PreviewModalProps {
   sbtImageURL: string;
@@ -24,10 +23,14 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
-      <Button onClick={onOpen} variant="outline" w="full">
+      <Button
+        disabled={sbtImageURL === ""}
+        onClick={onOpen}
+        variant="outline"
+        w="full"
+      >
         Preview SBT
       </Button>
-
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -37,7 +40,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
           </ModalBody>
 
           <ModalFooter>
-            <Text fontSize="2xl">{sbtName}</Text>
+            <Text>{sbtName}</Text>
           </ModalFooter>
         </ModalContent>
       </Modal>

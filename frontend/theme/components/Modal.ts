@@ -11,25 +11,35 @@ const helpers = createMultiStyleConfigHelpers([
 const Modal = helpers.defineMultiStyleConfig({
   baseStyle: {
     dialogContainer: {
-      // alignSelf: "center",
       border: "1px",
       borderColor: "red",
       fontFamily: "spaceMono",
-      w: ["70%", "70%", "45%", "30%"],
-      h: "50%",
+      w: ["90%", "50%", "45%", "30%"],
+      h: "fit",
+      minH: "20%",
+      maxH: "50%",
       bg: "gradientSBTPrev",
-      rounded: "xl",
-      m: "auto",
+      rounded: "2xl",
+      position: "absolute",
+      left: "50%",
+      top: "50%",
+      marginLeft: "-25%",
+      marginTop: "-125px",
     },
     dialog: {
       bg: "gradientSBTPrev",
-      // alignContent: "center",
+      pt: "3em",
+      mt: "0",
     },
     closeButton: {
-      bg: "transparent",
       color: "red",
     },
-    body: {},
+
+    footer: {
+      marginX: "auto",
+      fontSize: "2xl",
+      mb: "-3rem",
+    },
   },
 });
 
