@@ -8,42 +8,72 @@ export const FormContext = createContext<{
   displayPart3: boolean;
   setDisplayPart3: any;
   nameCohort: string;
+  setNameCohort: any;
   nameSBT: string;
+  setNameSBT: any;
   sbtImage: string;
+  setSbtImage: any;
   symbolSBT: string;
+  setSymbolSBT: any;
   uriSBT: string;
+  setUriSBT: any;
   stakePerMember: number | null;
+  setStakePerMember: any;
   cohortSize: number | null;
+  setCohortSize: any;
   onboardingPeriod: number | null;
+  setOnboardingPeriod: any;
   stakingPeriod: number | null;
-  hasTophat: boolean;
-  addAdmin: boolean;
+  setStakingPeriod: any;
+  // hasTophat: boolean;
+  // setHasTophat: any;
+  // addAdmin: boolean;
+  // setAddAdmin: any;
   tophatOwnerAddress: string;
+  setTophatOwnerAddress: any;
   tophatID: string;
+  setTophatID: any;
   admin2: string;
+  setAdmin2: any;
   admin3: string;
+  setAdmin3: any;
 }>({
   displayPart1: true,
   setDisplayPart1: null,
-  displayPart2: true,
+  displayPart2: false,
   setDisplayPart2: null,
-  displayPart3: true,
+  displayPart3: false,
   setDisplayPart3: null,
   nameCohort: "",
+  setNameCohort: null,
   nameSBT: "",
+  setNameSBT: null,
   sbtImage: "",
+  setSbtImage: null,
   symbolSBT: "",
+  setSymbolSBT: null,
   uriSBT: "",
+  setUriSBT: null,
   stakePerMember: null,
+  setStakePerMember: null,
   cohortSize: null,
+  setCohortSize: null,
   onboardingPeriod: null,
+  setOnboardingPeriod: null,
   stakingPeriod: null,
-  hasTophat: false,
-  addAdmin: false,
+  setStakingPeriod: null,
+  // hasTophat: false,
+  // setHasTophat: null,
+  // addAdmin: false,
+  // setAddAdmin: null,
   tophatOwnerAddress: "",
+  setTophatOwnerAddress: null,
   tophatID: "",
+  setTophatID: null,
   admin2: "",
+  setAdmin2: null,
   admin3: "",
+  setAdmin3: null,
 });
 
 interface FormProviderProps {
@@ -63,8 +93,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   const [cohortSize, setCohortSize] = useState<number | null>(null);
   const [onboardingPeriod, setOnboardingPeriod] = useState<number | null>(null);
   const [stakingPeriod, setStakingPeriod] = useState<number | null>(null);
-  const [hasTophat, setHasTophat] = useState(false);
-  const [addAdmin, setAddAdmin] = useState(false);
+  // const [hasTophat, setHasTophat] = useState(false);
+  // const [addAdmin, setAddAdmin] = useState(false);
   const [tophatOwnerAddress, setTophatOwnerAddress] = useState("");
   const [tophatID, setTophatID] = useState("");
   const [admin2, setAdmin2] = useState("");
@@ -78,20 +108,35 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
     displayPart3,
     setDisplayPart3,
     nameCohort,
+    setNameCohort,
     nameSBT,
+    setNameSBT,
     sbtImage,
+    setSbtImage,
     symbolSBT,
+    setSymbolSBT,
     uriSBT,
+    setUriSBT,
     stakePerMember,
+    setStakePerMember,
     cohortSize,
+    setCohortSize,
     onboardingPeriod,
+    setOnboardingPeriod,
     stakingPeriod,
-    hasTophat,
-    addAdmin,
+    setStakingPeriod,
+    // hasTophat,
+    // setHasTophat,
+    // addAdmin,
+    // setAddAdmin,
     tophatOwnerAddress,
+    setTophatOwnerAddress,
     tophatID,
+    setTophatID,
     admin2,
+    setAdmin2,
     admin3,
+    setAdmin3,
   };
 
   return <FormContext.Provider value={value}>{children}</FormContext.Provider>;
@@ -106,20 +151,35 @@ export const useFormContext = () => {
     displayPart3,
     setDisplayPart3,
     nameCohort,
+    setNameCohort,
     nameSBT,
+    setNameSBT,
     sbtImage,
+    setSbtImage,
     symbolSBT,
+    setSymbolSBT,
     uriSBT,
+    setUriSBT,
     stakePerMember,
+    setStakePerMember,
     cohortSize,
+    setCohortSize,
     onboardingPeriod,
+    setOnboardingPeriod,
     stakingPeriod,
-    hasTophat,
-    addAdmin,
+    setStakingPeriod,
+    // hasTophat,
+    // setHasTophat,
+    // addAdmin,
+    // setAddAdmin,
     tophatOwnerAddress,
+    setTophatOwnerAddress,
     tophatID,
+    setTophatID,
     admin2,
+    setAdmin2,
     admin3,
+    setAdmin3,
   } = useContext(FormContext);
   return {
     displayPart1,
@@ -129,19 +189,34 @@ export const useFormContext = () => {
     displayPart3,
     setDisplayPart3,
     nameCohort,
+    setNameCohort,
     nameSBT,
+    setNameSBT,
     sbtImage,
+    setSbtImage,
     symbolSBT,
+    setSymbolSBT,
     uriSBT,
+    setUriSBT,
     stakePerMember,
+    setStakePerMember,
     cohortSize,
+    setCohortSize,
     onboardingPeriod,
+    setOnboardingPeriod,
     stakingPeriod,
-    hasTophat,
-    addAdmin,
+    setStakingPeriod,
+    // hasTophat,
+    // setHasTophat,
+    // addAdmin,
+    // setAddAdmin,
     tophatOwnerAddress,
+    setTophatOwnerAddress,
     tophatID,
+    setTophatID,
     admin2,
+    setAdmin2,
     admin3,
+    setAdmin3,
   };
 };

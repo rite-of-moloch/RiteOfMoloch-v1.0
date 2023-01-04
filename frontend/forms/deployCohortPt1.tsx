@@ -17,7 +17,21 @@ interface deployCohortPt1Props {
 }
 
 const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
-  const { setDisplayPart1 } = useFormContext();
+  const {
+    nameCohort,
+    sbtImage,
+    nameSBT,
+    symbolSBT,
+    uriSBT,
+    setNameCohort,
+    setSbtImage,
+    setNameSBT,
+    setSymbolSBT,
+    setUriSBT,
+    displayPart1,
+    setDisplayPart1,
+    setDisplayPart2,
+  } = useFormContext();
 
   const localForm = useForm({
     defaultValues: {
@@ -38,19 +52,25 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
     formState: { errors, isValid },
   } = localForm;
 
-  console.log(isValid);
-
   const values = getValues();
-  const nameSBT = values.nameSBT;
 
   const handleNext = async (): Promise<void> => {
     await trigger();
-    isValid && setDisplayPart1(true);
+    console.log(isValid);
+    if (isValid) {
+      setNameCohort(values.nameCohort);
+      setSbtImage(values.sbtImage);
+      setNameSBT(values.nameSBT);
+      setSymbolSBT(values.symbolSBT);
+      setUriSBT(values.uriSBT);
+      setDisplayPart1(false);
+      setDisplayPart2(true);
+    }
   };
 
   return (
     <FormControl onSubmit={handleSubmit(handleNext)}>
-      <Box display={!setDisplayPart1 ? "none" : "inline"}>
+      <Box display={displayPart1 ? "inline" : "none"}>
         <SimpleGrid columns={2} spacingX={4} spacingY={3}>
           <Box>
             <Input

@@ -16,7 +16,7 @@ interface DeployCohortPt2Props {
 }
 
 const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
-  const { setDisplayPart1, setDisplayPart2, setDisplayPart3 } =
+  const { displayPart2, setDisplayPart1, setDisplayPart2, setDisplayPart3 } =
     useFormContext();
 
   const localForm = useForm();
@@ -36,24 +36,21 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
   // const values = getValues();
 
   const handleBack = (): void => {
-    // setDisplayPart1(true);
-    // setDisplayPart2(false);
+    setDisplayPart1(true);
+    setDisplayPart2(false);
   };
 
   const handleNext = async (): Promise<void> => {
     const validations = await trigger();
-    // if (validations) {
-    //   setDisplayPart1(false);
-    //   setDisplayPart2(false);
-    //   setDisplayPart3(true);
-    // } else {
-    //   setNextError("Double check inputs");
-    // }
+    if (validations) {
+      setDisplayPart2(false);
+      setDisplayPart3(true);
+    }
   };
 
   return (
     <FormControl onSubmit={handleSubmit(handleBack)}>
-      <Box display={!setDisplayPart2 ? "none" : "inline"}>
+      <Box display={displayPart2 ? "inline" : "none"}>
         <SimpleGrid columns={2} spacingX={4} spacingY={3}>
           <Box>
             <Input

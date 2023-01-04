@@ -30,7 +30,14 @@ type FormValues = {
 };
 
 const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
-  const { setDisplayPart3 } = useFormContext();
+  const {
+    setTophatID,
+    setAdmin2,
+    setAdmin3,
+    displayPart3,
+    setDisplayPart2,
+    setDisplayPart3,
+  } = useFormContext();
 
   const localForm = useForm<FormValues>({
     defaultValues: {
@@ -56,26 +63,27 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
   } = localForm;
 
   const values = getValues();
-
   const hasTophat = values.hasTophat;
   const addAdmin = values.addAdmin;
-  const tophatOwnerAddress = values.tophatOwnerAddress;
-  const tophatID = values.tophatID;
-  const admin2 = values.admin2;
-  const admin3 = values.admin3;
+  console.log(values);
+  console.log(values.hasTophat);
+  console.log(values.addAdmin);
 
   const handleNext = async (): Promise<void> => {
     const validations = await trigger();
-    console.log(validations);
+    if (validations) {
+      setDisplayPart3(false);
+    }
   };
 
   const handleBack = (): void => {
-    null;
+    setDisplayPart2(true);
+    setDisplayPart3(false);
   };
 
   return (
     <FormControl onSubmit={handleSubmit(handleNext)}>
-      <Box display={setDisplayPart3 ? "inline" : "none"}>
+      <Box display={displayPart3 ? "inline" : "none"}>
         <HStack justifyContent="space-between" mb={4}>
           <Box>
             <Text>Does the DAO have a TOP HAT?</Text>
@@ -87,7 +95,8 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               localForm={localForm}
               {...register("hasTophat", {
                 onChange: () => {
-                  setValue("hasTophat", !hasTophat);
+                  setValue("hasTophat", hasTophat ? false : true);
+                  console.log(hasTophat);
                 },
               })}
             />
@@ -108,7 +117,8 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
                   message: "value required",
                 },
                 validate: () =>
-                  utils.isAddress(tophatOwnerAddress) || "invalid address",
+                  utils.isAddress(values.tophatOwnerAddress) ||
+                  "invalid address",
               })}
             />
             <ErrorMessage
@@ -152,7 +162,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               {...(register("addAdmin"),
               {
                 onChange: () => {
-                  setValue("addAdmin", !addAdmin);
+                  setValue("addAdmin", addAdmin ? false : true);
                 },
               })}
             />
@@ -172,7 +182,8 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
                   value: true,
                   message: "value required",
                 },
-                validate: () => utils.isAddress(admin2) || "invalid address",
+                validate: () =>
+                  utils.isAddress(values.admin2) || "invalid address",
               })}
             />
             <ErrorMessage
@@ -193,7 +204,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
                 // validate: () => utils.isAddress(admin3) || "invalid address",
                 required: false,
                 onChange: () => {
-                  if (!!utils.isAddress(admin3)) {
+                  if (!!utils.isAddress(values.admin3)) {
                     setError("admin3", {
                       type: "custom",
                       message: "invalid address",
