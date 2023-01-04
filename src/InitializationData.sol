@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: MIT
 // @author st4rgard3n, bitbeckers, MrDeadce11 / Raid Guild
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.13;
 
 contract InitializationData {
-
     // object is used to initialize new cohorts
     // daoAddress_ the contract address read from in order to ascertain cohort completion
     // tokenAddress_ the contract address for the asset which is staked into the cohort contract
@@ -13,16 +12,24 @@ contract InitializationData {
     // name_ the name for the cohort's soul bound tokens
     // symbol_ the ticker symbol for cohort's soul bound token
     // baseURI_ the uniform resource identifier for accessing soul bound token metadata
+    // chainId_ for Hats protocol MAINNET: polygon=137 gnosis=100 TESTNET: georli=5
+
+    // todo: add new vars
+
     struct InitData {
         address membershipCriteria;
         address stakingAsset;
         address treasury;
+        address topHatWearer;
+        address admin1;
+        address admin2;
         uint256 threshold;
         uint256 assetAmount;
         uint256 duration;
+        uint256 chainId;
+        uint256 topHatId;
         string name;
         string symbol;
         string baseUri;
     }
-
 }
