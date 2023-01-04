@@ -1,20 +1,25 @@
 // SPDX-License-Identifier: MIT
-// @author st4rgard3n, bitbeckers, MrDeadce11 / Raid Guild
+// @author st4rgard3n, bitbeckers, MrDeadce11, huntrr / Raid Guild
 pragma solidity ^0.8.13;
 
 contract InitializationData {
     // object is used to initialize new cohorts
-    // daoAddress_ the contract address read from in order to ascertain cohort completion
+
+    // PARAMS:
+    // membershipCriteria_ (Moloch DAO address) the contract address read from in order to ascertain cohort completion
     // tokenAddress_ the contract address for the asset which is staked into the cohort contract
     // treasury_ the address which receives tokens when initiates are slashed
+    // topHatWearer_ [OPTIONAL] address of topHat (DAO address that wears topHat)
+    // admin1_ [OPTIONAL] address of cohort admin
+    // admin2_ [OPTIONAL] address of cohort admin
     // shareThreshold_ the minimum amount of criteria which constitutes membership
     // minStake_ the minimum amount of staking asset required to join the cohort
+    // duration_ of cohort / staking period?
+    // chainId_ for Hats protocol MAINNET: polygon=137 gnosis=100 TESTNET: georli=5
+    // topHat_ [OPTIONAL] topHat id associated with topHatWearer
     // name_ the name for the cohort's soul bound tokens
     // symbol_ the ticker symbol for cohort's soul bound token
     // baseURI_ the uniform resource identifier for accessing soul bound token metadata
-    // chainId_ for Hats protocol MAINNET: polygon=137 gnosis=100 TESTNET: georli=5
-
-    // todo: add new vars
 
     struct InitData {
         address membershipCriteria;
