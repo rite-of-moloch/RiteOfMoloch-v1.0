@@ -16,8 +16,16 @@ interface DeployCohortPt2Props {
 }
 
 const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
-  const { displayPart2, setDisplayPart1, setDisplayPart2, setDisplayPart3 } =
-    useFormContext();
+  const {
+    setStakePerMember,
+    setCohortSize,
+    setOnboardingPeriod,
+    setStakingPeriod,
+    displayPart2,
+    setDisplayPart1,
+    setDisplayPart2,
+    setDisplayPart3,
+  } = useFormContext();
 
   const localForm = useForm();
 
@@ -25,16 +33,17 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
     register,
     watch,
     getValues,
-    setValue,
-    setError,
-    clearErrors,
-    trigger,
     handleSubmit,
     formState: { errors, isValid },
   } = localForm;
 
-  watch(["stakePerMember", "cohortSize", "onboardingPeriod", "stakingPeriod"]);
-  // const values = getValues();
+  const watchAllValues = watch([
+    "stakePerMember",
+    "cohortSize",
+    "onboardingPeriod",
+    "stakingPeriod",
+  ]);
+  const values = getValues();
 
   const handleBack = (): void => {
     setDisplayPart1(true);
@@ -42,8 +51,12 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
   };
 
   const handleNext = async (): Promise<void> => {
-    const validations = await trigger();
-    if (validations) {
+    console.log(isValid);
+    if (isValid) {
+      setStakePerMember(values.stakePerMember);
+      setCohortSize(values.cohortSize);
+      setOnboardingPeriod(values.onboardindPeriod);
+      setStakingPeriod(values.stakingPeriod);
       setDisplayPart2(false);
       setDisplayPart3(true);
     }

@@ -20,11 +20,12 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
   sbtImageURL,
   sbtName,
 }) => {
+  console.log(typeof sbtImageURL);
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
       <Button
-        disabled={sbtImageURL === ""}
+        disabled={sbtImageURL === "" || typeof sbtImageURL !== "string"}
         onClick={onOpen}
         variant="outline"
         w="full"

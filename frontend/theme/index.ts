@@ -62,6 +62,7 @@ export const theme = extendTheme({
       "&::-webkit-scrollbar": {
         width: "10px",
         bg: "transparent",
+        display: "none",
       },
       "&::-webkit-scrollbar-thumb": {
         background: "#ff3864",

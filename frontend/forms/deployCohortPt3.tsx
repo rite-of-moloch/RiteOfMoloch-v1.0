@@ -68,20 +68,46 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
   const addAdmin = values.addAdmin;
   watch(["hasTophat", "tophatOwnerAddress", "addAdmin", "admin2", "admin3"]);
 
-  const handleNext = async (): Promise<void> => {
-    const validations = await trigger();
-    if (validations) {
-      setTophatOwnerAddress(values.tophatOwnerAddress);
-      setTophatID(values.tophatID);
-      setAdmin2(values.admin2);
-      setAdmin3(values.admin3);
-      setDisplayPart3(false);
-    }
-  };
-
   const handleBack = (): void => {
     setDisplayPart2(true);
     setDisplayPart3(false);
+  };
+
+  const handleNext = async (): Promise<void> => {
+    console.log(hasTophat);
+    const validationsTopHat = await trigger(["tophatOwnerAddress", "tophatID"]);
+    const validationsAddAdmin = await trigger(["admin2", "admin3"]);
+
+    if (hasTophat && !addAdmin) {
+      console.log("has top hat, doesn't want to add admin");
+      if (validationsTopHat) {
+        console.log("validations pass");
+        setTophatOwnerAddress(values.tophatOwnerAddress);
+        setTophatID(values.tophatID);
+        setDisplayPart3(false);
+      } else console.log("validations fail");
+    } else if (!hasTophat && addAdmin) {
+      console.log("doesn't have tophat, wants to add admin");
+      if (validationsAddAdmin) {
+        console.log("validations pass");
+        setAdmin2(values.admin2);
+        setAdmin3(values.admin3);
+        setDisplayPart3(false);
+      } else console.log("validations fail");
+    } else if (hasTophat && addAdmin) {
+      console.log("Has tophat and wants to add admin");
+      if (validationsTopHat && validationsAddAdmin) {
+        console.log("validations pass");
+        setTophatOwnerAddress(values.tophatOwnerAddress);
+        setTophatID(values.tophatID);
+        setAdmin2(values.admin2);
+        setAdmin3(values.admin3);
+        setDisplayPart3(false);
+      } else console.log("validations fail");
+    } else if (!hasTophat && !addAdmin) {
+      console.log("doesn't have top hat and doens't want more admins");
+      setDisplayPart3(false);
+    }
   };
 
   return (
@@ -114,10 +140,6 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               // @ts-ignore
               localForm={localForm}
               {...register("tophatOwnerAddress", {
-                required: {
-                  value: true,
-                  message: "value required",
-                },
                 validate: () =>
                   utils.isAddress(values.tophatOwnerAddress) ||
                   "invalid address",
