@@ -8,11 +8,12 @@ import {
   useDisclosure,
   Text,
   Box,
+  Image,
 } from "@raidguild/design-system";
 import { Modal } from "@chakra-ui/modal";
 
 interface PreviewModalProps {
-  sbtImageURL: any;
+  sbtImageURL: string;
   sbtName: string;
 }
 
@@ -31,7 +32,9 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
-          <ModalBody>{sbtImageURL}</ModalBody>
+          <ModalBody>
+            <Image src={sbtImageURL} alt="SBT image preview" />
+          </ModalBody>
 
           <ModalFooter>
             <Text fontSize="2xl">{sbtName}</Text>

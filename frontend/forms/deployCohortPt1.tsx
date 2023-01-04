@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, ReactNode } from "react";
+import React, { Dispatch, FC, ReactNode, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import {
@@ -49,10 +49,12 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
     setValue,
     trigger,
     handleSubmit,
+    watch,
     formState: { errors, isValid },
   } = localForm;
 
   const values = getValues();
+  const watchSbtImage = watch("sbtImage");
 
   const handleNext = async (): Promise<void> => {
     await trigger();
@@ -67,6 +69,10 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
       setDisplayPart2(true);
     }
   };
+
+  useEffect(() => {
+    console.log(values.sbtImage);
+  }, [values.sbtImage]);
 
   return (
     <FormControl onSubmit={handleSubmit(handleNext)}>
@@ -105,6 +111,12 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               localForm={localForm}
               {...register("sbtImage", {
                 required: false,
+                onChange(e) {
+                  const file = e.target.files[0];
+                  const url = URL.createObjectURL(file);
+                  setValue("sbtImage", url);
+                  console.log(sbtImage);
+                },
               })}
             />
             <ErrorMessage
@@ -178,7 +190,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
             />
           </Box>
           <Box alignSelf="end">
-            <PreviewModal sbtImageURL={null} sbtName={nameSBT} />
+            <PreviewModal sbtImageURL={watchSbtImage} sbtName={nameSBT} />
           </Box>
           <Box />
           <Box textAlign="right">

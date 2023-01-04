@@ -31,6 +31,7 @@ type FormValues = {
 
 const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
   const {
+    setTophatOwnerAddress,
     setTophatID,
     setAdmin2,
     setAdmin3,
@@ -52,26 +53,28 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
 
   const {
     register,
-    watch,
     getValues,
     setValue,
     setError,
     clearErrors,
     trigger,
     handleSubmit,
+    watch,
     formState: { errors, isValid },
   } = localForm;
 
   const values = getValues();
   const hasTophat = values.hasTophat;
   const addAdmin = values.addAdmin;
-  console.log(values);
-  console.log(values.hasTophat);
-  console.log(values.addAdmin);
+  watch(["hasTophat", "addAdmin"]);
 
   const handleNext = async (): Promise<void> => {
     const validations = await trigger();
     if (validations) {
+      setTophatOwnerAddress(values.tophatOwnerAddress);
+      setTophatID(values.tophatID);
+      setAdmin2(values.admin2);
+      setAdmin3(values.admin3);
       setDisplayPart3(false);
     }
   };
@@ -91,11 +94,12 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
           <Box>
             <Switch
               label=""
+              id="hasTopHat"
               // @ts-ignore
               localForm={localForm}
               {...register("hasTophat", {
                 onChange: () => {
-                  setValue("hasTophat", hasTophat ? false : true);
+                  setValue("hasTophat", !hasTophat);
                   console.log(hasTophat);
                 },
               })}
@@ -162,7 +166,8 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               {...(register("addAdmin"),
               {
                 onChange: () => {
-                  setValue("addAdmin", addAdmin ? false : true);
+                  setValue("addAdmin", !addAdmin);
+                  console.log(addAdmin);
                 },
               })}
             />
