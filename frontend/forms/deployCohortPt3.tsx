@@ -115,6 +115,13 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
         setAdmin3(values.admin3);
         setSuperadmin2(values.superadmin2);
         setSuperadmin3(values.superadmin3);
+        // TO-DO: if user changes mind about adding additional admins, superadmin switch btn's might still be active. Handle this better
+        {
+          values.admin2 !== "" && superadmin2 && setSuperadmin2(true);
+        }
+        {
+          values.admin3 !== "" && superadmin3 && setSuperadmin3(true);
+        }
         setDisplayPart3(false);
         setDisplayPreviewNewCohort(true);
       } else console.log("validations fail");
@@ -128,6 +135,13 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
         setAdmin3(values.admin3);
         setSuperadmin2(values.superadmin2);
         setSuperadmin3(values.superadmin3);
+        // TO-DO: if user changes mind about adding additional admins, superadmin switch btn's might still be active. Handle this better
+        {
+          values.admin2 !== "" && superadmin2 && setSuperadmin2(true);
+        }
+        {
+          values.admin3 !== "" && superadmin3 && setSuperadmin3(true);
+        }
         setDisplayPart3(false);
         setDisplayPreviewNewCohort(true);
       } else console.log("validations fail");
@@ -194,7 +208,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
             <Input
               label="TOP HAT owner address"
               id="tophatOwnerAddress"
-              placeholder="TOP HAT owner address"
+              placeholder="Controller address..."
               borderColor="red"
               // @ts-ignore
               localForm={localForm}
@@ -338,6 +352,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
                 <Switch
                   size="sm"
                   my={4}
+                  id="superadmin3"
                   label=""
                   // @ts-ignore
                   localForm={localForm}

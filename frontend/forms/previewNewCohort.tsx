@@ -68,9 +68,6 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
               <span style={{ color: "gray" }}>Symbol SBT:</span> {symbolSBT}
             </Text>
             <Text>
-              <span style={{ color: "gray" }}>SBT URI:</span> {uriSBT}
-            </Text>
-            <Text>
               <span style={{ color: "gray" }}>Stake per member:</span>{" "}
               {stakePerMember}
             </Text>
@@ -85,12 +82,14 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
               <span style={{ color: "gray" }}>Onboarding period:</span>
               {onboardingPeriod}
             </Text>
-            {/* <Text><span style={{ color: "gray" }}>Address staking asset:</span> {nameSBT}</Text> */}
+            <Text>
+              <span style={{ color: "gray" }}>Asset URI:</span> {uriSBT}
+            </Text>
             {/* <Text><span style={{ color: "gray" }}>Controller address:</span> {}</Text> */}
             {/* <Text><span style={{ color: "gray" }}>Treasury address:</span> {}</Text> */}
             {tophatOwnerAddress !== "" && (
               <Text>
-                <span style={{ color: "gray" }}>Tophat owner address 1:</span>
+                <span style={{ color: "gray" }}>Controller address:</span>
                 <span>
                   {<Text fontSize="xx-small">{tophatOwnerAddress}</Text>}
                 </span>
@@ -98,7 +97,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
             )}
             {tophatID !== "" && (
               <Text>
-                <span style={{ color: "gray" }}>Tophat owner address 2:</span>
+                <span style={{ color: "gray" }}>TOP HAT ID:</span>
                 <span>{<Text fontSize="xx-small">{tophatID}</Text>}</span>
               </Text>
             )}
@@ -112,7 +111,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
                     {
                       <>
                         <Text fontSize="xx-small">{admin2}</Text>
-                        <Text fontSize="xx-small">
+                        <Text fontSize="xx-small" color="red">
                           {superadmin2 && "*superadmin"}
                         </Text>
                       </>
@@ -131,7 +130,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
                     {
                       <>
                         <Text fontSize="xx-small">{admin3}</Text>
-                        <Text fontSize="xx-small">
+                        <Text fontSize="xx-small" color="red">
                           {superadmin3 && "*superadmin"}
                         </Text>
                       </>
