@@ -7,6 +7,8 @@ export const FormContext = createContext<{
   setDisplayPart2: any;
   displayPart3: boolean;
   setDisplayPart3: any;
+  displayPreviewNewCohort: boolean;
+  setDisplayPreviewNewCohort: any;
   nameCohort: string;
   setNameCohort: any;
   nameSBT: string;
@@ -44,6 +46,8 @@ export const FormContext = createContext<{
   setDisplayPart2: null,
   displayPart3: false,
   setDisplayPart3: null,
+  displayPreviewNewCohort: false,
+  setDisplayPreviewNewCohort: null,
   nameCohort: "",
   setNameCohort: null,
   nameSBT: "",
@@ -84,6 +88,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   const [displayPart1, setDisplayPart1] = useState(true);
   const [displayPart2, setDisplayPart2] = useState(false);
   const [displayPart3, setDisplayPart3] = useState(false);
+  const [displayPreviewNewCohort, setDisplayPreviewNewCohort] = useState(false);
   const [nameCohort, setNameCohort] = useState("");
   const [nameSBT, setNameSBT] = useState("");
   const [sbtImage, setSbtImage] = useState("");
@@ -107,6 +112,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
     setDisplayPart2,
     displayPart3,
     setDisplayPart3,
+    displayPreviewNewCohort,
+    setDisplayPreviewNewCohort,
     nameCohort,
     setNameCohort,
     nameSBT,
@@ -150,6 +157,8 @@ export const useFormContext = () => {
     setDisplayPart2,
     displayPart3,
     setDisplayPart3,
+    displayPreviewNewCohort,
+    setDisplayPreviewNewCohort,
     nameCohort,
     setNameCohort,
     nameSBT,
@@ -188,6 +197,8 @@ export const useFormContext = () => {
     setDisplayPart2,
     displayPart3,
     setDisplayPart3,
+    displayPreviewNewCohort,
+    setDisplayPreviewNewCohort,
     nameCohort,
     setNameCohort,
     nameSBT,

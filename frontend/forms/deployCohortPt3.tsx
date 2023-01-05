@@ -4,17 +4,19 @@ import { ErrorMessage } from "@hookform/error-message";
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   HStack,
+  Heading,
   Input,
   SimpleGrid,
-  Spacer,
   Switch,
   Text,
-  VStack,
+  Tooltip,
 } from "@raidguild/design-system";
 import { useFormContext } from "context/FormContext";
 import { utils } from "ethers";
+import { BsQuestion } from "react-icons/bs";
 
 interface DeployCohortFormProps {
   children?: ReactNode;
@@ -27,6 +29,8 @@ type FormValues = {
   addAdmin: boolean;
   admin2: string;
   admin3: string;
+  superAdmin2: boolean;
+  superAdmin3: boolean;
 };
 
 const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
@@ -38,6 +42,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
     displayPart3,
     setDisplayPart2,
     setDisplayPart3,
+    setDisplayPreviewNewCohort,
   } = useFormContext();
 
   const localForm = useForm<FormValues>({
@@ -48,6 +53,8 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
       addAdmin: false,
       admin2: "",
       admin3: "",
+      superAdmin2: false,
+      superAdmin3: false,
     },
   });
 
@@ -85,6 +92,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
         setTophatOwnerAddress(values.tophatOwnerAddress);
         setTophatID(values.tophatID);
         setDisplayPart3(false);
+        setDisplayPreviewNewCohort(true);
       } else console.log("validations fail");
     } else if (!hasTophat && addAdmin) {
       console.log("doesn't have tophat, wants to add admin");
@@ -93,6 +101,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
         setAdmin2(values.admin2);
         setAdmin3(values.admin3);
         setDisplayPart3(false);
+        setDisplayPreviewNewCohort(true);
       } else console.log("validations fail");
     } else if (hasTophat && addAdmin) {
       console.log("Has tophat and wants to add admin");
@@ -103,20 +112,41 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
         setAdmin2(values.admin2);
         setAdmin3(values.admin3);
         setDisplayPart3(false);
+        setDisplayPreviewNewCohort(true);
       } else console.log("validations fail");
     } else if (!hasTophat && !addAdmin) {
       console.log("doesn't have top hat and doens't want more admins");
       setDisplayPart3(false);
+      setDisplayPreviewNewCohort(true);
     }
   };
+
+  const tooltipText = (
+    <>
+      <Heading as="h3" fontSize="lg">
+        What is a TOP HAT?
+      </Heading>
+      <Text>
+        Lorem ipsum dolor sit amet consectetur. Proin scelerisque ultrices
+        magnis netus tincidunt pellentesque diam senectus. Lorem ipsum dolor sit
+        amet consectetur. Proin scelerisque ultrices magnis netus tincidunt
+        pellentesque diam senectus.
+      </Text>
+    </>
+  );
 
   return (
     <FormControl onSubmit={handleSubmit(handleNext)}>
       <Box display={displayPart3 ? "inline" : "none"}>
         <HStack justifyContent="space-between" mb={4}>
-          <Box>
+          <Flex alignItems="center">
             <Text>Does the DAO have a TOP HAT?</Text>
-          </Box>
+            <Tooltip label={tooltipText} placement="top" hasArrow>
+              <Box ml="0.5rem" border="1px" rounded="full" borderColor="red">
+                <BsQuestion />
+              </Box>
+            </Tooltip>
+          </Flex>
           <Box>
             <Switch
               label=""

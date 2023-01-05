@@ -1,10 +1,11 @@
 import React, { ReactNode } from "react";
 import { useAccount } from "wagmi";
 import { Box, Flex } from "@raidguild/design-system";
+import ProgressBar from "components/ProgressBar";
 import DeployCohortPt1 from "../forms/deployCohortPt1";
 import DeployCohortPt2 from "../forms/deployCohortPt2";
 import DeployCohortPt3 from "../forms/deployCohortPt3";
-import ProgressBar from "components/ProgressBar";
+import PreviewNewCohort from "components/previewNewCohort";
 import BoxHeader from "components/BoxHeader";
 
 interface DeployCohortProps {
@@ -31,6 +32,7 @@ const DeployCohort: React.FC<DeployCohortProps> = ({ children }) => {
           <DeployCohortPt1 />
           <DeployCohortPt2 />
           <DeployCohortPt3 />
+          <PreviewNewCohort />
         </Box>
       )}
       {!isConnected && (

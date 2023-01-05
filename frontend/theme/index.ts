@@ -4,6 +4,7 @@ import HStack from "./components/HStack";
 import Modal from "./components/Modal";
 import Progress from "./components/Progress";
 import Switch from "./components/Switch";
+import Tooltip from "./components/Tooltip";
 
 export const theme = extendTheme({
   components: {
@@ -12,6 +13,7 @@ export const theme = extendTheme({
     Modal,
     Progress,
     Switch,
+    Tooltip,
   },
   colors: {
     transparent: "transparent",
