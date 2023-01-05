@@ -20,7 +20,6 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
   sbtImageURL,
   sbtName,
 }) => {
-  console.log(typeof sbtImageURL);
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>

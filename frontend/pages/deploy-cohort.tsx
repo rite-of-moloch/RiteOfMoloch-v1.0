@@ -7,6 +7,7 @@ import DeployCohortPt2 from "../forms/deployCohortPt2";
 import DeployCohortPt3 from "../forms/deployCohortPt3";
 import PreviewNewCohort from "components/previewNewCohort";
 import BoxHeader from "components/BoxHeader";
+import { useFormContext } from "context/FormContext";
 
 interface DeployCohortProps {
   children: ReactNode;
@@ -14,6 +15,7 @@ interface DeployCohortProps {
 
 const DeployCohort: React.FC<DeployCohortProps> = ({ children }) => {
   const { isConnected } = useAccount();
+  const { displayPreviewNewCohort } = useFormContext();
 
   return (
     <Flex
@@ -26,7 +28,7 @@ const DeployCohort: React.FC<DeployCohortProps> = ({ children }) => {
     >
       {isConnected && (
         <Box>
-          <Box mb={8}>
+          <Box mb={8} display={displayPreviewNewCohort ? "none" : ""}>
             <ProgressBar />
           </Box>
           <DeployCohortPt1 />

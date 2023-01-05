@@ -7,7 +7,7 @@ interface ProgressBarProps {
 }
 
 const ProgressBar: React.FC<ProgressBarProps> = ({ children }) => {
-  const { displayPart1, displayPart2, displayPart3 } = useFormContext();
+  const { displayPart1, displayPart2 } = useFormContext();
 
   const getProgress = (): number => {
     let progress = 0;
