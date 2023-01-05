@@ -73,7 +73,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
   const values = getValues();
   const hasTophat = values.hasTophat;
   const addAdmin = values.addAdmin;
-  watch(["hasTophat", "tophatOwnerAddress", "addAdmin", "admin2", "admin3"]);
+  watch();
 
   const handleBack = (): void => {
     setDisplayPart2(true);
@@ -89,8 +89,11 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
       console.log("has top hat, doesn't want to add admin");
       if (validationsTopHat) {
         console.log("validations pass");
+        // handle all values in case user toggles switches off
         setTophatOwnerAddress(values.tophatOwnerAddress);
         setTophatID(values.tophatID);
+        setAdmin2(values.admin2);
+        setAdmin3(values.admin3);
         setDisplayPart3(false);
         setDisplayPreviewNewCohort(true);
       } else console.log("validations fail");
@@ -98,6 +101,9 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
       console.log("doesn't have tophat, wants to add admin");
       if (validationsAddAdmin) {
         console.log("validations pass");
+        // handle all values in case user toggles switches off
+        setTophatOwnerAddress(values.tophatOwnerAddress);
+        setTophatID(values.tophatID);
         setAdmin2(values.admin2);
         setAdmin3(values.admin3);
         setDisplayPart3(false);
@@ -116,6 +122,11 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
       } else console.log("validations fail");
     } else if (!hasTophat && !addAdmin) {
       console.log("doesn't have top hat and doens't want more admins");
+      // handle all values in case user toggles switches off
+      setTophatOwnerAddress(values.tophatOwnerAddress);
+      setTophatID(values.tophatID);
+      setAdmin2(values.admin2);
+      setAdmin3(values.admin3);
       setDisplayPart3(false);
       setDisplayPreviewNewCohort(true);
     }
@@ -154,8 +165,13 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               // @ts-ignore
               localForm={localForm}
               {...register("hasTophat", {
-                onChange: () =>
-                  setValue("hasTophat", !hasTophat ? true : false),
+                onChange: () => {
+                  setValue("hasTophat", !hasTophat ? true : false);
+                  if (!!values.hasTophat) {
+                    setValue("tophatOwnerAddress", "");
+                    setValue("tophatID", "");
+                  }
+                },
               })}
             />
           </Box>
@@ -215,7 +231,13 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               localForm={localForm}
               {...(register("addAdmin"),
               {
-                onChange: () => setValue("addAdmin", !addAdmin ? true : false),
+                onChange: () => {
+                  setValue("addAdmin", !addAdmin ? true : false);
+                  if (!!values.addAdmin) {
+                    setValue("admin2", "");
+                    setValue("admin3", "");
+                  }
+                },
               })}
             />
           </Box>
@@ -281,6 +303,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               color="red"
               border="1px"
               mt={10}
+              rounded="sm"
               onClick={handleBack}
             >
               BACK
@@ -294,7 +317,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               mt={10}
               onClick={handleNext}
             >
-              Save Cohort
+              Preview Cohort
             </Button>
           </Box>
         </SimpleGrid>

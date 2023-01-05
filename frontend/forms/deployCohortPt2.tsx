@@ -34,16 +34,13 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
     watch,
     getValues,
     handleSubmit,
+    trigger,
     formState: { errors, isValid },
   } = localForm;
 
-  const watchAllValues = watch([
-    "stakePerMember",
-    "cohortSize",
-    "onboardingPeriod",
-    "stakingPeriod",
-  ]);
+  watch();
   const values = getValues();
+  console.log(values);
 
   const handleBack = (): void => {
     setDisplayPart1(true);
@@ -51,11 +48,12 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
   };
 
   const handleNext = async (): Promise<void> => {
-    console.log(isValid);
+    await trigger();
+    console.log("onboardindPeriod", values.onboardingPeriod);
     if (isValid) {
       setStakePerMember(values.stakePerMember);
       setCohortSize(values.cohortSize);
-      setOnboardingPeriod(values.onboardindPeriod);
+      setOnboardingPeriod(values.onboardingPeriod);
       setStakingPeriod(values.stakingPeriod);
       setDisplayPart2(false);
       setDisplayPart3(true);
@@ -182,6 +180,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               w="full"
               color="red"
               border="1px"
+              rounded="sm"
               onClick={handleBack}
             >
               BACK
