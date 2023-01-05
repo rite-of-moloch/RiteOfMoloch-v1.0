@@ -29,8 +29,8 @@ type FormValues = {
   addAdmin: boolean;
   admin2: string;
   admin3: string;
-  superAdmin2: boolean;
-  superAdmin3: boolean;
+  superadmin2: boolean;
+  superadmin3: boolean;
 };
 
 const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
@@ -39,6 +39,10 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
     setTophatID,
     setAdmin2,
     setAdmin3,
+    superadmin2,
+    superadmin3,
+    setSuperadmin2,
+    setSuperadmin3,
     displayPart3,
     setDisplayPart2,
     setDisplayPart3,
@@ -53,8 +57,8 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
       addAdmin: false,
       admin2: "",
       admin3: "",
-      superAdmin2: false,
-      superAdmin3: false,
+      superadmin2: false,
+      superadmin3: false,
     },
   });
 
@@ -74,6 +78,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
   const hasTophat = values.hasTophat;
   const addAdmin = values.addAdmin;
   watch();
+  console.log(values);
 
   const handleBack = (): void => {
     setDisplayPart2(true);
@@ -94,6 +99,8 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
         setTophatID(values.tophatID);
         setAdmin2(values.admin2);
         setAdmin3(values.admin3);
+        setSuperadmin2(values.superadmin2);
+        setSuperadmin3(values.superadmin3);
         setDisplayPart3(false);
         setDisplayPreviewNewCohort(true);
       } else console.log("validations fail");
@@ -106,6 +113,8 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
         setTophatID(values.tophatID);
         setAdmin2(values.admin2);
         setAdmin3(values.admin3);
+        setSuperadmin2(values.superadmin2);
+        setSuperadmin3(values.superadmin3);
         setDisplayPart3(false);
         setDisplayPreviewNewCohort(true);
       } else console.log("validations fail");
@@ -117,6 +126,8 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
         setTophatID(values.tophatID);
         setAdmin2(values.admin2);
         setAdmin3(values.admin3);
+        setSuperadmin2(values.superadmin2);
+        setSuperadmin3(values.superadmin3);
         setDisplayPart3(false);
         setDisplayPreviewNewCohort(true);
       } else console.log("validations fail");
@@ -127,6 +138,8 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
       setTophatID(values.tophatID);
       setAdmin2(values.admin2);
       setAdmin3(values.admin3);
+      setSuperadmin2(values.superadmin2);
+      setSuperadmin3(values.superadmin3);
       setDisplayPart3(false);
       setDisplayPreviewNewCohort(true);
     }
@@ -236,6 +249,8 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
                   if (!!values.addAdmin) {
                     setValue("admin2", "");
                     setValue("admin3", "");
+                    // setValue("superadmin2", false);
+                    // setValue("superadmin3", false);
                   }
                 },
               })}
@@ -265,7 +280,28 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               name="admin2"
               render={({ message }) => <Text color="red">{message}</Text>}
             />
+            {/* superadmin2 switch */}
+            <HStack justifyContent="space-between" mb={4}>
+              <Box>
+                <Text fontSize="xs">Make address super-admin?</Text>
+              </Box>
+              <Box>
+                <Switch
+                  size="sm"
+                  my={4}
+                  label=""
+                  // @ts-ignore
+                  localForm={localForm}
+                  {...(register("superadmin2"),
+                  {
+                    onChange: () =>
+                      setValue("superadmin2", !superadmin2 ? true : false),
+                  })}
+                />
+              </Box>
+            </HStack>
           </Box>
+          {/* start address 2 */}
           <Box display={addAdmin ? "flex" : "none"} flexDir="column">
             <Input
               label="Input address 2"
@@ -275,7 +311,6 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               // @ts-ignore
               localForm={localForm}
               {...register("admin3", {
-                // validate: () => utils.isAddress(admin3) || "invalid address",
                 required: false,
                 onChange: () => {
                   if (!!utils.isAddress(values.admin3)) {
@@ -294,8 +329,28 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               name="admin3"
               render={({ message }) => <Text color="red">{message}</Text>}
             />
+            {/* superadmin3 switch */}
+            <HStack justifyContent="space-between" mb={4}>
+              <Box>
+                <Text fontSize="xs">Make address super-admin?</Text>
+              </Box>
+              <Box>
+                <Switch
+                  size="sm"
+                  my={4}
+                  label=""
+                  // @ts-ignore
+                  localForm={localForm}
+                  {...(register("superadmin3"),
+                  {
+                    onChange: () =>
+                      setValue("superadmin3", !superadmin3 ? true : false),
+                  })}
+                />
+              </Box>
+            </HStack>
           </Box>
-
+          {/* start buttons */}
           <Box>
             <Button
               variant="ghost"

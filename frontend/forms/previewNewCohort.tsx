@@ -32,8 +32,10 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     tophatID,
     admin2,
     admin3,
+    superadmin2,
+    superadmin3,
   } = useFormContext();
-  console.log(onboardingPeriod);
+  console.log(superadmin2, superadmin3);
 
   const handleBack = (): void => {
     setDisplayPart3(true);
@@ -88,7 +90,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
             {/* <Text><span style={{ color: "gray" }}>Treasury address:</span> {}</Text> */}
             {tophatOwnerAddress !== "" && (
               <Text>
-                <span style={{ color: "gray" }}>Tophat owner address:</span>
+                <span style={{ color: "gray" }}>Tophat owner address 1:</span>
                 <span>
                   {<Text fontSize="xx-small">{tophatOwnerAddress}</Text>}
                 </span>
@@ -96,7 +98,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
             )}
             {tophatID !== "" && (
               <Text>
-                <span style={{ color: "gray" }}>Tophat owner address:</span>
+                <span style={{ color: "gray" }}>Tophat owner address 2:</span>
                 <span>{<Text fontSize="xx-small">{tophatID}</Text>}</span>
               </Text>
             )}
@@ -106,9 +108,17 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
                   <span style={{ color: "gray" }}>
                     Additional admin address 1:
                   </span>
-                  <span>{<Text fontSize="xx-small">{admin2}</Text>}</span>
+                  <span>
+                    {
+                      <>
+                        <Text fontSize="xx-small">{admin2}</Text>
+                        <Text fontSize="xx-small">
+                          {superadmin2 && "*superadmin"}
+                        </Text>
+                      </>
+                    }
+                  </span>
                 </Text>
-                {/* {isSuperAdmin2 && <Text fontWeight="bold">*super admin</Text>} */}
               </>
             )}
             {admin3 !== "" && (
@@ -117,9 +127,17 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
                   <span style={{ color: "gray" }}>
                     Additional admin address 2:
                   </span>
-                  <span>{<Text fontSize="xx-small">{admin3}</Text>}</span>
+                  <span>
+                    {
+                      <>
+                        <Text fontSize="xx-small">{admin3}</Text>
+                        <Text fontSize="xx-small">
+                          {superadmin3 && "*superadmin"}
+                        </Text>
+                      </>
+                    }
+                  </span>
                 </Text>
-                {/* {isSuperAdmin3 && <Text fontWeight="bold">*super admin</Text>} */}
               </>
             )}
           </Stack>
