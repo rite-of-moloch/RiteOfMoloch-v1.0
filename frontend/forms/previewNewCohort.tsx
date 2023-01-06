@@ -1,3 +1,4 @@
+import React, { ReactNode } from "react";
 import {
   Box,
   Button,
@@ -8,13 +9,15 @@ import {
   Text,
 } from "@raidguild/design-system";
 import { useFormContext } from "context/FormContext";
-import React, { ReactNode } from "react";
+import useCreateCohort from "../hooks/useCreateCohort";
 
 interface PreviewNewCohortProps {
   children?: ReactNode;
 }
 
 const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
+  // const { createCohort } = useCreateCohort();
+
   const {
     setDisplayPart3,
     setDisplayPreviewNewCohort,
@@ -35,12 +38,13 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     superadmin2,
     superadmin3,
   } = useFormContext();
-  console.log(superadmin2, superadmin3);
 
   const handleBack = (): void => {
     setDisplayPart3(true);
     setDisplayPreviewNewCohort(false);
   };
+
+  const handleDeployCohort = () => {};
 
   return (
     <Box display={displayPreviewNewCohort ? "inline" : "none"} m="auto">

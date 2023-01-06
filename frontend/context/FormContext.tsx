@@ -43,6 +43,8 @@ export const FormContext = createContext<{
   setSuperadmin2: any;
   superadmin3: boolean;
   setSuperadmin3: any;
+  calldata: any[];
+  setCalldata: any;
 }>({
   displayPart1: true,
   setDisplayPart1: null,
@@ -86,6 +88,8 @@ export const FormContext = createContext<{
   setSuperadmin2: null,
   superadmin3: false,
   setSuperadmin3: null,
+  calldata: [],
+  setCalldata: null,
 });
 
 interface FormProviderProps {
@@ -114,6 +118,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   const [admin3, setAdmin3] = useState("");
   const [superadmin2, setSuperadmin2] = useState(false);
   const [superadmin3, setSuperadmin3] = useState(false);
+  const [calldata, setCalldata] = useState([]);
 
   const value = {
     displayPart1,
@@ -158,6 +163,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
     setSuperadmin2,
     superadmin3,
     setSuperadmin3,
+    calldata,
+    setCalldata,
   };
 
   return <FormContext.Provider value={value}>{children}</FormContext.Provider>;
@@ -207,6 +214,8 @@ export const useFormContext = () => {
     setSuperadmin2,
     superadmin3,
     setSuperadmin3,
+    calldata,
+    setCalldata,
   } = useContext(FormContext);
   return {
     displayPart1,
@@ -251,5 +260,7 @@ export const useFormContext = () => {
     setSuperadmin2,
     superadmin3,
     setSuperadmin3,
+    calldata,
+    setCalldata,
   };
 };
