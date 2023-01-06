@@ -19,6 +19,8 @@ contract ROMFScript is Script {
         vm.startBroadcast();
         new RiteOfMolochFactory();
 
-        ROMF.vm.stopBroadcast();
+        ROMF.addHatsProtocol(5, 0xcf912a0193593f5cD55D81FF611c26c3ED63f924);
+
+        vm.stopBroadcast();
     }
 }
