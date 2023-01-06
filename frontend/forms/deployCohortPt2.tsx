@@ -40,7 +40,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
 
   watch();
   const values = getValues();
-  console.log(values);
+  // console.log(values);
 
   const handleBack = (): void => {
     setDisplayPart1(true);

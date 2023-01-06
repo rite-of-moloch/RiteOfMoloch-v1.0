@@ -77,8 +77,10 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
   const values = getValues();
   const hasTophat = values.hasTophat;
   const addAdmin = values.addAdmin;
+
   watch();
-  console.log(values);
+
+  // console.log(watch());
 
   const handleBack = (): void => {
     setDisplayPart2(true);
@@ -99,8 +101,8 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
         setTophatID(values.tophatID);
         setAdmin2(values.admin2);
         setAdmin3(values.admin3);
-        setSuperadmin2(values.superadmin2);
-        setSuperadmin3(values.superadmin3);
+        setSuperadmin2(false);
+        setSuperadmin3(false);
         setDisplayPart3(false);
         setDisplayPreviewNewCohort(true);
       } else console.log("validations fail");
@@ -108,19 +110,22 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
       console.log("doesn't have tophat, wants to add admin");
       if (validationsAddAdmin) {
         console.log("validations pass");
-        // handle all values in case user toggles switches off
         setTophatOwnerAddress(values.tophatOwnerAddress);
         setTophatID(values.tophatID);
         setAdmin2(values.admin2);
         setAdmin3(values.admin3);
-        setSuperadmin2(values.superadmin2);
-        setSuperadmin3(values.superadmin3);
+        // setSuperadmin2(values.superadmin2);
+        // setSuperadmin3(values.superadmin3);
         // TO-DO: if user changes mind about adding additional admins, superadmin switch btn's might still be active. Handle this better
         {
-          values.admin2 !== "" && superadmin2 && setSuperadmin2(true);
+          values.admin2 !== "" && values.superadmin2
+            ? setSuperadmin2(true)
+            : setSuperadmin2(false);
         }
         {
-          values.admin3 !== "" && superadmin3 && setSuperadmin3(true);
+          values.admin3 !== "" && values.superadmin3
+            ? setSuperadmin3(true)
+            : setSuperadmin3(false);
         }
         setDisplayPart3(false);
         setDisplayPreviewNewCohort(true);
@@ -133,14 +138,16 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
         setTophatID(values.tophatID);
         setAdmin2(values.admin2);
         setAdmin3(values.admin3);
-        setSuperadmin2(values.superadmin2);
-        setSuperadmin3(values.superadmin3);
         // TO-DO: if user changes mind about adding additional admins, superadmin switch btn's might still be active. Handle this better
         {
-          values.admin2 !== "" && superadmin2 && setSuperadmin2(true);
+          values.admin2 !== "" && superadmin2
+            ? setSuperadmin2(true)
+            : setSuperadmin2(false);
         }
         {
-          values.admin3 !== "" && superadmin3 && setSuperadmin3(true);
+          values.admin3 !== "" && superadmin3
+            ? setSuperadmin3(true)
+            : setSuperadmin3(false);
         }
         setDisplayPart3(false);
         setDisplayPreviewNewCohort(true);
@@ -152,8 +159,8 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
       setTophatID(values.tophatID);
       setAdmin2(values.admin2);
       setAdmin3(values.admin3);
-      setSuperadmin2(values.superadmin2);
-      setSuperadmin3(values.superadmin3);
+      setSuperadmin2(false);
+      setSuperadmin3(false);
       setDisplayPart3(false);
       setDisplayPreviewNewCohort(true);
     }
@@ -303,13 +310,18 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
                 <Switch
                   size="sm"
                   my={4}
+                  id="superadmin2"
                   label=""
                   // @ts-ignore
                   localForm={localForm}
                   {...(register("superadmin2"),
                   {
-                    onChange: () =>
-                      setValue("superadmin2", !superadmin2 ? true : false),
+                    onChange: () => {
+                      setValue(
+                        "superadmin2",
+                        !values.superadmin2 ? true : false
+                      );
+                    },
                   })}
                 />
               </Box>
@@ -359,7 +371,10 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
                   {...(register("superadmin3"),
                   {
                     onChange: () =>
-                      setValue("superadmin3", !superadmin3 ? true : false),
+                      setValue(
+                        "superadmin3",
+                        !values.superadmin3 ? true : false
+                      ),
                   })}
                 />
               </Box>

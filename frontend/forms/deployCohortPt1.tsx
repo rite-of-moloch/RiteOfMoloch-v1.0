@@ -49,8 +49,8 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
   } = localForm;
 
   const values = getValues();
-  const watchAllValues = watch();
-  console.log(watchAllValues);
+  watch();
+  // console.log(watch());
 
   const handleNext = async (): Promise<void> => {
     await trigger();

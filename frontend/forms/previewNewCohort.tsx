@@ -57,7 +57,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
         w={["full", "full", "80%", "60%"]}
       >
         <Box>
-          <Stack fontSize="sm">
+          <Stack>
             <Text fontSize="lg" color="red" fontWeight="semibold">
               {nameCohort || "Name cohort"}
             </Text>
@@ -98,46 +98,30 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
             {tophatID !== "" && (
               <Text>
                 <span style={{ color: "gray" }}>TOP HAT ID:</span>
-                <span>{<Text fontSize="xx-small">{tophatID}</Text>}</span>
+                <span>{<Text>{tophatID}</Text>}</span>
               </Text>
             )}
             {admin2 !== "" && (
-              <>
-                <Text>
-                  <span style={{ color: "gray" }}>
-                    Additional admin address 1:
-                  </span>
-                  <span>
-                    {
-                      <>
-                        <Text fontSize="xx-small">{admin2}</Text>
-                        <Text fontSize="xx-small" color="red">
-                          {superadmin2 && "*superadmin"}
-                        </Text>
-                      </>
-                    }
-                  </span>
-                </Text>
-              </>
+              <Text>
+                <span style={{ color: "gray" }}>Admin address 1:</span>
+                {superadmin2 && (
+                  <Text fontSize="x-small" color="red">
+                    *super-admin
+                  </Text>
+                )}
+                <span>{<Text fontSize="xx-small">{admin2}</Text>}</span>
+              </Text>
             )}
             {admin3 !== "" && (
-              <>
-                <Text>
-                  <span style={{ color: "gray" }}>
-                    Additional admin address 2:
-                  </span>
-                  <span>
-                    {
-                      <>
-                        <Text fontSize="xx-small">{admin3}</Text>
-                        <Text fontSize="xx-small" color="red">
-                          {superadmin3 && "*superadmin"}
-                        </Text>
-                      </>
-                    }
-                  </span>
-                </Text>
-              </>
+              <Text>
+                <span style={{ color: "gray" }}>Admin address 2:</span>
+                {superadmin3 && (
+                  <Text fontSize="x-small" color="red">
+                    *super-admin
+                  </Text>
+                )}
+                <span>{<Text fontSize="xx-small">{admin3}</Text>}</span>
+              </Text>
             )}
           </Stack>
         </Box>
