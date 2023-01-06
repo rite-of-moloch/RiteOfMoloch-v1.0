@@ -1,5 +1,5 @@
-import React, { FC, ReactNode, useEffect } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import React, { FC, ReactNode } from "react";
+import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import {
   Box,
@@ -20,12 +20,15 @@ interface deployCohortPt1Props {
 
 const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
   const {
-    setNameCohort,
-    setSbtImage,
+    tokenAddress,
+    setTokenAddress,
+    // setNameCohort,
+    // setSbtImage,
     setNameSBT,
     setSymbolSBT,
     setUriSBT,
-    setTreasuryAddress,
+    setTreasury,
+    setMembershipCriteria,
     displayPart1,
     setDisplayPart1,
     setDisplayPart2,
@@ -33,12 +36,14 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
 
   const localForm = useForm({
     defaultValues: {
-      nameCohort: "",
-      sbtImage: "",
+      tokenAddress: "",
+      // nameCohort: "",
+      // sbtImage: "",
       nameSBT: "",
       symbolSBT: "",
       uriSBT: "",
-      treasuryAddress: "",
+      treasury: "",
+      membershipCriteria: "",
     },
   });
 
@@ -60,12 +65,14 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
     await trigger();
     console.log(isValid);
     if (isValid) {
-      setNameCohort(values.nameCohort);
-      setSbtImage(values.sbtImage);
+      setTokenAddress(values.tokenAddress);
+      // setNameCohort(values.nameCohort);
+      // // setSbtImage(values.sbtImage);
       setNameSBT(values.nameSBT);
       setSymbolSBT(values.symbolSBT);
       setUriSBT(values.uriSBT);
-      setTreasuryAddress(values.treasuryAddress);
+      setTreasury(values.treasury);
+      setMembershipCriteria(values.membershipCriteria);
       setDisplayPart1(false);
       setDisplayPart2(true);
     }
@@ -75,7 +82,68 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
     <FormControl onSubmit={handleSubmit(handleNext)}>
       <Box display={displayPart1 ? "inline" : "none"}>
         <SimpleGrid columns={2} spacingX={4} spacingY={3}>
-          <Box>
+          <Tooltip
+            label="Must be a valid Moloch DAO address. Rite of Moloch will read from this to ascertain cohort completion"
+            placement="top-start"
+            hasArrow
+          >
+            <Box>
+              <Input
+                label="DAO contract address"
+                id="membershipCriteria"
+                placeholder="enter address"
+                borderColor="red"
+                // @ts-ignore
+                localForm={localForm}
+                {...register("membershipCriteria", {
+                  required: {
+                    value: true,
+                    message: "Value required",
+                  },
+                  validate: () =>
+                    utils.isAddress(values.membershipCriteria) ||
+                    "invalid address",
+                })}
+              />
+
+              <ErrorMessage
+                errors={errors}
+                name="membershipCriteria"
+                render={({ message }) => <Text color="red">{message}</Text>}
+              />
+            </Box>
+          </Tooltip>
+          <Tooltip
+            label="Must be a valid Moloch DAO address. Rite of Moloch will read from this to ascertain cohort completion"
+            placement="top-start"
+            hasArrow
+          >
+            <Box>
+              <Input
+                label="Staking asset address"
+                id="tokenAddress"
+                placeholder="enter token address"
+                borderColor="red"
+                // @ts-ignore
+                localForm={localForm}
+                {...register("tokenAddress", {
+                  required: {
+                    value: true,
+                    message: "Value required",
+                  },
+                  validate: () =>
+                    utils.isAddress(values.tokenAddress) || "invalid address",
+                })}
+              />
+
+              <ErrorMessage
+                errors={errors}
+                name="tokenAddress"
+                render={({ message }) => <Text color="red">{message}</Text>}
+              />
+            </Box>
+          </Tooltip>
+          {/* <Box>
             <Input
               label="Name cohort"
               id="nameCohort"
@@ -95,8 +163,8 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               name="nameCohort"
               render={({ message }) => <Text color="red">{message}</Text>}
             />
-          </Box>
-          <Box>
+          </Box> */}
+          {/* <Box>
             <Input
               label="Upload SBT image"
               type="file"
@@ -123,7 +191,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               name="sbtImage"
               render={({ message }) => <Text color="red">{message}</Text>}
             />
-          </Box>
+          </Box> */}
 
           <Box>
             <Input
@@ -137,6 +205,9 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
                 required: {
                   value: true,
                   message: "Value required",
+                },
+                onChange(e) {
+                  setValue("nameSBT", e.target.value.toUpperCase());
                 },
               })}
             />
@@ -159,6 +230,9 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
                   value: true,
                   message: "Value required",
                 },
+                onChange(e) {
+                  setValue("symbolSBT", e.target.value.toUpperCase());
+                },
               })}
             />
             <ErrorMessage
@@ -171,7 +245,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
             <Input
               label="URI SBT"
               id="uriSBT"
-              placeholder="enter URI"
+              placeholder="enter SBT url"
               borderColor="red"
               // @ts-ignore
               localForm={localForm}
@@ -188,6 +262,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box>
+
           <Tooltip
             label="If cohort members get slashed, their stake will get sent to this address"
             placement="top-start"
@@ -196,33 +271,31 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
             <Box>
               <Input
                 label="Treasury address"
-                id="treasuryAddress"
+                id="treasury"
                 placeholder="enter address"
                 borderColor="red"
                 // @ts-ignore
                 localForm={localForm}
-                {...register("treasuryAddress", {
+                {...register("treasury", {
                   required: {
                     value: true,
                     message: "Value required",
                   },
                   validate: () =>
-                    utils.isAddress(values.treasuryAddress) ||
-                    "invalid address",
+                    utils.isAddress(values.treasury) || "invalid address",
                 })}
               />
 
               <ErrorMessage
                 errors={errors}
-                name="treasuryAddress"
+                name="treasury"
                 render={({ message }) => <Text color="red">{message}</Text>}
               />
             </Box>
           </Tooltip>
-          {/* <Box alignSelf="end"> */}
-          <Box mt={10}>
+          <Box my={10}>
             <PreviewModal
-              sbtImageURL={values.sbtImage}
+              sbtImageURL={values.uriSBT}
               sbtName={values.nameSBT}
             />
           </Box>
@@ -232,7 +305,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               variant="solid"
               w="full"
               color="black"
-              mt={10}
+              my={10}
               onClick={handleNext}
             >
               NEXT

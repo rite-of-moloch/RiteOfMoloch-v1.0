@@ -10,6 +10,7 @@ import {
 } from "@raidguild/design-system";
 import { useFormContext } from "context/FormContext";
 import useCreateCohort from "../hooks/useCreateCohort";
+import { useNetwork } from "wagmi";
 
 interface PreviewNewCohortProps {
   children?: ReactNode;
@@ -17,19 +18,22 @@ interface PreviewNewCohortProps {
 
 const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
   // const { createCohort } = useCreateCohort();
-
+  const { chain } = useNetwork();
   const {
     setDisplayPart3,
     setDisplayPreviewNewCohort,
     displayPreviewNewCohort,
-    nameCohort,
-    sbtImage,
+    membershipCriteria,
+    tokenAddress,
+    // nameCohort,
+    // sbtImage,
     nameSBT,
     symbolSBT,
     uriSBT,
-    treasuryAddress,
+    treasury,
     stakePerMember,
-    cohortSize,
+    // cohortSize,
+    shareThreshold,
     onboardingPeriod,
     stakingPeriod,
     tophatOwnerAddress,
@@ -45,7 +49,24 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     setDisplayPreviewNewCohort(false);
   };
 
-  const handleDeployCohort = () => {};
+  const handleDeployCohort = () => {
+    const initData = [
+      membershipCriteria, // Moloch DAO address
+      tokenAddress, // contract address for asset to be staked
+      treasury,
+      tophatOwnerAddress, // topHatWearer
+      admin2 || "", // admin1
+      admin3 || "", // admin2
+      shareThreshold,
+      stakePerMember, // assetAmount
+      stakingPeriod, // duration
+      chain?.id, // chainId
+      tophatID, // topHatId
+      nameSBT, // name
+      symbolSBT, // symbol
+      uriSBT, // baseUri
+    ];
+  };
 
   return (
     <Box display={displayPreviewNewCohort ? "inline" : "none"} m="auto">
@@ -63,37 +84,20 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
       >
         <Box>
           <Stack>
-            <Text fontSize="lg" color="red" fontWeight="semibold">
-              {nameCohort || "Name cohort"}
+            {/* <Text fontSize="lg" color="red" fontWeight="semibold">
+              {nameSBT}
+            </Text> */}
+            <Text>
+              <span style={{ color: "gray" }}>Moloch DAO address:</span>
+              <Text fontSize="xx-small">{membershipCriteria}</Text>
             </Text>
             <Text>
-              <span style={{ color: "gray" }}>Name SBT:</span> {nameSBT}
+              <span style={{ color: "gray" }}>Staking asset:</span>
+              <Text fontSize="xx-small">{tokenAddress}</Text>
             </Text>
             <Text>
-              <span style={{ color: "gray" }}>Symbol SBT:</span> {symbolSBT}
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Stake per member:</span>{" "}
-              {stakePerMember}
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Staking duration:</span>{" "}
-              {stakingPeriod}
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Cohort size:</span> {cohortSize}
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Onboarding period:</span>
-              {onboardingPeriod}
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Asset URI:</span> {uriSBT}
-            </Text>
-            {/* <Text><span style={{ color: "gray" }}>Controller address:</span> {}</Text> */}
-            <Text>
-              <span style={{ color: "gray" }}>Treasury address:</span>{" "}
-              {<Text fontSize="xx-small">{treasuryAddress}</Text>}
+              <span style={{ color: "gray" }}>Treasury address:</span>
+              <Text fontSize="xx-small">{treasury}</Text>
             </Text>
             {tophatOwnerAddress !== "" && (
               <Text>
@@ -131,15 +135,52 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
                 <span>{<Text fontSize="xx-small">{admin3}</Text>}</span>
               </Text>
             )}
+            <Text>
+              <span style={{ color: "gray" }}>
+                Share threshold for membership:
+              </span>
+              {shareThreshold}
+            </Text>
+            <Text>
+              <span style={{ color: "gray" }}>Minimum stake per member:</span>
+              {stakePerMember}
+            </Text>
+            <Text>
+              <span style={{ color: "gray" }}>Symbol SBT:</span> {symbolSBT}
+            </Text>
+            <Text>
+              <span style={{ color: "gray" }}>Staking duration:</span>{" "}
+              {stakingPeriod}
+            </Text>
+
+            {/* <Text>
+              <span style={{ color: "gray" }}>Onboarding period:</span>
+              {onboardingPeriod}
+            </Text> */}
+
+            {/* <Text>
+              <span style={{ color: "gray" }}>Asset URI:</span>{" "}
+              {<Text fontSize="xx-small">{uriSBT}</Text>}
+            </Text> */}
           </Stack>
         </Box>
         <Box pt={8}>
           <Image
-            src={sbtImage}
-            alt={`${nameCohort} SBT image preview`}
+            src={uriSBT}
+            alt={`${nameSBT} SBT image preview`}
             rounded="xl"
             m="auto"
           />
+
+          <Text
+            fontSize="lg"
+            color="red"
+            fontWeight="semibold"
+            textAlign="center"
+            my={4}
+          >
+            {nameSBT}
+          </Text>
         </Box>
       </SimpleGrid>
       <HStack my={10} mx="auto" spacing={6} w={["full", "full", "80%", "60%"]}>
@@ -156,7 +197,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
           </Button>
         </Box>
         <Box w="50%">
-          <Button variant="solid" w="full">
+          <Button variant="solid" w="full" color="black">
             Deploy cohort
           </Button>
         </Box>

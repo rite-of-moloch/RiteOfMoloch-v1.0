@@ -9,8 +9,10 @@ export const FormContext = createContext<{
   setDisplayPart3: any;
   displayPreviewNewCohort: boolean;
   setDisplayPreviewNewCohort: any;
-  nameCohort: string;
-  setNameCohort: any;
+  tokenAddress: string;
+  setTokenAddress: any;
+  // nameCohort: string;
+  // setNameCohort: any;
   nameSBT: string;
   setNameSBT: any;
   sbtImage: string;
@@ -19,12 +21,16 @@ export const FormContext = createContext<{
   setSymbolSBT: any;
   uriSBT: string;
   setUriSBT: any;
-  treasuryAddress: string;
-  setTreasuryAddress: any;
+  treasury: string;
+  setTreasury: any;
+  membershipCriteria: string;
+  setMembershipCriteria: any;
   stakePerMember: number | null;
   setStakePerMember: any;
-  cohortSize: number | null;
-  setCohortSize: any;
+  // cohortSize: number | null;
+  // setCohortSize: any;
+  shareThreshold: number | null;
+  setShareThreshold: any;
   onboardingPeriod: number | null;
   setOnboardingPeriod: any;
   stakingPeriod: number | null;
@@ -56,8 +62,10 @@ export const FormContext = createContext<{
   setDisplayPart3: null,
   displayPreviewNewCohort: false,
   setDisplayPreviewNewCohort: null,
-  nameCohort: "",
-  setNameCohort: null,
+  tokenAddress: "",
+  setTokenAddress: null,
+  // nameCohort: "",
+  // setNameCohort: null,
   nameSBT: "",
   setNameSBT: null,
   sbtImage: "",
@@ -66,12 +74,16 @@ export const FormContext = createContext<{
   setSymbolSBT: null,
   uriSBT: "",
   setUriSBT: null,
-  treasuryAddress: "",
-  setTreasuryAddress: null,
+  treasury: "",
+  setTreasury: null,
+  membershipCriteria: "",
+  setMembershipCriteria: null,
   stakePerMember: null,
   setStakePerMember: null,
-  cohortSize: null,
-  setCohortSize: null,
+  // cohortSize: null,
+  // setCohortSize: null,
+  shareThreshold: null,
+  setShareThreshold: null,
   onboardingPeriod: null,
   setOnboardingPeriod: null,
   stakingPeriod: null,
@@ -105,15 +117,18 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   const [displayPart2, setDisplayPart2] = useState(false);
   const [displayPart3, setDisplayPart3] = useState(false);
   const [displayPreviewNewCohort, setDisplayPreviewNewCohort] = useState(false);
-  const [nameCohort, setNameCohort] = useState("");
+  const [tokenAddress, setTokenAddress] = useState("");
+  // const [nameCohort, setNameCohort] = useState("");
   const [nameSBT, setNameSBT] = useState("");
   const [sbtImage, setSbtImage] = useState("");
   const [symbolSBT, setSymbolSBT] = useState("");
   const [uriSBT, setUriSBT] = useState("");
   const [stakePerMember, setStakePerMember] = useState<number | null>(null);
-  const [cohortSize, setCohortSize] = useState<number | null>(null);
+  // const [cohortSize, setCohortSize] = useState<number | null>(null);
+  const [shareThreshold, setShareThreshold] = useState<number | null>(null);
   const [onboardingPeriod, setOnboardingPeriod] = useState<number | null>(null);
-  const [treasuryAddress, setTreasuryAddress] = useState("");
+  const [treasury, setTreasury] = useState("");
+  const [membershipCriteria, setMembershipCriteria] = useState("");
   const [stakingPeriod, setStakingPeriod] = useState<number | null>(null);
   // const [hasTophat, setHasTophat] = useState(false);
   // const [addAdmin, setAddAdmin] = useState(false);
@@ -134,8 +149,10 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
     setDisplayPart3,
     displayPreviewNewCohort,
     setDisplayPreviewNewCohort,
-    nameCohort,
-    setNameCohort,
+    tokenAddress,
+    setTokenAddress,
+    // nameCohort,
+    // setNameCohort,
     nameSBT,
     setNameSBT,
     sbtImage,
@@ -144,12 +161,16 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
     setSymbolSBT,
     uriSBT,
     setUriSBT,
-    treasuryAddress,
-    setTreasuryAddress,
+    treasury,
+    setTreasury,
+    membershipCriteria,
+    setMembershipCriteria,
     stakePerMember,
     setStakePerMember,
-    cohortSize,
-    setCohortSize,
+    // cohortSize,
+    // setCohortSize,
+    shareThreshold,
+    setShareThreshold,
     onboardingPeriod,
     setOnboardingPeriod,
     stakingPeriod,
@@ -187,8 +208,10 @@ export const useFormContext = () => {
     setDisplayPart3,
     displayPreviewNewCohort,
     setDisplayPreviewNewCohort,
-    nameCohort,
-    setNameCohort,
+    tokenAddress,
+    setTokenAddress,
+    // nameCohort,
+    // setNameCohort,
     nameSBT,
     setNameSBT,
     sbtImage,
@@ -197,12 +220,16 @@ export const useFormContext = () => {
     setSymbolSBT,
     uriSBT,
     setUriSBT,
-    treasuryAddress,
-    setTreasuryAddress,
+    treasury,
+    setTreasury,
+    membershipCriteria,
+    setMembershipCriteria,
     stakePerMember,
     setStakePerMember,
-    cohortSize,
-    setCohortSize,
+    // cohortSize,
+    // setCohortSize,
+    shareThreshold,
+    setShareThreshold,
     onboardingPeriod,
     setOnboardingPeriod,
     stakingPeriod,
@@ -235,8 +262,10 @@ export const useFormContext = () => {
     setDisplayPart3,
     displayPreviewNewCohort,
     setDisplayPreviewNewCohort,
-    nameCohort,
-    setNameCohort,
+    tokenAddress,
+    setTokenAddress,
+    // nameCohort,
+    // setNameCohort,
     nameSBT,
     setNameSBT,
     sbtImage,
@@ -245,12 +274,16 @@ export const useFormContext = () => {
     setSymbolSBT,
     uriSBT,
     setUriSBT,
-    treasuryAddress,
-    setTreasuryAddress,
+    treasury,
+    setTreasury,
+    membershipCriteria,
+    setMembershipCriteria,
     stakePerMember,
     setStakePerMember,
-    cohortSize,
-    setCohortSize,
+    // cohortSize,
+    // setCohortSize,
+    shareThreshold,
+    setShareThreshold,
     onboardingPeriod,
     setOnboardingPeriod,
     stakingPeriod,

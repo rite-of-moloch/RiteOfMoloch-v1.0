@@ -18,8 +18,9 @@ interface DeployCohortPt2Props {
 const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
   const {
     setStakePerMember,
-    setCohortSize,
-    setOnboardingPeriod,
+    // setCohortSize,
+    setShareThreshold,
+    // setOnboardingPeriod,
     setStakingPeriod,
     displayPart2,
     setDisplayPart1,
@@ -52,8 +53,9 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
     console.log("onboardindPeriod", values.onboardingPeriod);
     if (isValid) {
       setStakePerMember(values.stakePerMember);
-      setCohortSize(values.cohortSize);
-      setOnboardingPeriod(values.onboardingPeriod);
+      // setCohortSize(values.cohortSize);
+      setShareThreshold(values.shareThreshold);
+      // setOnboardingPeriod(values.onboardingPeriod);
       setStakingPeriod(values.stakingPeriod);
       setDisplayPart2(false);
       setDisplayPart3(true);
@@ -93,14 +95,14 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
           </Box>
           <Box>
             <Input
-              label="Cohort size"
-              id="cohortSize"
-              placeholder="enter cohort size..."
+              label="Share threshold"
+              id="shareThreshold"
+              placeholder="minimum shares for membership"
               borderColor="red"
               type="number"
               // @ts-ignore
               localForm={localForm}
-              {...register("cohortSize", {
+              {...register("shareThreshold", {
                 validate: (val) => val > 0,
                 required: {
                   value: true,
@@ -114,11 +116,11 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
             />
             <ErrorMessage
               errors={errors}
-              name="cohortSize"
+              name="shareThreshold"
               render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box>
-          <Box>
+          {/* <Box>
             <Input
               label="Onboarding period in days"
               id="onboardindPeriod"
@@ -144,7 +146,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               name="onboardingPeriod"
               render={({ message }) => <Text color="red">{message}</Text>}
             />
-          </Box>
+          </Box> */}
           <Box>
             <Input
               label="Staking period in days"
@@ -172,6 +174,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box>
+          <Box />
           <Box />
           <Box />
           <Box mt={10}>
