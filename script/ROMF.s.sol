@@ -11,11 +11,14 @@ import {RiteOfMolochFactory} from "src/RiteOfMolochFactory.sol";
 // forge script script/ROMF.s.sol:ROMFScript --rpc-url $RU --private-key $PK --broadcast -vvvv
 
 contract ROMFScript is Script {
+    RiteOfMolochFactory public ROMF;
+
     function setUp() public {}
 
     function run() public {
         vm.startBroadcast();
         new RiteOfMolochFactory();
-        vm.stopBroadcast();
+
+        ROMF.vm.stopBroadcast();
     }
 }

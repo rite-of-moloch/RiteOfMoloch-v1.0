@@ -47,8 +47,7 @@ contract RiteOfMolochFactory is InitializationData, AccessControl {
 
         // assign admin roles to deployer
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-
-        // todo: add Hats implementations
+        _grantRole(ADMIN, msg.sender);
     }
 
     /**
@@ -112,7 +111,7 @@ contract RiteOfMolochFactory is InitializationData, AccessControl {
     // todo: add security
     function addHatsProtocol(uint256 _chainId, address _hatsProtocol)
         public
-    /**onlyRole(ADMIN)*/
+        onlyRole(ADMIN)
     {
         hatsProtocols[_chainId] = _hatsProtocol;
     }
