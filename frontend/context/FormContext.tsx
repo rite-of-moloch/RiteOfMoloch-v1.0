@@ -1,4 +1,5 @@
 import React, { createContext, useState, Dispatch, useContext } from "react";
+// import { initDataDeployCohort } from "../utils/types/initDataDeployCohort";
 
 export const FormContext = createContext<{
   displayPart1: boolean;
@@ -9,10 +10,10 @@ export const FormContext = createContext<{
   setDisplayPart3: any;
   displayPreviewNewCohort: boolean;
   setDisplayPreviewNewCohort: any;
-  tokenAddress: string;
-  setTokenAddress: any;
-  // nameCohort: string;
-  // setNameCohort: any;
+  stakingAsset: string;
+  setStakingAsset: any;
+  nameCohort: string;
+  setNameCohort: any;
   nameSBT: string;
   setNameSBT: any;
   sbtImage: string;
@@ -25,34 +26,34 @@ export const FormContext = createContext<{
   setTreasury: any;
   membershipCriteria: string;
   setMembershipCriteria: any;
-  stakePerMember: number | null;
-  setStakePerMember: any;
-  // cohortSize: number | null;
-  // setCohortSize: any;
+  assetAmount: number | null;
+  setAssetAmount: any;
+  cohortSize: number | null;
+  setCohortSize: any;
   shareThreshold: number | null;
   setShareThreshold: any;
   onboardingPeriod: number | null;
   setOnboardingPeriod: any;
-  stakingPeriod: number | null;
-  setStakingPeriod: any;
+  stakeDuration: number | null;
+  setStakeDuration: any;
   // hasTophat: boolean;
   // setHasTophat: any;
   // addAdmin: boolean;
   // setAddAdmin: any;
-  tophatOwnerAddress: string;
-  setTophatOwnerAddress: any;
+  topHatWearer: string;
+  setTopHatWearer: any;
   tophatID: number | null;
   setTophatID: any;
+  admin1: string;
+  setAdmin1: any;
   admin2: string;
   setAdmin2: any;
-  admin3: string;
-  setAdmin3: any;
+  superadmin1: boolean;
+  setSuperadmin1: any;
   superadmin2: boolean;
   setSuperadmin2: any;
-  superadmin3: boolean;
-  setSuperadmin3: any;
-  calldata: any[];
-  setCalldata: any;
+  // calldata: initDataDeployCohort;
+  // setCalldata: any;
 }>({
   displayPart1: true,
   setDisplayPart1: null,
@@ -62,10 +63,10 @@ export const FormContext = createContext<{
   setDisplayPart3: null,
   displayPreviewNewCohort: false,
   setDisplayPreviewNewCohort: null,
-  tokenAddress: "",
-  setTokenAddress: null,
-  // nameCohort: "",
-  // setNameCohort: null,
+  stakingAsset: "",
+  setStakingAsset: null,
+  nameCohort: "",
+  setNameCohort: null,
   nameSBT: "",
   setNameSBT: null,
   sbtImage: "",
@@ -78,34 +79,34 @@ export const FormContext = createContext<{
   setTreasury: null,
   membershipCriteria: "",
   setMembershipCriteria: null,
-  stakePerMember: null,
-  setStakePerMember: null,
-  // cohortSize: null,
-  // setCohortSize: null,
+  assetAmount: null,
+  setAssetAmount: null,
+  cohortSize: null,
+  setCohortSize: null,
   shareThreshold: null,
   setShareThreshold: null,
   onboardingPeriod: null,
   setOnboardingPeriod: null,
-  stakingPeriod: null,
-  setStakingPeriod: null,
+  stakeDuration: null,
+  setStakeDuration: null,
   // hasTophat: false,
   // setHasTophat: null,
   // addAdmin: false,
   // setAddAdmin: null,
-  tophatOwnerAddress: "",
-  setTophatOwnerAddress: null,
+  topHatWearer: "",
+  setTopHatWearer: null,
   tophatID: null,
   setTophatID: null,
+  admin1: "",
+  setAdmin1: null,
   admin2: "",
   setAdmin2: null,
-  admin3: "",
-  setAdmin3: null,
+  superadmin1: false,
+  setSuperadmin1: null,
   superadmin2: false,
   setSuperadmin2: null,
-  superadmin3: false,
-  setSuperadmin3: null,
-  calldata: [],
-  setCalldata: null,
+  // calldata: [],
+  // setCalldata: null,
 });
 
 interface FormProviderProps {
@@ -117,28 +118,28 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   const [displayPart2, setDisplayPart2] = useState(false);
   const [displayPart3, setDisplayPart3] = useState(false);
   const [displayPreviewNewCohort, setDisplayPreviewNewCohort] = useState(false);
-  const [tokenAddress, setTokenAddress] = useState("");
-  // const [nameCohort, setNameCohort] = useState("");
+  const [nameCohort, setNameCohort] = useState("");
+  const [stakingAsset, setStakingAsset] = useState("");
   const [nameSBT, setNameSBT] = useState("");
   const [sbtImage, setSbtImage] = useState("");
   const [symbolSBT, setSymbolSBT] = useState("");
   const [uriSBT, setUriSBT] = useState("");
-  const [stakePerMember, setStakePerMember] = useState<number | null>(null);
-  // const [cohortSize, setCohortSize] = useState<number | null>(null);
+  const [assetAmount, setAssetAmount] = useState<number | null>(null);
+  const [cohortSize, setCohortSize] = useState<number | null>(null);
   const [shareThreshold, setShareThreshold] = useState<number | null>(null);
   const [onboardingPeriod, setOnboardingPeriod] = useState<number | null>(null);
   const [treasury, setTreasury] = useState("");
   const [membershipCriteria, setMembershipCriteria] = useState("");
-  const [stakingPeriod, setStakingPeriod] = useState<number | null>(null);
+  const [stakeDuration, setStakeDuration] = useState<number | null>(null);
   // const [hasTophat, setHasTophat] = useState(false);
   // const [addAdmin, setAddAdmin] = useState(false);
-  const [tophatOwnerAddress, setTophatOwnerAddress] = useState("");
+  const [topHatWearer, setTopHatWearer] = useState("");
   const [tophatID, setTophatID] = useState<number | null>(null);
+  const [admin1, setAdmin1] = useState("");
   const [admin2, setAdmin2] = useState("");
-  const [admin3, setAdmin3] = useState("");
+  const [superadmin1, setSuperadmin1] = useState(false);
   const [superadmin2, setSuperadmin2] = useState(false);
-  const [superadmin3, setSuperadmin3] = useState(false);
-  const [calldata, setCalldata] = useState([]);
+  // const [calldata, setCalldata] = useState([]);
 
   const value = {
     displayPart1,
@@ -149,10 +150,10 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
     setDisplayPart3,
     displayPreviewNewCohort,
     setDisplayPreviewNewCohort,
-    tokenAddress,
-    setTokenAddress,
-    // nameCohort,
-    // setNameCohort,
+    stakingAsset,
+    setStakingAsset,
+    nameCohort,
+    setNameCohort,
     nameSBT,
     setNameSBT,
     sbtImage,
@@ -165,34 +166,34 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
     setTreasury,
     membershipCriteria,
     setMembershipCriteria,
-    stakePerMember,
-    setStakePerMember,
-    // cohortSize,
-    // setCohortSize,
+    assetAmount,
+    setAssetAmount,
+    cohortSize,
+    setCohortSize,
     shareThreshold,
     setShareThreshold,
     onboardingPeriod,
     setOnboardingPeriod,
-    stakingPeriod,
-    setStakingPeriod,
+    stakeDuration,
+    setStakeDuration,
     // hasTophat,
     // setHasTophat,
     // addAdmin,
     // setAddAdmin,
-    tophatOwnerAddress,
-    setTophatOwnerAddress,
+    topHatWearer,
+    setTopHatWearer,
     tophatID,
     setTophatID,
+    admin1,
+    setAdmin1,
     admin2,
     setAdmin2,
-    admin3,
-    setAdmin3,
+    superadmin1,
+    setSuperadmin1,
     superadmin2,
     setSuperadmin2,
-    superadmin3,
-    setSuperadmin3,
-    calldata,
-    setCalldata,
+    // calldata,
+    // setCalldata,
   };
 
   return <FormContext.Provider value={value}>{children}</FormContext.Provider>;
@@ -208,10 +209,10 @@ export const useFormContext = () => {
     setDisplayPart3,
     displayPreviewNewCohort,
     setDisplayPreviewNewCohort,
-    tokenAddress,
-    setTokenAddress,
-    // nameCohort,
-    // setNameCohort,
+    stakingAsset,
+    setStakingAsset,
+    nameCohort,
+    setNameCohort,
     nameSBT,
     setNameSBT,
     sbtImage,
@@ -224,34 +225,34 @@ export const useFormContext = () => {
     setTreasury,
     membershipCriteria,
     setMembershipCriteria,
-    stakePerMember,
-    setStakePerMember,
-    // cohortSize,
-    // setCohortSize,
+    assetAmount,
+    setAssetAmount,
+    cohortSize,
+    setCohortSize,
     shareThreshold,
     setShareThreshold,
     onboardingPeriod,
     setOnboardingPeriod,
-    stakingPeriod,
-    setStakingPeriod,
+    stakeDuration,
+    setStakeDuration,
     // hasTophat,
     // setHasTophat,
     // addAdmin,
     // setAddAdmin,
-    tophatOwnerAddress,
-    setTophatOwnerAddress,
+    topHatWearer,
+    setTopHatWearer,
     tophatID,
     setTophatID,
+    admin1,
+    setAdmin1,
     admin2,
     setAdmin2,
-    admin3,
-    setAdmin3,
+    superadmin1,
+    setSuperadmin1,
     superadmin2,
     setSuperadmin2,
-    superadmin3,
-    setSuperadmin3,
-    calldata,
-    setCalldata,
+    // calldata,
+    // setCalldata,
   } = useContext(FormContext);
   return {
     displayPart1,
@@ -262,10 +263,10 @@ export const useFormContext = () => {
     setDisplayPart3,
     displayPreviewNewCohort,
     setDisplayPreviewNewCohort,
-    tokenAddress,
-    setTokenAddress,
-    // nameCohort,
-    // setNameCohort,
+    stakingAsset,
+    setStakingAsset,
+    nameCohort,
+    setNameCohort,
     nameSBT,
     setNameSBT,
     sbtImage,
@@ -278,33 +279,33 @@ export const useFormContext = () => {
     setTreasury,
     membershipCriteria,
     setMembershipCriteria,
-    stakePerMember,
-    setStakePerMember,
-    // cohortSize,
-    // setCohortSize,
+    assetAmount,
+    setAssetAmount,
+    cohortSize,
+    setCohortSize,
     shareThreshold,
     setShareThreshold,
     onboardingPeriod,
     setOnboardingPeriod,
-    stakingPeriod,
-    setStakingPeriod,
+    stakeDuration,
+    setStakeDuration,
     // hasTophat,
     // setHasTophat,
     // addAdmin,
     // setAddAdmin,
-    tophatOwnerAddress,
-    setTophatOwnerAddress,
+    topHatWearer,
+    setTopHatWearer,
     tophatID,
     setTophatID,
+    admin1,
+    setAdmin1,
     admin2,
     setAdmin2,
-    admin3,
-    setAdmin3,
+    superadmin1,
+    setSuperadmin1,
     superadmin2,
     setSuperadmin2,
-    superadmin3,
-    setSuperadmin3,
-    calldata,
-    setCalldata,
+    // calldata,
+    // setCalldata,
   };
 };

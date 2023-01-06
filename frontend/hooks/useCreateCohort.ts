@@ -1,29 +1,14 @@
+import { initDataDeployCohort } from "utils/types/initDataDeployCohort";
 import useWriteContract from "./useWriteContract";
 
 /**
  *
  * @param args calldata ([tuple] of arguments)
+ * @param implementationSelector string (use 1)
  * @Returns address
  */
 
-const useCreateCohort = (
-  args: [
-    string,
-    string,
-    string,
-    string | null | undefined,
-    string | null | undefined,
-    string | null | undefined,
-    number,
-    number,
-    number,
-    number,
-    number | null | undefined,
-    string,
-    string,
-    string
-  ]
-) => {
+const useCreateCohort = (args: [initDataDeployCohort, string]) => {
   const {
     write: createCohort,
     isLoading: isLoadingApprove,

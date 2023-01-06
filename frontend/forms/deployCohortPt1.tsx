@@ -20,9 +20,7 @@ interface deployCohortPt1Props {
 
 const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
   const {
-    tokenAddress,
-    setTokenAddress,
-    // setNameCohort,
+    setNameCohort,
     // setSbtImage,
     setNameSBT,
     setSymbolSBT,
@@ -36,8 +34,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
 
   const localForm = useForm({
     defaultValues: {
-      tokenAddress: "",
-      // nameCohort: "",
+      nameCohort: "",
       // sbtImage: "",
       nameSBT: "",
       symbolSBT: "",
@@ -59,15 +56,13 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
 
   const values = getValues();
   watch();
-  // console.log(watch());
 
   const handleNext = async (): Promise<void> => {
     await trigger();
     console.log(isValid);
     if (isValid) {
-      setTokenAddress(values.tokenAddress);
-      // setNameCohort(values.nameCohort);
-      // // setSbtImage(values.sbtImage);
+      setNameCohort(values.nameCohort);
+      // setSbtImage(values.sbtImage);
       setNameSBT(values.nameSBT);
       setSymbolSBT(values.symbolSBT);
       setUriSBT(values.uriSBT);
@@ -82,14 +77,35 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
     <FormControl onSubmit={handleSubmit(handleNext)}>
       <Box display={displayPart1 ? "inline" : "none"}>
         <SimpleGrid columns={2} spacingX={4} spacingY={3}>
+          <Box>
+            <Input
+              label="Name cohort"
+              id="nameCohort"
+              placeholder="Name cohort"
+              borderColor="red"
+              // @ts-ignore
+              localForm={localForm}
+              {...register("nameCohort", {
+                required: {
+                  value: true,
+                  message: "Value required",
+                },
+              })}
+            />
+            <ErrorMessage
+              errors={errors}
+              name="nameCohort"
+              render={({ message }) => <Text color="red">{message}</Text>}
+            />
+          </Box>
           <Tooltip
-            label="Must be a valid Moloch DAO address. Rite of Moloch will read from this to ascertain cohort completion"
+            label="Must be a valid Moloch DAO address. The Rite of Moloch contract will read from this to ascertain cohort completion"
             placement="top-start"
             hasArrow
           >
             <Box>
               <Input
-                label="DAO contract address"
+                label="Moloch DAO address"
                 id="membershipCriteria"
                 placeholder="enter address"
                 borderColor="red"
@@ -113,57 +129,31 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               />
             </Box>
           </Tooltip>
-          <Tooltip
-            label="Address of the asset which new members will be required to stake in order to join the cohort"
-            placement="top-start"
-            hasArrow
-          >
-            <Box>
-              <Input
-                label="Staking asset address"
-                id="tokenAddress"
-                placeholder="enter token address"
-                borderColor="red"
-                // @ts-ignore
-                localForm={localForm}
-                {...register("tokenAddress", {
-                  required: {
-                    value: true,
-                    message: "Value required",
-                  },
-                  validate: () =>
-                    utils.isAddress(values.tokenAddress) || "invalid address",
-                })}
-              />
-
-              <ErrorMessage
-                errors={errors}
-                name="tokenAddress"
-                render={({ message }) => <Text color="red">{message}</Text>}
-              />
-            </Box>
-          </Tooltip>
-          {/* <Box>
+          <Box>
             <Input
-              label="Name cohort"
-              id="nameCohort"
-              placeholder="Name cohort"
+              label="Name SBT"
+              id="nameSBT"
+              placeholder="Name SBT"
               borderColor="red"
               // @ts-ignore
               localForm={localForm}
-              {...register("nameCohort", {
+              {...register("nameSBT", {
                 required: {
                   value: true,
                   message: "Value required",
+                },
+                onChange(e) {
+                  setValue("nameSBT", e.target.value.toUpperCase());
                 },
               })}
             />
             <ErrorMessage
               errors={errors}
-              name="nameCohort"
+              name="nameSBT"
               render={({ message }) => <Text color="red">{message}</Text>}
             />
-          </Box> */}
+          </Box>
+          {/* image uploader - needs to be connected to IPFS */}
           {/* <Box>
             <Input
               label="Upload SBT image"
@@ -192,31 +182,6 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box> */}
-
-          <Box>
-            <Input
-              label="Name SBT"
-              id="nameSBT"
-              placeholder="Name SBT"
-              borderColor="red"
-              // @ts-ignore
-              localForm={localForm}
-              {...register("nameSBT", {
-                required: {
-                  value: true,
-                  message: "Value required",
-                },
-                onChange(e) {
-                  setValue("nameSBT", e.target.value.toUpperCase());
-                },
-              })}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="nameSBT"
-              render={({ message }) => <Text color="red">{message}</Text>}
-            />
-          </Box>
           <Box>
             <Input
               label="SBT Symbol"
@@ -241,76 +206,43 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box>
-          <Tooltip
-            label="The image location (URL) for the image of your SBT. *** For example, go to Google Images, right click on an image, select 'copy image address' and paste the address into the input below"
-            placement="top-start"
-            hasArrow
-          >
-            <Box>
-              <Input
-                label="URI SBT"
-                id="uriSBT"
-                placeholder="enter SBT url"
-                borderColor="red"
-                // @ts-ignore
-                localForm={localForm}
-                {...register("uriSBT", {
-                  required: {
-                    value: true,
-                    message: "Value required",
-                  },
-                })}
-              />
-              <ErrorMessage
-                errors={errors}
-                name="uriSBT"
-                render={({ message }) => <Text color="red">{message}</Text>}
-              />
-            </Box>
-          </Tooltip>
-          <Tooltip
-            label="If cohort members get slashed, their stake will get sent to this address"
-            placement="top-start"
-            hasArrow
-          >
-            <Box>
-              <Input
-                label="Treasury address"
-                id="treasury"
-                placeholder="enter address"
-                borderColor="red"
-                // @ts-ignore
-                localForm={localForm}
-                {...register("treasury", {
-                  required: {
-                    value: true,
-                    message: "Value required",
-                  },
-                  validate: () =>
-                    utils.isAddress(values.treasury) || "invalid address",
-                })}
-              />
 
-              <ErrorMessage
-                errors={errors}
-                name="treasury"
-                render={({ message }) => <Text color="red">{message}</Text>}
-              />
-            </Box>
-          </Tooltip>
-          <Box my={10}>
+          <Box>
+            <Input
+              label="URL SBT"
+              id="uriSBT"
+              placeholder="enter SBT URI"
+              borderColor="red"
+              // @ts-ignore
+              localForm={localForm}
+              {...register("uriSBT", {
+                required: {
+                  value: true,
+                  message: "Value required",
+                },
+              })}
+            />
+            <ErrorMessage
+              errors={errors}
+              name="uriSBT"
+              render={({ message }) => <Text color="red">{message}</Text>}
+            />
+          </Box>
+
+          <Box mt={8}>
             <PreviewModal
               sbtImageURL={values.uriSBT}
               sbtName={values.nameSBT}
             />
           </Box>
-          {/* <Box /> */}
+          <Box />
           <Box textAlign="right">
             <Button
               variant="solid"
               w="full"
               color="black"
-              my={10}
+              mt={6}
+              mb={10}
               onClick={handleNext}
             >
               NEXT

@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, ReactNode } from "react";
+import React, { FC, ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import {
@@ -11,6 +11,7 @@ import {
   Tooltip,
 } from "@raidguild/design-system";
 import { useFormContext } from "context/FormContext";
+import { utils } from "ethers";
 
 interface DeployCohortPt2Props {
   children?: ReactNode;
@@ -18,11 +19,11 @@ interface DeployCohortPt2Props {
 
 const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
   const {
-    setStakePerMember,
-    // setCohortSize,
+    setAssetAmount,
+    setCohortSize,
     setShareThreshold,
-    // setOnboardingPeriod,
-    setStakingPeriod,
+    setOnboardingPeriod,
+    setStakeDuration,
     displayPart2,
     setDisplayPart1,
     setDisplayPart2,
@@ -53,11 +54,11 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
     await trigger();
     console.log("onboardindPeriod", values.onboardingPeriod);
     if (isValid) {
-      setStakePerMember(values.stakePerMember);
-      // setCohortSize(values.cohortSize);
+      setAssetAmount(values.assetAmount);
+      setCohortSize(values.cohortSize);
       setShareThreshold(values.shareThreshold);
-      // setOnboardingPeriod(values.onboardingPeriod);
-      setStakingPeriod(values.stakingPeriod);
+      setOnboardingPeriod(values.onboardingPeriod);
+      setStakeDuration(values.stakeDuration);
       setDisplayPart2(false);
       setDisplayPart3(true);
     }
@@ -68,20 +69,20 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
       <Box display={displayPart2 ? "inline" : "none"}>
         <SimpleGrid columns={2} spacingX={4} spacingY={3}>
           <Tooltip
-            label="Set the minimum stake required of your selected asset for new members to join your cohort"
+            label="Set minimum stake required for new cohort initiates"
             placement="top-start"
             hasArrow
           >
             <Box>
               <Input
-                label="Minimum stake required"
-                id="stakePerMember"
-                placeholder="enter minimum stake..."
+                label="Stake per member"
+                id="assetAmount"
+                placeholder="Stake per member"
                 borderColor="red"
                 type="number"
                 // @ts-ignore
                 localForm={localForm}
-                {...register("stakePerMember", {
+                {...register("assetAmount", {
                   validate: (val) => val > 0,
                   required: {
                     value: true,
@@ -95,11 +96,38 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               />
               <ErrorMessage
                 errors={errors}
-                name="stakePerMember"
+                name="assetAmount"
                 render={({ message }) => <Text color="red">{message}</Text>}
               />
             </Box>
           </Tooltip>
+          <Box>
+            <Input
+              label="Cohort size"
+              id="cohortSize"
+              placeholder="Cohort size"
+              borderColor="red"
+              type="number"
+              // @ts-ignore
+              localForm={localForm}
+              {...register("cohortSize", {
+                validate: (val) => val > 0,
+                required: {
+                  value: true,
+                  message: "Input cannot be blank",
+                },
+                min: {
+                  value: 1,
+                  message: "Minimum of 1 required",
+                },
+              })}
+            />
+            <ErrorMessage
+              errors={errors}
+              name="cohortSize"
+              render={({ message }) => <Text color="red">{message}</Text>}
+            />
+          </Box>
           <Tooltip
             label="Set the minimum amount of shares required for membership"
             placement="top-start"
@@ -107,9 +135,9 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
           >
             <Box>
               <Input
-                label="Share threshold"
+                label="Shares per member"
                 id="shareThreshold"
-                placeholder="minimum shares for membership"
+                placeholder="shares per member"
                 borderColor="red"
                 type="number"
                 // @ts-ignore
@@ -133,7 +161,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               />
             </Box>
           </Tooltip>
-          {/* <Box>
+          <Box>
             <Input
               label="Onboarding period in days"
               id="onboardindPeriod"
@@ -159,17 +187,43 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               name="onboardingPeriod"
               render={({ message }) => <Text color="red">{message}</Text>}
             />
-          </Box> */}
+          </Box>
+
           <Box>
             <Input
-              label="Staking period in days"
-              id="stakingPeriod"
+              label="Staking asset address"
+              id="stakingAsset"
+              placeholder="enter token address"
+              borderColor="red"
+              // @ts-ignore
+              localForm={localForm}
+              {...register("stakingAsset", {
+                required: {
+                  value: true,
+                  message: "Value required",
+                },
+                validate: () =>
+                  utils.isAddress(values.stakingAsset) || "invalid address",
+              })}
+            />
+
+            <ErrorMessage
+              errors={errors}
+              name="stakingAsset"
+              render={({ message }) => <Text color="red">{message}</Text>}
+            />
+          </Box>
+
+          <Box>
+            <Input
+              label="Staking duration"
+              id="stakeDuration"
               placeholder="amount in days..."
               borderColor="red"
               type="number"
               // @ts-ignore
               localForm={localForm}
-              {...register("stakingPeriod", {
+              {...register("stakeDuration", {
                 validate: (val) => val > 0,
                 required: {
                   value: true,
@@ -183,15 +237,47 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
             />
             <ErrorMessage
               errors={errors}
-              name="stakingPeriod"
+              name="stakeDuration"
               render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box>
-          <Box />
-          <Box />
-          <Box />
-          <Box mt={10}>
+        </SimpleGrid>
+        <SimpleGrid my={3}>
+          <Tooltip
+            label="Unworthy mortals will have their stake slashed and sent to this address. Can be a gnosis-safe address"
+            placement="top-start"
+            hasArrow
+          >
+            <Box>
+              <Input
+                label="Treasury address"
+                id="treasury"
+                placeholder="enter address"
+                borderColor="red"
+                // @ts-ignore
+                localForm={localForm}
+                {...register("treasury", {
+                  required: {
+                    value: true,
+                    message: "Value required",
+                  },
+                  validate: () =>
+                    utils.isAddress(values.treasury) || "invalid address",
+                })}
+              />
+
+              <ErrorMessage
+                errors={errors}
+                name="treasury"
+                render={({ message }) => <Text color="red">{message}</Text>}
+              />
+            </Box>
+          </Tooltip>
+        </SimpleGrid>
+        <SimpleGrid columns={2} spacingX={4} spacingY={3} my={10}>
+          <Box>
             <Button
+              mt={10}
               variant="ghost"
               w="full"
               color="red"

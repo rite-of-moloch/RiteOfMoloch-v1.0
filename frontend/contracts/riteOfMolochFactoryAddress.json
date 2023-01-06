@@ -1,269 +1,170 @@
 [
-  { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
+  { "type": "constructor", "inputs": [] },
   {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "cohortAddress",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "deployer",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "implementation",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "membershipCriteria",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "stakeToken",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "stakeAmount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "threshold",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "time",
-        "type": "uint256"
-      }
-    ],
-    "name": "NewRiteOfMoloch",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "role",
-        "type": "bytes32"
-      },
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "previousAdminRole",
-        "type": "bytes32"
-      },
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "newAdminRole",
-        "type": "bytes32"
-      }
-    ],
-    "name": "RoleAdminChanged",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "role",
-        "type": "bytes32"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "sender",
-        "type": "address"
-      }
-    ],
-    "name": "RoleGranted",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "bytes32",
-        "name": "role",
-        "type": "bytes32"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "sender",
-        "type": "address"
-      }
-    ],
-    "name": "RoleRevoked",
-    "type": "event"
-  },
-  {
-    "inputs": [],
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "bytes32", "name": "", "internalType": "bytes32" }],
     "name": "ADMIN",
-    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
-    "stateMutability": "view",
-    "type": "function"
+    "inputs": []
   },
   {
-    "inputs": [],
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "bytes32", "name": "", "internalType": "bytes32" }],
     "name": "DEFAULT_ADMIN_ROLE",
-    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
-    "stateMutability": "view",
-    "type": "function"
+    "inputs": []
   },
   {
-    "inputs": [
-      { "internalType": "address", "name": "implementation", "type": "address" }
-    ],
-    "name": "addImplementation",
-    "outputs": [],
+    "type": "function",
     "stateMutability": "nonpayable",
-    "type": "function"
+    "outputs": [],
+    "name": "addImplementation",
+    "inputs": [
+      { "type": "address", "name": "implementation", "internalType": "address" }
+    ]
   },
   {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
+    "name": "createCohort",
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "membershipCriteria",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "stakingAsset",
-            "type": "address"
-          },
-          { "internalType": "address", "name": "treasury", "type": "address" },
-          { "internalType": "uint256", "name": "threshold", "type": "uint256" },
-          {
-            "internalType": "uint256",
-            "name": "assetAmount",
-            "type": "uint256"
-          },
-          { "internalType": "uint256", "name": "duration", "type": "uint256" },
-          { "internalType": "string", "name": "name", "type": "string" },
-          { "internalType": "string", "name": "symbol", "type": "string" },
-          { "internalType": "string", "name": "baseUri", "type": "string" }
-        ],
-        "internalType": "struct InitializationData.InitData",
+        "type": "tuple",
         "name": "initData",
-        "type": "tuple"
+        "internalType": "struct InitializationData.InitData",
+        "components": [
+          { "type": "address" },
+          { "type": "address" },
+          { "type": "address" },
+          { "type": "uint256" },
+          { "type": "uint256" },
+          { "type": "uint256" },
+          { "type": "string" },
+          { "type": "string" },
+          { "type": "string" }
+        ]
       },
       {
-        "internalType": "uint256",
+        "type": "uint256",
         "name": "implementationSelector",
-        "type": "uint256"
+        "internalType": "uint256"
       }
-    ],
-    "name": "createCohort",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    ]
   },
   {
-    "inputs": [
-      { "internalType": "bytes32", "name": "role", "type": "bytes32" }
-    ],
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "bytes32", "name": "", "internalType": "bytes32" }],
     "name": "getRoleAdmin",
-    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
-    "stateMutability": "view",
-    "type": "function"
+    "inputs": [{ "type": "bytes32", "name": "role", "internalType": "bytes32" }]
   },
   {
-    "inputs": [
-      { "internalType": "bytes32", "name": "role", "type": "bytes32" },
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
     "name": "grantRole",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    "inputs": [
+      { "type": "bytes32", "name": "role", "internalType": "bytes32" },
+      { "type": "address", "name": "account", "internalType": "address" }
+    ]
   },
   {
-    "inputs": [
-      { "internalType": "bytes32", "name": "role", "type": "bytes32" },
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "bool", "name": "", "internalType": "bool" }],
     "name": "hasRole",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-    "stateMutability": "view",
-    "type": "function"
+    "inputs": [
+      { "type": "bytes32", "name": "role", "internalType": "bytes32" },
+      { "type": "address", "name": "account", "internalType": "address" }
+    ]
   },
   {
-    "inputs": [],
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
     "name": "iid",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
+    "inputs": []
   },
   {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
     "name": "implementations",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "view",
-    "type": "function"
+    "inputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }]
   },
   {
-    "inputs": [
-      { "internalType": "bytes32", "name": "role", "type": "bytes32" },
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
     "name": "renounceRole",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    "inputs": [
+      { "type": "bytes32", "name": "role", "internalType": "bytes32" },
+      { "type": "address", "name": "account", "internalType": "address" }
+    ]
   },
   {
-    "inputs": [
-      { "internalType": "bytes32", "name": "role", "type": "bytes32" },
-      { "internalType": "address", "name": "account", "type": "address" }
-    ],
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
     "name": "revokeRole",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    "inputs": [
+      { "type": "bytes32", "name": "role", "internalType": "bytes32" },
+      { "type": "address", "name": "account", "internalType": "address" }
+    ]
   },
   {
-    "inputs": [
-      { "internalType": "bytes4", "name": "interfaceId", "type": "bytes4" }
-    ],
-    "name": "supportsInterface",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "type": "function",
     "stateMutability": "view",
-    "type": "function"
+    "outputs": [{ "type": "bool", "name": "", "internalType": "bool" }],
+    "name": "supportsInterface",
+    "inputs": [
+      { "type": "bytes4", "name": "interfaceId", "internalType": "bytes4" }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "NewRiteOfMoloch",
+    "inputs": [
+      { "type": "address", "name": "cohortAddress", "indexed": false },
+      { "type": "address", "name": "deployer", "indexed": false },
+      { "type": "address", "name": "implementation", "indexed": false },
+      { "type": "address", "name": "membershipCriteria", "indexed": false },
+      { "type": "address", "name": "stakeToken", "indexed": false },
+      { "type": "uint256", "name": "stakeAmount", "indexed": false },
+      { "type": "uint256", "name": "threshold", "indexed": false },
+      { "type": "uint256", "name": "time", "indexed": false }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RoleAdminChanged",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "indexed": true },
+      { "type": "bytes32", "name": "previousAdminRole", "indexed": true },
+      { "type": "bytes32", "name": "newAdminRole", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RoleGranted",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "indexed": true },
+      { "type": "address", "name": "account", "indexed": true },
+      { "type": "address", "name": "sender", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RoleRevoked",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "indexed": true },
+      { "type": "address", "name": "account", "indexed": true },
+      { "type": "address", "name": "sender", "indexed": true }
+    ],
+    "anonymous": false
   }
 ]
