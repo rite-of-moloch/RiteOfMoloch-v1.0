@@ -100,6 +100,18 @@ contract RiteOfMoloch is
     // cohort's base URI for accessing token metadata
     string internal __baseURI;
 
+    // cohort name
+    string public cohortName;
+
+    // cohort join count
+    uint256 public cohortCount;
+
+    // cohort size limit
+    uint256 public cohortSize;
+
+    // cohort join time limit
+    uint256 public joinEndTime;
+
     // minimum amount of dao shares required to be considered a member
     uint256 public minimumShare;
 
@@ -137,19 +149,28 @@ contract RiteOfMoloch is
         // increment the counter so our first sbt has token id of one
         _tokenIdCounter.increment();
 
-        // initialize the SBT
-        __ERC721_init(initData.name, initData.symbol);
+        // set cohort name
+        cohortName = initData.cohortName;
 
-        // Set the interface for accessing the DAO's public members mapping
+        // set size limit on cohort
+        cohortSize = initData.cohortSize;
+
+        // set join time limit
+        joinEndTime = block.timestamp + initData.joinDuration;
+
+        // initialize the SBT
+        __ERC721_init(initData.sbtName, initData.sbtSymbol);
+
+        // set the interface for accessing the DAO's public members mapping
         dao = MolochDAO(initData.membershipCriteria);
 
-        // Store the treasury daoAddress
+        // store the treasury daoAddress
         treasury = initData.treasury;
 
-        // Set the interface for accessing the required staking token
+        // set the interface for accessing the required staking token
         _token = Token(initData.stakingAsset);
 
-        // Set the minimum shares
+        // set the minimum shares
         minimumShare = initData.threshold;
 
         // point to Hats Protocol
@@ -174,8 +195,8 @@ contract RiteOfMoloch is
         // set the minimum stake requirement
         _setMinimumStake(initData.assetAmount);
 
-        // set the cohort duration in seconds
-        _setMaxDuration(initData.duration);
+        // set the cohort staking duration
+        _setMaxDuration(initData.stakeDuration);
 
         // set the cohort token's base uri
         _setBaseUri(initData.baseUri);
@@ -213,22 +234,18 @@ contract RiteOfMoloch is
      * Stakes required tokens and mints soul bound token
      */
     function joinInitiation(address user) public callerIsUser {
+        // enforce time and size contraints
+        require(block.timestamp <= joinDuration, "This cohort is now closed");
+        require(cohortCount <= cohortSize, "This cohort is already full");
+
         // enforce the initiate or sponsor transfers correct tokens to the contract
         require(_stake(user), "Staking failed!");
 
+        // account for new cohort attendee
+        cohortCount++;
+
         // issue a soul bound token
         _soulBind(user);
-    }
-
-    /**
-     * @dev Claims the life force of failed initiates for the dao
-     * @param failedInitiates an array of user's who have failed to join the DAO
-     */
-    function sacrifice(address[] calldata failedInitiates)
-        public
-        onlyRole(ADMIN)
-    {
-        _darkRitual(failedInitiates);
     }
 
     /**
@@ -254,19 +271,22 @@ contract RiteOfMoloch is
      *************************/
 
     /**
-     * @dev Allows DAO members to change the staking requirement
-     * @param newMinimumStake the minimum quantity of tokens a user must stake to join the cohort
+     * @dev Claims the life force of failed initiates for the dao
+     * @param failedInitiates an array of user's who have failed to join the DAO
      */
-    function setMinimumStake(uint256 newMinimumStake) public onlyRole(ADMIN) {
-        _setMinimumStake(newMinimumStake);
+    function sacrifice(address[] calldata failedInitiates)
+        public
+        onlyRole(ADMIN)
+    {
+        _darkRitual(failedInitiates);
     }
 
     /**
-     * @dev Allows changing the maximum initiation duration
-     * @param newMaxTime the length in seconds until an initiate's stake is forfeit
+     * @dev Allows DAO members to change the staking requirement
+     * @param newMinimumStake the minimum quantity of tokens a user must stake to join the cohort
      */
-    function setMaxDuration(uint256 newMaxTime) public onlyRole(SUPER_ADMIN) {
-        _setMaxDuration(newMaxTime);
+    function setMinimumStake(uint256 newMinimumStake) external onlyRole(ADMIN) {
+        _setMinimumStake(newMinimumStake);
     }
 
     /**
@@ -274,7 +294,7 @@ contract RiteOfMoloch is
      * @param newShareThreshold the number of shares required to be considered a DAO member
      */
     function setShareThreshold(uint256 newShareThreshold)
-        public
+        external
         onlyRole(ADMIN)
     {
         // enforce that the minimum share threshold isn't zero
@@ -288,6 +308,28 @@ contract RiteOfMoloch is
 
         // log data for the new minimum share threshold
         emit ChangedShares(newShareThreshold);
+    }
+
+    /**
+     * @dev Allows changing the maximum initiation duration
+     * @param newMaxTime the length in seconds until an initiate's stake is forfeit
+     */
+    function setMaxDuration(uint256 newMaxTime) external onlyRole(SUPER_ADMIN) {
+        _setMaxDuration(newMaxTime);
+    }
+
+    function changeJoinSizeLimit(uint256 _cohortSize)
+        external
+        onlyRole(SUPER_ADMIN)
+    {
+        cohortSize = _cohortSize;
+    }
+
+    function extendJoinTimeLimit(uint256 _extension)
+        external
+        onlyRole(SUPER_ADMIN)
+    {
+        joinEndTime = joinEndTime + _extension;
     }
 
     /*************************

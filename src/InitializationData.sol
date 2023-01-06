@@ -7,19 +7,22 @@ contract InitializationData {
 
     // PARAMS:
     // membershipCriteria_ (Moloch DAO address) the contract address read from in order to ascertain cohort completion
-    // tokenAddress_ the contract address for the asset which is staked into the cohort contract
-    // treasury_ the address which receives tokens when initiates are slashed
+    // stakingAsset_ (tokenAddress) the contract address for the asset which is staked into the cohort contract
+    // treasury_ the address which receives tokens when initiates are slashed (e.g. Gnosis safe, smart contract, etc.)
     // topHatWearer_ [OPTIONAL] address of topHat (DAO address that wears topHat)
     // admin1_ [OPTIONAL] address of cohort admin
     // admin2_ [OPTIONAL] address of cohort admin
-    // shareThreshold_ the minimum amount of criteria which constitutes membership
-    // minStake_ the minimum amount of staking asset required to join the cohort
-    // duration_ of cohort / staking period?
-    // chainId_ for Hats protocol MAINNET: polygon=137 gnosis=100 TESTNET: georli=5
-    // topHat_ [OPTIONAL] topHat id associated with topHatWearer
-    // name_ the name for the cohort's soul bound tokens
-    // symbol_ the ticker symbol for cohort's soul bound token
-    // baseURI_ the uniform resource identifier for accessing soul bound token metadata
+    // cohortSize_ the limit of cohort attendees that can join/stake
+    // joinDuration_ the time limit for cohort attendees to join/stake
+    // threshold_ (shares in DAO) the minimum amount of criteria which constitutes membership
+    // assetAmount_ (staking amount) the minimum amount of staking asset required to join the cohort
+    // stakeDuration_ the time limit beginning from time of stake for cohort attendee to achieve DAO membership
+    // chainId_ blockchain ID for Hats protocol (MAINNET: polygon = 137 gnosis = 100 TESTNET: georli = 5)
+    // topHatId_ [OPTIONAL] topHat ID of topHatWearer
+    // cohortName_ name of cohort
+    // stbName_ the name for the cohort's soul bound tokens (SBT)
+    // sbtSymbol_ the ticker symbol for cohort's SBT
+    // baseURI_ the uniform resource identifier for accessing SBT metadata
 
     struct InitData {
         address membershipCriteria;
@@ -28,13 +31,16 @@ contract InitializationData {
         address topHatWearer;
         address admin1;
         address admin2;
+        uint256 cohortSize;
+        uint256 joinDuration;
         uint256 threshold;
         uint256 assetAmount;
-        uint256 duration;
+        uint256 stakeDuration;
         uint256 chainId;
         uint256 topHatId;
-        string name;
-        string symbol;
+        string cohortName;
+        string sbtName;
+        string sbtSymbol;
         string baseUri;
     }
 }

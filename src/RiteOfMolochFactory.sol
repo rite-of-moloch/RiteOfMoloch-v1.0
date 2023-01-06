@@ -11,16 +11,22 @@ import "./InitializationData.sol";
 contract RiteOfMolochFactory is InitializationData, AccessControl {
     bytes32 public constant ADMIN = keccak256("ADMIN");
 
-    // todo: add new vars
     event NewRiteOfMoloch(
-        address cohortAddress,
+        address cohortContract,
         address deployer,
         address implementation,
         address membershipCriteria,
-        address stakeToken,
-        uint256 stakeAmount,
+        address stakingAsset,
+        address treasury,
+        address topHatWearer,
+        uint256 cohortSize,
+        uint256 joinDuration,
         uint256 threshold,
-        uint256 time
+        uint256 assetAmount,
+        uint256 stakeDuration,
+        uint256 chainId,
+        uint256 topHatId,
+        string cohortName
     );
 
     // access an existing implementation of cohort staking sbt contracts
@@ -41,24 +47,14 @@ contract RiteOfMolochFactory is InitializationData, AccessControl {
 
         // assign admin roles to deployer
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+
+        // todo: add Hats implementations
     }
 
     /**
      * @dev Deploys a new clone proxy instance for cohort staking
      * @param initData the complete data for initializing a new cohort
      * @param implementationSelector points to a logic contract implementation
-     * @dev initData struct format
-            {
-           membershipCriteria: string;
-            stakingAsset: string;
-            treasury: string;
-            threshold: BigNumber;
-            assetAmount: BigNumber;
-            duration: BigNumber;
-            name: string;
-            symbol: string;
-            baseUri: string;
-             }
      */
     function createCohort(
         InitData calldata initData,
@@ -85,9 +81,16 @@ contract RiteOfMolochFactory is InitializationData, AccessControl {
             implementations[implementationSelector],
             initData.membershipCriteria,
             initData.stakingAsset,
-            initData.assetAmount,
+            initData.treasury,
+            initData.topHatWearer,
+            initData.cohortSize,
+            initData.joinDuration,
             initData.threshold,
-            initData.duration
+            initData.assetAmount,
+            initData.stakeDuration,
+            initData.chainId,
+            initData.topHatId,
+            initData.cohortName
         );
 
         return clone;
