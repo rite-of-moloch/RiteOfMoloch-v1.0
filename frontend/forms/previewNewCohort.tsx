@@ -27,6 +27,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     nameSBT,
     symbolSBT,
     uriSBT,
+    treasuryAddress,
     stakePerMember,
     cohortSize,
     onboardingPeriod,
@@ -90,7 +91,10 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
               <span style={{ color: "gray" }}>Asset URI:</span> {uriSBT}
             </Text>
             {/* <Text><span style={{ color: "gray" }}>Controller address:</span> {}</Text> */}
-            {/* <Text><span style={{ color: "gray" }}>Treasury address:</span> {}</Text> */}
+            <Text>
+              <span style={{ color: "gray" }}>Treasury address:</span>{" "}
+              {<Text fontSize="xx-small">{treasuryAddress}</Text>}
+            </Text>
             {tophatOwnerAddress !== "" && (
               <Text>
                 <span style={{ color: "gray" }}>Controller address:</span>

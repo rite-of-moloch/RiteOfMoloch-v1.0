@@ -19,6 +19,8 @@ export const FormContext = createContext<{
   setSymbolSBT: any;
   uriSBT: string;
   setUriSBT: any;
+  treasuryAddress: string;
+  setTreasuryAddress: any;
   stakePerMember: number | null;
   setStakePerMember: any;
   cohortSize: number | null;
@@ -64,6 +66,8 @@ export const FormContext = createContext<{
   setSymbolSBT: null,
   uriSBT: "",
   setUriSBT: null,
+  treasuryAddress: "",
+  setTreasuryAddress: null,
   stakePerMember: null,
   setStakePerMember: null,
   cohortSize: null,
@@ -109,6 +113,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   const [stakePerMember, setStakePerMember] = useState<number | null>(null);
   const [cohortSize, setCohortSize] = useState<number | null>(null);
   const [onboardingPeriod, setOnboardingPeriod] = useState<number | null>(null);
+  const [treasuryAddress, setTreasuryAddress] = useState("");
   const [stakingPeriod, setStakingPeriod] = useState<number | null>(null);
   // const [hasTophat, setHasTophat] = useState(false);
   // const [addAdmin, setAddAdmin] = useState(false);
@@ -139,6 +144,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
     setSymbolSBT,
     uriSBT,
     setUriSBT,
+    treasuryAddress,
+    setTreasuryAddress,
     stakePerMember,
     setStakePerMember,
     cohortSize,
@@ -190,6 +197,8 @@ export const useFormContext = () => {
     setSymbolSBT,
     uriSBT,
     setUriSBT,
+    treasuryAddress,
+    setTreasuryAddress,
     stakePerMember,
     setStakePerMember,
     cohortSize,
@@ -236,6 +245,8 @@ export const useFormContext = () => {
     setSymbolSBT,
     uriSBT,
     setUriSBT,
+    treasuryAddress,
+    setTreasuryAddress,
     stakePerMember,
     setStakePerMember,
     cohortSize,

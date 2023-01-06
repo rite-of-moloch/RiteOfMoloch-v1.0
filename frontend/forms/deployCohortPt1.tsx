@@ -8,9 +8,11 @@ import {
   Input,
   SimpleGrid,
   Text,
+  Tooltip,
 } from "@raidguild/design-system";
 import { useFormContext } from "context/FormContext";
 import PreviewModal from "components/PreviewModal";
+import { utils } from "ethers";
 
 interface deployCohortPt1Props {
   children?: ReactNode;
@@ -23,6 +25,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
     setNameSBT,
     setSymbolSBT,
     setUriSBT,
+    setTreasuryAddress,
     displayPart1,
     setDisplayPart1,
     setDisplayPart2,
@@ -35,6 +38,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
       nameSBT: "",
       symbolSBT: "",
       uriSBT: "",
+      treasuryAddress: "",
     },
   });
 
@@ -61,20 +65,11 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
       setNameSBT(values.nameSBT);
       setSymbolSBT(values.symbolSBT);
       setUriSBT(values.uriSBT);
+      setTreasuryAddress(values.treasuryAddress);
       setDisplayPart1(false);
       setDisplayPart2(true);
     }
   };
-
-  // useEffect(() => {
-  //   const subscription = watch((data) => {
-  //     console.log(data);
-  //   });
-
-  //   return () => {
-  //     subscription.unsubscribe();
-  //   };
-  // }, [watch]);
 
   return (
     <FormControl onSubmit={handleSubmit(handleNext)}>
@@ -176,7 +171,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
             <Input
               label="URI SBT"
               id="uriSBT"
-              placeholder="uriSBT"
+              placeholder="enter URI"
               borderColor="red"
               // @ts-ignore
               localForm={localForm}
@@ -193,13 +188,45 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box>
-          <Box alignSelf="end">
+          <Tooltip
+            label="If cohort members get slashed, their stake will get sent to this address"
+            placement="top-start"
+            hasArrow
+          >
+            <Box>
+              <Input
+                label="Treasury address"
+                id="treasuryAddress"
+                placeholder="enter address"
+                borderColor="red"
+                // @ts-ignore
+                localForm={localForm}
+                {...register("treasuryAddress", {
+                  required: {
+                    value: true,
+                    message: "Value required",
+                  },
+                  validate: () =>
+                    utils.isAddress(values.treasuryAddress) ||
+                    "invalid address",
+                })}
+              />
+
+              <ErrorMessage
+                errors={errors}
+                name="treasuryAddress"
+                render={({ message }) => <Text color="red">{message}</Text>}
+              />
+            </Box>
+          </Tooltip>
+          {/* <Box alignSelf="end"> */}
+          <Box mt={10}>
             <PreviewModal
               sbtImageURL={values.sbtImage}
               sbtName={values.nameSBT}
             />
           </Box>
-          <Box />
+          {/* <Box /> */}
           <Box textAlign="right">
             <Button
               variant="solid"
