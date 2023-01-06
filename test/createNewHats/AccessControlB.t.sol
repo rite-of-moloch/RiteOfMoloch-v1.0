@@ -1,15 +1,29 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import {TestHelperB} from "test/createNewHats/TestHelperB.t.sol";
+import "test/TestHelper.sol";
 import "test/utils/hats/interfaces/HatsErrorsT.sol";
 
 // forge test --match-contract AccessControlB -vv
 
-contract AccessControlB is TestHelperB {
+contract AccessControlB is TestHelper {
     bytes32 public constant SUPER_ADMIN = keccak256("SUPER_ADMIN");
     bytes32 public constant ADMIN = keccak256("ADMIN");
 
+    function setUp() public {
+        // set and deploy ROM-Factory
+        setUpFactory();
+
+        // set initial data for ROM clone
+        createInitData();
+
+        // deploy ROM clone
+        ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
+    }
+
+    /**
+     * TESTS
+     */
     function testSuperAdminPermissions() public {
         vm.startPrank(deployer);
         ROM.setMinimumStake(20);
@@ -25,7 +39,7 @@ contract AccessControlB is TestHelperB {
         uint256 adminHat = ROM.adminHat();
         uint256 superAdminHat = ROM.superAdminHat();
 
-        hats.mintHat(adminHat, bob);
+        HATS.mintHat(adminHat, bob);
         assertTrue(ROM.hasRole(ADMIN, bob));
 
         // alice should be able to call admin functions
@@ -68,13 +82,13 @@ contract AccessControlB is TestHelperB {
     function testSetAdminLimit() public {
         uint256 adminHat = ROM.adminHat();
 
-        hats.mintHat(adminHat, bob);
+        HATS.mintHat(adminHat, bob);
 
         // all hats have been minted, next hat [for charlie] should revert
         vm.expectRevert(
             abi.encodeWithSelector(HatsErrorsT.AllHatsWorn.selector, adminHat)
         );
-        hats.mintHat(adminHat, charlie);
+        HATS.mintHat(adminHat, charlie);
     }
 
     function testDoubleMintGuard() public {
@@ -88,8 +102,6 @@ contract AccessControlB is TestHelperB {
                 adminHat
             )
         );
-        hats.mintHat(adminHat, alice);
+        HATS.mintHat(adminHat, alice);
     }
-
-    // function testHatAssignments() public {}
 }

@@ -235,7 +235,7 @@ contract RiteOfMoloch is
      */
     function joinInitiation(address user) public callerIsUser {
         // enforce time and size contraints
-        require(block.timestamp <= joinDuration, "This cohort is now closed");
+        require(block.timestamp <= joinEndTime, "This cohort is now closed");
         require(cohortCount <= cohortSize, "This cohort is already full");
 
         // enforce the initiate or sponsor transfers correct tokens to the contract

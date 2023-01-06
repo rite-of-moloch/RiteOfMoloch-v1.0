@@ -3,13 +3,14 @@
 pragma solidity ^0.8.4;
 
 import "lib/openzeppelin-contracts/contracts/proxy/Clones.sol";
-import "lib/openzeppelin-contracts/contracts/access/AccessControl.sol";
 import "src/RiteOfMoloch.sol";
-import "./InitializationData.sol";
+import "src/InitializationData.sol";
+import "src/hats/HatsAccessControl.sol";
 
-// todo: Hats Access Control?
-contract RiteOfMolochFactory is InitializationData, AccessControl {
-    bytes32 public constant ADMIN = keccak256("ADMIN");
+contract RiteOfMolochFactory is InitializationData, HatsAccessControl {
+    bytes32 public constant FACTORY_OPERATOR = keccak256("FACTORY_OPERATOR");
+
+    mapping(bytes32 => RoleData) public _roles;
 
     event NewRiteOfMoloch(
         address cohortContract,
@@ -19,26 +20,36 @@ contract RiteOfMolochFactory is InitializationData, AccessControl {
         address stakingAsset,
         address treasury,
         address topHatWearer,
-        uint256 cohortSize,
-        uint256 joinDuration,
         uint256 threshold,
         uint256 assetAmount,
-        uint256 stakeDuration,
-        uint256 chainId,
-        uint256 topHatId,
-        string cohortName
+        uint256 stakeDuration
     );
 
     // access an existing implementation of cohort staking sbt contracts
     mapping(uint256 => address) public implementations;
 
-    // Hats protocol implementations
-    mapping(uint256 => address) hatsProtocols;
-
     // the unique identifier used to select which implementation to use for a new cohort
     uint256 public iid;
 
-    constructor() {
+    // Hats protocol implementations
+    address public hatsProtocol;
+
+    // Hats factory operator
+    uint256 public factoryOperatorHat;
+
+    /**
+     * @param _hatsProtocol implementations:
+     * Polygon = 0x95647f88dcbc12986046fc4f49064edd11a25d38
+     * Gnosis = 0x6B49b86D21aBc1D60611bD85c843a9766B5493DB
+     * Georli = 0xcf912a0193593f5cD55D81FF611c26c3ED63f924
+     */
+    constructor(address _hatsProtocol, uint256 _factoryOperatorHat) {
+        // point to Hats implementation
+        hatsProtocol = _hatsProtocol;
+
+        // point access control functionality to Hats protocol
+        _changeHatsContract(hatsProtocol);
+
         // increment the implementation id
         iid = 1;
 
@@ -46,8 +57,7 @@ contract RiteOfMolochFactory is InitializationData, AccessControl {
         implementations[iid] = address(new RiteOfMoloch());
 
         // assign admin roles to deployer
-        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(ADMIN, msg.sender);
+        _grantRole(FACTORY_OPERATOR, _factoryOperatorHat);
     }
 
     /**
@@ -65,9 +75,6 @@ contract RiteOfMolochFactory is InitializationData, AccessControl {
             "!implementation"
         );
 
-        // lookup correct Hats protocol implementation
-        address hatsProtocol = hatsProtocols[initData.chainId];
-
         // deploy cohort clone proxy with a certain implementation
         address clone = Clones.clone(implementations[implementationSelector]);
 
@@ -82,14 +89,9 @@ contract RiteOfMolochFactory is InitializationData, AccessControl {
             initData.stakingAsset,
             initData.treasury,
             initData.topHatWearer,
-            initData.cohortSize,
-            initData.joinDuration,
             initData.threshold,
             initData.assetAmount,
-            initData.stakeDuration,
-            initData.chainId,
-            initData.topHatId,
-            initData.cohortName
+            initData.stakeDuration
         );
 
         return clone;
@@ -99,20 +101,19 @@ contract RiteOfMolochFactory is InitializationData, AccessControl {
      * @dev marks a deployed contract as a suitable implementation for additional cohort formats
      * @param implementation the contract address for new cohort format logic
      */
-
     function addImplementation(address implementation)
         external
-        onlyRole(ADMIN)
+        onlyRole(FACTORY_OPERATOR)
     {
         iid++;
         implementations[iid] = implementation;
     }
 
-    // todo: add security
-    function addHatsProtocol(uint256 _chainId, address _hatsProtocol)
+    // point to new Hats protocol implementation
+    function changeHatsProtocol(address _hatsProtocol)
         public
-        onlyRole(ADMIN)
+        onlyRole(FACTORY_OPERATOR)
     {
-        hatsProtocols[_chainId] = _hatsProtocol;
+        hatsProtocol = _hatsProtocol;
     }
 }

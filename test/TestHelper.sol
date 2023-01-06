@@ -2,18 +2,16 @@
 pragma solidity ^0.8.4;
 
 import "forge-std/Test.sol";
-
-// import "src/inheritedSetup/RiteOfMoloch2.sol";
 import "src/RiteOfMoloch.sol";
-
 import "src/RiteOfMolochFactory.sol";
 import "src/InitializationData.sol";
+import "test/TestHelper.sol";
 import "test/utils/TestToken.sol";
 import {Hats} from "test/utils/hats/HatsT.sol";
 
 // forge test --match-contract TestHelperB -vv
 
-contract TestHelperB is Test, InitializationData {
+contract TestHelper is Test, InitializationData {
     event Log(string message);
 
     address dao = 0x90F79bf6EB2c4f870365E785982E1f101E93b906;
@@ -31,43 +29,76 @@ contract TestHelperB is Test, InitializationData {
     RiteOfMolochFactory public ROMF;
 
     // Hats protocol
-    Hats public hats;
+    Hats public HATS;
 
-    function setUp() public {
+    // Hats protocol implementation
+    address public hatsProtocol;
+
+    // Hats / roles
+    uint256 public factoryTopHat;
+    uint256 public factoryOperatorHat;
+
+    // arbitrary DAO address for factory deployment
+    address constant molochDAO = address(1);
+
+    function setUpFactory() public {
+        // deploy Hats protocol
+        HATS = new Hats("Local-Hats", "");
+
         // set token to be staked
         daoToken = new TestToken();
 
-        // deploy Hats protocol
-        hats = new Hats("Local-Hats", "");
+        // factory hats setup
+        createFactoryHats();
 
         // deploy ROM factory
-        ROMF = new RiteOfMolochFactory();
-
-        ROMF.addHatsProtocol(5, address(hats));
-
-        // set initial data for ROM clone
-        createInitData();
-
-        // deploy ROM clone
-        ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
+        ROMF = new RiteOfMolochFactory(address(HATS), factoryOperatorHat);
     }
 
     // create initial data
-    function createInitData() public {
+    function createInitData() public virtual {
         Data.membershipCriteria = dao;
         Data.stakingAsset = address(daoToken);
         Data.treasury = dao;
         Data.topHatWearer = address(0);
         Data.admin1 = alice;
         Data.admin2 = address(0);
+        Data.cohortSize = 20;
+        Data.joinDuration = 21 weeks;
         Data.threshold = 10;
         Data.assetAmount = 10;
-        Data.duration = 10;
-        Data.chainId = 5;
+        Data.stakeDuration = 52 weeks;
         Data.topHatId = 0;
-        Data.name = "RiteOfMolochSBT";
-        Data.symbol = "SBTMoloch";
+        Data.cohortName = "SeasonV";
+        Data.sbtName = "RiteOfMolochSBT";
+        Data.sbtSymbol = "SBTMoloch";
         Data.baseUri = "";
+    }
+
+    function createFactoryHats() public {
+        // mint topHat
+        factoryTopHat = HATS.mintTopHat(address(this), "Factory-TopHat", "");
+
+        // create factory operator hat
+        factoryOperatorHat = HATS.createHat(
+            factoryTopHat,
+            "Factory-Operator",
+            1,
+            molochDAO,
+            molochDAO,
+            true,
+            ""
+        );
+
+        // mint factory operator
+        HATS.mintHat(factoryOperatorHat, msg.sender);
+
+        HATS.transferHat(factoryTopHat, address(this), address(444444));
+    }
+
+    // log factory deployment
+    function testFactoryDeployment() public {
+        emit log_named_address("ROMF Contract", address(ROMF));
     }
 
     // log deployment information
@@ -75,7 +106,6 @@ contract TestHelperB is Test, InitializationData {
         // deployer address
         emit log_named_address("ROM  Deployer", deployer);
         // contract addresses
-        emit log_named_address("ROMF Contract", address(ROMF));
         emit log_named_address("ROM  Contract", address(ROM));
         emit log_named_address("ROM  Treasury", ROM.treasury());
         emit log_named_address("Hats Protocol", address(ROM.HATS()));

@@ -17,7 +17,6 @@ contract InitializationData {
     // threshold_ (shares in DAO) the minimum amount of criteria which constitutes membership
     // assetAmount_ (staking amount) the minimum amount of staking asset required to join the cohort
     // stakeDuration_ the time limit beginning from time of stake for cohort attendee to achieve DAO membership
-    // chainId_ blockchain ID for Hats protocol (MAINNET: polygon = 137 gnosis = 100 TESTNET: georli = 5)
     // topHatId_ [OPTIONAL] topHat ID of topHatWearer
     // cohortName_ name of cohort
     // stbName_ the name for the cohort's soul bound tokens (SBT)
@@ -36,7 +35,6 @@ contract InitializationData {
         uint256 threshold;
         uint256 assetAmount;
         uint256 stakeDuration;
-        uint256 chainId;
         uint256 topHatId;
         string cohortName;
         string sbtName;
