@@ -1,5 +1,4 @@
 import React, { createContext, useState, Dispatch, useContext } from "react";
-// import { initDataDeployCohort } from "../utils/types/initDataDeployCohort";
 
 export const FormContext = createContext<{
   displayPart1: boolean;
@@ -36,10 +35,6 @@ export const FormContext = createContext<{
   setOnboardingPeriod: any;
   stakeDuration: number | null;
   setStakeDuration: any;
-  // hasTophat: boolean;
-  // setHasTophat: any;
-  // addAdmin: boolean;
-  // setAddAdmin: any;
   topHatWearer: string;
   setTopHatWearer: any;
   tophatID: number | null;
@@ -52,8 +47,6 @@ export const FormContext = createContext<{
   setSuperadmin1: any;
   superadmin2: boolean;
   setSuperadmin2: any;
-  // calldata: initDataDeployCohort;
-  // setCalldata: any;
 }>({
   displayPart1: true,
   setDisplayPart1: null,
@@ -89,10 +82,6 @@ export const FormContext = createContext<{
   setOnboardingPeriod: null,
   stakeDuration: null,
   setStakeDuration: null,
-  // hasTophat: false,
-  // setHasTophat: null,
-  // addAdmin: false,
-  // setAddAdmin: null,
   topHatWearer: "",
   setTopHatWearer: null,
   tophatID: null,
@@ -105,8 +94,6 @@ export const FormContext = createContext<{
   setSuperadmin1: null,
   superadmin2: false,
   setSuperadmin2: null,
-  // calldata: [],
-  // setCalldata: null,
 });
 
 interface FormProviderProps {
@@ -131,15 +118,12 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   const [treasury, setTreasury] = useState("");
   const [membershipCriteria, setMembershipCriteria] = useState("");
   const [stakeDuration, setStakeDuration] = useState<number | null>(null);
-  // const [hasTophat, setHasTophat] = useState(false);
-  // const [addAdmin, setAddAdmin] = useState(false);
   const [topHatWearer, setTopHatWearer] = useState("");
   const [tophatID, setTophatID] = useState<number | null>(null);
   const [admin1, setAdmin1] = useState("");
   const [admin2, setAdmin2] = useState("");
   const [superadmin1, setSuperadmin1] = useState(false);
   const [superadmin2, setSuperadmin2] = useState(false);
-  // const [calldata, setCalldata] = useState([]);
 
   const value = {
     displayPart1,
@@ -176,10 +160,6 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
     setOnboardingPeriod,
     stakeDuration,
     setStakeDuration,
-    // hasTophat,
-    // setHasTophat,
-    // addAdmin,
-    // setAddAdmin,
     topHatWearer,
     setTopHatWearer,
     tophatID,
@@ -192,8 +172,6 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
     setSuperadmin1,
     superadmin2,
     setSuperadmin2,
-    // calldata,
-    // setCalldata,
   };
 
   return <FormContext.Provider value={value}>{children}</FormContext.Provider>;
@@ -235,10 +213,6 @@ export const useFormContext = () => {
     setOnboardingPeriod,
     stakeDuration,
     setStakeDuration,
-    // hasTophat,
-    // setHasTophat,
-    // addAdmin,
-    // setAddAdmin,
     topHatWearer,
     setTopHatWearer,
     tophatID,
@@ -251,8 +225,6 @@ export const useFormContext = () => {
     setSuperadmin1,
     superadmin2,
     setSuperadmin2,
-    // calldata,
-    // setCalldata,
   } = useContext(FormContext);
   return {
     displayPart1,
@@ -289,10 +261,6 @@ export const useFormContext = () => {
     setOnboardingPeriod,
     stakeDuration,
     setStakeDuration,
-    // hasTophat,
-    // setHasTophat,
-    // addAdmin,
-    // setAddAdmin,
     topHatWearer,
     setTopHatWearer,
     tophatID,
@@ -305,7 +273,5 @@ export const useFormContext = () => {
     setSuperadmin1,
     superadmin2,
     setSuperadmin2,
-    // calldata,
-    // setCalldata,
   };
 };

@@ -25,21 +25,22 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     displayPreviewNewCohort,
     membershipCriteria,
     stakingAsset,
+    treasury,
+    topHatWearer,
+    admin1,
+    admin2,
+    cohortSize,
+    setOnboardingPeriod,
+    stakeDuration,
+    tophatID,
     nameCohort,
-    // sbtImage,
     nameSBT,
     symbolSBT,
     uriSBT,
-    treasury,
+    // sbtImage,
     assetAmount,
-    cohortSize,
     shareThreshold,
     onboardingPeriod,
-    stakeDuration,
-    topHatWearer,
-    tophatID,
-    admin1,
-    admin2,
   } = useFormContext();
 
   const handleBack = (): void => {
@@ -52,14 +53,17 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     stakingAsset,
     treasury,
     topHatWearer,
-    admin1, // admin1
-    admin2, // admin1
+    admin1,
+    admin2,
+    cohortSize,
+    setOnboardingPeriod,
     shareThreshold,
-    assetAmount, // assetAmount
-    stakeDuration, // duration
+    assetAmount,
+    stakeDuration,
     chain?.id,
     tophatID,
-    nameSBT, // name
+    nameCohort,
+    nameSBT,
     symbolSBT,
     uriSBT,
   ];
@@ -68,7 +72,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
   console.log(createCohort);
 
   const handleDeployCohort = (): void => {
-    console.log("deploying cohort...");
+    console.log("deploying cohort");
     createCohort;
   };
 

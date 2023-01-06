@@ -47,7 +47,6 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
     defaultValues: {
       hasTophat: false,
       topHatWearer: "",
-      // tophatID: 0,
       addAdmin: false,
       admin1: "",
       admin2: "",
@@ -58,12 +57,10 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
     register,
     getValues,
     setValue,
-    setError,
-    clearErrors,
     trigger,
     handleSubmit,
     watch,
-    formState: { errors, isValid },
+    formState: { errors },
   } = localForm;
 
   const values = getValues();
