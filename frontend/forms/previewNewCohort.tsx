@@ -11,13 +11,14 @@ import {
 import { useFormContext } from "context/FormContext";
 import useCreateCohort from "../hooks/useCreateCohort";
 import { useNetwork } from "wagmi";
+import { initDataDeployCohort } from "utils/types/initDataDeployCohort";
+import { create } from "domain";
 
 interface PreviewNewCohortProps {
   children?: ReactNode;
 }
 
 const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
-  // const { createCohort } = useCreateCohort();
   const { chain } = useNetwork();
   const {
     setDisplayPart3,
@@ -34,7 +35,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     stakePerMember,
     // cohortSize,
     shareThreshold,
-    onboardingPeriod,
+    // onboardingPeriod,
     stakingPeriod,
     tophatOwnerAddress,
     tophatID,
@@ -49,23 +50,26 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     setDisplayPreviewNewCohort(false);
   };
 
+  const initData: initDataDeployCohort = [
+    membershipCriteria, // membershipCriteria
+    tokenAddress, // stakingAsset
+    treasury, //treasury
+    tophatOwnerAddress, // topHatWearer
+    admin2 || "", // admin1
+    admin3 || "", // admin2
+    shareThreshold,
+    stakePerMember, // assetAmount
+    stakingPeriod, // duration
+    chain?.id, // chainId
+    tophatID, // topHatId
+    nameSBT, // name
+    symbolSBT, // symbol
+    uriSBT, // baseUri
+  ];
+  const { createCohort } = useCreateCohort(initData);
+
   const handleDeployCohort = () => {
-    const initData = [
-      membershipCriteria, // Moloch DAO address
-      tokenAddress, // contract address for asset to be staked
-      treasury,
-      tophatOwnerAddress, // topHatWearer
-      admin2 || "", // admin1
-      admin3 || "", // admin2
-      shareThreshold,
-      stakePerMember, // assetAmount
-      stakingPeriod, // duration
-      chain?.id, // chainId
-      tophatID, // topHatId
-      nameSBT, // name
-      symbolSBT, // symbol
-      uriSBT, // baseUri
-    ];
+    createCohort && createCohort();
   };
 
   return (
@@ -107,7 +111,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
                 </span>
               </Text>
             )}
-            {tophatID !== "" && (
+            {tophatID && (
               <Text>
                 <span style={{ color: "gray" }}>TOP HAT ID:</span>
                 <span>{<Text>{tophatID}</Text>}</span>

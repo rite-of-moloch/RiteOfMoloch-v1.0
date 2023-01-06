@@ -114,7 +114,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
             </Box>
           </Tooltip>
           <Tooltip
-            label="Must be a valid Moloch DAO address. Rite of Moloch will read from this to ascertain cohort completion"
+            label="Address of the asset which new members will be required to stake in order to join the cohort"
             placement="top-start"
             hasArrow
           >
@@ -241,28 +241,33 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box>
-          <Box>
-            <Input
-              label="URI SBT"
-              id="uriSBT"
-              placeholder="enter SBT url"
-              borderColor="red"
-              // @ts-ignore
-              localForm={localForm}
-              {...register("uriSBT", {
-                required: {
-                  value: true,
-                  message: "Value required",
-                },
-              })}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="uriSBT"
-              render={({ message }) => <Text color="red">{message}</Text>}
-            />
-          </Box>
-
+          <Tooltip
+            label="The image location (URL) for the image of your SBT. *** For example, go to Google Images, right click on an image, select 'copy image address' and paste the address into the input below"
+            placement="top-start"
+            hasArrow
+          >
+            <Box>
+              <Input
+                label="URI SBT"
+                id="uriSBT"
+                placeholder="enter SBT url"
+                borderColor="red"
+                // @ts-ignore
+                localForm={localForm}
+                {...register("uriSBT", {
+                  required: {
+                    value: true,
+                    message: "Value required",
+                  },
+                })}
+              />
+              <ErrorMessage
+                errors={errors}
+                name="uriSBT"
+                render={({ message }) => <Text color="red">{message}</Text>}
+              />
+            </Box>
+          </Tooltip>
           <Tooltip
             label="If cohort members get slashed, their stake will get sent to this address"
             placement="top-start"

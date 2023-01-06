@@ -41,7 +41,7 @@ export const FormContext = createContext<{
   // setAddAdmin: any;
   tophatOwnerAddress: string;
   setTophatOwnerAddress: any;
-  tophatID: string;
+  tophatID: number | null;
   setTophatID: any;
   admin2: string;
   setAdmin2: any;
@@ -94,7 +94,7 @@ export const FormContext = createContext<{
   // setAddAdmin: null,
   tophatOwnerAddress: "",
   setTophatOwnerAddress: null,
-  tophatID: "",
+  tophatID: null,
   setTophatID: null,
   admin2: "",
   setAdmin2: null,
@@ -133,7 +133,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   // const [hasTophat, setHasTophat] = useState(false);
   // const [addAdmin, setAddAdmin] = useState(false);
   const [tophatOwnerAddress, setTophatOwnerAddress] = useState("");
-  const [tophatID, setTophatID] = useState("");
+  const [tophatID, setTophatID] = useState<number | null>(null);
   const [admin2, setAdmin2] = useState("");
   const [admin3, setAdmin3] = useState("");
   const [superadmin2, setSuperadmin2] = useState(false);

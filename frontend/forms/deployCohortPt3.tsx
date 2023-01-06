@@ -25,7 +25,7 @@ interface DeployCohortFormProps {
 type FormValues = {
   hasTophat: boolean;
   tophatOwnerAddress: string;
-  tophatID: string;
+  tophatID: number | null;
   addAdmin: boolean;
   admin2: string;
   admin3: string;
@@ -53,7 +53,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
     defaultValues: {
       hasTophat: false,
       tophatOwnerAddress: "",
-      tophatID: "",
+      // tophatID: "",
       addAdmin: false,
       admin2: "",
       admin3: "",
@@ -203,7 +203,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
                   setValue("hasTophat", !hasTophat ? true : false);
                   if (!!values.hasTophat) {
                     setValue("tophatOwnerAddress", "");
-                    setValue("tophatID", "");
+                    setValue("tophatID", null);
                   }
                 },
               })}
@@ -237,6 +237,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               id="tophatID"
               placeholder="TOP HAT ID"
               borderColor="red"
+              type="number"
               // @ts-ignore
               localForm={localForm}
               {...register("tophatID", {

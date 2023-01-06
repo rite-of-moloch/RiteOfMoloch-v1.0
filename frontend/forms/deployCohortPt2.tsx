@@ -8,6 +8,7 @@ import {
   Input,
   SimpleGrid,
   Text,
+  Tooltip,
 } from "@raidguild/design-system";
 import { useFormContext } from "context/FormContext";
 
@@ -66,60 +67,72 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
     <FormControl onSubmit={handleSubmit(handleBack)}>
       <Box display={displayPart2 ? "inline" : "none"}>
         <SimpleGrid columns={2} spacingX={4} spacingY={3}>
-          <Box>
-            <Input
-              label="Stake per member"
-              id="stakePerMember"
-              placeholder="enter minimum stake..."
-              borderColor="red"
-              type="number"
-              // @ts-ignore
-              localForm={localForm}
-              {...register("stakePerMember", {
-                validate: (val) => val > 0,
-                required: {
-                  value: true,
-                  message: "Input cannot be blank",
-                },
-                min: {
-                  value: 1,
-                  message: "Minimum of 1 required",
-                },
-              })}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="stakePerMember"
-              render={({ message }) => <Text color="red">{message}</Text>}
-            />
-          </Box>
-          <Box>
-            <Input
-              label="Share threshold"
-              id="shareThreshold"
-              placeholder="minimum shares for membership"
-              borderColor="red"
-              type="number"
-              // @ts-ignore
-              localForm={localForm}
-              {...register("shareThreshold", {
-                validate: (val) => val > 0,
-                required: {
-                  value: true,
-                  message: "Input cannot be blank",
-                },
-                min: {
-                  value: 1,
-                  message: "Minimum of 1 required",
-                },
-              })}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="shareThreshold"
-              render={({ message }) => <Text color="red">{message}</Text>}
-            />
-          </Box>
+          <Tooltip
+            label="Set the minimum stake required of your selected asset for new members to join your cohort"
+            placement="top-start"
+            hasArrow
+          >
+            <Box>
+              <Input
+                label="Minimum stake required"
+                id="stakePerMember"
+                placeholder="enter minimum stake..."
+                borderColor="red"
+                type="number"
+                // @ts-ignore
+                localForm={localForm}
+                {...register("stakePerMember", {
+                  validate: (val) => val > 0,
+                  required: {
+                    value: true,
+                    message: "Input cannot be blank",
+                  },
+                  min: {
+                    value: 1,
+                    message: "Minimum of 1 required",
+                  },
+                })}
+              />
+              <ErrorMessage
+                errors={errors}
+                name="stakePerMember"
+                render={({ message }) => <Text color="red">{message}</Text>}
+              />
+            </Box>
+          </Tooltip>
+          <Tooltip
+            label="Set the minimum amount of shares required for membership"
+            placement="top-start"
+            hasArrow
+          >
+            <Box>
+              <Input
+                label="Share threshold"
+                id="shareThreshold"
+                placeholder="minimum shares for membership"
+                borderColor="red"
+                type="number"
+                // @ts-ignore
+                localForm={localForm}
+                {...register("shareThreshold", {
+                  validate: (val) => val > 0,
+                  required: {
+                    value: true,
+                    message: "Input cannot be blank",
+                  },
+                  min: {
+                    value: 1,
+                    message: "Minimum of 1 required",
+                  },
+                })}
+              />
+              <ErrorMessage
+                errors={errors}
+                name="shareThreshold"
+                render={({ message }) => <Text color="red">{message}</Text>}
+              />
+            </Box>
+          </Tooltip>
           {/* <Box>
             <Input
               label="Onboarding period in days"
@@ -151,7 +164,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
             <Input
               label="Staking period in days"
               id="stakingPeriod"
-              placeholder="enter duration in days..."
+              placeholder="amount in days..."
               borderColor="red"
               type="number"
               // @ts-ignore
