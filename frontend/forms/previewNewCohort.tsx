@@ -4,6 +4,7 @@ import {
   Button,
   HStack,
   Image,
+  Link,
   SimpleGrid,
   Stack,
   Text,
@@ -12,6 +13,7 @@ import { useFormContext } from "context/FormContext";
 import useCreateCohort from "../hooks/useCreateCohort";
 import { useNetwork } from "wagmi";
 import { initDataDeployCohort } from "utils/types/initDataDeployCohort";
+import { BigNumber } from "ethers";
 
 interface PreviewNewCohortProps {
   children?: ReactNode;
@@ -30,7 +32,6 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     admin1,
     admin2,
     cohortSize,
-    setOnboardingPeriod,
     stakeDuration,
     tophatID,
     nameCohort,
@@ -42,6 +43,17 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     shareThreshold,
     onboardingPeriod,
   } = useFormContext();
+
+  const blockExplorerLink = (address: string) => (
+    <Link
+      href={`${chain?.blockExplorers?.default.url}/address/${address}`}
+      isExternal
+    >
+      {address}
+    </Link>
+  );
+
+  console.log(blockExplorerLink("9809x0989"));
 
   const handleBack = (): void => {
     setDisplayPart3(true);
@@ -55,25 +67,27 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     topHatWearer,
     admin1,
     admin2,
-    cohortSize,
-    setOnboardingPeriod,
-    shareThreshold,
-    assetAmount,
-    stakeDuration,
-    chain?.id,
-    tophatID,
+    Number(cohortSize),
+    Number(onboardingPeriod),
+    Number(shareThreshold),
+    Number(assetAmount),
+    Number(stakeDuration),
+    Number(chain?.id),
+    Number(tophatID),
     nameCohort,
     nameSBT,
     symbolSBT,
     uriSBT,
   ];
 
-  const { createCohort } = useCreateCohort([initData, "1"]);
+  console.log(initData);
+  // console.log(BigNumber.from(1));
+
+  const { createCohort } = useCreateCohort([initData, parseInt("1")]);
   console.log(createCohort);
 
   const handleDeployCohort = (): void => {
     console.log("deploying cohort");
-    createCohort;
   };
 
   return (
@@ -88,7 +102,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
         px={"5%"}
         py={6}
         m="auto"
-        w={["full", "full", "80%", "60%"]}
+        w={"full"}
       >
         <Box>
           <Stack>
@@ -124,21 +138,32 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
             </Text>
             <Text>
               <span style={{ color: "gray" }}>Staking asset address:</span>
-              <Text fontSize="xx-small">{stakingAsset}</Text>
+              <Text fontSize="xx-small">{blockExplorerLink(stakingAsset)}</Text>
             </Text>
             <Text>
               <span style={{ color: "gray" }}>Moloch DAO address:</span>
-              <Text fontSize="xx-small">{membershipCriteria}</Text>
+              {/* TO-DO: put etherscan link to contract */}
+              <Text fontSize="xx-small">
+                {blockExplorerLink(membershipCriteria)}
+              </Text>
             </Text>
 
             <Text>
               <span style={{ color: "gray" }}>Treasury address:</span>
-              <Text fontSize="xx-small">{treasury}</Text>
+              {/* TO-DO: put etherscan link to contract */}
+              <Text fontSize="xx-small">{blockExplorerLink(treasury)}</Text>
             </Text>
             {topHatWearer !== "" && (
               <Text>
                 <span style={{ color: "gray" }}>TOP HAT address:</span>
-                <span>{<Text fontSize="xx-small">{topHatWearer}</Text>}</span>
+                {/* TO-DO: put etherscan link to contract */}
+                <span>
+                  {
+                    <Text fontSize="xx-small">
+                      {blockExplorerLink(topHatWearer)}
+                    </Text>
+                  }
+                </span>
               </Text>
             )}
             {tophatID && (
@@ -149,14 +174,15 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
             {admin1 !== "" && (
               <Text>
                 <span style={{ color: "gray" }}>Admin address 1:</span>
-
-                {<Text fontSize="xx-small">{admin1}</Text>}
+                {/* TO-DO: put etherscan link to contract */}
+                {<Text fontSize="xx-small">{blockExplorerLink(admin1)}</Text>}
               </Text>
             )}
             {admin2 !== "" && (
               <Text>
                 <span style={{ color: "gray" }}>Admin address 2:</span>
-                {<Text fontSize="xx-small">{admin2}</Text>}
+                {/* TO-DO: put etherscan link to contract */}
+                {<Text fontSize="xx-small">{blockExplorerLink(admin2)}</Text>}
               </Text>
             )}
           </Stack>

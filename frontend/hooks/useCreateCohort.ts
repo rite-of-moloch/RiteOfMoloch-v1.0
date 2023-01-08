@@ -1,5 +1,6 @@
 import { initDataDeployCohort } from "utils/types/initDataDeployCohort";
 import useWriteContract from "./useWriteContract";
+import { BigNumber } from "ethers";
 
 /**
  *
@@ -8,13 +9,15 @@ import useWriteContract from "./useWriteContract";
  * @Returns address
  */
 
-const useCreateCohort = (args: [initDataDeployCohort, string]) => {
+const useCreateCohort = (args: [initDataDeployCohort, number]) => {
   const {
     write: createCohort,
     isLoading: isLoadingApprove,
     isSuccess: isSuccessApprove,
     isError: isErrorApprove,
   } = useWriteContract("riteOfMolochFactoryAddress", "createCohort", args);
+
+  // console.log(createCohort, isLoadingApprove, isSuccessApprove, isErrorApprove);
 
   return { createCohort, isLoadingApprove, isSuccessApprove, isErrorApprove };
 };

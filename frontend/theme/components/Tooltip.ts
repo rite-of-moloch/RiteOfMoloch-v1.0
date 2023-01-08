@@ -3,19 +3,12 @@ import { defineStyle, defineStyleConfig } from "@chakra-ui/react";
 const Tooltip = defineStyleConfig({
   baseStyle: {
     fontWeight: "normal",
-    border: "1px solid",
-    p: "1rem",
-    color: "white",
-  },
-  variants: {
-    rgTheme: defineStyle({
-      bg: "gradientSBTPrev",
-      borderColor: "red",
-      borderRadius: "xl",
-    }),
-  },
-  defaultProps: {
-    variant: "rgTheme",
+    border: "1px solid red",
+    px: "1.5rem",
+    py: "1rem",
+    background: "black",
+    textColor: "white",
+    borderRadius: "xl",
   },
 });
 

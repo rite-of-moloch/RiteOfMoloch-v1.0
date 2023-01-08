@@ -23,7 +23,9 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
     setCohortSize,
     setShareThreshold,
     setOnboardingPeriod,
+    setStakingAsset,
     setStakeDuration,
+    setTreasury,
     displayPart2,
     setDisplayPart1,
     setDisplayPart2,
@@ -52,13 +54,14 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
 
   const handleNext = async (): Promise<void> => {
     await trigger();
-    console.log("onboardindPeriod", values.onboardingPeriod);
     if (isValid) {
       setAssetAmount(values.assetAmount);
       setCohortSize(values.cohortSize);
       setShareThreshold(values.shareThreshold);
       setOnboardingPeriod(values.onboardingPeriod);
       setStakeDuration(values.stakeDuration);
+      setStakingAsset(values.stakingAsset);
+      setTreasury(values.treasury);
       setDisplayPart2(false);
       setDisplayPart3(true);
     }
@@ -68,39 +71,34 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
     <FormControl onSubmit={handleSubmit(handleBack)}>
       <Box display={displayPart2 ? "inline" : "none"}>
         <SimpleGrid columns={2} spacingX={4} spacingY={3}>
-          <Tooltip
-            label="Set minimum stake required for new cohort initiates"
-            placement="top-start"
-            hasArrow
-          >
-            <Box>
-              <Input
-                label="Stake per member"
-                id="assetAmount"
-                placeholder="Stake per member"
-                borderColor="red"
-                type="number"
-                // @ts-ignore
-                localForm={localForm}
-                {...register("assetAmount", {
-                  validate: (val) => val > 0,
-                  required: {
-                    value: true,
-                    message: "Input cannot be blank",
-                  },
-                  min: {
-                    value: 1,
-                    message: "Minimum of 1 required",
-                  },
-                })}
-              />
-              <ErrorMessage
-                errors={errors}
-                name="assetAmount"
-                render={({ message }) => <Text color="red">{message}</Text>}
-              />
-            </Box>
-          </Tooltip>
+          <Box>
+            <Input
+              label="Stake per member"
+              id="assetAmount"
+              placeholder="Stake per member"
+              borderColor="red"
+              type="number"
+              // @ts-ignore
+              localForm={localForm}
+              {...register("assetAmount", {
+                validate: (val) => val > 0,
+                required: {
+                  value: true,
+                  message: "Input cannot be blank",
+                },
+                min: {
+                  value: 1,
+                  message: "Minimum of 1 required",
+                },
+              })}
+            />
+            <ErrorMessage
+              errors={errors}
+              name="assetAmount"
+              render={({ message }) => <Text color="red">{message}</Text>}
+            />
+          </Box>
+
           <Box>
             <Input
               label="Cohort size"
@@ -243,36 +241,30 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
           </Box>
         </SimpleGrid>
         <SimpleGrid my={3}>
-          <Tooltip
-            label="Unworthy mortals will have their stake slashed and sent to this address. Can be a gnosis-safe address"
-            placement="top-start"
-            hasArrow
-          >
-            <Box>
-              <Input
-                label="Treasury address"
-                id="treasury"
-                placeholder="enter address"
-                borderColor="red"
-                // @ts-ignore
-                localForm={localForm}
-                {...register("treasury", {
-                  required: {
-                    value: true,
-                    message: "Value required",
-                  },
-                  validate: () =>
-                    utils.isAddress(values.treasury) || "invalid address",
-                })}
-              />
+          <Box>
+            <Input
+              label="Treasury address"
+              id="treasury"
+              placeholder="Slashed stake will be sent here..."
+              borderColor="red"
+              // @ts-ignore
+              localForm={localForm}
+              {...register("treasury", {
+                required: {
+                  value: true,
+                  message: "Value required",
+                },
+                validate: () =>
+                  utils.isAddress(values.treasury) || "invalid address",
+              })}
+            />
 
-              <ErrorMessage
-                errors={errors}
-                name="treasury"
-                render={({ message }) => <Text color="red">{message}</Text>}
-              />
-            </Box>
-          </Tooltip>
+            <ErrorMessage
+              errors={errors}
+              name="treasury"
+              render={({ message }) => <Text color="red">{message}</Text>}
+            />
+          </Box>
         </SimpleGrid>
         <SimpleGrid columns={2} spacingX={4} spacingY={3} my={10}>
           <Box>
