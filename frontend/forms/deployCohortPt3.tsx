@@ -120,7 +120,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
     }
   };
 
-  const tooltipText = (
+  const tophatExplanation = (
     <>
       <Heading as="h3" fontSize="lg">
         What is a TOP HAT?
@@ -134,13 +134,19 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
     </>
   );
 
+  const addAdminExplanation = (
+    <Text>
+      The deployer of this cohort will receive super-admin priviledges
+    </Text>
+  );
+
   return (
     <FormControl onSubmit={handleSubmit(handleNext)}>
       <Box display={displayPart3 ? "inline" : "none"}>
         <HStack justifyContent="space-between" mb={4}>
           <Flex alignItems="center">
             <Text>Does the DAO have a TOP HAT?</Text>
-            <Tooltip label={tooltipText} placement="top" hasArrow>
+            <Tooltip label={tophatExplanation} placement="top" hasArrow>
               <Box ml="0.5rem" border="1px" rounded="full" borderColor="red">
                 <BsQuestion />
               </Box>
@@ -209,7 +215,14 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
         </SimpleGrid>
         <HStack justifyContent="space-between" mb={4}>
           <Box>
-            <Text>Want to add additional administrators?</Text>
+            <Flex alignItems="center">
+              <Text>Want to add additional administrators?</Text>
+              <Tooltip label={addAdminExplanation} placement="top" hasArrow>
+                <Box ml="0.5rem" border="1px" rounded="full" borderColor="red">
+                  <BsQuestion />
+                </Box>
+              </Tooltip>
+            </Flex>
           </Box>
           <Box>
             <Switch
