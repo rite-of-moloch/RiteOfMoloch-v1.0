@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { ReactNode } from "react";
-import { Flex } from "@raidguild/design-system";
+import { Box, Flex } from "@raidguild/design-system";
 import { useAccount } from "wagmi";
 import { useGetDeadline } from "hooks/useGetDeadline";
 import { useRiteBalanceOf } from "hooks/useRiteBalanceOf";
@@ -8,6 +8,7 @@ import BoxHeader from "components/BoxHeader";
 import HeaderOne from "../components/Header0ne";
 import RiteStaked from "components/RiteStaked";
 import StakingFlow from "components/StakingFlow";
+import NotConnected from "components/NotConnected";
 
 interface HomeProps {
   children?: ReactNode;
@@ -42,28 +43,28 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
    */
 
   return (
-    <Flex
-      minH="350px"
-      minW="80%"
-      direction="column"
-      alignItems="center"
-      fontFamily="spaceMono"
-      px="2rem"
-    >
-      <HeaderOne />
-      {!isConnected && (
-        <BoxHeader text="Connect your wallet and stake to our cohort!" />
-      )}
+    <>
+      {!isConnected && <NotConnected />}
       {isConnected && (
-        <BoxHeader text="Commit Your Stake To Join Our Cohort!" />
+        <Flex
+          minH="350px"
+          minW="80%"
+          direction="column"
+          alignItems="center"
+          fontFamily="spaceMono"
+          px="2rem"
+        >
+          {isConnected && (
+            <BoxHeader text="Commit Your Stake To Join Our Cohort!" />
+          )}
+          {isConnected && !hasRite() && <StakingFlow />}
+          {isConnected && hasRite() && (
+            <RiteStaked riteBalance={riteBalance} deadline={deadline} />
+          )}
+          {children}
+        </Flex>
       )}
-      {isConnected && !hasRite() && <StakingFlow />}
-      {isConnected && hasRite() && (
-        <RiteStaked riteBalance={riteBalance} deadline={deadline} />
-      )}
-
-      {children}
-    </Flex>
+    </>
   );
 };
 
