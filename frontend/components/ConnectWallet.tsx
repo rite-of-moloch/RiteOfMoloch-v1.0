@@ -16,7 +16,7 @@ import { FiKey, FiChevronDown, FiXCircle } from "react-icons/fi";
 import { truncateAddress } from "utils/general";
 
 const ConnectWallet = () => {
-  const { isConnecting } = useAccount();
+  const { isConnecting, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
 
   return (

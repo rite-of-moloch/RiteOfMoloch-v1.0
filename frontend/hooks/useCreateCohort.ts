@@ -9,7 +9,7 @@ import { BigNumber } from "ethers";
  * @Returns address
  */
 
-const useCreateCohort = (args: [initDataDeployCohort, number]) => {
+const useCreateCohort = (args: [initDataDeployCohort, string]) => {
   const {
     write: createCohort,
     isLoading: isLoadingApprove,
@@ -17,7 +17,7 @@ const useCreateCohort = (args: [initDataDeployCohort, number]) => {
     isError: isErrorApprove,
   } = useWriteContract("riteOfMolochFactoryAddress", "createCohort", args);
 
-  // console.log(createCohort, isLoadingApprove, isSuccessApprove, isErrorApprove);
+  console.log(createCohort);
 
   return { createCohort, isLoadingApprove, isSuccessApprove, isErrorApprove };
 };

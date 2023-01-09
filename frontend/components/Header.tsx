@@ -2,12 +2,14 @@ import React, { ReactNode } from "react";
 import { Flex, Image, Text, Box } from "@raidguild/design-system";
 import Link from "next/link";
 import ConnectBtn from "./ConnectWallet";
+import { useAccount } from "wagmi";
 
 interface HeaderProps {
   children?: ReactNode;
 }
 
 export const Header: React.FC<HeaderProps> = ({ children }) => {
+  const { isConnected } = useAccount();
   return (
     <Flex
       h="100px"
@@ -30,7 +32,7 @@ export const Header: React.FC<HeaderProps> = ({ children }) => {
           </Box>
         </Flex>
       </Link>
-      <ConnectBtn />
+      {isConnected && <ConnectBtn />}
     </Flex>
   );
 };

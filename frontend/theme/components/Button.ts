@@ -58,9 +58,21 @@ const Button = {
         boxShadow: "none",
       },
     }),
+    red: () => ({
+      textTransform: "uppercase",
+      maxWidth: "100%",
+      width: "auto",
+      height: "40px",
+      color: "red",
+      border: "solid red 1px",
+      rounded: "sm",
+      bg: "whiteAlpha.100",
+      _focus: {
+        boxShadow: "none",
+      },
+    }),
   },
   defaultProps: {
-    colorScheme: "primary",
     variant: "solid",
     fontWeight: "400",
     fontFamily: "texturina",

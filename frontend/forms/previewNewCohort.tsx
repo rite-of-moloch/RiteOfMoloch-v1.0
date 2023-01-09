@@ -67,13 +67,13 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     topHatWearer,
     admin1,
     admin2,
-    Number(cohortSize),
-    Number(onboardingPeriod),
-    Number(shareThreshold),
-    Number(assetAmount),
-    Number(stakeDuration),
-    Number(chain?.id),
-    Number(tophatID),
+    cohortSize?.toString(),
+    onboardingPeriod?.toString(),
+    shareThreshold?.toString(),
+    assetAmount?.toString(),
+    stakeDuration?.toString(),
+    chain?.id?.toString(),
+    tophatID?.toString(),
     nameCohort,
     nameSBT,
     symbolSBT,
@@ -81,9 +81,9 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
   ];
 
   console.log(initData);
-  // console.log(BigNumber.from(1));
+  console.log(BigNumber.from(1));
 
-  const { createCohort } = useCreateCohort([initData, parseInt("1")]);
+  const { createCohort } = useCreateCohort([initData, "1"]);
   console.log(createCohort);
 
   const handleDeployCohort = (): void => {
