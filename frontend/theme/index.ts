@@ -1,11 +1,19 @@
 import { extendTheme } from "@chakra-ui/react";
-import { HStack } from "./components/HStack";
-import { Button } from "./components/Button";
+import Button from "./components/Button";
+import HStack from "./components/HStack";
+import Modal from "./components/Modal";
+import Progress from "./components/Progress";
+import Switch from "./components/Switch";
+import Tooltip from "./components/Tooltip";
 
 export const theme = extendTheme({
   components: {
-    HStack,
     Button,
+    HStack,
+    Modal,
+    Progress,
+    Switch,
+    Tooltip,
   },
   colors: {
     transparent: "transparent",
@@ -30,6 +38,10 @@ export const theme = extendTheme({
     "red.900": "#63171B",
     yellow: "#F2E857",
     yellowDark: "#DCCF11",
+    gradient1:
+      "linear-gradient(94.89deg, #f78040 0%, #dd459b 70.2%, #ad3bad 100%)",
+    gradientSBTPrev:
+      "linear-gradient(90deg, #290009 -0.56%, #060606 82.19%, #25003A 100%)",
   },
   fonts: {
     texturina: `'Texturina', serif`,
@@ -52,6 +64,7 @@ export const theme = extendTheme({
       "&::-webkit-scrollbar": {
         width: "10px",
         bg: "transparent",
+        display: "none",
       },
       "&::-webkit-scrollbar-thumb": {
         background: "#ff3864",

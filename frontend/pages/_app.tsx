@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RGThemeProvider } from "@raidguild/design-system";
 import { UserProvider } from "context/UserContext";
+import { FormProvider } from "context/FormContext";
 import { theme } from "../theme";
 import { Layout } from "../components/Layout";
 import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
@@ -21,11 +22,13 @@ const App = ({ Component, pageProps }: AppProps) => {
       <QueryClientProvider client={queryClient}>
         <WagmiConfig client={wagmiClient}>
           <RainbowKitProvider chains={chains} theme={darkTheme()}>
-            <UserProvider>
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
-            </UserProvider>
+            <FormProvider>
+              <UserProvider>
+                <Layout>
+                  <Component {...pageProps} />
+                </Layout>
+              </UserProvider>
+            </FormProvider>
           </RainbowKitProvider>
         </WagmiConfig>
       </QueryClientProvider>

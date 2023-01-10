@@ -32,18 +32,19 @@ interface StakingFlowProps {
   children?: ReactNode;
 }
 
+type FormValues = {
+  initiateAddress: string;
+};
+
 const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
+  const { address } = useAccount();
+  const { chain } = useNetwork();
   const { willSponsor, handleWillSponsor } = useContext(UserContext);
 
-  // start react-hook-form
-  // const localForm = useForm<FieldValues>({
-  //   defaultValues: {
-  //     initiateAddress: "",
-  //   },
-  // });
-
-  const localForm = useForm({
-    mode: "all",
+  const localForm = useForm<FormValues>({
+    defaultValues: {
+      initiateAddress: "",
+    },
   });
 
   const {
@@ -55,8 +56,11 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
   } = localForm;
 
   const customValidations = {
-    validate: (initiate: string) => utils.isAddress(initiate),
+    required: true,
+    validate: (initiate: string) =>
+      utils.isAddress(initiate) || "invalid address",
     onChange: () => {
+      // console.log(isValid);
       if (isValid) {
         clearErrors();
       } else {
@@ -68,14 +72,8 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
     },
   };
 
-  console.log("isValid", isValid);
-
   const values = getValues();
   const initiateAddress: string = values?.initiateAddress || "";
-  // end react-hook-form
-
-  const { address } = useAccount();
-  const { chain } = useNetwork();
 
   const chainId = (): number => {
     if (chain?.id) return chain?.id;
