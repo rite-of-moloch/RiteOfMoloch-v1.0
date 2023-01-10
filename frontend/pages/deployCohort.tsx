@@ -18,29 +18,24 @@ const DeployCohort: React.FC<DeployCohortProps> = ({ children }) => {
   const { displayPreviewNewCohort } = useFormContext();
 
   return (
-    <Flex
-      minH="350px"
-      minW="80%"
-      direction="column"
-      alignItems="center"
-      fontFamily="spaceMono"
-      px="2rem"
-    >
+    <>
       {!isConnected && <NotConnected />}
-      {isConnected && (
-        <Box>
-          <Box mb={8} display={displayPreviewNewCohort ? "none" : ""}>
-            <ProgressBar />
+      <Flex>
+        {isConnected && (
+          <Box>
+            <Box mb={8} display={displayPreviewNewCohort ? "none" : ""}>
+              <ProgressBar />
+            </Box>
+            <DeployCohortPt1 />
+            <DeployCohortPt2 />
+            <DeployCohortPt3 />
+            <PreviewNewCohort />
           </Box>
-          <DeployCohortPt1 />
-          <DeployCohortPt2 />
-          <DeployCohortPt3 />
-          <PreviewNewCohort />
-        </Box>
-      )}
+        )}
 
-      {children}
-    </Flex>
+        {children}
+      </Flex>
+    </>
   );
 };
 

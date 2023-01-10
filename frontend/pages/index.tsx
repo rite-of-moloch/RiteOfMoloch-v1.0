@@ -1,6 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { ReactNode } from "react";
-import { Button, Grid, GridItem } from "@raidguild/design-system";
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  GridItem,
+  HStack,
+  Spacer,
+} from "@raidguild/design-system";
 import { useAccount } from "wagmi";
 import Link from "next/link";
 import NotConnected from "components/NotConnected";
@@ -16,23 +24,23 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
     <>
       {!isConnected && <NotConnected />}
       {isConnected && (
-        <Grid templateColumns={"repeat(2, 1fr)"} w="80%">
-          <GridItem w="100%" textAlign="center">
+        <HStack justifyContent="space-around">
+          <Box mr={["1rem", "2rem", "4rem", "8rem"]}>
             <Link href="/stake">
               <Button variant="red" p="1.5rem">
                 Cohort Member
               </Button>
             </Link>
-          </GridItem>
+          </Box>
 
-          <GridItem w="100%" textAlign="center">
+          <Box ml={["1rem", "2rem", "4rem", "8rem"]}>
             <Link href="admin">
               <Button variant="red" p="1.5rem">
                 Cohort Administration
               </Button>
             </Link>
-          </GridItem>
-        </Grid>
+          </Box>
+        </HStack>
       )}
     </>
   );

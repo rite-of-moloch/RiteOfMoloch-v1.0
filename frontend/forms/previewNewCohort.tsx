@@ -63,26 +63,25 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     membershipCriteria,
     stakingAsset,
     treasury,
-    topHatWearer || zeroAddress,
-    admin1 || zeroAddress,
-    admin2 || zeroAddress,
-    cohortSize,
-    onboardingPeriod,
-    shareThreshold,
-    assetAmount,
-    stakeDuration,
-    chain?.id,
-    tophatID || 0,
+    topHatWearer !== "" ? topHatWearer : zeroAddress,
+    admin1 !== "" ? admin1 : zeroAddress,
+    admin2 !== "" ? admin2 : zeroAddress,
+    Number(cohortSize),
+    Number(onboardingPeriod),
+    Number(shareThreshold),
+    Number(assetAmount),
+    Number(stakeDuration),
+    tophatID ? tophatID : Number(0),
     nameCohort,
     nameSBT,
     symbolSBT,
     uriSBT,
   ];
 
+  // console.log(initData);
   const { createCohort } = useCreateCohort([initData, 1]);
 
   const handleDeployCohort = (): void => {
-    console.log(initData);
     createCohort && createCohort();
   };
 
@@ -138,7 +137,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
             </Text>
             <Text>
               <span style={{ color: "gray" }}>Moloch DAO address:</span>
-              {/* TO-DO: put etherscan link to contract */}
+
               <Text fontSize="xx-small">
                 {blockExplorerLink(membershipCriteria)}
               </Text>
@@ -146,13 +145,13 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
 
             <Text>
               <span style={{ color: "gray" }}>Treasury address:</span>
-              {/* TO-DO: put etherscan link to contract */}
+
               <Text fontSize="xx-small">{blockExplorerLink(treasury)}</Text>
             </Text>
             {topHatWearer !== "" && (
               <Text>
                 <span style={{ color: "gray" }}>TOP HAT address:</span>
-                {/* TO-DO: put etherscan link to contract */}
+
                 <span>
                   {
                     <Text fontSize="xx-small">
@@ -170,14 +169,14 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
             {admin1 !== "" && (
               <Text>
                 <span style={{ color: "gray" }}>Admin address 1:</span>
-                {/* TO-DO: put etherscan link to contract */}
+
                 {<Text fontSize="xx-small">{blockExplorerLink(admin1)}</Text>}
               </Text>
             )}
             {admin2 !== "" && (
               <Text>
                 <span style={{ color: "gray" }}>Admin address 2:</span>
-                {/* TO-DO: put etherscan link to contract */}
+
                 {<Text fontSize="xx-small">{blockExplorerLink(admin2)}</Text>}
               </Text>
             )}

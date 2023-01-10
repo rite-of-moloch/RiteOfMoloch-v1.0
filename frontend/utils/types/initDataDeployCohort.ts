@@ -1,5 +1,3 @@
-import { BigNumber } from "ethers";
-
 export type initDataDeployCohort = [
   membershipCriteria: string,
   stakingAsset: string,
@@ -12,7 +10,6 @@ export type initDataDeployCohort = [
   threshold: number | null,
   assetAmount: number | null,
   stakeDuration: number | null,
-  chainId: number | undefined,
   topHatId: number | null,
   cohortName: string,
   sbtName: string,

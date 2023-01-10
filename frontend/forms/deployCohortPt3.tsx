@@ -9,6 +9,7 @@ import {
   HStack,
   Heading,
   Input,
+  Link,
   SimpleGrid,
   Switch,
   Text,
@@ -120,20 +121,6 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
     }
   };
 
-  const tophatExplanation = (
-    <>
-      <Heading as="h3" fontSize="lg">
-        What is a TOP HAT?
-      </Heading>
-      <Text>
-        Lorem ipsum dolor sit amet consectetur. Proin scelerisque ultrices
-        magnis netus tincidunt pellentesque diam senectus. Lorem ipsum dolor sit
-        amet consectetur. Proin scelerisque ultrices magnis netus tincidunt
-        pellentesque diam senectus.
-      </Text>
-    </>
-  );
-
   const addAdminExplanation = (
     <Text>
       The deployer of this cohort will receive super-admin priviledges
@@ -146,7 +133,21 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
         <HStack justifyContent="space-between" mb={4}>
           <Flex alignItems="center">
             <Text>Does the DAO have a TOP HAT?</Text>
-            <Tooltip label={tophatExplanation} placement="top" hasArrow>
+            <Tooltip
+              label={
+                <Text>
+                  <Link
+                    href="https://hackmd.io/@spengrah/H15lKdsmc"
+                    isExternal={true}
+                  >
+                    Read more about Hats Protocol. Click here
+                  </Link>
+                </Text>
+              }
+              placement="bottom"
+              hasArrow
+              closeDelay={2000}
+            >
               <Box ml="0.5rem" border="1px" rounded="full" borderColor="red">
                 <BsQuestion />
               </Box>

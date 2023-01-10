@@ -1,18 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { ReactNode } from "react";
-import {
-  Flex,
-  Button,
-  Box,
-  SimpleGrid,
-  HStack,
-  Grid,
-  GridItem,
-} from "@raidguild/design-system";
+import { Button, Grid, GridItem } from "@raidguild/design-system";
 import { useAccount } from "wagmi";
 import Link from "next/link";
 import NotConnected from "components/NotConnected";
-import reviewOngoingCohort from "pages/reviewOngoingCohort";
 
 interface AdminProps {
   children: ReactNode;
