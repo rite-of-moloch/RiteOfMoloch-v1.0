@@ -13,7 +13,6 @@ import { useFormContext } from "context/FormContext";
 import useCreateCohort from "../hooks/useCreateCohort";
 import { useNetwork } from "wagmi";
 import { initDataDeployCohort } from "utils/types/initDataDeployCohort";
-import { BigNumber } from "ethers";
 
 interface PreviewNewCohortProps {
   children?: ReactNode;
@@ -53,41 +52,38 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     </Link>
   );
 
-  console.log(blockExplorerLink("9809x0989"));
-
   const handleBack = (): void => {
     setDisplayPart3(true);
     setDisplayPreviewNewCohort(false);
   };
 
+  const zeroAddress = "0x0000000000000000000000000000000000000000";
+
   const initData: initDataDeployCohort = [
     membershipCriteria,
     stakingAsset,
     treasury,
-    topHatWearer,
-    admin1,
-    admin2,
-    cohortSize?.toString(),
-    onboardingPeriod?.toString(),
-    shareThreshold?.toString(),
-    assetAmount?.toString(),
-    stakeDuration?.toString(),
-    chain?.id?.toString(),
-    tophatID?.toString(),
+    topHatWearer || zeroAddress,
+    admin1 || zeroAddress,
+    admin2 || zeroAddress,
+    cohortSize,
+    onboardingPeriod,
+    shareThreshold,
+    assetAmount,
+    stakeDuration,
+    chain?.id,
+    tophatID || 0,
     nameCohort,
     nameSBT,
     symbolSBT,
     uriSBT,
   ];
 
-  console.log(initData);
-  console.log(BigNumber.from(1));
-
-  const { createCohort } = useCreateCohort([initData, "1"]);
-  console.log(createCohort);
+  const { createCohort } = useCreateCohort([initData, 1]);
 
   const handleDeployCohort = (): void => {
-    console.log("deploying cohort");
+    console.log(initData);
+    createCohort && createCohort();
   };
 
   return (

@@ -12,6 +12,7 @@ import {
 import { useAccount } from "wagmi";
 import Link from "next/link";
 import NotConnected from "components/NotConnected";
+import reviewOngoingCohort from "pages/reviewOngoingCohort";
 
 interface AdminProps {
   children: ReactNode;
@@ -26,7 +27,7 @@ const Admin: React.FC<AdminProps> = ({ children }): any => {
       {isConnected && (
         <Grid templateColumns={"repeat(1)"} w={["50%", "40%", "20%"]}>
           <GridItem w="100%" textAlign="center" my="1rem">
-            <Link href="/deploy-cohort">
+            <Link href="/deployCohort">
               <Button variant="red" w="full" p="1.5rem">
                 Deploy Cohort
               </Button>
@@ -48,7 +49,7 @@ const Admin: React.FC<AdminProps> = ({ children }): any => {
             </Link>
           </GridItem>
           <GridItem w="100%" textAlign="center" my="1rem">
-            <Link href="#">
+            <Link href="/reviewOngoingCohort">
               <Button variant="red" w="full" p="1.5rem">
                 Review Ongoing Cohort
               </Button>

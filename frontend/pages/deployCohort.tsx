@@ -6,11 +6,11 @@ import DeployCohortPt1 from "../forms/deployCohortPt1";
 import DeployCohortPt2 from "../forms/deployCohortPt2";
 import DeployCohortPt3 from "../forms/deployCohortPt3";
 import PreviewNewCohort from "forms/previewNewCohort";
-import BoxHeader from "components/BoxHeader";
 import { useFormContext } from "context/FormContext";
+import NotConnected from "components/NotConnected";
 
 interface DeployCohortProps {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 const DeployCohort: React.FC<DeployCohortProps> = ({ children }) => {
@@ -26,6 +26,7 @@ const DeployCohort: React.FC<DeployCohortProps> = ({ children }) => {
       fontFamily="spaceMono"
       px="2rem"
     >
+      {!isConnected && <NotConnected />}
       {isConnected && (
         <Box>
           <Box mb={8} display={displayPreviewNewCohort ? "none" : ""}>
@@ -37,9 +38,7 @@ const DeployCohort: React.FC<DeployCohortProps> = ({ children }) => {
           <PreviewNewCohort />
         </Box>
       )}
-      {!isConnected && (
-        <BoxHeader text="Connect your wallet to deploy a cohort" />
-      )}
+
       {children}
     </Flex>
   );

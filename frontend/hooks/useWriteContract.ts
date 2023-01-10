@@ -27,7 +27,6 @@ const useWriteContract = (
   const toast = useCustomToast();
   const contractAddress = useContractAddress(contractName);
   const abi = useAbi(contractName);
-  // let output: string;
 
   const { config } = usePrepareContractWrite({
     addressOrName: contractAddress,
@@ -41,15 +40,17 @@ const useWriteContract = (
   const { data, write } = useContractWrite({
     ...config,
     request: config.request,
+    onSuccess(data) {
+      console.log(data);
+    },
     onError(err) {
+      console.log(err);
       toast.error({
         status: "error",
         title: `Transaction Error... ${err.message}`,
       });
     },
   });
-
-  console.log(data, write);
 
   const {
     data: txData,
@@ -60,6 +61,9 @@ const useWriteContract = (
     hash: data?.hash,
     onError(error) {
       console.log("Error", error);
+    },
+    onSuccess(data) {
+      console.log(data);
     },
   });
 
@@ -77,12 +81,15 @@ const useWriteContract = (
       });
     },
     onError(err) {
+      console.log(err);
       toast.success({
         status: "error",
         title: `Transaction Error... ${err.message}`,
       });
     },
   });
+
+  console.log(txResponse);
 
   return { write, txResponse, isLoading, isSuccess, isError };
 };
