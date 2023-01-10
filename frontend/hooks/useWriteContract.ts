@@ -52,6 +52,8 @@ const useWriteContract = (
     },
   });
 
+  // console.log(data);
+
   const {
     data: txData,
     isLoading,

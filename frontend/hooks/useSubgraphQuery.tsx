@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { performQuery, subgraphEndpoint } from '../utils/subgraph/helpers';
+import { useState, useEffect } from "react";
+import { performQuery, subgraphEndpoint } from "../utils/subgraph/helpers";
 
 /// @param query: a GraphQL compliant query string. (SEE /utils/subraph/queries.ts for examples.)
 /// @return { data, isLoading, error}
@@ -8,20 +8,19 @@ import { performQuery, subgraphEndpoint } from '../utils/subgraph/helpers';
 /// @return error: boolean determining whether the query or the fetch resulted in an error.
 
 export function useSubgraphQuery(query: string) {
-
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  useEffect( () => {
-    const queryPromise = performQuery(subgraphEndpoint, query)
+  useEffect(() => {
+    const queryPromise = performQuery(subgraphEndpoint, query);
 
     setIsLoading(true);
 
     queryPromise
-      .then( json => {
+      .then((json) => {
         // abort if query has returned errors
-        if(json.errors != undefined) {
+        if (json.errors != undefined) {
           setData(null);
           setIsLoading(false);
           setError(true);
@@ -32,24 +31,16 @@ export function useSubgraphQuery(query: string) {
         setIsLoading(false);
         setError(false);
       })
-      .catch( (error) => {
+      .catch((error) => {
         setError(true);
-        setIsLoading(false)
-      })
+        setIsLoading(false);
+      });
+  }, []);
 
-  }, [])
-
-  return { data, isLoading, error }
+  return { data, isLoading, error };
 }
 
-
-
-
-
-
-export function useSubgraphPaginatedData(queryBuilder: () => string, itemsPerPage: number) {
-
-}
-
-
-
+export function useSubgraphPaginatedData(
+  queryBuilder: () => string,
+  itemsPerPage: number
+) {}

@@ -46,14 +46,7 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
     <>
       {!isConnected && <NotConnected />}
       {isConnected && (
-        <Flex
-          minH="350px"
-          minW="80%"
-          direction="column"
-          alignItems="center"
-          fontFamily="spaceMono"
-          px="2rem"
-        >
+        <Flex direction="column">
           {isConnected && (
             <BoxHeader text="Commit Your Stake To Join Our Cohort!" />
           )}
