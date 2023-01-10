@@ -19,7 +19,12 @@ contract ROMFScript is Script {
     IHats public HATS;
 
     // Hats protocol implementation
-    address public hatsProtocol = 0xcf912a0193593f5cD55D81FF611c26c3ED63f924;
+    address public hatsProtocolGoerli =
+        0xcf912a0193593f5cD55D81FF611c26c3ED63f924;
+    address public hatsProtocolPolygon =
+        0x95647f88dcbc12986046fc4f49064edd11a25d38;
+    address public hatsProtocolGnosis =
+        0x6B49b86D21aBc1D60611bD85c843a9766B5493DB;
 
     // Hats / roles
     uint256 public topHat;
@@ -53,7 +58,8 @@ contract ROMFScript is Script {
     function run() public {
         vm.startBroadcast();
 
-        ROMF = new RiteOfMolochFactory(hatsProtocol, factoryOperatorHat);
+        // change Hats Protocol for chain
+        ROMF = new RiteOfMolochFactory(hatsProtocolGoerli, factoryOperatorHat);
 
         vm.stopBroadcast();
     }

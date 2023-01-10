@@ -29,74 +29,14 @@
       ]
     }
   ],
-  "receipts": [
-    {
-      "transactionHash": "0xa4332c2cc587c8375c28cf0f45f86cd2bb86df9e8f1241ba636f63f200dd1f4b",
-      "transactionIndex": "0x42",
-      "blockHash": "0x45d7f136cd546a019d2ac2ad6cf01389e2ed8a27a70401c2f2794d46018bafef",
-      "blockNumber": "0x7e7c1f",
-      "from": "0x1A4B691738C9c8Db8f2EDf0b9207f6acb24ADF07",
-      "to": null,
-      "cumulativeGasUsed": "0xb533ae",
-      "gasUsed": "0x3a25d6",
-      "contractAddress": "0x7D3A3dCbfCA8047A830A6B2DAA03f05b5Ba16079",
-      "logs": [
-        {
-          "address": "0x7D3A3dCbfCA8047A830A6B2DAA03f05b5Ba16079",
-          "topics": [
-            "0xe2c5fed45442eae2ee9c94b63f1e24155d9bfe92ecd80e48c35ebf2927675737",
-            "0x0000000000000000000000000000000000000000000000000000000000000000",
-            "0x000000000000000000000000cf912a0193593f5cd55d81ff611c26c3ed63f924"
-          ],
-          "data": "0x",
-          "blockHash": "0x45d7f136cd546a019d2ac2ad6cf01389e2ed8a27a70401c2f2794d46018bafef",
-          "blockNumber": "0x7e7c1f",
-          "transactionHash": "0xa4332c2cc587c8375c28cf0f45f86cd2bb86df9e8f1241ba636f63f200dd1f4b",
-          "transactionIndex": "0x42",
-          "logIndex": "0x3a",
-          "removed": false
-        },
-        {
-          "address": "0xFfB6Ed8BDe2f671AA542b3Eb17B7F6f9E249fE59",
-          "topics": [
-            "0x7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb3847402498"
-          ],
-          "data": "0x00000000000000000000000000000000000000000000000000000000000000ff",
-          "blockHash": "0x45d7f136cd546a019d2ac2ad6cf01389e2ed8a27a70401c2f2794d46018bafef",
-          "blockNumber": "0x7e7c1f",
-          "transactionHash": "0xa4332c2cc587c8375c28cf0f45f86cd2bb86df9e8f1241ba636f63f200dd1f4b",
-          "transactionIndex": "0x42",
-          "logIndex": "0x3b",
-          "removed": false
-        },
-        {
-          "address": "0x7D3A3dCbfCA8047A830A6B2DAA03f05b5Ba16079",
-          "topics": [
-            "0x7c2a2c4bb5a44dafa473fc49e557303dba6db62123713789deefe8ccb3846549",
-            "0xb19670d2e3818e839ba59517be280f7a5561efd94d08a56c89ac3f27bce58039",
-            "0x0000002301000000000000000000000000000000000000000000000000000000",
-            "0x0000000000000000000000001a4b691738c9c8db8f2edf0b9207f6acb24adf07"
-          ],
-          "data": "0x",
-          "blockHash": "0x45d7f136cd546a019d2ac2ad6cf01389e2ed8a27a70401c2f2794d46018bafef",
-          "blockNumber": "0x7e7c1f",
-          "transactionHash": "0xa4332c2cc587c8375c28cf0f45f86cd2bb86df9e8f1241ba636f63f200dd1f4b",
-          "transactionIndex": "0x42",
-          "logIndex": "0x3c",
-          "removed": false
-        }
-      ],
-      "status": "0x1",
-      "logsBloom": "0x0020000000000000000000020000000000000000000000000000000000001800800000000000000000000100000000000000000000000000000000000000a000000000000800000000000000000000000020000000100000000000000000000000000000020000010000000000000800000000000004400000000400000000000004400000000000000000000000000000000000400080000000000000000000000000000000000000000000000401000000008000000000000000000000000000000000000000000000000000040000080000000000800000000000000028000000000000000000000000000020000000000000000000000000000000000000",
-      "type": "0x2",
-      "effectiveGasPrice": "0x91712a158"
-    }
-  ],
+  "receipts": [],
   "libraries": [],
-  "pending": [],
+  "pending": [
+    "0xa4332c2cc587c8375c28cf0f45f86cd2bb86df9e8f1241ba636f63f200dd1f4b"
+  ],
   "path": "/Users/hunterking/Desktop/ROM/rom-curr/RiteOfMoloch-v1.0/broadcast/ROMF.s.sol/5/run-latest.json",
   "returns": {},
-  "timestamp": 1673379624,
+  "timestamp": 1673379548,
   "chain": 5,
   "multi": false,
   "commit": "c63c902"
