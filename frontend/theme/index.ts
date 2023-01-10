@@ -5,6 +5,7 @@ import Modal from "./components/Modal";
 import Progress from "./components/Progress";
 import Switch from "./components/Switch";
 import Tooltip from "./components/Tooltip";
+import Heading from "./components/Heading";
 
 export const theme = extendTheme({
   components: {
@@ -14,6 +15,7 @@ export const theme = extendTheme({
     Progress,
     Switch,
     Tooltip,
+    Heading,
   },
   colors: {
     transparent: "transparent",

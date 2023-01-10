@@ -20,12 +20,16 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     >
       <Meta />
       <Flex
-        direction="column"
+        // minH="350px"
         minH="100vh"
+        minW="80%"
         maxW="80rem"
+        direction="column"
         alignItems="center"
         justifyContent="space-between"
+        fontFamily="spaceMono"
         mx="auto"
+        px="2rem"
       >
         <Box
           bgImage="/assets/ai_2.png"
