@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Flex, Text, Checkbox, Box } from "@raidguild/design-system";
+import { Flex, Text, Checkbox, Box, VStack } from "@raidguild/design-system";
 import CountdownTimer from "./CountdownTimer";
 import StakingFlow from "./StakingFlow";
 import { UserContext } from "context/UserContext";
@@ -13,13 +13,7 @@ const RiteStaked: React.FC<RiteStakedProps> = ({ riteBalance, deadline }) => {
   const { handleWillSponsor, willSponsor } = useContext(UserContext);
 
   return (
-    <Flex
-      w="100%"
-      direction="column"
-      alignItems="center"
-      justifyContent="space-between"
-      p="15px"
-    >
+    <VStack>
       <Box w="full" textAlign="center">
         <Text color="red" fontSize={{ lg: "1.2rem", sm: "1rem" }} mb="5px">
           You own a stake for {Number(riteBalance)} RITE
@@ -43,7 +37,7 @@ const RiteStaked: React.FC<RiteStakedProps> = ({ riteBalance, deadline }) => {
         />
       </Flex>
       {willSponsor && <StakingFlow />}
-    </Flex>
+    </VStack>
   );
 };
 
