@@ -66,6 +66,7 @@ export const theme = extendTheme({
         p: 0,
         boxSizing: "border-box",
         overflowY: "overlay",
+        color: "white",
       },
       "&::-webkit-scrollbar": {
         width: "10px",
