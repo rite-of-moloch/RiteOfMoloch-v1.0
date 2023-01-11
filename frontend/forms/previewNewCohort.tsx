@@ -191,7 +191,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
           />
         </Box>
       </SimpleGrid>
-      <HStack my={10} mx="auto" spacing={6} w={["full", "full", "80%", "60%"]}>
+      <HStack my={10} mx="auto" spacing={6}>
         <Box w="50%">
           <Button
             variant="ghost"
