@@ -41,7 +41,6 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
    * RiteStaked shown if user has staked, but wants to sponsor another address.
    * RiteStaked also renders StakingFlow
    */
-  console.log(typeof deadline);
 
   return (
     <>
