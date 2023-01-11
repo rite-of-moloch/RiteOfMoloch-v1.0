@@ -82,6 +82,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               label="Name cohort"
               id="nameCohort"
               placeholder="Name cohort"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("nameCohort", {
@@ -107,6 +108,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
                 label="Moloch DAO address"
                 id="membershipCriteria"
                 placeholder="enter address"
+                autoComplete="off"
                 // @ts-ignore
                 localForm={localForm}
                 {...register("membershipCriteria", {
@@ -132,6 +134,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               label="Name SBT"
               id="nameSBT"
               placeholder="Name SBT"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("nameSBT", {
@@ -184,6 +187,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               label="SBT Symbol"
               id="symbolSBT"
               placeholder="SBT Symbol"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("symbolSBT", {
@@ -208,6 +212,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               label="URL SBT"
               id="uriSBT"
               placeholder="enter SBT URI"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("uriSBT", {

@@ -10,7 +10,7 @@ interface AdminProps {
 }
 
 const Admin: React.FC<AdminProps> = ({ children }): any => {
-  const { address, isConnected } = useAccount();
+  const { isConnected } = useAccount();
 
   return (
     <>

@@ -5,7 +5,7 @@ import { useAccount } from "wagmi";
 import { useGetDeadline } from "hooks/useGetDeadline";
 import { useRiteBalanceOf } from "hooks/useRiteBalanceOf";
 import BoxHeader from "components/BoxHeader";
-import HeaderOne from "../components/Header0ne";
+
 import RiteStaked from "components/RiteStaked";
 import StakingFlow from "components/StakingFlow";
 import NotConnected from "components/NotConnected";
@@ -41,13 +41,14 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
    * RiteStaked shown if user has staked, but wants to sponsor another address.
    * RiteStaked also renders StakingFlow
    */
+  console.log(typeof deadline);
 
   return (
     <>
       {!isConnected && <NotConnected />}
       {isConnected && (
         <Flex direction="column">
-          {isConnected && (
+          {isConnected && Number(deadline) === 0 && (
             <BoxHeader text="Commit Your Stake To Join Our Cohort!" />
           )}
           {isConnected && !hasRite() && <StakingFlow />}

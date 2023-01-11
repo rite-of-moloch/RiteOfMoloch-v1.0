@@ -178,6 +178,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               label="TOP HAT owner address"
               id="topHatWearer"
               placeholder="Input address of TOP HAT owner"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("topHatWearer", {
@@ -197,6 +198,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               id="tophatID"
               placeholder="TOP HAT ID"
               type="number"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("tophatID", {
@@ -250,6 +252,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               label="Input address 1"
               id="admin1"
               placeholder="Input address 1"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("admin1", {
@@ -273,6 +276,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               label="Input address 2"
               id="admin2"
               placeholder="Input address 2"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("admin2", {

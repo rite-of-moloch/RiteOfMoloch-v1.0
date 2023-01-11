@@ -77,6 +77,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               label="Stake per member"
               id="assetAmount"
               placeholder="Stake per member"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("assetAmount", {
@@ -103,6 +104,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               label="Cohort size"
               id="cohortSize"
               placeholder="Cohort size"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("cohortSize", {
@@ -133,6 +135,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
                 label="Shares per member"
                 id="shareThreshold"
                 placeholder="shares per member"
+                autoComplete="off"
                 // @ts-ignore
                 localForm={localForm}
                 {...register("shareThreshold", {
@@ -159,6 +162,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               label="Onboarding period in days"
               id="onboardindPeriod"
               placeholder="enter time in days..."
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("onboardingPeriod", {
@@ -185,6 +189,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               label="Staking asset address"
               id="stakingAsset"
               placeholder="enter token address"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("stakingAsset", {
@@ -206,9 +211,10 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
 
           <Box>
             <NumberInput
-              label="Staking duration"
+              label="Staking duration in days"
               id="stakeDuration"
               placeholder="amount in days..."
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("stakeDuration", {
@@ -236,6 +242,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               label="Treasury address"
               id="treasury"
               placeholder="Slashed stake will be sent here..."
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("treasury", {
