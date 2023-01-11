@@ -23,9 +23,6 @@ const NumberInput = helpers.defineMultiStyleConfig({
         color: "#323232",
       },
     },
-    stepperGroup: {
-      color: "blue",
-    },
   },
   defaultProps: {
     variant: "none",
