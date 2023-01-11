@@ -5,8 +5,7 @@ export const truncateAddress = (address: string): string =>
   `${address.slice(0, 4)}...${address.slice(-4)}`;
 
 export const convertBigNumber = (data: TxHash): string => {
-  if (!data) return "0".toString();
-  else return data.toString();
+  return data.toString();
 };
 
 export const canStake = (
