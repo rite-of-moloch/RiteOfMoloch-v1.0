@@ -118,8 +118,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
             Your {TOKEN_TICKER[chainId()]} balance
           </Text>
           <Text color="white" fontSize=".8rem">
-            {utils.formatUnits(balanceOf || 0, "ether")}{" "}
-            {TOKEN_TICKER[chainId()]}
+            {utils.formatUnits(balanceOf, "ether")} {TOKEN_TICKER[chainId()]}
           </Text>
         </HStack>
         <HStack>
@@ -127,7 +126,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
             Your {TOKEN_TICKER[chainId()]} allowance
           </Text>
           <Text color="white" fontSize=".8rem">
-            {utils.formatEther(allowance || 0)} {TOKEN_TICKER[chainId()]}
+            {utils.formatEther(allowance)} {TOKEN_TICKER[chainId()]}
           </Text>
         </HStack>
         <Stack mt={8} w="full">
