@@ -67,7 +67,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
     else return "";
   }
 
-  const minimumStake: string = useMinimumStake();
+  const minimumStake: string = useMinimumStake() || "0";
 
   const balanceOf: string = useBalanceOf([userAddress()]);
 
@@ -83,9 +83,9 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
     useJoinInitiation(!willSponsor ? [userAddress()] : [initiateAddress]);
 
   const canUserStake: boolean = canStake(
-    allowance,
-    minimumStake,
-    balanceOf,
+    allowance || "",
+    minimumStake || "",
+    balanceOf || "",
     initiateAddress,
     willSponsor
   );
