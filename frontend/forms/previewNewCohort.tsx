@@ -13,6 +13,7 @@ import { useFormContext } from "context/FormContext";
 import useCreateCohort from "../hooks/useCreateCohort";
 import { useNetwork } from "wagmi";
 import { initDataDeployCohort } from "utils/types/initDataDeployCohort";
+import { create } from "domain";
 
 interface PreviewNewCohortProps {
   children?: ReactNode;
@@ -79,7 +80,12 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
   ];
 
   // console.log(initData);
-  const { createCohort } = useCreateCohort([initData, 1]);
+  const { createCohort, isLoadingApprove, isSuccessApprove } = useCreateCohort([
+    initData,
+    1,
+  ]);
+
+  // console.log(createCohort);
 
   const handleDeployCohort = (): void => {
     createCohort && createCohort();
@@ -200,6 +206,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
             border="1px"
             rounded="sm"
             onClick={handleBack}
+            disabled={isSuccessApprove || isLoadingApprove}
           >
             Back
           </Button>
@@ -210,8 +217,11 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
             w="full"
             color="black"
             onClick={() => handleDeployCohort && handleDeployCohort()}
+            isLoading={isLoadingApprove}
+            loadingText="creating cohort..."
+            disabled={isSuccessApprove}
           >
-            Deploy cohort
+            {!isSuccessApprove ? "Deploy cohort" : "Cohort deployed!"}
           </Button>
         </Box>
       </HStack>
