@@ -86,7 +86,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
   };
 
   return (
-    <Box display={displayPreviewNewCohort ? "inline" : "none"} m="auto">
+    <Box display={displayPreviewNewCohort ? "inline" : "none"}>
       <SimpleGrid
         columns={2}
         spacingX={6}
@@ -97,7 +97,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
         px={"5%"}
         py={6}
         m="auto"
-        w={"full"}
+        w={["full", "full", "60%"]}
       >
         <Box>
           <Stack>
@@ -191,7 +191,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
           />
         </Box>
       </SimpleGrid>
-      <HStack my={10} mx="auto" spacing={6}>
+      <HStack my={10} mx="auto" spacing={6} w={["full", "full", "60%"]}>
         <Box w="50%">
           <Button
             variant="ghost"
