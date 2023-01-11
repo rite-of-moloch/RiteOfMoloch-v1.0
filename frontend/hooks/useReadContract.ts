@@ -35,7 +35,7 @@ const useReadContract = (
   if (typeof data === "boolean") {
     return data;
   } else if (data) {
-    output = convertBigNumber(data);
+    output = convertBigNumber(data || "0");
   } else {
     output = "";
   }
