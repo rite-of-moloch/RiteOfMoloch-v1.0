@@ -41,6 +41,9 @@ contract TestHelper is Test, InitializationData {
     // arbitrary DAO address for factory deployment
     address constant molochDAO = address(1);
 
+    // staking
+    uint256 minStake = 10;
+
     function setUpFactory() public {
         // deploy Hats protocol
         HATS = new Hats("Local-Hats", "");
@@ -66,7 +69,7 @@ contract TestHelper is Test, InitializationData {
         Data.cohortSize = 20;
         Data.joinDuration = 21 weeks;
         Data.threshold = 10;
-        Data.assetAmount = 10;
+        Data.assetAmount = minStake;
         Data.stakeDuration = 52 weeks;
         Data.topHatId = 0;
         Data.cohortName = "SeasonV";
@@ -94,6 +97,12 @@ contract TestHelper is Test, InitializationData {
         HATS.mintHat(factoryOperatorHat, msg.sender);
 
         HATS.transferHat(factoryTopHat, address(this), address(444444));
+    }
+
+    function mintTokens() public {
+        daoToken.mint(alice, 1000);
+        daoToken.mint(bob, 1000);
+        daoToken.mint(address(this), 1000);
     }
 
     // log factory deployment

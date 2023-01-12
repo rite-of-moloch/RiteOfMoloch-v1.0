@@ -211,6 +211,7 @@ contract RiteOfMoloch is
      * Safety feature for preventing malicious contract call backs
      */
     modifier callerIsUser() {
+        // for testing in Forge: disable
         require(tx.origin == msg.sender, "The caller is another contract!");
         _;
     }

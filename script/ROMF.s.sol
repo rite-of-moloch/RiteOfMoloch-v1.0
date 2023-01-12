@@ -22,7 +22,7 @@ contract ROMFScript is Script {
     address public hatsProtocolGoerli =
         0xcf912a0193593f5cD55D81FF611c26c3ED63f924;
     address public hatsProtocolPolygon =
-        0x95647f88dcbc12986046fc4f49064edd11a25d38;
+        0x95647F88dcbC12986046fc4f49064Edd11a25d38;
     address public hatsProtocolGnosis =
         0x6B49b86D21aBc1D60611bD85c843a9766B5493DB;
 
@@ -35,7 +35,7 @@ contract ROMFScript is Script {
 
     function setUp() public {
         // point to Hats implementation
-        HATS = IHats(hatsProtocol);
+        HATS = IHats(hatsProtocolGoerli);
 
         // mint topHat
         topHat = HATS.mintTopHat(address(this), "ROM-Factory TopHat", "");
