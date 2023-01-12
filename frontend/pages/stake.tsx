@@ -9,6 +9,7 @@ import BoxHeader from "components/BoxHeader";
 import RiteStaked from "components/RiteStaked";
 import StakingFlow from "components/StakingFlow";
 import NotConnected from "components/NotConnected";
+import HeaderOne from "components/Header0ne";
 
 interface HomeProps {
   children?: ReactNode;
@@ -47,9 +48,13 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
       {!isConnected && <NotConnected />}
       {isConnected && (
         <Flex direction="column">
+          <Box mb={"1rem"}>
+            <HeaderOne />
+          </Box>
           {isConnected && Number(deadline) === 0 && (
             <BoxHeader text="Commit Your Stake To Join Our Cohort!" />
           )}
+
           {isConnected && !hasRite() && <StakingFlow />}
           {isConnected && hasRite() && (
             <RiteStaked riteBalance={riteBalance} deadline={deadline} />

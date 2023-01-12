@@ -14,7 +14,7 @@ const RiteStaked: React.FC<RiteStakedProps> = ({ riteBalance, deadline }) => {
 
   return (
     <VStack>
-      <Box w="full" textAlign="center">
+      <Box textAlign="center">
         <Text color="red" fontSize={{ lg: "1.2rem", sm: "1rem" }} mb="5px">
           You own a stake for {Number(riteBalance)} RITE
         </Text>

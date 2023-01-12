@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from "react-query";
+// import { QueryClient, QueryClientProvider } from "react-query";
 import { RGThemeProvider } from "@raidguild/design-system";
 import { UserProvider } from "context/UserContext";
 import { FormProvider } from "context/FormContext";
@@ -9,7 +9,7 @@ import { WagmiConfig } from "wagmi";
 import { wagmiClient, chains } from "../utils/wagmiConfig";
 import "@rainbow-me/rainbowkit/styles.css";
 
-const queryClient = new QueryClient();
+// const queryClient = new QueryClient();
 
 interface AppProps {
   Component: any;
@@ -19,19 +19,19 @@ interface AppProps {
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <RGThemeProvider theme={theme}>
-      <QueryClientProvider client={queryClient}>
-        <WagmiConfig client={wagmiClient}>
-          <RainbowKitProvider chains={chains} theme={darkTheme()}>
-            <FormProvider>
-              <UserProvider>
-                <Layout>
-                  <Component {...pageProps} />
-                </Layout>
-              </UserProvider>
-            </FormProvider>
-          </RainbowKitProvider>
-        </WagmiConfig>
-      </QueryClientProvider>
+      {/* <QueryClientProvider client={queryClient}> */}
+      <WagmiConfig client={wagmiClient}>
+        <RainbowKitProvider chains={chains} theme={darkTheme()}>
+          <FormProvider>
+            <UserProvider>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </UserProvider>
+          </FormProvider>
+        </RainbowKitProvider>
+      </WagmiConfig>
+      {/* </QueryClientProvider> */}
     </RGThemeProvider>
   );
 };
