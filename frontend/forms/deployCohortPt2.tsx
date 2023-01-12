@@ -6,6 +6,7 @@ import {
   Button,
   FormControl,
   Input,
+  NumberInput,
   SimpleGrid,
   Text,
   Tooltip,
@@ -72,12 +73,11 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
       <Box display={displayPart2 ? "inline" : "none"}>
         <SimpleGrid columns={2} spacingX={4} spacingY={3}>
           <Box>
-            <Input
+            <NumberInput
               label="Stake per member"
               id="assetAmount"
               placeholder="Stake per member"
-              borderColor="red"
-              type="number"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("assetAmount", {
@@ -95,17 +95,16 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="assetAmount"
-              render={({ message }) => <Text color="red">{message}</Text>}
+              render={({ message }) => <Text color="#FF3864">{message}</Text>}
             />
           </Box>
 
           <Box>
-            <Input
+            <NumberInput
               label="Cohort size"
               id="cohortSize"
               placeholder="Cohort size"
-              borderColor="red"
-              type="number"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("cohortSize", {
@@ -123,7 +122,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="cohortSize"
-              render={({ message }) => <Text color="red">{message}</Text>}
+              render={({ message }) => <Text color="#FF3864">{message}</Text>}
             />
           </Box>
           <Tooltip
@@ -132,12 +131,11 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
             hasArrow
           >
             <Box>
-              <Input
+              <NumberInput
                 label="Shares per member"
                 id="shareThreshold"
                 placeholder="shares per member"
-                borderColor="red"
-                type="number"
+                autoComplete="off"
                 // @ts-ignore
                 localForm={localForm}
                 {...register("shareThreshold", {
@@ -155,17 +153,16 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               <ErrorMessage
                 errors={errors}
                 name="shareThreshold"
-                render={({ message }) => <Text color="red">{message}</Text>}
+                render={({ message }) => <Text color="#FF3864">{message}</Text>}
               />
             </Box>
           </Tooltip>
           <Box>
-            <Input
+            <NumberInput
               label="Onboarding period in days"
               id="onboardindPeriod"
               placeholder="enter time in days..."
-              borderColor="red"
-              type="number"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("onboardingPeriod", {
@@ -183,7 +180,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="onboardingPeriod"
-              render={({ message }) => <Text color="red">{message}</Text>}
+              render={({ message }) => <Text color="#FF3864">{message}</Text>}
             />
           </Box>
 
@@ -192,7 +189,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               label="Staking asset address"
               id="stakingAsset"
               placeholder="enter token address"
-              borderColor="red"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("stakingAsset", {
@@ -208,17 +205,16 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="stakingAsset"
-              render={({ message }) => <Text color="red">{message}</Text>}
+              render={({ message }) => <Text color="#FF3864">{message}</Text>}
             />
           </Box>
 
           <Box>
-            <Input
-              label="Staking duration"
+            <NumberInput
+              label="Staking duration in days"
               id="stakeDuration"
               placeholder="amount in days..."
-              borderColor="red"
-              type="number"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("stakeDuration", {
@@ -236,7 +232,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="stakeDuration"
-              render={({ message }) => <Text color="red">{message}</Text>}
+              render={({ message }) => <Text color="#FF3864">{message}</Text>}
             />
           </Box>
         </SimpleGrid>
@@ -246,7 +242,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               label="Treasury address"
               id="treasury"
               placeholder="Slashed stake will be sent here..."
-              borderColor="red"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("treasury", {
@@ -262,7 +258,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="treasury"
-              render={({ message }) => <Text color="red">{message}</Text>}
+              render={({ message }) => <Text color="#FF3864">{message}</Text>}
             />
           </Box>
         </SimpleGrid>
@@ -272,7 +268,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               mt={10}
               variant="ghost"
               w="full"
-              color="red"
+              color="#FF3864"
               border="1px"
               rounded="sm"
               onClick={handleBack}

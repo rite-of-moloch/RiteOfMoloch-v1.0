@@ -148,13 +148,14 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               hasArrow
               closeDelay={2000}
             >
-              <Box ml="0.5rem" border="1px" rounded="full" borderColor="red">
+              <Box ml="0.5rem" border="1px" rounded="full">
                 <BsQuestion />
               </Box>
             </Tooltip>
           </Flex>
           <Box>
             <Switch
+              isDisabled
               label=""
               id="hasTopHat"
               // @ts-ignore
@@ -177,7 +178,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               label="TOP HAT owner address"
               id="topHatWearer"
               placeholder="Input address of TOP HAT owner"
-              borderColor="red"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("topHatWearer", {
@@ -188,7 +189,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="topHatWearer"
-              render={({ message }) => <Text color="red">{message}</Text>}
+              render={({ message }) => <Text color="#FF3864">{message}</Text>}
             />
           </Box>
           <Box display={hasTophat ? "flex" : "none"} flexDir="column">
@@ -196,8 +197,8 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               label="TOP HAT ID"
               id="tophatID"
               placeholder="TOP HAT ID"
-              borderColor="red"
               type="number"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("tophatID", {
@@ -210,7 +211,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="tophatID"
-              render={({ message }) => <Text color="red">{message}</Text>}
+              render={({ message }) => <Text color="#FF3864">{message}</Text>}
             />
           </Box>
         </SimpleGrid>
@@ -219,7 +220,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
             <Flex alignItems="center">
               <Text>Want to add additional administrators?</Text>
               <Tooltip label={addAdminExplanation} placement="top" hasArrow>
-                <Box ml="0.5rem" border="1px" rounded="full" borderColor="red">
+                <Box ml="0.5rem" border="1px" rounded="full">
                   <BsQuestion />
                 </Box>
               </Tooltip>
@@ -227,6 +228,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
           </Box>
           <Box>
             <Switch
+              isDisabled
               my={4}
               label=""
               // @ts-ignore
@@ -250,7 +252,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               label="Input address 1"
               id="admin1"
               placeholder="Input address 1"
-              borderColor="red"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("admin1", {
@@ -265,7 +267,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="admin1"
-              render={({ message }) => <Text color="red">{message}</Text>}
+              render={({ message }) => <Text color="#FF3864">{message}</Text>}
             />
           </Box>
 
@@ -274,7 +276,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               label="Input address 2"
               id="admin2"
               placeholder="Input address 2"
-              borderColor="red"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("admin2", {
@@ -291,7 +293,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="admin2"
-              render={({ message }) => <Text color="red">{message}</Text>}
+              render={({ message }) => <Text color="#FF3864">{message}</Text>}
             />
           </Box>
           {/* start buttons */}
@@ -299,7 +301,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
             <Button
               variant="ghost"
               w="full"
-              color="red"
+              color="#FF3864"
               border="1px"
               mt={10}
               rounded="sm"

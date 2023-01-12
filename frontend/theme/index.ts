@@ -6,6 +6,8 @@ import Progress from "./components/Progress";
 import Switch from "./components/Switch";
 import Tooltip from "./components/Tooltip";
 import Heading from "./components/Heading";
+import Input from "./components/Input";
+import NumberInput from "./components/Input";
 
 export const theme = extendTheme({
   components: {
@@ -16,6 +18,8 @@ export const theme = extendTheme({
     Switch,
     Tooltip,
     Heading,
+    Input,
+    NumberInput,
   },
   colors: {
     transparent: "transparent",
@@ -62,6 +66,7 @@ export const theme = extendTheme({
         p: 0,
         boxSizing: "border-box",
         overflowY: "overlay",
+        color: "white",
       },
       "&::-webkit-scrollbar": {
         width: "10px",
@@ -76,5 +81,9 @@ export const theme = extendTheme({
         background: "#e4728b",
       },
     },
+  },
+  config: {
+    initialColorMode: "dark",
+    useSystemColorMode: false,
   },
 });

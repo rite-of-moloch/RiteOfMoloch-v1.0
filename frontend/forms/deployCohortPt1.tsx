@@ -82,7 +82,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               label="Name cohort"
               id="nameCohort"
               placeholder="Name cohort"
-              borderColor="red"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("nameCohort", {
@@ -108,7 +108,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
                 label="Moloch DAO address"
                 id="membershipCriteria"
                 placeholder="enter address"
-                borderColor="red"
+                autoComplete="off"
                 // @ts-ignore
                 localForm={localForm}
                 {...register("membershipCriteria", {
@@ -134,7 +134,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               label="Name SBT"
               id="nameSBT"
               placeholder="Name SBT"
-              borderColor="red"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("nameSBT", {
@@ -161,7 +161,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               id="sbtImage"
               accept=".png, .jpg, .jpeg, .gif"
               placeholder="Upload image for SBT"
-              borderColor="red"
+
               // @ts-ignore
               localForm={localForm}
               {...register("sbtImage", {
@@ -187,7 +187,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               label="SBT Symbol"
               id="symbolSBT"
               placeholder="SBT Symbol"
-              borderColor="red"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("symbolSBT", {
@@ -212,7 +212,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               label="URL SBT"
               id="uriSBT"
               placeholder="enter SBT URI"
-              borderColor="red"
+              autoComplete="off"
               // @ts-ignore
               localForm={localForm}
               {...register("uriSBT", {
@@ -225,7 +225,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="uriSBT"
-              render={({ message }) => <Text color="red">{message}</Text>}
+              render={({ message }) => <Text color="#FF3864">{message}</Text>}
             />
           </Box>
 

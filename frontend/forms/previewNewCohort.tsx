@@ -13,6 +13,7 @@ import { useFormContext } from "context/FormContext";
 import useCreateCohort from "../hooks/useCreateCohort";
 import { useNetwork } from "wagmi";
 import { initDataDeployCohort } from "utils/types/initDataDeployCohort";
+import { create } from "domain";
 
 interface PreviewNewCohortProps {
   children?: ReactNode;
@@ -79,14 +80,19 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
   ];
 
   // console.log(initData);
-  const { createCohort } = useCreateCohort([initData, 1]);
+  const { createCohort, isLoadingApprove, isSuccessApprove } = useCreateCohort([
+    initData,
+    1,
+  ]);
+
+  // console.log(createCohort);
 
   const handleDeployCohort = (): void => {
     createCohort && createCohort();
   };
 
   return (
-    <Box display={displayPreviewNewCohort ? "inline" : "none"} m="auto">
+    <Box display={displayPreviewNewCohort ? "inline" : "none"}>
       <SimpleGrid
         columns={2}
         spacingX={6}
@@ -97,7 +103,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
         px={"5%"}
         py={6}
         m="auto"
-        w={"full"}
+        w="full"
       >
         <Box>
           <Stack>
@@ -191,7 +197,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
           />
         </Box>
       </SimpleGrid>
-      <HStack my={10} mx="auto" spacing={6} w={["full", "full", "80%", "60%"]}>
+      <HStack my={10} mx="auto" spacing={6} w={"full"}>
         <Box w="50%">
           <Button
             variant="ghost"
@@ -200,6 +206,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
             border="1px"
             rounded="sm"
             onClick={handleBack}
+            disabled={isSuccessApprove || isLoadingApprove}
           >
             Back
           </Button>
@@ -210,8 +217,11 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
             w="full"
             color="black"
             onClick={() => handleDeployCohort && handleDeployCohort()}
+            isLoading={isLoadingApprove}
+            loadingText="creating cohort..."
+            disabled={isSuccessApprove}
           >
-            Deploy cohort
+            {!isSuccessApprove ? "Deploy cohort" : "Cohort deployed!"}
           </Button>
         </Box>
       </HStack>

@@ -11,7 +11,6 @@ import {
   Tooltip,
   Stack,
   VStack,
-  FormControl,
 } from "@raidguild/design-system";
 
 import { useAccount, useNetwork } from "wagmi";
@@ -55,23 +54,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
     formState: { errors, isValid },
   } = localForm;
 
-  const customValidations = {
-    required: true,
-    validate: (initiate: string) =>
-      utils.isAddress(initiate) || "invalid address",
-    onChange: () => {
-      // console.log(isValid);
-      if (isValid) {
-        clearErrors();
-      } else {
-        setError("initiateAddress", {
-          type: "validate",
-          message: "Address is invalid!",
-        });
-      }
-    },
-  };
-
   const values = getValues();
   const initiateAddress: string = values?.initiateAddress || "";
 
@@ -85,7 +67,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
     else return "";
   }
 
-  const minimumStake: string = useMinimumStake();
+  const minimumStake: string = useMinimumStake() || "0";
 
   const balanceOf: string = useBalanceOf([userAddress()]);
 
@@ -101,9 +83,9 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
     useJoinInitiation(!willSponsor ? [userAddress()] : [initiateAddress]);
 
   const canUserStake: boolean = canStake(
-    allowance,
-    minimumStake,
-    balanceOf,
+    allowance || "",
+    minimumStake || "",
+    balanceOf || "",
     initiateAddress,
     willSponsor
   );
@@ -164,9 +146,23 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
                 id="initiateAddress"
                 placeholder="enter wallet address"
                 type="text"
+                autoComplete="off"
                 // @ts-ignore
                 localForm={localForm}
-                {...register("initiateAddress", customValidations)}
+                {...register("initiateAddress", {
+                  validate: (initiate: string) =>
+                    utils.isAddress(initiate) || "invalid address",
+                  onChange: () => {
+                    if (isValid) {
+                      clearErrors();
+                    } else {
+                      setError("initiateAddress", {
+                        type: "validate",
+                        message: "Address is invalid!",
+                      });
+                    }
+                  },
+                })}
               />
 
               {!isValid && initiateAddress && (
