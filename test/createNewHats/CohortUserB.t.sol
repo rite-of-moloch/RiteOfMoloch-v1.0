@@ -42,4 +42,6 @@ contract CohortUserB is TestHelper {
 
         vm.stopPrank();
     }
+
+    // todo: test time and size limits
 }
