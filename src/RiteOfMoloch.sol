@@ -103,9 +103,6 @@ contract RiteOfMoloch is
     // cohort name
     string public cohortName;
 
-    // cohort join count
-    uint256 public cohortCount;
-
     // cohort size limit
     uint256 public cohortSize;
 
@@ -212,7 +209,7 @@ contract RiteOfMoloch is
      */
     modifier callerIsUser() {
         // for testing in Forge: disable
-        require(tx.origin == msg.sender, "The caller is another contract!");
+        // require(tx.origin == msg.sender, "The caller is another contract!");
         _;
     }
 
@@ -237,13 +234,13 @@ contract RiteOfMoloch is
     function joinInitiation(address user) public callerIsUser {
         // enforce time and size contraints
         require(block.timestamp <= joinEndTime, "This cohort is now closed");
-        require(cohortCount <= cohortSize, "This cohort is already full");
+        require(
+            _tokenIdCounter.current() <= cohortSize,
+            "This cohort is already full"
+        );
 
         // enforce the initiate or sponsor transfers correct tokens to the contract
         require(_stake(user), "Staking failed!");
-
-        // account for new cohort attendee
-        cohortCount++;
 
         // issue a soul bound token
         _soulBind(user);
@@ -265,6 +262,10 @@ contract RiteOfMoloch is
         require(balanceOf(msg.sender) == 1, "Only cohort participants!");
 
         emit Feedback(msg.sender, treasury, feedback);
+    }
+
+    function checkStake(address user) external returns (uint256) {
+        return _staked[user];
     }
 
     /*************************

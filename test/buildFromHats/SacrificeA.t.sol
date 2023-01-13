@@ -3,12 +3,12 @@ pragma solidity ^0.8.4;
 
 import "test/TestHelper.sol";
 
-// forge test --match-contract CohortUserA -vv
+// forge test --match-contract SacrificeA -vv
 
 /**
  * @dev disable callerIsUser on RiteOfMoloch contract for these tests
  */
-contract CohortUserA is TestHelper {
+contract SacrificeA is TestHelper {
     function setUp() public {
         // set and deploy ROM-Factory
         setUpFactory();
@@ -23,22 +23,6 @@ contract CohortUserA is TestHelper {
     /**
      * TESTS
      */
-    function testUserStake() public {
-        emit log_named_uint("Bob   tokenBal", daoToken.balanceOf(bob));
-        emit log_named_uint("Alice tokenBal", daoToken.balanceOf(alice));
-
-        vm.startPrank(bob);
-
-        daoToken.approve(address(ROM), minStake);
-
-        ROM.joinInitiation(bob);
-
-        emit log_named_uint("Bob deadline", ROM.getDeadline(bob));
-
-        ROM.cryForHelp("Help me!");
-
-        vm.stopPrank();
-    }
 
     /**
      * UTILS

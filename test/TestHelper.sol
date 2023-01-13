@@ -12,7 +12,7 @@ import {Hats} from "test/utils/hats/HatsT.sol";
 // forge test --match-contract TestHelperB -vv
 
 contract TestHelper is Test, InitializationData {
-    event Log(string message);
+    uint256 constant DAY_IN_SECONDS = 86400;
 
     address dao = 0x90F79bf6EB2c4f870365E785982E1f101E93b906;
     TestToken public daoToken;
@@ -42,7 +42,7 @@ contract TestHelper is Test, InitializationData {
     address constant molochDAO = address(1);
 
     // staking
-    uint256 minStake = 10;
+    uint256 minStake = 200;
 
     function setUpFactory() public {
         // deploy Hats protocol
@@ -66,16 +66,16 @@ contract TestHelper is Test, InitializationData {
         Data.topHatWearer = address(0);
         Data.admin1 = alice;
         Data.admin2 = address(0);
-        Data.cohortSize = 20;
-        Data.joinDuration = 21 weeks;
+        Data.cohortSize = 3;
+        Data.joinDuration = 2 weeks;
         Data.threshold = 10;
         Data.assetAmount = minStake;
-        Data.stakeDuration = 52 weeks;
+        Data.stakeDuration = 1 weeks;
         Data.topHatId = 0;
         Data.cohortName = "SeasonV";
         Data.sbtName = "RiteOfMolochSBT";
         Data.sbtSymbol = "SBTMoloch";
-        Data.baseUri = "";
+        Data.baseUri = "x";
     }
 
     function createFactoryHats() public {
@@ -102,29 +102,47 @@ contract TestHelper is Test, InitializationData {
     function mintTokens() public {
         daoToken.mint(alice, 1000);
         daoToken.mint(bob, 1000);
-        daoToken.mint(address(this), 1000);
+        daoToken.mint(charlie, 1000);
+        daoToken.mint(deployer, 1000);
     }
 
-    // log factory deployment
-    function testFactoryDeployment() public {
+    // deployment logs
+    function testLogs() public {
+        // deployer address
+        emit log_named_address("ROM  Deployer", deployer);
+
+        // factoryDeployment();
+        // cloneDeployment();
+        // hatsIdentities();
+    }
+
+    // factory deployment
+    function factoryDeployment() public {
         emit log_named_address("ROMF Contract", address(ROMF));
     }
 
-    // log deployment information
-    function testCloneDeployment() public {
-        // deployer address
-        emit log_named_address("ROM  Deployer", deployer);
+    // clone deployment
+    function cloneDeployment() public {
         // contract addresses
         emit log_named_address("ROM  Contract", address(ROM));
         emit log_named_address("ROM  Treasury", ROM.treasury());
-        emit log_named_address("Hats Protocol", address(ROM.HATS()));
-        // Hat ids
-        emit log_named_uint("Top       Hat", ROM.topHat());
-        emit log_named_uint("SupAdmin  Hat", ROM.superAdminHat());
-        emit log_named_uint("Admin     Hat", ROM.adminHat());
+
         // cohort settings
         emit log_named_uint("Min     Share", ROM.minimumShare());
         emit log_named_uint("Min     Stake", ROM.minimumStake());
-        emit log_named_uint("Max      Time", ROM.maximumTime());
+        emit log_named_uint(
+            "Max      Time",
+            ROM.maximumTime() / DAY_IN_SECONDS
+        );
+    }
+
+    // Hat ids
+    function hatsIdentities() public {
+        // protocol
+        emit log_named_address("Hats Protocol", address(ROM.HATS()));
+        // hats
+        emit log_named_uint("Top       Hat", ROM.topHat());
+        emit log_named_uint("SupAdmin  Hat", ROM.superAdminHat());
+        emit log_named_uint("Admin     Hat", ROM.adminHat());
     }
 }

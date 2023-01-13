@@ -13,10 +13,8 @@ contract AccessControlB is TestHelper {
     function setUp() public {
         // set and deploy ROM-Factory
         setUpFactory();
-
         // set initial data for ROM clone
         createInitData();
-
         // deploy ROM clone
         ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
     }
