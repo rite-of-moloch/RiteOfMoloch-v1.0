@@ -68,10 +68,10 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     admin1 !== "" ? admin1 : zeroAddress,
     admin2 !== "" ? admin2 : zeroAddress,
     Number(cohortSize),
-    Number(onboardingPeriod),
+    Number(onboardingPeriod) * 60 * 24,
     Number(shareThreshold),
     Number(assetAmount),
-    Number(stakeDuration),
+    Number(stakeDuration) * 60 * 24,
     tophatID ? tophatID : Number(0),
     nameCohort,
     nameSBT,
@@ -88,6 +88,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
   // console.log(createCohort);
 
   const handleDeployCohort = (): void => {
+    console.log("deploying");
     createCohort && createCohort();
   };
 

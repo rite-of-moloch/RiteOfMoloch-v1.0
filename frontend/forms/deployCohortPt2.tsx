@@ -87,8 +87,8 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
                   message: "Input cannot be blank",
                 },
                 min: {
-                  value: 1,
-                  message: "Minimum of 1 required",
+                  value: 0.01,
+                  message: "Value cannot be 0",
                 },
               })}
             />
