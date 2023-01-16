@@ -125,9 +125,9 @@ contract TestHelper is Test, InitializationData {
         // deployer address
         emit log_named_address("ROM  Deployer", deployer);
 
-        // factoryDeployment();
-        // cloneDeployment();
-        // hatsIdentities();
+        factoryDeployment();
+        cloneDeployment();
+        hatsIdentities();
     }
 
     // factory deployment

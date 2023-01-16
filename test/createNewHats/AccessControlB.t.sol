@@ -27,9 +27,9 @@ contract AccessControlB is TestHelper {
         ROM.setMinimumStake(20);
         ROM.setShareThreshold(20);
         ROM.setMaxDuration(20);
-        emit log_named_uint("Min     Share", ROM.minimumShare());
-        emit log_named_uint("Min     Stake", ROM.minimumStake());
-        emit log_named_uint("Max      Time", ROM.maximumTime());
+        emit log_named_uint("Min Share", ROM.minimumShare());
+        emit log_named_uint("Min Stake", ROM.minimumStake());
+        emit log_named_uint("Max  Time", ROM.maximumTime());
         vm.stopPrank();
     }
 
@@ -45,8 +45,8 @@ contract AccessControlB is TestHelper {
 
         ROM.setMinimumStake(30);
         ROM.setShareThreshold(30);
-        emit log_named_uint("Min     Share", ROM.minimumShare());
-        emit log_named_uint("Min     Stake", ROM.minimumStake());
+        emit log_named_uint("Min Share", ROM.minimumShare());
+        emit log_named_uint("Min Stake", ROM.minimumStake());
 
         // alice should not be able to call superAdmin functions
         vm.expectRevert(
