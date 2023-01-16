@@ -57,10 +57,10 @@ contract CohortUserScript is Script, InitializationData {
         Data.admin1 = admin1;
         Data.admin2 = address(0);
         Data.cohortSize = 2;
-        Data.joinDuration = 20 minutes;
+        Data.joinDuration = 10 days;
         Data.threshold = 10;
         Data.assetAmount = minStake;
-        Data.stakeDuration = 1 minutes;
+        Data.stakeDuration = 10 days;
         Data.topHatId = 0;
         Data.cohortName = "SeasonV";
         Data.sbtName = "RiteOfMolochSBT";

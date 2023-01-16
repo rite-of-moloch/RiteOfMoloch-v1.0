@@ -13,7 +13,7 @@ contract CohortUserA is TestHelper {
         // set and deploy ROM-Factory
         setUpFactory();
         // mint tokens to alice & bob
-        mintTokens();
+        mintTokens([alice, bob, charlie, deployer]);
         // set initial data for ROM clone
         createInitData();
         // deploy ROM clone

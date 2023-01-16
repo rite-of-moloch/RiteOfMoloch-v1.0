@@ -9,7 +9,7 @@ import "test/TestHelper.sol";
 import "test/utils/TestToken.sol";
 import {Hats} from "test/utils/hats/HatsT.sol";
 
-// forge test --match-contract TestHelperB -vv
+// forge test --match-contract TestHelper -vv
 
 contract TestHelper is Test, InitializationData {
     uint256 constant DAY_IN_SECONDS = 86400;
@@ -58,7 +58,7 @@ contract TestHelper is Test, InitializationData {
         ROMF = new RiteOfMolochFactory(address(HATS), factoryOperatorHat);
     }
 
-    // create initial data
+    // INIT CLONE DATA
     function createInitData() public virtual {
         Data.membershipCriteria = dao;
         Data.stakingAsset = address(daoToken);
@@ -78,6 +78,7 @@ contract TestHelper is Test, InitializationData {
         Data.baseUri = "x";
     }
 
+    // UTILS
     function createFactoryHats() public {
         // mint topHat
         factoryTopHat = HATS.mintTopHat(address(this), "Factory-TopHat", "");
@@ -99,14 +100,20 @@ contract TestHelper is Test, InitializationData {
         HATS.transferHat(factoryTopHat, address(this), address(444444));
     }
 
-    function mintTokens() public {
-        daoToken.mint(alice, 1000);
-        daoToken.mint(bob, 1000);
-        daoToken.mint(charlie, 1000);
-        daoToken.mint(deployer, 1000);
+    function mintTokens(address[4] memory eoas) public {
+        for (uint256 i = 0; i < eoas.length; i++) {
+            daoToken.mint(eoas[i], 1000);
+        }
     }
 
-    // deployment logs
+    function prankJoinInititation(address initiate) public {
+        vm.startPrank(initiate);
+        daoToken.approve(address(ROM), minStake);
+        ROM.joinInitiation(initiate);
+        vm.stopPrank();
+    }
+
+    // LOGS
     function testLogs() public {
         // deployer address
         emit log_named_address("ROM  Deployer", deployer);

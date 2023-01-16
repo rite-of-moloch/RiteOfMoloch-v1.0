@@ -13,7 +13,7 @@ contract CohortUserB is TestHelper {
         // set and deploy ROM-Factory
         setUpFactory();
         // mint tokens to alice & bob
-        mintTokens();
+        mintTokens([alice, bob, charlie, deployer]);
         // set initial data for ROM clone
         createInitData();
         // deploy ROM clone
@@ -35,24 +35,15 @@ contract CohortUserB is TestHelper {
         vm.stopPrank();
     }
 
-    function testMultipleUserStakeAndRestriction() public {
+    function testJoinSizeRestriction() public {
         emit log_named_uint("Alice tokenBal", daoToken.balanceOf(alice));
         emit log_named_uint("Bob   tokenBal", daoToken.balanceOf(bob));
 
-        vm.startPrank(alice);
-        daoToken.approve(address(ROM), minStake);
-        ROM.joinInitiation(alice);
-        vm.stopPrank();
+        prankJoinInititation(alice);
 
-        vm.startPrank(bob);
-        daoToken.approve(address(ROM), minStake);
-        ROM.joinInitiation(bob);
-        vm.stopPrank();
+        prankJoinInititation(bob);
 
-        vm.startPrank(deployer);
-        daoToken.approve(address(ROM), minStake);
-        ROM.joinInitiation(deployer);
-        vm.stopPrank();
+        prankJoinInititation(deployer);
 
         vm.startPrank(charlie);
         daoToken.approve(address(ROM), minStake);
@@ -67,16 +58,10 @@ contract CohortUserB is TestHelper {
 
     function testJoinTimeRestriction() public {
         vm.warp(7 days);
-        vm.startPrank(alice);
-        daoToken.approve(address(ROM), minStake);
-        ROM.joinInitiation(alice);
-        vm.stopPrank();
+        prankJoinInititation(alice);
 
         vm.warp(13 days);
-        vm.startPrank(bob);
-        daoToken.approve(address(ROM), minStake);
-        ROM.joinInitiation(bob);
-        vm.stopPrank();
+        prankJoinInititation(bob);
 
         vm.warp(15 days);
         vm.startPrank(charlie);

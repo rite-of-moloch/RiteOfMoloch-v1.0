@@ -197,6 +197,8 @@ contract RiteOfMoloch is
 
         // set the cohort token's base uri
         _setBaseUri(initData.baseUri);
+
+        // todo: send proposal to DAO for ROM to become a Shaman
     }
 
     /*************************

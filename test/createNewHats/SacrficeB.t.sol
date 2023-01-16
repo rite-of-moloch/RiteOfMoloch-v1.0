@@ -15,27 +15,18 @@ contract SacrificeB is TestHelper {
         // set and deploy ROM-Factory
         setUpFactory();
         // mint tokens to alice & bob
-        mintTokens();
+        mintTokens([alice, bob, charlie, deployer]);
         // set initial data for ROM clone
         createInitData();
         // deploy ROM clone
         ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
 
-        vm.startPrank(alice);
-        daoToken.approve(address(ROM), minStake);
-        ROM.joinInitiation(alice);
-        vm.stopPrank();
+        prankJoinInititation(alice);
 
-        vm.startPrank(bob);
-        daoToken.approve(address(ROM), minStake);
-        ROM.joinInitiation(bob);
-        vm.stopPrank();
+        prankJoinInititation(bob);
 
         vm.warp(2 days);
-        vm.startPrank(charlie);
-        daoToken.approve(address(ROM), minStake);
-        ROM.joinInitiation(charlie);
-        vm.stopPrank();
+        prankJoinInititation(charlie);
     }
 
     /**
