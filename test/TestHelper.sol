@@ -79,6 +79,26 @@ contract TestHelper is Test, InitializationData {
     }
 
     // UTILS
+    function mintTokens(address[4] memory eoas) public {
+        for (uint256 i = 0; i < eoas.length; i++) {
+            daoToken.mint(eoas[i], 1000);
+        }
+    }
+
+    function prankJoinInititation(address initiate) public {
+        vm.startPrank(initiate);
+        daoToken.approve(address(ROM), minStake);
+        ROM.joinInitiation(initiate);
+        vm.stopPrank();
+    }
+
+    function emitUserDeadline(string memory name, address initiate) public {
+        emit log_named_uint(
+            string.concat(name, " deadline"),
+            ROM.getDeadline(initiate) / DAY_IN_SECONDS
+        );
+    }
+
     function createFactoryHats() public {
         // mint topHat
         factoryTopHat = HATS.mintTopHat(address(this), "Factory-TopHat", "");
@@ -98,19 +118,6 @@ contract TestHelper is Test, InitializationData {
         HATS.mintHat(factoryOperatorHat, msg.sender);
 
         HATS.transferHat(factoryTopHat, address(this), address(444444));
-    }
-
-    function mintTokens(address[4] memory eoas) public {
-        for (uint256 i = 0; i < eoas.length; i++) {
-            daoToken.mint(eoas[i], 1000);
-        }
-    }
-
-    function prankJoinInititation(address initiate) public {
-        vm.startPrank(initiate);
-        daoToken.approve(address(ROM), minStake);
-        ROM.joinInitiation(initiate);
-        vm.stopPrank();
     }
 
     // LOGS

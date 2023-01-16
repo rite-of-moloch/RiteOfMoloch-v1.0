@@ -22,7 +22,6 @@ contract SacrificeB is TestHelper {
         ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
 
         prankJoinInititation(alice);
-
         prankJoinInititation(bob);
 
         vm.warp(2 days);
@@ -33,58 +32,48 @@ contract SacrificeB is TestHelper {
      * TESTS
      */
     function testSacrfice() public {
-        emit log_named_uint(
-            "Alice deadline",
-            ROM.getDeadline(alice) / DAY_IN_SECONDS
-        );
-
-        emit log_named_uint(
-            "Bob deadline",
-            ROM.getDeadline(bob) / DAY_IN_SECONDS
-        );
-
-        emit log_named_uint(
-            "Charlie deadline",
-            ROM.getDeadline(charlie) / DAY_IN_SECONDS
-        );
+        emitUserDeadline("Alice", alice);
+        emitUserDeadline("Bob", bob);
+        emitUserDeadline("Charlie", charlie);
 
         vm.warp(8 days);
-
         vm.startPrank(alice);
         // check current timeStamp
         emit log_named_uint("Timestamp", block.timestamp / DAY_IN_SECONDS);
 
         // stakes before
-        uint256 aliceStake = ROM.checkStake(alice);
-        uint256 bobStake = ROM.checkStake(bob);
-        uint256 charlieStake = ROM.checkStake(charlie);
+        uint256[3] memory userStakesBefore = checkAllUserStakes();
 
-        // log stakes
-        emit log_named_uint("Alice stake", aliceStake);
-        emit log_named_uint("Bob stake", bobStake);
-
-        // assert value of stakes
-        assertEq(aliceStake, minStake);
-        assertEq(bobStake, minStake);
-        assertEq(charlieStake, minStake);
+        // assert values of stakes
+        for (uint256 i = 0; i < userStakesBefore.length; i++) {
+            assertEq(userStakesBefore[i], minStake);
+        }
 
         // sacrifice those that are eligible
         ROM.sacrifice(failedInitiates);
 
         // stakes after
-        uint256 aliceSacrificedStake = ROM.checkStake(alice);
-        uint256 bobSacrificedStake = ROM.checkStake(bob);
-        uint256 charlieSacrificedStake = ROM.checkStake(charlie);
+        uint256[3] memory userStakesAfter = checkAllUserStakes();
 
-        emit log_named_uint("Alice stake", aliceSacrificedStake);
-        emit log_named_uint("Bob stake", bobSacrificedStake);
-        emit log_named_uint("Charlie stake", charlieSacrificedStake);
-
-        assertEq(aliceSacrificedStake, 0);
-        assertEq(bobSacrificedStake, 0);
+        // re-assert values of stakes
+        assertEq(userStakesAfter[0], 0);
+        assertEq(userStakesAfter[1], 0);
         // charlie's time has not expired, so he should not have been sacrificed
-        assertEq(charlieSacrificedStake, minStake);
+        assertEq(userStakesAfter[2], minStake);
 
         vm.stopPrank();
+    }
+
+    // UTILS
+    function checkAllUserStakes() public returns (uint256[3] memory) {
+        uint256[3] memory stakes = [
+            ROM.checkStake(alice),
+            ROM.checkStake(bob),
+            ROM.checkStake(charlie)
+        ];
+        emit log_named_uint("Alice   stake", stakes[0]);
+        emit log_named_uint("Bob     stake", stakes[1]);
+        emit log_named_uint("Charlie stake", stakes[2]);
+        return stakes;
     }
 }

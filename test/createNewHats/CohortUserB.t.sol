@@ -40,9 +40,7 @@ contract CohortUserB is TestHelper {
         emit log_named_uint("Bob   tokenBal", daoToken.balanceOf(bob));
 
         prankJoinInititation(alice);
-
         prankJoinInititation(bob);
-
         prankJoinInititation(deployer);
 
         vm.startPrank(charlie);
