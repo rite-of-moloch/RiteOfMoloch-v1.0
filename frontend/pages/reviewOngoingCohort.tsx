@@ -1,12 +1,18 @@
 import React, { FC } from "react";
 import { Box, Flex, Heading, SimpleGrid } from "@raidguild/design-system";
 import CohortMemberDetails from "components/cohortMemberDetails";
+import { useSubgraphQuery } from "../hooks/useSubgraphQuery";
+import { cohorts, cohortMetadata } from "../utils/subgraph/queries";
 
 interface ReviewOngoingCohortProps {
   children?: any;
 }
 
 const reviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
+  const cohortList = useSubgraphQuery(cohorts(0, 10));
+  console.log(cohortList);
+  // console.log(cohorts(0, 0));
+
   return (
     <>
       <Flex direction="column">

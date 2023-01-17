@@ -12,16 +12,14 @@ const NumberInput = helpers.defineMultiStyleConfig({
     root: {
       bg: "black",
       border: "solid #FF3864 1px",
+      fontFamily: "texturina",
       rounded: "md",
     },
     field: {
       bg: "black",
       fontFamily: "texturina",
       color: "#FFFFFF",
-      _placeholder: {
-        fontFamily: "spaceMono",
-        color: "#323232",
-      },
+      my: "auto",
     },
   },
   defaultProps: {

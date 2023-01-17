@@ -7,7 +7,7 @@ const NumberInput = helpers.defineMultiStyleConfig({
     field: {
       bg: "black",
       border: "solid #FF3864 1px",
-      // fontFamily: "texturina",
+      fontFamily: "texturina",
       color: "#FFFFFF",
       _placeholder: {
         fontFamily: "spaceMono",
