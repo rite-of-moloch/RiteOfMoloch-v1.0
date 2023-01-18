@@ -1,40 +1,47 @@
-import React, { FC } from "react";
-import { Box, Flex, Heading, SimpleGrid } from "@raidguild/design-system";
-import CohortMemberDetails from "components/cohortMemberDetails";
+import React, { FC, ReactNode } from "react";
+import {
+  Box,
+  Flex,
+  Heading,
+  SimpleGrid,
+  VStack,
+} from "@raidguild/design-system";
+import CohortDetail from "../components/cohortDetail";
 import { useSubgraphQuery } from "../hooks/useSubgraphQuery";
-import { cohorts, cohortMetadata } from "../utils/subgraph/queries";
+import { cohorts } from "../utils/subgraph/queries";
+import { Cohort } from "utils/types/subgraphQueries";
 
 interface ReviewOngoingCohortProps {
-  children?: any;
+  children?: ReactNode;
 }
 
 const reviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
-  const cohortList = useSubgraphQuery(cohorts(0, 10));
-  console.log(cohortList);
-  // console.log(cohorts(0, 0));
+  const cohortList: Cohort | any = useSubgraphQuery(cohorts(0, 10));
+  const cohort = cohortList?.data?.cohorts;
+  // console.log(cohort);
+
+  const renderCohorts = cohort
+    ? cohort.map((cohort: { [x: string]: string }) => {
+        return (
+          <CohortDetail
+            cohortName={cohort.id}
+            address={cohort.id}
+            stake={cohort.time}
+            stakingDate={cohort.tokenAmount}
+            key={cohort.id}
+          />
+        );
+      })
+    : null;
 
   return (
     <>
-      <Flex direction="column">
-        <Heading as="h3" my="1rem" color="red">
+      <VStack spacing={6}>
+        <Heading as="h4" fontSize="xl" alignSelf="start" my={1} color="red">
           Cohort Name
         </Heading>
-        {/* header */}
-        {/* <SimpleGrid
-          columns={5}
-          justifyContent="center"
-          alignItems="center"
-          py={1}
-          px={2}
-        >
-          <Box>Cohort Member</Box>
-          <Box>Address</Box>
-          <Box>Stake</Box>
-          <Box>Staking Date</Box>
-          <Box />
-        </SimpleGrid> */}
-        <CohortMemberDetails />
-      </Flex>
+        {renderCohorts}
+      </VStack>
     </>
   );
 };

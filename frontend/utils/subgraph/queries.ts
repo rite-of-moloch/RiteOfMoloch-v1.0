@@ -11,6 +11,7 @@ query {
 }
 `;
 
+// skip = starting index
 export const cohorts: QueryBuilder = (skip: number, first: number) => `
     query {
         cohorts(skip: ${skip}, first: ${first}) {
@@ -20,6 +21,7 @@ export const cohorts: QueryBuilder = (skip: number, first: number) => `
             tokenAmount
             dao
             createdAt
+
         }
     }
 `;

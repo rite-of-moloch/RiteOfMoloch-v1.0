@@ -1,5 +1,5 @@
 export const subgraphEndpoint =
-  "https://api.studio.thegraph.com/query/40280/rom-test/v0.0.1";
+  "https://api.studio.thegraph.com/query/40280/rom-test/v0.0.3";
 
 export const performQuery = async (subgraphEndpoint: string, query: string) => {
   const res = await fetch(subgraphEndpoint, {
