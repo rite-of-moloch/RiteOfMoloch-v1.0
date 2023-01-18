@@ -24,9 +24,9 @@ const reviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
     ? cohort.map((cohort: { [x: string]: string }) => {
         return (
           <CohortDetail
-            cohortName={cohort.id}
+            cohortName={"cohort name"}
             address={cohort.id}
-            stake={cohort.time}
+            stake={555}
             stakingDate={cohort.tokenAmount}
             key={cohort.id}
           />
@@ -36,7 +36,7 @@ const reviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
 
   return (
     <>
-      <VStack spacing={6}>
+      <VStack spacing={6} w={["full", "80%"]}>
         <Heading as="h4" fontSize="xl" alignSelf="start" my={1} color="red">
           Cohort Name
         </Heading>

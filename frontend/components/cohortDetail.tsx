@@ -1,5 +1,6 @@
 import React, { FC, ReactNode } from "react";
 import { Box, Button, SimpleGrid, Link } from "@raidguild/design-system";
+
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { useNetwork } from "wagmi";
 
@@ -37,13 +38,17 @@ const CohortDetail: FC<CohortDetailProps> = ({
         py={1}
         px={2}
         rounded="md"
+        spacingX={3}
+        w="full"
       >
-        <Box m="auto">{cohortName}</Box>
-        <Box m="auto">{blockExplorerLink(address)}</Box>
-        <Box m="auto">{stake}</Box>
-        <Box m="auto">{stakingDate}</Box>
-        <Box m="auto">
-          <Button size="xs">Manage</Button>
+        <Box justifySelf="start">{cohortName}</Box>
+        <Box justifySelf="center">{blockExplorerLink(address)}</Box>
+        <Box justifySelf="center">{stake}</Box>
+        <Box justifySelf="center">{stakingDate}</Box>
+        <Box justifySelf="end">
+          <Link href={`/cohorts/${address}`}>
+            <Button size="xs">Manage</Button>
+          </Link>
         </Box>
       </SimpleGrid>
     </>
