@@ -39,8 +39,8 @@ const CohortDetail: FC<CohortDetailProps> = ({
   return (
     <>
       <SimpleGrid
-        columns={5}
-        border="1px red solid"
+        columns={4}
+        border="1px #FF3864 solid"
         justifyContent="center"
         alignItems="center"
         bg="black"
@@ -50,7 +50,7 @@ const CohortDetail: FC<CohortDetailProps> = ({
         spacingX={3}
         w="full"
       >
-        <Box justifySelf="start">{cohortName}</Box>
+        {/* <Box justifySelf="start">{cohortName}</Box> */}
         <Box justifySelf="center">{blockExplorerLink(address)}</Box>
         <Box justifySelf="center">{stake}</Box>
         <Box justifySelf="center">{stakingDate}</Box>

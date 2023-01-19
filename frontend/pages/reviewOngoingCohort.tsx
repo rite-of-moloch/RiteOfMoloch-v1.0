@@ -15,6 +15,7 @@ const reviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
 
   const cohortList = useSubgraphQuery(cohorts(0, 10));
   const cohort: Cohort | null = cohortList.data && cohortList?.data["cohorts"];
+  console.log(cohort);
 
   // const getCohorts = (pageParam: number) => {
   //   const cohort = cohortList?.data?.cohorts;
@@ -48,9 +49,6 @@ const reviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
   return (
     <>
       <VStack spacing={6} w={["full", "80%"]}>
-        <Heading as="h4" fontSize="xl" alignSelf="start" my={1} color="red">
-          Cohort Name
-        </Heading>
         {renderCohorts}
       </VStack>
     </>

@@ -1,12 +1,13 @@
 const Button = {
   baseStyles: {},
+
   variants: {
     solid: () => ({
       textTransform: "uppercase",
       maxWidth: "100%",
       width: "auto",
-      height: "40px",
-      color: "white",
+      // height: "40px",
+      color: "black",
       borderRadius: "2px",
       background:
         "linear-gradient(94.89deg, #FF5A00 0%, #D62789 70.2%, #AD17AD 100%)",
@@ -72,7 +73,16 @@ const Button = {
       },
     }),
   },
+  sizes: {
+    default: {
+      height: "40px",
+    },
+    xxs: {
+      height: "2em",
+    },
+  },
   defaultProps: {
+    size: "default",
     variant: "solid",
     fontWeight: "400",
     fontFamily: "texturina",

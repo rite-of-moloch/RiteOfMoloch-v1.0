@@ -34,15 +34,15 @@ const Cohort: FC<CohortProps> = ({ children }) => {
 
   const timeUTC = (time: string) => new Date(time).toUTCString();
 
-  const metadata = useSubgraphQuery(cohortMetadata(pid));
+  // const metadata = useSubgraphQuery(cohortMetadata(pid));
 
-  const cohort: CohortMetadata | null =
-    metadata.data && metadata?.data["cohort"];
+  // const cohort: CohortMetadata | null =
+  //   metadata.data && metadata?.data["cohort"];
 
   const initiates = useSubgraphQuery(cohortInitiates(pid, 0, 10));
 
   const initiateList: MemberData | null =
-    initiates.data && initiates?.data["cohort"]["initiates"];
+    initiates.data && initiates?.data["cohort"]?.initiates;
   console.log("initiateList", initiateList);
 
   const renderInitiateList = initiateList?.map((initiate: MemberData) => {
@@ -57,35 +57,12 @@ const Cohort: FC<CohortProps> = ({ children }) => {
   });
 
   return (
-    <Stack direction="column">
-      <Stack
-        w="full"
-        alignSelf="start"
-        // borderRight="1px"
-        // pr={2}
-      >
-        <Heading as="h3" fontSize="lg" textAlign="center">
-          Cohort metadata:
-        </Heading>
-        <Box>Cohort Address: {pid}</Box>
-        <Box>Created: {cohort && cohort["createdAt"]}</Box>
-        <Box>DAO address: {cohort && cohort["dao"]}</Box>
-        <Box>Time: {cohort && timeUTC(cohort["time"])}</Box>
-        <Box>Token: {cohort && blockExplorerLink(cohort["token"])} </Box>
-        <Box>Token amount: {cohort && cohort["tokenAmount"]}</Box>
-      </Stack>
-      <Stack
-        w="full"
-        // alignSelf="start"
-        // pl={2}
-      >
-        <Heading as="h3" fontSize="lg" textAlign="center">
-          Staked initiates:
-        </Heading>
-        <Stack spacing={4} m="auto" w="full">
-          {renderInitiateList}
-        </Stack>
-      </Stack>
+    <Stack w="full" alignSelf="start" spacing={5}>
+      <Heading as="h3" fontSize="md" textAlign="left" color="red">
+        {pid}
+      </Heading>
+
+      {renderInitiateList}
     </Stack>
   );
 };
