@@ -1,8 +1,9 @@
-import React, { FC, ReactNode } from "react";
+import React, { FC } from "react";
 import { Box, Button, SimpleGrid, Link } from "@raidguild/design-system";
 
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { useNetwork } from "wagmi";
+import { useRouter } from "next/router";
 
 interface CohortDetailProps {
   cohortName: string;
@@ -17,6 +18,7 @@ const CohortDetail: FC<CohortDetailProps> = ({
   stakingDate,
 }) => {
   const { chain } = useNetwork();
+  const router = useRouter();
 
   const blockExplorerLink = (address: string) => (
     <Link
@@ -26,6 +28,13 @@ const CohortDetail: FC<CohortDetailProps> = ({
       {`${address?.slice(0, 4)}...${address?.slice(-4)}`}
     </Link>
   );
+
+  const handleManageCohort = () => {
+    router.push({
+      pathname: `/cohorts/${address}`,
+      query: { pid: address },
+    });
+  };
 
   return (
     <>
@@ -46,9 +55,9 @@ const CohortDetail: FC<CohortDetailProps> = ({
         <Box justifySelf="center">{stake}</Box>
         <Box justifySelf="center">{stakingDate}</Box>
         <Box justifySelf="end">
-          <Link href={`/cohorts/${address}`}>
-            <Button size="xs">Manage</Button>
-          </Link>
+          <Button size="xs" onClick={handleManageCohort}>
+            Manage
+          </Button>
         </Box>
       </SimpleGrid>
     </>

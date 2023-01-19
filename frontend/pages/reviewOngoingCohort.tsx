@@ -1,11 +1,6 @@
-import React, { FC, ReactNode } from "react";
-import {
-  Box,
-  Flex,
-  Heading,
-  SimpleGrid,
-  VStack,
-} from "@raidguild/design-system";
+import React, { FC, ReactNode, useState } from "react";
+import { Heading, VStack } from "@raidguild/design-system";
+import { useQuery } from "react-query";
 import CohortDetail from "../components/cohortDetail";
 import { useSubgraphQuery } from "../hooks/useSubgraphQuery";
 import { cohorts } from "../utils/subgraph/queries";
@@ -16,12 +11,28 @@ interface ReviewOngoingCohortProps {
 }
 
 const reviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
-  const cohortList: Cohort | any = useSubgraphQuery(cohorts(0, 10));
-  const cohort = cohortList?.data?.cohorts;
-  // console.log(cohort);
+  const [page, setPage] = useState(0);
+
+  const cohortList = useSubgraphQuery(cohorts(0, 10));
+  const cohort: Cohort | null = cohortList.data && cohortList?.data["cohorts"];
+
+  // const getCohorts = (pageParam: number) => {
+  //   const cohort = cohortList?.data?.cohorts;
+  //   return cohort;
+  // };
+
+  // const { status, data, error, isFetching, isPreviousData } = useQuery({
+  //   queryKey: ["cohorts", page],
+  //   queryFn:
+  //     () =>
+  //     ({ pageParam = 0 }) =>
+  //       getCohorts(pageParam),
+  //   keepPreviousData: true,
+  //   staleTime: 5000,
+  // });
 
   const renderCohorts = cohort
-    ? cohort.map((cohort: { [x: string]: string }) => {
+    ? cohort?.map((cohort: { [x: string]: string }) => {
         return (
           <CohortDetail
             cohortName={"cohort name"}
