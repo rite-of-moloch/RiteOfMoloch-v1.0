@@ -1,20 +1,11 @@
 import { FC, ReactNode } from "react";
-import {
-  Box,
-  HStack,
-  Heading,
-  Link,
-  Stack,
-  Text,
-  VStack,
-} from "@raidguild/design-system";
+import { Heading, Link, Stack } from "@raidguild/design-system";
 import { useRouter } from "next/router";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
-import { cohortMetadata, cohortInitiates } from "utils/subgraph/queries";
-import { CohortMetadata, MemberData } from "utils/types/subgraphQueries";
+import { cohortInitiates } from "utils/subgraph/queries";
+import { MemberData } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
 import InitiateData from "components/initiateData";
-import Head from "next/head";
 
 interface CohortProps {
   children: ReactNode;
@@ -23,7 +14,7 @@ interface CohortProps {
 const Cohort: FC<CohortProps> = ({ children }) => {
   const router = useRouter();
   const { chain } = useNetwork();
-  const { pid } = router.query;
+  const { address } = router.query;
 
   const blockExplorerLink = (address: string) => (
     <Link
@@ -36,12 +27,12 @@ const Cohort: FC<CohortProps> = ({ children }) => {
 
   const timeUTC = (time: string) => new Date(time).toUTCString();
 
-  // const metadata = useSubgraphQuery(cohortMetadata(pid));
+  // const metadata = useSubgraphQuery(cohortMetadata(address));
 
   // const cohort: CohortMetadata | null =
   //   metadata.data && metadata?.data["cohort"];
 
-  const initiates = useSubgraphQuery(cohortInitiates(pid, 0, 10));
+  const initiates = useSubgraphQuery(cohortInitiates(address, 0, 10));
 
   const initiateList: MemberData | null =
     initiates.data && initiates?.data["cohort"]?.initiates;
@@ -61,7 +52,7 @@ const Cohort: FC<CohortProps> = ({ children }) => {
   return (
     <Stack w="full" alignSelf="start" spacing={5}>
       <Heading as="h2" fontSize="lg" textAlign="left" color="red">
-        Cohort {pid}
+        Cohort {address}
       </Heading>
       {renderInitiateList}
     </Stack>
