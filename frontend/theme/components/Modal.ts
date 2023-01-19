@@ -14,7 +14,7 @@ const Modal = helpers.defineMultiStyleConfig({
     dialogContainer: {
       position: "fixed",
       border: "1px solid #FF3864",
-      fontFamily: "spaceMono",
+      fontFamily: "texturina",
       h: "fit",
       bg: "gradientSBTPrev",
       rounded: "2xl",
@@ -23,14 +23,16 @@ const Modal = helpers.defineMultiStyleConfig({
       transform: "translate(-50%, -50%)",
     },
     dialog: {
-      bg: "gradientSBTPrev",
+      bg: "transparent",
       pt: "3em",
       mt: "0",
+      w: "100%",
     },
     footer: {
       marginX: "auto",
       fontSize: "2xl",
       mb: "-3rem",
+      bg: "transparent",
     },
   },
   variants: {
@@ -43,12 +45,9 @@ const Modal = helpers.defineMultiStyleConfig({
       },
     },
     member: {
-      overlay: {},
       dialogContainer: {
-        w: "fit",
-        minW: "fit",
+        w: ["90%", "80%", "75%", "65%"],
       },
-      dialog: { w: "full" },
       closeButton: {
         color: "white",
       },

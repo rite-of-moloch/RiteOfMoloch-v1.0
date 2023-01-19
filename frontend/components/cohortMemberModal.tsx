@@ -47,38 +47,49 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
       </Button>
       <Modal isOpen={isOpen} onClose={onClose} variant="member">
         <ModalOverlay onClick={onClose} />
-        <ModalContent w="full">
+        <ModalContent minW="full">
           <ModalCloseButton />
-          <ModalBody mx={"-1.5rem"}>
+          <ModalBody mx="-1.5em">
             <SimpleGrid
-              columns={3}
+              columns={4}
               spacingX={2}
               px={2}
+              pt={2}
+              pb={2.5}
               bg="black"
               borderTop="1px solid #FF3864"
               borderBottom="1px solid #FF3864"
               alignItems="center"
             >
-              {/* <Box justifySelf="center" textAlign="center" w="full">
+              <Box justifySelf="center" textAlign="center" w="full">
                 Cohort Member
-              </Box> */}
-
-              <Box justifySelf="center" textAlign="center" w="full">
-                {blockExplorerLink(initiateData.address)}
               </Box>
               <Box justifySelf="center" textAlign="center" w="full">
-                {initiateData.stake}
+                <Text>{blockExplorerLink(initiateData.address)}</Text>
               </Box>
-              <Box justifySelf="center" textAlign="center" w="full">
-                {initiateData.joinedAt}
+              <Box
+                justifySelf="center"
+                justifyContent="center"
+                textAlign="center"
+                w="full"
+                // px={3}
+              >
+                <Text>{initiateData.stake}</Text>
+              </Box>
+              <Box
+                justifySelf="center"
+                justifyContent="center"
+                textAlign="center"
+                w="full"
+              >
+                <Text>{initiateData.joinedAt}</Text>
               </Box>
             </SimpleGrid>
-            {/* </HStack> */}
           </ModalBody>
 
           <ModalFooter>
             <Box>
-              <Button variant="outline" size="md" onClick={handleSlashStake}>
+              <Button variant="gray" size="md" onClick={handleSlashStake}>
                 Slash Stake
               </Button>
               <Text mt={1} fontSize="xx-small" color="red">

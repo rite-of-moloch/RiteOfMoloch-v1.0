@@ -72,6 +72,19 @@ const Button = {
         boxShadow: "none",
       },
     }),
+    gray: () => ({
+      textTransform: "uppercase",
+      maxWidth: "100%",
+      width: "auto",
+      height: "40px",
+      color: "gray",
+      border: "solid gray 1px",
+      rounded: "sm",
+      bg: "whiteAlpha.100",
+      _focus: {
+        boxShadow: "none",
+      },
+    }),
   },
   sizes: {
     default: {
