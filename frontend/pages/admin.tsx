@@ -40,9 +40,9 @@ const Admin: React.FC<AdminProps> = ({ children }): any => {
             </Link>
           </GridItem>
           <GridItem w="100%" textAlign="center" my="1rem">
-            <Link href="/reviewOngoingCohort">
+            <Link href="/cohorts">
               <Button variant="red" w="full" p="1.5rem">
-                Review Ongoing Cohort
+                Review Ongoing Cohorts
               </Button>
             </Link>
           </GridItem>

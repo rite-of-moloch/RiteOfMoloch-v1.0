@@ -1,9 +1,10 @@
 import React, { FC, ReactNode, useState } from "react";
 import { Heading, VStack } from "@raidguild/design-system";
 import { useQuery } from "react-query";
-import CohortDetail from "../components/cohortDetail";
-import { useSubgraphQuery } from "../hooks/useSubgraphQuery";
-import { cohorts } from "../utils/subgraph/queries";
+import CohortDetail from "components/cohortDetail";
+
+import { useSubgraphQuery } from "hooks/useSubgraphQuery";
+import { cohorts } from "utils/subgraph/queries";
 import { Cohort } from "utils/types/subgraphQueries";
 
 interface ReviewOngoingCohortProps {
