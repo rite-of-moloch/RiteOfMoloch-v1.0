@@ -51,7 +51,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
           <ModalCloseButton />
           <ModalBody mx="-1.5em">
             <SimpleGrid
-              columns={4}
+              columns={3}
               spacingX={2}
               px={2}
               pt={2}
@@ -61,9 +61,6 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
               borderBottom="1px solid #FF3864"
               alignItems="center"
             >
-              <Box justifySelf="center" textAlign="center" w="full">
-                Cohort Member
-              </Box>
               <Box justifySelf="center" textAlign="center" w="full">
                 <Text>{blockExplorerLink(initiateData.address)}</Text>
               </Box>

@@ -8,6 +8,7 @@ import Tooltip from "./components/Tooltip";
 import Heading from "./components/Heading";
 import Input from "./components/Input";
 import NumberInput from "./components/Input";
+import SimpleGrid from "./components/SimpleGrid";
 
 export const theme = extendTheme({
   components: {
@@ -20,6 +21,7 @@ export const theme = extendTheme({
     Heading,
     Input,
     NumberInput,
+    SimpleGrid,
   },
   colors: {
     transparent: "transparent",
