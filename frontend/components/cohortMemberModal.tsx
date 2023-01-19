@@ -11,9 +11,11 @@ import {
   SimpleGrid,
   Box,
   HStack,
+  Link,
 } from "@raidguild/design-system";
 import { Modal } from "@chakra-ui/modal";
 import { MemberData } from "utils/types/subgraphQueries";
+import { useNetwork } from "wagmi";
 
 interface CohortMemberModalProps {
   initiateData: MemberData;
@@ -23,6 +25,16 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
   initiateData,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { chain } = useNetwork();
+
+  const blockExplorerLink = (address: string) => (
+    <Link
+      href={`${chain?.blockExplorers?.default.url}/address/${address}`}
+      isExternal
+    >
+      {address.slice(0, 4)}...{address.slice(-6)}
+    </Link>
+  );
 
   const handleSlashStake = () => {
     console.log("slashing member stake");
@@ -35,26 +47,33 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
       </Button>
       <Modal isOpen={isOpen} onClose={onClose} variant="member">
         <ModalOverlay onClick={onClose} />
-        <ModalContent>
+        <ModalContent w="full">
           <ModalCloseButton />
           <ModalBody mx={"-1.5rem"}>
-            <HStack
+            <SimpleGrid
+              columns={3}
+              spacingX={2}
+              px={2}
               bg="black"
-              w="full"
               borderTop="1px solid #FF3864"
               borderBottom="1px solid #FF3864"
-              py={2}
-              px={1}
-              justifyContent="space-around"
+              alignItems="center"
             >
-              <Box ml={3}>Cohort Member</Box>
-              <Box>
-                {initiateData.address.slice(0, 4)}...
-                {initiateData.address.slice(-6)}
+              {/* <Box justifySelf="center" textAlign="center" w="full">
+                Cohort Member
+              </Box> */}
+
+              <Box justifySelf="center" textAlign="center" w="full">
+                {blockExplorerLink(initiateData.address)}
               </Box>
-              <Box>{initiateData.stake}</Box>
-              <Box mr={3}>{initiateData.joinedAt}</Box>
-            </HStack>
+              <Box justifySelf="center" textAlign="center" w="full">
+                {initiateData.stake}
+              </Box>
+              <Box justifySelf="center" textAlign="center" w="full">
+                {initiateData.joinedAt}
+              </Box>
+            </SimpleGrid>
+            {/* </HStack> */}
           </ModalBody>
 
           <ModalFooter>

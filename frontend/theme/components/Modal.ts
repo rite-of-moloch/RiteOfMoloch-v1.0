@@ -1,6 +1,7 @@
 import { createMultiStyleConfigHelpers } from "@chakra-ui/styled-system";
 
 const helpers = createMultiStyleConfigHelpers([
+  "overlay",
   "dialogContainer",
   "dialog",
   "closeButton",
@@ -19,8 +20,7 @@ const Modal = helpers.defineMultiStyleConfig({
       rounded: "2xl",
       top: "50%",
       left: "50%",
-      marginTop: "-100px",
-      marginLeft: "-250px",
+      transform: "translate(-50%, -50%)",
     },
     dialog: {
       bg: "gradientSBTPrev",
@@ -36,17 +36,19 @@ const Modal = helpers.defineMultiStyleConfig({
   variants: {
     sbt: {
       dialogContainer: {
-        w: ["90%", "50%", "45%", "30%"],
+        w: ["90%", "50%", "45%", "35%"],
       },
       closeButton: {
         color: "red",
       },
     },
     member: {
+      overlay: {},
       dialogContainer: {
         w: "fit",
         minW: "fit",
       },
+      dialog: { w: "full" },
       closeButton: {
         color: "white",
       },
