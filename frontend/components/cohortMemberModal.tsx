@@ -50,6 +50,17 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
         <ModalContent minW="full">
           <ModalCloseButton />
           <ModalBody mx="-1.5em">
+            <SimpleGrid columns={3} spacingX={2} mb={2}>
+              <Box justifySelf="center" textAlign="center" w="full">
+                Address:
+              </Box>
+              <Box justifySelf="center" textAlign="center" w="full">
+                Shares:
+              </Box>
+              <Box justifySelf="center" textAlign="center" w="full">
+                Date Staked:
+              </Box>
+            </SimpleGrid>
             <SimpleGrid
               columns={3}
               spacingX={2}
