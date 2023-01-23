@@ -9,6 +9,16 @@ interface CohortDetailProps {
   stake: number | string;
   stakingDate: string;
 }
+
+/**
+ *
+ * @param address cohort address
+ * @param stake required stake (tokenAmount variable)
+ * @param stakingDate calculated with createdAt * time
+ *
+ * @returns grid with cohort data. Gets rendered on ../index.tsx
+ */
+
 const CohortDetail: FC<CohortDetailProps> = ({
   address,
   stake,
@@ -22,7 +32,7 @@ const CohortDetail: FC<CohortDetailProps> = ({
       href={`${chain?.blockExplorers?.default.url}/address/${address}`}
       isExternal
     >
-      {`${address?.slice(0, 4)}...${address?.slice(-4)}`}
+      {`${address?.slice(0, 4)}...${address?.slice(-6)}`}
     </Link>
   );
 
@@ -46,9 +56,8 @@ const CohortDetail: FC<CohortDetailProps> = ({
         px={4}
         rounded="md"
         spacingX={2}
-        w="80%"
       >
-        <Box justifySelf="center">{blockExplorerLink(address)}</Box>
+        <Box justifySelf="start">{blockExplorerLink(address)}</Box>
         <Box justifySelf="center">{stake}</Box>
         <Box justifySelf="center">{stakingDate}</Box>
         <Box justifySelf="end">

@@ -1,11 +1,12 @@
 import React, { FC, ReactNode } from "react";
-import { Box, SimpleGrid, VStack } from "@raidguild/design-system";
+import { Box, SimpleGrid, Stack, VStack } from "@raidguild/design-system";
 import CohortDetail from "components/cohortDetail";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { useSubgraphReactQuery } from "hooks/useSubgraphReactQuery";
 import { cohorts } from "utils/subgraph/queries";
 import { Cohort } from "utils/types/subgraphQueries";
 import { performQuery } from "utils/subgraph/helpers";
+import { unixToUTC } from "utils/general";
 
 interface ReviewOngoingCohortProps {
   children?: ReactNode;
@@ -25,12 +26,16 @@ const reviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
   runQuery();
 
   const renderCohorts = cohort?.map((cohort: Cohort) => {
-    console.log(cohort);
+    const deadline = (
+      Number(cohort.createdAt) +
+      Number(cohort.time) * 1000
+    ).toString();
+
     return (
       <CohortDetail
         address={cohort.id}
-        stake={555}
-        stakingDate={cohort.tokenAmount}
+        stake={cohort.tokenAmount}
+        stakingDate={unixToUTC(deadline)}
         key={cohort.id}
       />
     );
@@ -38,7 +43,7 @@ const reviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
 
   return (
     <>
-      <VStack spacing={6} w={["full", "80%"]}>
+      <Stack spacing={6} w={["full", "full", "80%"]} my={6}>
         <SimpleGrid
           columns={4}
           fontFamily="texturina"
@@ -46,16 +51,15 @@ const reviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
           alignItems="center"
           spacingX={2}
           mb={-3}
-          w="80%"
+          w="full"
         >
-          <Box justifySelf="center">Address</Box>
+          <Box justifySelf="start">Address</Box>
           <Box justifySelf="center">Stake</Box>
           <Box justifySelf="center">Staking Date</Box>
           <Box />
         </SimpleGrid>
-
         {renderCohorts}
-      </VStack>
+      </Stack>
     </>
   );
 };
