@@ -1,11 +1,12 @@
 import { FC, ReactNode } from "react";
-import { Heading, Link, Stack } from "@raidguild/design-system";
+import { Box, Heading, Link, Stack, Text } from "@raidguild/design-system";
 import { useRouter } from "next/router";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { cohortInitiates } from "utils/subgraph/queries";
 import { MemberData } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
 import InitiateData from "components/initiateData";
+import { unixToUTC } from "utils/general";
 
 interface CohortProps {
   children: ReactNode;
@@ -34,27 +35,35 @@ const Cohort: FC<CohortProps> = ({ children }) => {
 
   const initiates = useSubgraphQuery(cohortInitiates(address, 0, 10));
 
-  const initiateList: MemberData | null =
-    initiates.data && initiates?.data["cohort"]?.initiates;
-  console.log("initiateList", initiateList);
+  const initiateList: MemberData[] | null =
+    initiates.data && initiates?.data?.cohort?.initiates;
+  // console.log("initiateList", initiateList);
 
   const renderInitiateList = initiateList?.map((initiate: MemberData) => {
     return (
       <InitiateData
         address={initiate.address}
         id={initiate.id}
-        joinedAt={initiate.joinedAt}
+        joinedAt={unixToUTC(initiate.joinedAt)}
         stake={initiate.stake}
       />
     );
   });
 
+  console.log(renderInitiateList);
+
   return (
     <Stack w="full" alignSelf="start" spacing={5}>
-      <Heading as="h2" fontSize="lg" textAlign="left" color="red">
-        Cohort {address}
+      <Heading as="h2" fontSize="md" textAlign="left" color="red">
+        Cohort: {address}
       </Heading>
-      {renderInitiateList}
+      {renderInitiateList && renderInitiateList.length > 0 ? (
+        renderInitiateList
+      ) : (
+        <Box textAlign="center" fontFamily="texturina">
+          <Text my={10}>Nobody has staked to this cohort yet</Text>
+        </Box>
+      )}
     </Stack>
   );
 };

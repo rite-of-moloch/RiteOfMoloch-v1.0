@@ -25,13 +25,15 @@ const cohortMemberDetails: FC<CohortMemberDetailsProps> = ({ children }) => {
     <>
       <SimpleGrid
         columns={5}
-        border="1px red solid"
+        border="1px #FF3864 solid"
         justifyContent="center"
         alignItems="center"
         bg="black"
-        py={1}
-        px={2}
+        py={2}
+        px={4}
         rounded="md"
+        spacingX={2}
+        w="full"
       >
         <Box m="auto">Initiate:</Box>
         <Box m="auto">

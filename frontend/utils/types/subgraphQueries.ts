@@ -1,12 +1,10 @@
 export type Cohort = {
-  data: {
-    id: string;
-    time: string;
-    token: string;
-    tokenAmount: string;
-    dao: string;
-    createdAt: string;
-  }[];
+  id: string;
+  time: string;
+  token: string;
+  tokenAmount: string;
+  dao: string;
+  createdAt: string;
 };
 
 export type CohortMetadata = {

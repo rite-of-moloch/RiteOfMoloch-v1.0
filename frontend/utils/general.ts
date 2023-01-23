@@ -68,3 +68,9 @@ export const approveTooltip = (
   } else return null;
   return label;
 };
+
+export const unixToUTC = (unix: string): string => {
+  const utc = new Date(Number(unix) * 1000);
+  const localDate = utc.toLocaleDateString();
+  return localDate;
+};

@@ -1,18 +1,15 @@
 import React, { FC } from "react";
 import { Box, Button, SimpleGrid, Link } from "@raidguild/design-system";
 
-import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { useNetwork } from "wagmi";
 import { useRouter } from "next/router";
 
 interface CohortDetailProps {
-  cohortName: string;
   address: string;
   stake: number | string;
   stakingDate: string;
 }
 const CohortDetail: FC<CohortDetailProps> = ({
-  cohortName,
   address,
   stake,
   stakingDate,
@@ -40,17 +37,17 @@ const CohortDetail: FC<CohortDetailProps> = ({
     <>
       <SimpleGrid
         columns={4}
+        fontFamily="texturina"
         border="1px #FF3864 solid"
         justifyContent="center"
         alignItems="center"
         bg="black"
-        py={3}
+        py={2}
         px={4}
         rounded="md"
-        spacingX={3}
-        w="full"
+        spacingX={2}
+        w="80%"
       >
-        {/* <Box justifySelf="start">{cohortName}</Box> */}
         <Box justifySelf="center">{blockExplorerLink(address)}</Box>
         <Box justifySelf="center">{stake}</Box>
         <Box justifySelf="center">{stakingDate}</Box>

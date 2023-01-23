@@ -98,8 +98,8 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
         columns={2}
         spacingX={6}
         rounded="xl"
-        border="1px"
-        borderColor="red"
+        fontFamily="texturina"
+        border="1px solid #FF3864"
         bg="black"
         px={"5%"}
         py={6}

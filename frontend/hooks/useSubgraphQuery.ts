@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { performQuery, subgraphEndpoint } from "../utils/subgraph/helpers";
+import { performQuery } from "../utils/subgraph/helpers";
 
 /// @param query: a GraphQL compliant query string. (SEE /utils/subraph/queries.ts for examples.)
 /// @return { data, isLoading, error}
@@ -8,12 +8,12 @@ import { performQuery, subgraphEndpoint } from "../utils/subgraph/helpers";
 /// @return error: boolean determining whether the query or the fetch resulted in an error.
 
 export function useSubgraphQuery(query: string) {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    const queryPromise = performQuery(subgraphEndpoint, query);
+    const queryPromise = performQuery(query);
 
     setIsLoading(true);
 

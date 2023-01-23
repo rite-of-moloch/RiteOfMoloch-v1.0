@@ -16,6 +16,7 @@ import {
 import { Modal } from "@chakra-ui/modal";
 import { MemberData } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
+import { unixToUTC } from "utils/general";
 
 interface CohortMemberModalProps {
   initiateData: MemberData;
@@ -90,7 +91,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
                 textAlign="center"
                 w="full"
               >
-                <Text>{initiateData.joinedAt}</Text>
+                <Text>{unixToUTC(initiateData.joinedAt)}</Text>
               </Box>
             </SimpleGrid>
           </ModalBody>

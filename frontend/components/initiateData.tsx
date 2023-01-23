@@ -21,11 +21,15 @@ const InitiateData: FC<MemberData> = ({ address, id, joinedAt, stake }) => {
   return (
     <SimpleGrid
       columns={4}
-      bg="black"
-      border="1px solid #FF3864"
-      p={2}
-      rounded="lg"
+      border="1px #FF3864 solid"
+      justifyContent="center"
       alignItems="center"
+      bg="black"
+      py={2}
+      px={4}
+      rounded="md"
+      spacingX={2}
+      w="full"
     >
       <Box justifySelf="start">{blockExplorerLink(address)}</Box>
       <Box justifySelf="center">{stake}</Box>
