@@ -17,8 +17,8 @@ import {ERC20} from "lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol"
 contract CohortUserScript is Script, InitializationData {
     // constants
     ERC20 constant token = ERC20(0xA49dF10dD5B84257dE634F4350218f615471Fc69);
-    address constant molochDAO = 0x69830F52d75Ed8d1431c17AECFe09F083dDc7761;
-    // address constant admin1 = 0x1A4B691738C9c8Db8f2EDf0b9207f6acb24ADF07;
+    address constant baalV3 = 0x6c9110CBbCD400b768646729E5b400F0B5A6BCC7;
+    address constant deployer = 0x1A4B691738C9c8Db8f2EDf0b9207f6acb24ADF07;
     address constant admin1 = 0xa25256073cB38b8CAF83b208949E7f746f3BEBDc;
     uint256 constant minStake = 250 * 10e18;
 
@@ -44,19 +44,21 @@ contract CohortUserScript is Script, InitializationData {
 
         ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
 
-        token.approve(address(ROM), minStake);
+        token.approve(address(ROM), minStake + 100);
+
+        ROM.joinInitiation(deployer);
 
         vm.stopBroadcast();
     }
 
     function createInitData() public {
-        Data.membershipCriteria = molochDAO;
+        Data.membershipCriteria = baalV3;
         Data.stakingAsset = address(token);
-        Data.treasury = molochDAO;
+        Data.treasury = baalV3;
         Data.topHatWearer = address(0);
         Data.admin1 = admin1;
         Data.admin2 = address(0);
-        Data.cohortSize = 2;
+        Data.cohortSize = 5;
         Data.joinDuration = 10 days;
         Data.threshold = 10;
         Data.assetAmount = minStake;
@@ -77,8 +79,8 @@ contract CohortUserScript is Script, InitializationData {
             topHat,
             "ROM-Factoryx Operator",
             1,
-            molochDAO,
-            molochDAO,
+            baalV3,
+            baalV3,
             true,
             ""
         );

@@ -314,6 +314,10 @@ contract RiteOfMoloch is
         emit ChangedShares(newShareThreshold);
     }
 
+    function extendJoinTimeLimit(uint256 _extension) external onlyRole(ADMIN) {
+        joinEndTime = joinEndTime + _extension;
+    }
+
     /**
      * @dev Allows changing the maximum initiation duration
      * @param newMaxTime the length in seconds until an initiate's stake is forfeit
@@ -327,13 +331,6 @@ contract RiteOfMoloch is
         onlyRole(SUPER_ADMIN)
     {
         cohortSize = _cohortSize;
-    }
-
-    function extendJoinTimeLimit(uint256 _extension)
-        external
-        onlyRole(SUPER_ADMIN)
-    {
-        joinEndTime = joinEndTime + _extension;
     }
 
     /*************************
