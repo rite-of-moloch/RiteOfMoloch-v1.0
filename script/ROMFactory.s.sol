@@ -6,12 +6,12 @@ import {RiteOfMolochFactory} from "src/RiteOfMolochFactory.sol";
 import {IHats} from "src/hats/IHats.sol";
 
 // create with verify
-// forge script script/ROMF.s.sol:ROMFScript --rpc-url $RU --private-key $PK --broadcast --verify --etherscan-api-key $EK -vvvv
+// forge script script/ROMFactory.s.sol:ROMFactoryScript --rpc-url $RU --private-key $PK --broadcast --verify --etherscan-api-key $EK -vvvv
 
 // create without verify
-// forge script script/ROMF.s.sol:ROMFScript --rpc-url $RU --private-key $PK --broadcast -vvvv
+// forge script script/ROMFactory.s.sol:ROMFactoryScript --rpc-url $RU --private-key $PK --broadcast -vvvv
 
-contract ROMFScript is Script {
+contract ROMFactoryScript is Script {
     // ROM factory contract
     RiteOfMolochFactory public ROMF;
 

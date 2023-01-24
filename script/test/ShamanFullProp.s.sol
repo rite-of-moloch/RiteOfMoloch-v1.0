@@ -6,10 +6,10 @@ import "src/InitializationData.sol";
 import {RiteOfMoloch} from "src/RiteOfMoloch.sol";
 
 // create with verify
-// forge script script/test/ShamanProposal.s.sol:ShamanProposalScript --rpc-url $RU --private-key $PK --broadcast --verify --etherscan-api-key $EK -vvvv
+// forge script script/test/ShamanFullProp.s.sol:ShamanFullPropScript --rpc-url $RU --private-key $PK --broadcast --verify --etherscan-api-key $EK -vvvv
 
 // create without verify
-// forge script script/test/ShamanProposal.s.sol:ShamanProposalScript --rpc-url $RU --private-key $PK --broadcast -vvvv
+// forge script script/test/ShamanFullProp.s.sol:ShamanFullPropScript --rpc-url $RU --private-key $PK --broadcast -vvvv
 
 interface IBaal {
     function proposalOffering() external returns (uint256);
@@ -24,7 +24,7 @@ interface IBaal {
     ) external payable returns (uint256);
 }
 
-contract ShamanProposalScript is Script {
+contract ShamanFullPropScript is Script {
     IBaal public constant baal =
         IBaal(0x6c9110CBbCD400b768646729E5b400F0B5A6BCC7);
 
