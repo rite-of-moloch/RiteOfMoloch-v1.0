@@ -27,7 +27,7 @@ const Modal = helpers.defineMultiStyleConfig({
       textAlign: "center",
       mt: "-2rem",
       fontSize: "28px",
-      color: "gray",
+      color: "white",
     },
     dialog: {
       bg: "transparent",

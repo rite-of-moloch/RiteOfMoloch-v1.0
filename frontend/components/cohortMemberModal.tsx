@@ -22,7 +22,6 @@ import { useRouter } from "next/router";
 
 interface CohortMemberModalProps {
   initiateData: MemberData;
-  slashDate: string;
 }
 
 const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
@@ -54,7 +53,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
       {address.slice(0, 4)}...{address.slice(-6)}
     </Link>
   );
-  console.log(initiateData);
+  // console.log(initiateData);
 
   const handleSlashStake = () => {
     console.log("slashing member stake");

@@ -9,6 +9,7 @@ export const performQuery = async (query: string) => {
       query: query,
     }),
   });
+
   const json = await res.json();
   return json;
 };

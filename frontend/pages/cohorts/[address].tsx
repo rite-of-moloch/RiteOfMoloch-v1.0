@@ -9,19 +9,23 @@ import {
   Text,
 } from "@raidguild/design-system";
 import { useRouter } from "next/router";
-import { useSubgraphQuery } from "hooks/useSubgraphQuery";
-import { cohortInitiates } from "utils/subgraph/queries";
+import {
+  COHORT_INITIATES,
+  COHORTS,
+  COHORT_METADATA,
+} from "utils/subgraph/queries";
 import { MemberData } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
 import InitiateData from "components/initiateData";
+import { useSubgraphReactQuery } from "hooks/useSubgraphReactQuery";
 
 interface CohortProps {
   children: ReactNode;
 }
 
 const Cohort: FC<CohortProps> = ({ children }) => {
-  const router = useRouter();
   const { chain } = useNetwork();
+  const router = useRouter();
   const { address } = router.query;
 
   const blockExplorerLink = (address: string) => (
@@ -33,13 +37,14 @@ const Cohort: FC<CohortProps> = ({ children }) => {
     </Link>
   );
 
-  const timeUTC = (time: string) => new Date(time).toUTCString();
-
-  const initiates = useSubgraphQuery(cohortInitiates(address, 0, 10));
+  /*
+  const initiates = useSubgraphQuery(COHORT_INITIATES(address, 0, 10));
 
   const initiateList: MemberData[] | null =
     initiates.data && initiates?.data?.cohort?.initiates;
-  // console.log("initiateList", initiateList);
+  console.log("initiateList", initiateList);
+
+  console.log(initiates);
 
   const renderInitiateList = initiateList?.map((initiate: MemberData) => {
     return (
@@ -52,7 +57,29 @@ const Cohort: FC<CohortProps> = ({ children }) => {
     );
   });
 
-  // console.log(renderInitiateList);
+   */
+
+  const {
+    data: initiates,
+    isLoading,
+    error,
+  } = useSubgraphReactQuery(COHORT_INITIATES(address), address);
+  console.log("COHORT_INITIATES", initiates);
+
+  const initiateList: MemberData[] | null =
+    initiates?.data && initiates?.data?.cohort?.initiates;
+  console.log("initiateList", initiateList);
+
+  const renderInitiateList = initiateList?.map((initiate: MemberData) => {
+    return (
+      <InitiateData
+        address={initiate.address}
+        id={initiate.id}
+        joinedAt={initiate.joinedAt}
+        stake={initiate.stake}
+      />
+    );
+  });
 
   return (
     <Stack w="full" alignSelf="start" spacing={5}>
@@ -68,7 +95,7 @@ const Cohort: FC<CohortProps> = ({ children }) => {
       >
         {address}
       </Heading>
-      {renderInitiateList && renderInitiateList.length > 0 && (
+      {/* {renderInitiateList && renderInitiateList.length > 0 && (
         <SimpleGrid
           columns={4}
           fontFamily="texturina"
@@ -82,8 +109,8 @@ const Cohort: FC<CohortProps> = ({ children }) => {
           <Box justifySelf="center">Shares</Box>
           <Box justifySelf="center">Date Staked</Box>
         </SimpleGrid>
-      )}
-      {renderInitiateList && renderInitiateList.length > 0 ? (
+      )} */}
+      {/* {renderInitiateList && renderInitiateList.length > 0 ? (
         renderInitiateList
       ) : (
         <Box
@@ -94,7 +121,7 @@ const Cohort: FC<CohortProps> = ({ children }) => {
         >
           <Text my={10}>Nobody has staked to this cohort yet!</Text>
         </Box>
-      )}
+      )} */}
       <Box
       // textAlign="center"
       >
