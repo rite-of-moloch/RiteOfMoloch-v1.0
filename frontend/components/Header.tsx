@@ -16,7 +16,7 @@ export const Header: React.FC<HeaderProps> = ({ children }) => {
       w="100%"
       alignItems="center"
       justifyContent="space-between"
-      px="2rem"
+      // px="2rem"
     >
       <Link href="/" passHref>
         <Flex alignItems="center" cursor="pointer">

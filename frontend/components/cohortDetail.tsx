@@ -52,8 +52,9 @@ const CohortDetail: FC<CohortDetailProps> = ({
         justifyContent="center"
         alignItems="center"
         bg="black"
-        py={2}
         px={4}
+        pt={2}
+        pb={3}
         rounded="md"
         spacingX={2}
       >

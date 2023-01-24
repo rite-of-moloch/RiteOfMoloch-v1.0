@@ -1,12 +1,19 @@
 import { FC, ReactNode } from "react";
-import { Box, Heading, Link, Stack, Text } from "@raidguild/design-system";
+import {
+  Box,
+  Button,
+  Heading,
+  Link,
+  SimpleGrid,
+  Stack,
+  Text,
+} from "@raidguild/design-system";
 import { useRouter } from "next/router";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { cohortInitiates } from "utils/subgraph/queries";
 import { MemberData } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
 import InitiateData from "components/initiateData";
-import { unixToUTC } from "utils/general";
 
 interface CohortProps {
   children: ReactNode;
@@ -28,11 +35,6 @@ const Cohort: FC<CohortProps> = ({ children }) => {
 
   const timeUTC = (time: string) => new Date(time).toUTCString();
 
-  // const metadata = useSubgraphQuery(cohortMetadata(address));
-
-  // const cohort: CohortMetadata | null =
-  //   metadata.data && metadata?.data["cohort"];
-
   const initiates = useSubgraphQuery(cohortInitiates(address, 0, 10));
 
   const initiateList: MemberData[] | null =
@@ -44,26 +46,62 @@ const Cohort: FC<CohortProps> = ({ children }) => {
       <InitiateData
         address={initiate.address}
         id={initiate.id}
-        joinedAt={unixToUTC(initiate.joinedAt)}
+        joinedAt={initiate.joinedAt}
         stake={initiate.stake}
       />
     );
   });
 
-  console.log(renderInitiateList);
+  // console.log(renderInitiateList);
 
   return (
     <Stack w="full" alignSelf="start" spacing={5}>
-      <Heading as="h2" fontSize="md" textAlign="left" color="red">
-        Cohort: {address}
+      <Heading as="h1" textAlign="center" color="red">
+        Cohort Initiates
       </Heading>
+      <Heading
+        as="h4"
+        fontSize="md"
+        fontWeight="normal"
+        textAlign="center"
+        color="white"
+      >
+        {address}
+      </Heading>
+      {renderInitiateList && renderInitiateList.length > 0 && (
+        <SimpleGrid
+          columns={4}
+          fontFamily="texturina"
+          justifyContent="center"
+          alignItems="center"
+          px={4}
+          spacingX={2}
+          w="full"
+        >
+          <Box justifySelf="start">Address</Box>
+          <Box justifySelf="center">Shares</Box>
+          <Box justifySelf="center">Date Staked</Box>
+        </SimpleGrid>
+      )}
       {renderInitiateList && renderInitiateList.length > 0 ? (
         renderInitiateList
       ) : (
-        <Box textAlign="center" fontFamily="texturina">
-          <Text my={10}>Nobody has staked to this cohort yet</Text>
+        <Box
+          border="1px solid #FF3864"
+          textAlign="center"
+          fontFamily="texturina"
+          rounded="lg"
+        >
+          <Text my={10}>Nobody has staked to this cohort yet!</Text>
         </Box>
       )}
+      <Box
+      // textAlign="center"
+      >
+        <Link href="/cohorts">
+          <Button variant="outline">back</Button>
+        </Link>
+      </Box>
     </Stack>
   );
 };

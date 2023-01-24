@@ -1,5 +1,13 @@
 import React, { FC, ReactNode } from "react";
-import { Box, SimpleGrid, Stack, VStack } from "@raidguild/design-system";
+import {
+  Box,
+  Button,
+  Heading,
+  Link,
+  SimpleGrid,
+  Stack,
+  VStack,
+} from "@raidguild/design-system";
 import CohortDetail from "components/cohortDetail";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { useSubgraphReactQuery } from "hooks/useSubgraphReactQuery";
@@ -43,7 +51,10 @@ const reviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
 
   return (
     <>
-      <Stack spacing={6} w={["full", "full", "80%"]} my={6}>
+      <Stack spacing={6} w={["full", "full", "80%"]} mb={6}>
+        <Heading as="h1" textAlign="center" color="#FF3864">
+          Cohorts
+        </Heading>
         <SimpleGrid
           columns={4}
           fontFamily="texturina"
@@ -53,13 +64,24 @@ const reviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
           mb={-3}
           w="full"
         >
-          <Box justifySelf="start">Address</Box>
+          <Box justifySelf="start" pl={4}>
+            Address
+          </Box>
           <Box justifySelf="center">Stake</Box>
           <Box justifySelf="center">Staking Date</Box>
           <Box />
         </SimpleGrid>
         {renderCohorts}
       </Stack>
+      <Box w={["full", "full", "80%"]}>
+        <Box w={["25%"]} alignSelf="start" my={"2rem"}>
+          <Link href="/admin">
+            <Button w="full" variant="outline">
+              back
+            </Button>
+          </Link>
+        </Box>
+      </Box>
     </>
   );
 };

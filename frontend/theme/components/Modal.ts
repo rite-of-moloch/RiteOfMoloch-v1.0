@@ -3,6 +3,7 @@ import { createMultiStyleConfigHelpers } from "@chakra-ui/styled-system";
 const helpers = createMultiStyleConfigHelpers([
   "overlay",
   "dialogContainer",
+  "header",
   "dialog",
   "closeButton",
   "body",
@@ -21,6 +22,12 @@ const Modal = helpers.defineMultiStyleConfig({
       top: "50%",
       left: "50%",
       transform: "translate(-50%, -50%)",
+    },
+    header: {
+      textAlign: "center",
+      mt: "-2rem",
+      fontSize: "28px",
+      color: "gray",
     },
     dialog: {
       bg: "transparent",

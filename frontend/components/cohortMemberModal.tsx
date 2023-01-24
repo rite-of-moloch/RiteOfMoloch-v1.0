@@ -4,22 +4,25 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalFooter,
+  ModalHeader,
   ModalOverlay,
   useDisclosure,
   Text,
-  Image,
   SimpleGrid,
   Box,
-  HStack,
   Link,
 } from "@raidguild/design-system";
 import { Modal } from "@chakra-ui/modal";
-import { MemberData } from "utils/types/subgraphQueries";
+import { CohortMetadata, MemberData } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
 import { unixToUTC } from "utils/general";
+import { useSubgraphQuery } from "hooks/useSubgraphQuery";
+import { cohortMetadata } from "utils/subgraph/queries";
+import { useRouter } from "next/router";
 
 interface CohortMemberModalProps {
   initiateData: MemberData;
+  slashDate: string;
 }
 
 const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
@@ -27,6 +30,21 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { chain } = useNetwork();
+  const router = useRouter();
+
+  const { address } = router.query;
+
+  const metadata = useSubgraphQuery(cohortMetadata(address));
+  const cohort: CohortMetadata | null = metadata?.data?.cohort;
+  // console.log("cohort", cohort);
+
+  const getDeadline = (): string => {
+    const deadline = (
+      Number(cohort?.createdAt) +
+      Number(cohort?.time) * 1000
+    ).toString();
+    return unixToUTC(deadline);
+  };
 
   const blockExplorerLink = (address: string) => (
     <Link
@@ -36,6 +54,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
       {address.slice(0, 4)}...{address.slice(-6)}
     </Link>
   );
+  console.log(initiateData);
 
   const handleSlashStake = () => {
     console.log("slashing member stake");
@@ -49,6 +68,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
       <Modal isOpen={isOpen} onClose={onClose} variant="member">
         <ModalOverlay onClick={onClose} />
         <ModalContent minW="full">
+          <ModalHeader>Initiate</ModalHeader>
           <ModalCloseButton />
           <ModalBody mx="-1.5em">
             <SimpleGrid columns={3} spacingX={2} mb={2}>
@@ -77,7 +97,6 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
                 <Text>{blockExplorerLink(initiateData.address)}</Text>
               </Box>
               <Box
-                justifySelf="center"
                 justifyContent="center"
                 textAlign="center"
                 w="full"
@@ -85,12 +104,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
               >
                 <Text>{initiateData.stake}</Text>
               </Box>
-              <Box
-                justifySelf="center"
-                justifyContent="center"
-                textAlign="center"
-                w="full"
-              >
+              <Box justifyContent="center" textAlign="center" w="full">
                 <Text>{unixToUTC(initiateData.joinedAt)}</Text>
               </Box>
             </SimpleGrid>
@@ -102,7 +116,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
                 Slash Stake
               </Button>
               <Text mt={1} fontSize="xx-small" color="red">
-                Slashing is available in {initiateData.joinedAt} days
+                Slashing is available in {getDeadline()} days
               </Text>
             </Box>
           </ModalFooter>

@@ -54,6 +54,7 @@ const Button = {
       width: "auto",
       height: "40px",
       color: "#8B1DBA",
+      px: "0.75rem",
       bg: "whiteAlpha.100",
       _focus: {
         boxShadow: "none",
@@ -65,9 +66,10 @@ const Button = {
       width: "auto",
       height: "40px",
       color: "red",
-      border: "solid red 1px",
+      border: "solid #FF3864 1px",
       rounded: "sm",
       bg: "whiteAlpha.100",
+      px: "1rem",
       _focus: {
         boxShadow: "none",
       },
