@@ -11,7 +11,7 @@ import {
 import CohortDetail from "components/cohortDetail";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { useSubgraphReactQuery } from "hooks/useSubgraphReactQuery";
-import { cohorts } from "utils/subgraph/queries";
+import { COHORTS } from "utils/subgraph/queries";
 import { Cohort } from "utils/types/subgraphQueries";
 import { performQuery } from "utils/subgraph/helpers";
 import { unixToUTC } from "utils/general";
@@ -21,7 +21,7 @@ interface ReviewOngoingCohortProps {
 }
 
 const reviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
-  const cohortList = useSubgraphQuery(cohorts(0, 10));
+  const cohortList = useSubgraphReactQuery(COHORTS(), true);
   const cohort: Cohort[] | null = cohortList.data?.cohorts;
 
   // const { data, isLoading, error } = useSubgraphReactQuery("cohorts", true);

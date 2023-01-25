@@ -17,8 +17,9 @@ import { CohortMetadata, MemberData } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
 import { unixToUTC } from "utils/general";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
-import { cohortMetadata } from "utils/subgraph/queries";
+import { COHORT_METADATA } from "utils/subgraph/queries";
 import { useRouter } from "next/router";
+import { useSubgraphReactQuery } from "hooks/useSubgraphReactQuery";
 
 interface CohortMemberModalProps {
   initiateData: MemberData;
@@ -33,7 +34,10 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
 
   const { address } = router.query;
 
-  const metadata = useSubgraphQuery(cohortMetadata(address));
+  const metadata = useSubgraphReactQuery(
+    COHORT_METADATA(address),
+    Boolean(address)
+  );
   const cohort: CohortMetadata | null = metadata?.data?.cohort;
   // console.log("cohort", cohort);
 

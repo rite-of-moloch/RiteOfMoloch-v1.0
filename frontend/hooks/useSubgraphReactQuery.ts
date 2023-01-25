@@ -1,18 +1,20 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import {
+  QueryFunction,
+  QueryFunctionContext,
+  // useInfiniteQuery,
+  useQuery,
+} from "@tanstack/react-query";
 import { performQuery } from "../utils/subgraph/helpers";
 
-export const useSubgraphReactQuery = (query: any, enabled: any) => {
-  const limit = 8;
+export const useSubgraphReactQuery = (query: string, enabled: Boolean) => {
   const getData = async () => {
     const results = await performQuery(query);
     const data = results?.data;
-
     return data;
   };
 
   /*
-  // infinite query
-  *
+  // const limit = 8;
   const { data, isLoading, error, fetchNextPage, isFetchingNextPage, hasNextPage } = useInfiniteQuery({
     queryKey: [query],
     queryFn: () => getData(),
@@ -26,11 +28,11 @@ export const useSubgraphReactQuery = (query: any, enabled: any) => {
 
   const { data, isLoading, error } = useQuery({
     queryKey: [query],
-    queryFn: () => getData(),
-    enabled: enabled ? true : false,
+    queryFn: (context: QueryFunctionContext): Promise<any> => getData(),
+    enabled,
   });
 
-  console.log(data);
+  // console.log(data);
 
   return { data, isLoading, error };
 };
