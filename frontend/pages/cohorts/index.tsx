@@ -9,7 +9,6 @@ import {
   VStack,
 } from "@raidguild/design-system";
 import CohortDetail from "components/cohortDetail";
-import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { useSubgraphReactQuery } from "hooks/useSubgraphReactQuery";
 import { COHORTS } from "utils/subgraph/queries";
 import { Cohort } from "utils/types/subgraphQueries";
@@ -24,16 +23,8 @@ const reviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
   const cohortList = useSubgraphReactQuery(COHORTS(), true);
   const cohort: Cohort[] | null = cohortList.data?.cohorts;
 
-  // const { data, isLoading, error } = useSubgraphReactQuery("cohorts", true);
-  // console.log(data, isLoading, error);
-  const runQuery = () => {
-    let query = performQuery("cohorts");
-    console.log(query);
-    return query;
-  };
-  runQuery();
-
   const renderCohorts = cohort?.map((cohort: Cohort) => {
+    // console.log("cohort", cohort);
     const deadline = (
       Number(cohort.createdAt) +
       Number(cohort.time) * 1000
@@ -82,6 +73,7 @@ const reviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
           </Link>
         </Box>
       </Box>
+      {children}
     </>
   );
 };

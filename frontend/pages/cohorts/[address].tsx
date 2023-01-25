@@ -3,10 +3,12 @@ import {
   Box,
   Button,
   Heading,
+  Image,
   Link,
   SimpleGrid,
   Stack,
   Text,
+  VStack,
 } from "@raidguild/design-system";
 import { useRouter } from "next/router";
 import {
@@ -27,15 +29,6 @@ const Cohort: FC<CohortProps> = ({ children }) => {
   const { chain } = useNetwork();
   const router = useRouter();
   const { address } = router.query;
-
-  const blockExplorerLink = (address: string) => (
-    <Link
-      href={`${chain?.blockExplorers?.default.url}/address/${address}`}
-      isExternal
-    >
-      {address}
-    </Link>
-  );
 
   const {
     data: initiates,
@@ -65,6 +58,15 @@ const Cohort: FC<CohortProps> = ({ children }) => {
   });
 
   console.log("renderInitiateList", renderInitiateList);
+
+  const blockExplorerLink = (address: string) => (
+    <Link
+      href={`${chain?.blockExplorers?.default.url}/address/${address}`}
+      isExternal
+    >
+      {address}
+    </Link>
+  );
 
   return (
     <Stack w="full" alignSelf="start" spacing={5}>
@@ -98,14 +100,25 @@ const Cohort: FC<CohortProps> = ({ children }) => {
       {renderInitiateList && renderInitiateList.length > 0 ? (
         renderInitiateList
       ) : (
-        <Box
+        <VStack
           border="1px solid #FF3864"
           textAlign="center"
           fontFamily="texturina"
           rounded="lg"
+          bg="black"
+          p={4}
         >
-          <Text my={10}>Nobody has staked to this cohort yet!</Text>
-        </Box>
+          <Box mb={"0.5em"}>
+            <Text>Nobody has staked to this cohort yet...</Text>
+          </Box>
+          <Box
+            bgImage="/assets/raid__banner.png"
+            bgPosition="center"
+            bgRepeat="no-repeat"
+            w="full"
+            h="89px"
+          />
+        </VStack>
       )}
       <Box
       // textAlign="center"
