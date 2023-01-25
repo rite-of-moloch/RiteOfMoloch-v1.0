@@ -14,12 +14,12 @@ import {
 } from "@raidguild/design-system";
 import { Modal } from "@chakra-ui/modal";
 import { CohortMetadata, MemberData } from "utils/types/subgraphQueries";
-import { useNetwork } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 import { unixToUTC } from "utils/general";
-import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { COHORT_METADATA } from "utils/subgraph/queries";
 import { useRouter } from "next/router";
 import { useSubgraphReactQuery } from "hooks/useSubgraphReactQuery";
+import useIsMember from "hooks/useIsMember";
 
 interface CohortMemberModalProps {
   initiateData: MemberData;
@@ -30,13 +30,19 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { chain } = useNetwork();
-  const router = useRouter();
+  const { address } = useAccount();
 
-  const { address } = router.query;
+  const userAddress: string = address ? address : "";
+
+  const isMember = useIsMember([userAddress]);
+  console.log(isMember);
+
+  const router = useRouter();
+  const { address: cohortAddress } = router.query;
 
   const metadata = useSubgraphReactQuery(
-    COHORT_METADATA(address),
-    Boolean(address)
+    COHORT_METADATA(cohortAddress),
+    Boolean(cohortAddress)
   );
   const cohort: CohortMetadata | null = metadata?.data?.cohort;
   // console.log("cohort", cohort);
@@ -115,7 +121,12 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
 
           <ModalFooter>
             <Box>
-              <Button variant="gray" size="md" onClick={handleSlashStake}>
+              <Button
+                variant="solid"
+                size="md"
+                onClick={handleSlashStake}
+                disabled={true}
+              >
                 Slash Stake
               </Button>
               <Text mt={1} fontSize="xx-small" color="red">

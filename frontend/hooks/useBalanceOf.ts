@@ -1,4 +1,3 @@
-import { useBalance } from "wagmi";
 import useReadContract from "./useReadContract";
 /**
  *

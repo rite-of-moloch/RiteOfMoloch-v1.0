@@ -1,14 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { ReactNode } from "react";
-import {
-  Box,
-  Button,
-  Flex,
-  Grid,
-  GridItem,
-  HStack,
-  Spacer,
-} from "@raidguild/design-system";
+import { Box, Button, HStack } from "@raidguild/design-system";
 import { useAccount } from "wagmi";
 import Link from "next/link";
 import NotConnected from "components/NotConnected";

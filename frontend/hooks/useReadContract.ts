@@ -5,9 +5,12 @@ import { convertBigNumber } from "utils/general";
 
 /**
  *
+ * hook for react contract functions
+ *
  * @param contractName - pass in contract name
  * @param functionName - pass name of function
  * @param args - option array of args
+ * @returns output of contract function
  */
 
 const useReadContract = (
