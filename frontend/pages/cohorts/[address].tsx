@@ -20,6 +20,7 @@ import { MemberData } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
 import InitiateData from "components/initiateData";
 import { useSubgraphReactQuery } from "hooks/useSubgraphReactQuery";
+import BackButton from "components/BackButton";
 
 interface CohortProps {
   children: ReactNode;
@@ -57,6 +58,8 @@ const Cohort: FC<CohortProps> = ({ children }) => {
     );
   });
 
+  const isInitiates = renderInitiateList && renderInitiateList.length > 0;
+
   console.log("renderInitiateList", renderInitiateList);
 
   const blockExplorerLink = (address: string) => (
@@ -69,7 +72,12 @@ const Cohort: FC<CohortProps> = ({ children }) => {
   );
 
   return (
-    <Stack w="full" alignSelf="start" spacing={5}>
+    <Stack
+      w={["full", "full", "80%"]}
+      alignSelf="center"
+      spacing={5}
+      my={!isInitiates ? 8 : 0}
+    >
       <Heading as="h1" textAlign="center" color="red">
         Cohort Initiates
       </Heading>
@@ -82,7 +90,7 @@ const Cohort: FC<CohortProps> = ({ children }) => {
       >
         {address}
       </Heading>
-      {renderInitiateList && renderInitiateList.length > 0 && (
+      {isInitiates && (
         <SimpleGrid
           columns={4}
           fontFamily="texturina"
@@ -97,16 +105,18 @@ const Cohort: FC<CohortProps> = ({ children }) => {
           <Box justifySelf="center">Date Staked</Box>
         </SimpleGrid>
       )}
-      {renderInitiateList && renderInitiateList.length > 0 ? (
+      {isInitiates ? (
         renderInitiateList
       ) : (
         <VStack
           border="1px solid #FF3864"
           textAlign="center"
+          alignSelf="center"
           fontFamily="texturina"
           rounded="lg"
           bg="black"
           p={4}
+          w={["full", "80%"]}
         >
           <Box mb={"0.5em"}>
             <Text>Nobody has staked to this cohort yet...</Text>
@@ -120,13 +130,8 @@ const Cohort: FC<CohortProps> = ({ children }) => {
           />
         </VStack>
       )}
-      <Box
-      // textAlign="center"
-      >
-        <Link href="/cohorts">
-          <Button variant="outline">back</Button>
-        </Link>
-      </Box>
+
+      <BackButton />
     </Stack>
   );
 };

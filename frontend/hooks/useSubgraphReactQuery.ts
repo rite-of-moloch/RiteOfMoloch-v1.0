@@ -32,7 +32,5 @@ export const useSubgraphReactQuery = (query: string, enabled: Boolean) => {
     enabled,
   });
 
-  // console.log(data);
-
   return { data, isLoading, error };
 };

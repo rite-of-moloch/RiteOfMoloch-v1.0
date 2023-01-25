@@ -5,15 +5,18 @@ import {
   Heading,
   Link,
   SimpleGrid,
+  Spinner,
   Stack,
+  Text,
   VStack,
 } from "@raidguild/design-system";
 import CohortDetail from "components/cohortDetail";
 import { useSubgraphReactQuery } from "hooks/useSubgraphReactQuery";
 import { COHORTS } from "utils/subgraph/queries";
 import { Cohort } from "utils/types/subgraphQueries";
-import { performQuery } from "utils/subgraph/helpers";
+
 import { unixToUTC } from "utils/general";
+import BackButton from "components/BackButton";
 
 interface ReviewOngoingCohortProps {
   children?: ReactNode;
@@ -21,10 +24,11 @@ interface ReviewOngoingCohortProps {
 
 const reviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
   const cohortList = useSubgraphReactQuery(COHORTS(), true);
-  const cohort: Cohort[] | null = cohortList.data?.cohorts;
+  const isLoading = cohortList.isLoading;
+
+  const cohort: Cohort[] | undefined = cohortList?.data?.cohorts;
 
   const renderCohorts = cohort?.map((cohort: Cohort) => {
-    // console.log("cohort", cohort);
     const deadline = (
       Number(cohort.createdAt) +
       Number(cohort.time) * 1000
@@ -46,33 +50,33 @@ const reviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
         <Heading as="h1" textAlign="center" color="#FF3864">
           Cohorts
         </Heading>
-        <SimpleGrid
-          columns={4}
-          fontFamily="texturina"
-          justifyContent="center"
-          alignItems="center"
-          spacingX={2}
-          mb={-3}
-          w="full"
-        >
-          <Box justifySelf="start" pl={4}>
-            Address
+        {!isLoading && (
+          <SimpleGrid
+            columns={4}
+            fontFamily="texturina"
+            justifyContent="center"
+            alignItems="center"
+            spacingX={2}
+            mb={-3}
+            w="full"
+          >
+            <Box justifySelf="start" pl={4}>
+              Address
+            </Box>
+            <Box justifySelf="center">Stake</Box>
+            <Box justifySelf="center">Staking Date</Box>
+            <Box />
+          </SimpleGrid>
+        )}
+        {isLoading && (
+          <Box w="full" textAlign="center" p={2} fontFamily="texturina">
+            <Spinner size="xl" my="50" color="red" emptyColor="purple" />
+            <Text>Loading cohorts...</Text>
           </Box>
-          <Box justifySelf="center">Stake</Box>
-          <Box justifySelf="center">Staking Date</Box>
-          <Box />
-        </SimpleGrid>
+        )}
         {renderCohorts}
       </Stack>
-      <Box w={["full", "full", "80%"]}>
-        <Box w={["25%"]} alignSelf="start" my={"2rem"}>
-          <Link href="/admin">
-            <Button w="full" variant="outline">
-              back
-            </Button>
-          </Link>
-        </Box>
-      </Box>
+      {!isLoading && <BackButton />}
       {children}
     </>
   );
