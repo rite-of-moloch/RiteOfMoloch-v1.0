@@ -13,7 +13,7 @@ import { useFormContext } from "context/FormContext";
 import useCreateCohort from "../hooks/useCreateCohort";
 import { useNetwork } from "wagmi";
 import { initDataDeployCohort } from "utils/types/initDataDeployCohort";
-import { create } from "domain";
+import CohortConfirmation from "components/CohortConfirmationModal";
 
 interface PreviewNewCohortProps {
   children?: ReactNode;
@@ -38,7 +38,6 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     nameSBT,
     symbolSBT,
     uriSBT,
-    // sbtImage,
     assetAmount,
     shareThreshold,
     onboardingPeriod,
@@ -85,148 +84,151 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     1,
   ]);
 
-  // console.log(createCohort);
-
   const handleDeployCohort = (): void => {
     console.log("deploying");
     createCohort && createCohort();
   };
 
   return (
-    <Box display={displayPreviewNewCohort ? "inline" : "none"}>
-      <SimpleGrid
-        columns={2}
-        spacingX={6}
-        rounded="xl"
-        fontFamily="texturina"
-        border="1px solid #FF3864"
-        bg="black"
-        px={"5%"}
-        py={6}
-        m="auto"
-        w="full"
-      >
-        <Box>
-          <Stack>
-            <Text fontSize="lg" color="red" fontWeight="semibold">
-              {nameCohort.toUpperCase()}
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Name SBT:</span>
-              {nameSBT}
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Symbol SBT:</span> {symbolSBT}
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Stake per member:</span>
-              {assetAmount} {assetAmount && assetAmount > 1 && "days"}
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Staking duration:</span>
-              {stakeDuration} {stakeDuration && stakeDuration > 1 && "days"}
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Cohort size:</span> {cohortSize}
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Shares per member:</span>{" "}
-              {shareThreshold}
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Onboarding period:</span>{" "}
-              {onboardingPeriod}{" "}
-              {onboardingPeriod && onboardingPeriod > 1 && "days"}
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Staking asset address:</span>
-              <Text fontSize="xx-small">{blockExplorerLink(stakingAsset)}</Text>
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Moloch DAO address:</span>
-
-              <Text fontSize="xx-small">
-                {blockExplorerLink(membershipCriteria)}
+    <>
+      <Box display={displayPreviewNewCohort ? "inline" : "none"}>
+        <SimpleGrid
+          columns={2}
+          spacingX={6}
+          rounded="xl"
+          fontFamily="texturina"
+          border="1px solid #FF3864"
+          bg="black"
+          px={"5%"}
+          py={6}
+          m="auto"
+          w="full"
+        >
+          <Box>
+            <Stack>
+              <Text fontSize="lg" color="red" fontWeight="semibold">
+                {nameCohort.toUpperCase()}
               </Text>
-            </Text>
-
-            <Text>
-              <span style={{ color: "gray" }}>Treasury address:</span>
-
-              <Text fontSize="xx-small">{blockExplorerLink(treasury)}</Text>
-            </Text>
-            {topHatWearer !== "" && (
               <Text>
-                <span style={{ color: "gray" }}>TOP HAT address:</span>
-
-                <span>
-                  {
-                    <Text fontSize="xx-small">
-                      {blockExplorerLink(topHatWearer)}
-                    </Text>
-                  }
-                </span>
+                <span style={{ color: "gray" }}>Name SBT:</span>
+                {nameSBT}
               </Text>
-            )}
-            {tophatID && (
               <Text>
-                <span style={{ color: "gray" }}>TOP HAT ID:</span> {tophatID}
+                <span style={{ color: "gray" }}>Symbol SBT:</span> {symbolSBT}
               </Text>
-            )}
-            {admin1 !== "" && (
               <Text>
-                <span style={{ color: "gray" }}>Admin address 1:</span>
-
-                {<Text fontSize="xx-small">{blockExplorerLink(admin1)}</Text>}
+                <span style={{ color: "gray" }}>Stake per member:</span>
+                {assetAmount} {assetAmount && assetAmount > 1 && "days"}
               </Text>
-            )}
-            {admin2 !== "" && (
               <Text>
-                <span style={{ color: "gray" }}>Admin address 2:</span>
-
-                {<Text fontSize="xx-small">{blockExplorerLink(admin2)}</Text>}
+                <span style={{ color: "gray" }}>Staking duration:</span>
+                {stakeDuration} {stakeDuration && stakeDuration > 1 && "days"}
               </Text>
-            )}
-          </Stack>
-        </Box>
-        <Box pt={8}>
-          <Image
-            src={uriSBT}
-            alt={`${nameSBT} SBT image preview`}
-            rounded="xl"
-            m="auto"
-          />
-        </Box>
-      </SimpleGrid>
-      <HStack my={10} mx="auto" spacing={6} w={"full"}>
-        <Box w="50%">
-          <Button
-            variant="ghost"
-            w="full"
-            color="red"
-            border="1px"
-            rounded="sm"
-            onClick={handleBack}
-            disabled={isSuccessApprove || isLoadingApprove}
-          >
-            Back
-          </Button>
-        </Box>
-        <Box w="50%">
-          <Button
-            variant="solid"
-            w="full"
-            color="black"
-            onClick={() => handleDeployCohort && handleDeployCohort()}
-            isLoading={isLoadingApprove}
-            loadingText="creating cohort..."
-            disabled={isSuccessApprove}
-          >
-            {!isSuccessApprove ? "Deploy cohort" : "Cohort deployed!"}
-          </Button>
-        </Box>
-      </HStack>
-    </Box>
+              <Text>
+                <span style={{ color: "gray" }}>Cohort size:</span> {cohortSize}
+              </Text>
+              <Text>
+                <span style={{ color: "gray" }}>Shares per member:</span>{" "}
+                {shareThreshold}
+              </Text>
+              <Text>
+                <span style={{ color: "gray" }}>Onboarding period:</span>{" "}
+                {onboardingPeriod}{" "}
+                {onboardingPeriod && onboardingPeriod > 1 && "days"}
+              </Text>
+              <Text>
+                <span style={{ color: "gray" }}>Staking asset address:</span>
+                <Text fontSize="xx-small">
+                  {blockExplorerLink(stakingAsset)}
+                </Text>
+              </Text>
+              <Text>
+                <span style={{ color: "gray" }}>Moloch DAO address:</span>
+
+                <Text fontSize="xx-small">
+                  {blockExplorerLink(membershipCriteria)}
+                </Text>
+              </Text>
+
+              <Text>
+                <span style={{ color: "gray" }}>Treasury address:</span>
+
+                <Text fontSize="xx-small">{blockExplorerLink(treasury)}</Text>
+              </Text>
+              {topHatWearer !== "" && (
+                <Text>
+                  <span style={{ color: "gray" }}>TOP HAT address:</span>
+
+                  <span>
+                    {
+                      <Text fontSize="xx-small">
+                        {blockExplorerLink(topHatWearer)}
+                      </Text>
+                    }
+                  </span>
+                </Text>
+              )}
+              {tophatID && (
+                <Text>
+                  <span style={{ color: "gray" }}>TOP HAT ID:</span> {tophatID}
+                </Text>
+              )}
+              {admin1 !== "" && (
+                <Text>
+                  <span style={{ color: "gray" }}>Admin address 1:</span>
+
+                  {<Text fontSize="xx-small">{blockExplorerLink(admin1)}</Text>}
+                </Text>
+              )}
+              {admin2 !== "" && (
+                <Text>
+                  <span style={{ color: "gray" }}>Admin address 2:</span>
+
+                  {<Text fontSize="xx-small">{blockExplorerLink(admin2)}</Text>}
+                </Text>
+              )}
+            </Stack>
+          </Box>
+          <Box pt={8}>
+            <Image
+              src={uriSBT}
+              alt={`${nameSBT} SBT image preview`}
+              rounded="xl"
+              m="auto"
+            />
+          </Box>
+        </SimpleGrid>
+        <HStack my={10} mx="auto" spacing={6} w={"full"}>
+          <Box w="50%">
+            <Button
+              variant="ghost"
+              w="full"
+              color="red"
+              border="1px"
+              rounded="sm"
+              onClick={handleBack}
+              disabled={isSuccessApprove || isLoadingApprove}
+            >
+              Back
+            </Button>
+          </Box>
+          <Box w="50%">
+            <Button
+              variant="solid"
+              w="full"
+              color="black"
+              onClick={() => handleDeployCohort && handleDeployCohort()}
+              isLoading={isLoadingApprove}
+              loadingText="creating cohort..."
+              disabled={isSuccessApprove}
+            >
+              {!isSuccessApprove ? "Deploy cohort" : "Cohort deployed!"}
+            </Button>
+          </Box>
+        </HStack>
+      </Box>
+      <CohortConfirmation openLogic={isSuccessApprove} />
+    </>
   );
 };
 
