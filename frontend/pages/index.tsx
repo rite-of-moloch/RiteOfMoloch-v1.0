@@ -18,7 +18,7 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
       {isConnected && (
         <HStack justifyContent="space-around">
           <Box mr={["1rem", "2rem", "4rem"]}>
-            <Link href="/stake">
+            <Link href="/joinCohorts">
               <Button variant="red" p="1.5rem">
                 Cohort Member
               </Button>

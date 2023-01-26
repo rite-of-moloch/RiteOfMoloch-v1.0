@@ -1,4 +1,3 @@
-import React, { FC, ReactNode } from "react";
 import {
   Box,
   Heading,
@@ -7,25 +6,28 @@ import {
   Stack,
   Text,
 } from "@raidguild/design-system";
+import BackButton from "components/BackButton";
 import CohortDetail from "components/CohortDetail";
+import NotConnected from "components/NotConnected";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
+import React, { ReactNode } from "react";
+import { unixToUTC } from "utils/general";
 import { COHORTS } from "utils/subgraph/queries";
 import { Cohort } from "utils/types/subgraphQueries";
-import { unixToUTC } from "utils/general";
-import BackButton from "components/BackButton";
 import { useAccount } from "wagmi";
-import NotConnected from "components/NotConnected";
 
-interface ReviewOngoingCohortProps {
+interface JoinCohortsProps {
   children?: ReactNode;
 }
 
 /**
- * Admin page. Page for admins to view active cohorts and members
+ * Non-admin page. Page for prospective and cohort members
  *
  */
-const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
+
+const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
   const { isConnected } = useAccount();
+
   const cohortList = useSubgraphQuery(COHORTS(), true);
 
   /**
@@ -48,7 +50,7 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
         stake={cohort.tokenAmount}
         stakingDate={unixToUTC(deadline)}
         key={cohort.id}
-        memberOrAdmin={"admin"}
+        memberOrAdmin={"member"}
       />
     );
   });
@@ -59,7 +61,7 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
       {isConnected && (
         <Stack spacing={6} w={["full", "full", "80%"]} mb={6}>
           <Heading as="h1" textAlign="center" color="#FF3864">
-            Cohorts
+            Active Cohorts
           </Heading>
           {!isLoading && (
             <SimpleGrid
@@ -88,10 +90,10 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
           {renderCohorts}
         </Stack>
       )}
-      {isConnected && !isLoading && <BackButton path="/admin" />}
+      {isConnected && !isLoading && <BackButton path="/" />}
       {children}
     </>
   );
 };
 
-export default ReviewOngoingCohort;
+export default JoinCohorts;

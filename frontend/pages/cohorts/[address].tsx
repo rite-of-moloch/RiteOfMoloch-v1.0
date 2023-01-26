@@ -15,7 +15,7 @@ import { useRouter } from "next/router";
 import { COHORT_INITIATES } from "utils/subgraph/queries";
 import { MemberData } from "utils/types/subgraphQueries";
 import { useAccount, useNetwork } from "wagmi";
-import InitiateData from "components/initiateData";
+import InitiateData from "components/InitiateData";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";

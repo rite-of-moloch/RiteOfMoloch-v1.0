@@ -1,6 +1,5 @@
 import {
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
@@ -41,7 +40,7 @@ const CohortConfirmationModal: React.FC<CohortConfirmationModalProps> = ({
 
         <ModalContent minW="full">
           <ModalHeader color="red">Success!</ModalHeader>
-          {/* <ModalCloseButton /> */}
+
           <ModalBody>
             <Text textAlign="center">
               You've successfull deployed a chohort
