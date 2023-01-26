@@ -1,5 +1,7 @@
 const Button = {
-  baseStyles: {},
+  baseStyles: {
+    textDecoration: "none",
+  },
 
   variants: {
     solid: () => ({

@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-query";
 import { performQuery } from "../utils/subgraph/helpers";
 
-export const useSubgraphReactQuery = (query: string, enabled: Boolean) => {
+export const useSubgraphQuery = (query: string, enabled: Boolean) => {
   const getData = async () => {
     const results = await performQuery(query);
     const data = results?.data;

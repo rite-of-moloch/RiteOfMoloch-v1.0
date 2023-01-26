@@ -9,6 +9,7 @@ import Heading from "./components/Heading";
 import Input from "./components/Input";
 import NumberInput from "./components/Input";
 import SimpleGrid from "./components/SimpleGrid";
+import Link from "./components/Link";
 
 export const theme = extendTheme({
   components: {
@@ -22,6 +23,7 @@ export const theme = extendTheme({
     Input,
     NumberInput,
     SimpleGrid,
+    Link,
   },
   colors: {
     transparent: "transparent",
@@ -69,11 +71,6 @@ export const theme = extendTheme({
         boxSizing: "border-box",
         overflowY: "overlay",
         color: "white",
-      },
-      a: {
-        "&:hover": {
-          textDecoration: "none",
-        },
       },
       "&::-webkit-scrollbar": {
         width: "10px",

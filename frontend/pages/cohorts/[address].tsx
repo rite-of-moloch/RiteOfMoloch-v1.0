@@ -16,7 +16,7 @@ import { COHORT_INITIATES } from "utils/subgraph/queries";
 import { MemberData } from "utils/types/subgraphQueries";
 import { useAccount, useNetwork } from "wagmi";
 import InitiateData from "components/initiateData";
-import { useSubgraphReactQuery } from "hooks/useSubgraphReactQuery";
+import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";
 import useIsMember from "hooks/useIsMember";
@@ -38,7 +38,7 @@ const Cohort: FC<CohortProps> = ({ children }) => {
   const isMember = useIsMember([userAddress]);
   console.log("isMember", isMember);
 
-  const { data: initiates, isLoading } = useSubgraphReactQuery(
+  const { data: initiates, isLoading } = useSubgraphQuery(
     COHORT_INITIATES(cohortAddress),
     Boolean(cohortAddress) ? true : false
   );

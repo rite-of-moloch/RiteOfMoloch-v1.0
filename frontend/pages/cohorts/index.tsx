@@ -11,7 +11,7 @@ import {
   VStack,
 } from "@raidguild/design-system";
 import CohortDetail from "components/cohortDetail";
-import { useSubgraphReactQuery } from "hooks/useSubgraphReactQuery";
+import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { COHORTS } from "utils/subgraph/queries";
 import { Cohort } from "utils/types/subgraphQueries";
 import { unixToUTC } from "utils/general";
@@ -25,7 +25,7 @@ interface ReviewOngoingCohortProps {
 
 const reviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
   const { isConnected } = useAccount();
-  const cohortList = useSubgraphReactQuery(COHORTS(), true);
+  const cohortList = useSubgraphQuery(COHORTS(), true);
 
   /**
    * !isLoading: hook has fetched data.
