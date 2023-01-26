@@ -5,9 +5,9 @@ import { useRouter } from "next/router";
 
 interface CohortDetailProps {
   address: string;
-  stake: number | string;
+  stake: string;
   stakingDate: string;
-  memberOrAdmin: string;
+  memberOrAdmin: string | number;
 }
 
 /**
@@ -38,22 +38,6 @@ const CohortDetail: FC<CohortDetailProps> = ({
     </Link>
   );
 
-  // function for cohort members
-  const handleCohortMemberOptions = () => {
-    router.push({
-      pathname: `/joinCohorts/${address}`,
-      query: { pid: address },
-    });
-  };
-
-  // function for admin
-  const handleAdminOptions = () => {
-    router.push({
-      pathname: `/cohorts/${address}`,
-      query: { pid: address },
-    });
-  };
-
   return (
     <>
       <SimpleGrid
@@ -73,16 +57,17 @@ const CohortDetail: FC<CohortDetailProps> = ({
         <Box justifySelf="center">{stake}</Box>
         <Box justifySelf="center">{stakingDate}</Box>
         <Box justifySelf="end">
-          <Button
-            size="xs"
-            onClick={
-              memberOrAdmin === "admin"
-                ? handleAdminOptions
-                : handleCohortMemberOptions
+          <Link
+            href={
+              memberOrAdmin === "member"
+                ? `/joinCohorts/${address}`
+                : `/cohorts/${address}`
             }
           >
-            {memberOrAdmin === "admin" ? "Manage" : "Details"}
-          </Button>
+            <Button size="xs">
+              {memberOrAdmin === "admin" ? "Manage" : "Details"}
+            </Button>
+          </Link>
         </Box>
       </SimpleGrid>
     </>

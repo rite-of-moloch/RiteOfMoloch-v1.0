@@ -1,8 +1,8 @@
-import { Box, Button, Link, SimpleGrid } from "@raidguild/design-system";
+import { Box, Link, SimpleGrid } from "@raidguild/design-system";
 import { FC } from "react";
 import { MemberData } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
-import CohortMemberModal from "./cohortMemberModal";
+import CohortMemberModal from "./CohortMemberModal";
 
 const initiateData: FC<MemberData> = ({ address, id, joinedAt, stake }) => {
   const { chain } = useNetwork();
@@ -35,7 +35,12 @@ const initiateData: FC<MemberData> = ({ address, id, joinedAt, stake }) => {
       <Box justifySelf="center">{stake}</Box>
       <Box justifySelf="center">{joinedAt}</Box>
       <Box justifySelf="end">
-        <CohortMemberModal initiateData={{ address, id, joinedAt, stake }} />
+        <CohortMemberModal
+          address={address}
+          id={id}
+          joinedAt={joinedAt}
+          stake={stake}
+        />
       </Box>
     </SimpleGrid>
   );

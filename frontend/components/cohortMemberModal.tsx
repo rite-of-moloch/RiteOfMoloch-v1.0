@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Button,
   ModalBody,
@@ -14,23 +15,28 @@ import {
 } from "@raidguild/design-system";
 import { Modal } from "@chakra-ui/modal";
 import { CohortMetadata, MemberData } from "utils/types/subgraphQueries";
-import { useAccount, useNetwork } from "wagmi";
+import { useNetwork } from "wagmi";
 import { unixToUTC } from "utils/general";
 import { COHORT_METADATA } from "utils/subgraph/queries";
 import { useRouter } from "next/router";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
-import useIsMember from "hooks/useIsMember";
+// import useIsMember from "hooks/useIsMember";
 
 interface CohortMemberModalProps {
-  initiateData: MemberData;
+  address: string;
+  id: string;
+  joinedAt: string;
+  stake: string;
 }
 
 const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
-  initiateData,
+  address,
+  id,
+  joinedAt,
+  stake,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { chain } = useNetwork();
-
   const router = useRouter();
   const { address: cohortAddress } = router.query;
 
@@ -46,6 +52,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
       Number(cohort?.createdAt) +
       Number(cohort?.time) * 1000
     ).toString();
+
     return unixToUTC(deadline);
   };
 
@@ -59,23 +66,25 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
   //   return deadlineUnix;
   // };
 
-  const blockExplorerLink = (address: string) => (
-    <Link
-      href={`${chain?.blockExplorers?.default.url}/address/${address}`}
-      isExternal
-    >
-      {address.slice(0, 4)}...{address.slice(-6)}
-    </Link>
-  );
-  // console.log(initiateData);
+  const blockExplorerLink = (address: string) => {
+    return (
+      <Link
+        href={`${chain?.blockExplorers?.default.url}/address/${address}`}
+        isExternal
+      >
+        {address?.slice(0, 4)}...{address?.slice(-6)}
+      </Link>
+    );
+  };
 
   const handleSlashStake = () => {
     console.log("slashing member stake");
     // Ethers slash function
   };
+
   return (
     <>
-      <Button onClick={onOpen} size="xxs" w="full">
+      <Button onClick={onOpen} size="xs" w="full">
         Manage
       </Button>
       <Modal isOpen={isOpen} onClose={onClose} variant="member">
@@ -107,7 +116,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
               alignItems="center"
             >
               <Box justifySelf="center" textAlign="center" w="full">
-                <Text>{blockExplorerLink(initiateData.address)}</Text>
+                <Text>{address && blockExplorerLink(address)}</Text>
               </Box>
               <Box
                 justifyContent="center"
@@ -115,10 +124,13 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
                 w="full"
                 // px={3}
               >
-                <Text>{initiateData.stake}</Text>
+                <Text>{stake}</Text>
               </Box>
               <Box justifyContent="center" textAlign="center" w="full">
-                <Text>{unixToUTC(initiateData.joinedAt)}</Text>
+                <Text>
+                  {joinedAt}
+                  {/* {unixToUTC(joinedAt)} */}
+                </Text>
               </Box>
             </SimpleGrid>
           </ModalBody>

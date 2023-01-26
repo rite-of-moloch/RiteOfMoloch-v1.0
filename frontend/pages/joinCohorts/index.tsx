@@ -76,7 +76,7 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
               <Box justifySelf="start" pl={4}>
                 Address
               </Box>
-              <Box justifySelf="center">Stake</Box>
+              <Box justifySelf="center">Required Stake</Box>
               <Box justifySelf="center">Staking Date</Box>
               <Box />
             </SimpleGrid>

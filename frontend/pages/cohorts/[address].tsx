@@ -23,11 +23,11 @@ import useIsMember from "hooks/useIsMember";
 import NobodyStaked from "components/NobodyStaked";
 import { unixToUTC } from "utils/general";
 
-interface CohortProps {
+interface CohortDetailProps {
   children: ReactNode;
 }
 
-const Cohort: FC<CohortProps> = ({ children }) => {
+const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
   const { chain } = useNetwork();
   const { address, isConnected } = useAccount();
   const router = useRouter();
@@ -120,4 +120,4 @@ const Cohort: FC<CohortProps> = ({ children }) => {
   );
 };
 
-export default Cohort;
+export default CohortDetail;

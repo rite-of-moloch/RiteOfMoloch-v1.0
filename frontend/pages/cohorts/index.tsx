@@ -37,6 +37,7 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
   const cohort: Cohort[] | undefined = cohortList?.data?.cohorts;
 
   const renderCohorts = cohort?.map((cohort: Cohort) => {
+    console.log(typeof cohort.tokenAmount, cohort.tokenAmount);
     const deadline = (
       Number(cohort.createdAt) +
       Number(cohort.time) * 1000
