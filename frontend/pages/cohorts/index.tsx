@@ -14,7 +14,6 @@ import CohortDetail from "components/cohortDetail";
 import { useSubgraphReactQuery } from "hooks/useSubgraphReactQuery";
 import { COHORTS } from "utils/subgraph/queries";
 import { Cohort } from "utils/types/subgraphQueries";
-
 import { unixToUTC } from "utils/general";
 import BackButton from "components/BackButton";
 import { useAccount } from "wagmi";
@@ -88,7 +87,6 @@ const reviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
         </Stack>
       )}
       {isConnected && !isLoading && <BackButton path="/admin" />}
-
       {children}
     </>
   );

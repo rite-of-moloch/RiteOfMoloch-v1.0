@@ -4,10 +4,10 @@ import { MemberData } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
 import CohortMemberModal from "./cohortMemberModal";
 
-const InitiateData: FC<MemberData> = ({ address, id, joinedAt, stake }) => {
+const initiateData: FC<MemberData> = ({ address, id, joinedAt, stake }) => {
   const { chain } = useNetwork();
 
-  const timeUTC = (time: string) => new Date(time).toUTCString();
+  // const timeUTC = (time: string) => new Date(time).toUTCString();
 
   const blockExplorerLink = (address: string) => (
     <Link
@@ -41,4 +41,4 @@ const InitiateData: FC<MemberData> = ({ address, id, joinedAt, stake }) => {
   );
 };
 
-export default InitiateData;
+export default initiateData;

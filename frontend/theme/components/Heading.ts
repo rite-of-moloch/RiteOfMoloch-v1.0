@@ -1,6 +1,7 @@
 const Heading = {
   baseStyle: {
     fontFamily: "texturina",
+    color: "white",
   },
 };
 

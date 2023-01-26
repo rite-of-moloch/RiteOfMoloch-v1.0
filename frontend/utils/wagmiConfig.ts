@@ -39,8 +39,8 @@ const gnosis: Chain = {
 export const { chains, provider } = configureChains(
   [gnosis, chain.goerli],
   [
-    alchemyProvider({ apiKey: process.env.REACT_APP_ALCHEMY_ID }),
-    infuraProvider({ apiKey: process.env.REACT_APP_INFURA_ID }),
+    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
+    infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_ID }),
     publicProvider(),
   ],
   { stallTimeout: 5000 }

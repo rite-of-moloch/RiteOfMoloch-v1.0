@@ -30,12 +30,6 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { chain } = useNetwork();
-  const { address } = useAccount();
-
-  const userAddress: string = address ? address : "";
-
-  const isMember = useIsMember([userAddress]);
-  console.log(isMember);
 
   const router = useRouter();
   const { address: cohortAddress } = router.query;
@@ -54,6 +48,16 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
     ).toString();
     return unixToUTC(deadline);
   };
+
+  // const daysLeftToSlash = () => {
+  //   const todayUnix = new Date().getTime();
+  //   const deadlineUnix =
+  //     Number(cohort?.createdAt) + Number(cohort?.time) * 1000;
+
+  //   const difference = deadlineUnix - todayUnix;
+
+  //   return deadlineUnix;
+  // };
 
   const blockExplorerLink = (address: string) => (
     <Link
@@ -129,8 +133,8 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
               >
                 Slash Stake
               </Button>
-              <Text mt={1} fontSize="xx-small" color="red">
-                Slashing is available in {getDeadline()} days
+              <Text mt={1} fontSize="xx-small" color="red" textAlign="center">
+                Slashing is available on {getDeadline()}
               </Text>
             </Box>
           </ModalFooter>

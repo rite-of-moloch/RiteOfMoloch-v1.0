@@ -12,17 +12,15 @@ import {
   VStack,
 } from "@raidguild/design-system";
 import { useRouter } from "next/router";
-import {
-  COHORT_INITIATES,
-  COHORTS,
-  COHORT_METADATA,
-} from "utils/subgraph/queries";
+import { COHORT_INITIATES } from "utils/subgraph/queries";
 import { MemberData } from "utils/types/subgraphQueries";
 import { useAccount, useNetwork } from "wagmi";
 import InitiateData from "components/initiateData";
 import { useSubgraphReactQuery } from "hooks/useSubgraphReactQuery";
 import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";
+import useIsMember from "hooks/useIsMember";
+import NobodyStaked from "components/NobodyStaked";
 
 interface CohortProps {
   children: ReactNode;
@@ -30,19 +28,20 @@ interface CohortProps {
 
 const Cohort: FC<CohortProps> = ({ children }) => {
   const { chain } = useNetwork();
-  const { isConnected } = useAccount();
+  const { address, isConnected } = useAccount();
   const router = useRouter();
-  const { address } = router.query;
+  const { address: cohortAddress } = router.query;
 
-  const {
-    data: initiates,
-    isLoading,
-    error,
-  } = useSubgraphReactQuery(
-    COHORT_INITIATES(address),
-    Boolean(address) ? true : false
+  const userAddress: string = address ? address : "";
+
+  const isMember = useIsMember([userAddress]);
+  console.log("isMember", isMember);
+
+  const { data: initiates, isLoading } = useSubgraphReactQuery(
+    COHORT_INITIATES(cohortAddress),
+    Boolean(cohortAddress) ? true : false
   );
-  console.log(isLoading);
+  // console.log(isLoading);
 
   const initiateList: MemberData[] | null =
     initiates?.cohort && initiates?.cohort?.initiates;
@@ -84,14 +83,8 @@ const Cohort: FC<CohortProps> = ({ children }) => {
           <Heading as="h1" textAlign="center" color="red">
             Cohort Initiates
           </Heading>
-          <Heading
-            as="h4"
-            fontSize="md"
-            fontWeight="normal"
-            textAlign="center"
-            color="white"
-          >
-            {address}
+          <Heading as="h4" fontSize="md" fontWeight="normal" textAlign="center">
+            {cohortAddress}
           </Heading>
           {isInitiates && (
             <SimpleGrid
@@ -116,33 +109,12 @@ const Cohort: FC<CohortProps> = ({ children }) => {
           )}
           {isInitiates
             ? !isLoading && renderInitiateList
-            : !isLoading && (
-                <VStack
-                  border="1px solid #FF3864"
-                  textAlign="center"
-                  alignSelf="center"
-                  fontFamily="texturina"
-                  rounded="lg"
-                  bg="black"
-                  p={4}
-                  w={["full", "80%"]}
-                >
-                  <Box mb={"0.5em"}>
-                    <Text>Nobody has staked to this cohort yet...</Text>
-                  </Box>
-                  <Box
-                    bgImage="/assets/raid__banner.png"
-                    bgPosition="center"
-                    bgRepeat="no-repeat"
-                    w="full"
-                    h="89px"
-                  />
-                </VStack>
-              )}
+            : !isLoading && <NobodyStaked />}
 
           <BackButton path="/cohorts" />
         </Stack>
       )}
+      {children}
     </>
   );
 };
