@@ -21,6 +21,7 @@ import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";
 import useIsMember from "hooks/useIsMember";
 import NobodyStaked from "components/NobodyStaked";
+import { unixToUTC } from "utils/general";
 
 interface CohortProps {
   children: ReactNode;
@@ -52,7 +53,7 @@ const Cohort: FC<CohortProps> = ({ children }) => {
       <InitiateData
         address={initiate.address}
         id={initiate.id}
-        joinedAt={initiate.joinedAt}
+        joinedAt={unixToUTC(initiate.joinedAt)}
         stake={initiate.stake}
         key={initiate.id}
       />
