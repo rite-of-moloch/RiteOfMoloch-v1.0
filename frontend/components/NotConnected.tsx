@@ -16,7 +16,7 @@ const NotConnected: React.FC<NotConnectedProps> = ({ children }) => {
         border="red 1px solid"
         rounded="lg"
         textAlign="center"
-        w={["50%", "50%", "30%"]}
+        w={["60%", "60%", "50%", "40%"]}
         py="5rem"
       >
         <ConnectWallet />

@@ -6,6 +6,7 @@ import {
   Link,
   VStack,
   Image,
+  Heading,
 } from "@raidguild/design-system";
 import { useAccount, useNetwork } from "wagmi";
 import { unixToUTC } from "utils/general";
@@ -104,15 +105,18 @@ const CohortDetailModal: React.FC<CohortDetailModalProps> = ({ children }) => {
         py={6}
         w={["full", "90%", "70%"]}
       >
+        <Heading as="h2" fontSize="md" color="red" my={3}>
+          <Text>{cohortData?.id}</Text>
+        </Heading>
         <SimpleGrid columns={3} spacingX={2} w="full">
           <Box justifySelf="start" textAlign="center" w="full">
-            Address:
+            Address
           </Box>
           <Box justifySelf="center" textAlign="center" w="full">
-            Shares:
+            Shares
           </Box>
           <Box justifySelf="center" textAlign="center" w="full">
-            Date Staked:
+            Date Staked
           </Box>
         </SimpleGrid>
         <SimpleGrid
