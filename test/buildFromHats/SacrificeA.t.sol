@@ -31,7 +31,6 @@ contract SacrificeA is TestHelper {
         Data.membershipCriteria = dao;
         Data.stakingAsset = address(daoToken);
         Data.treasury = dao;
-        Data.topHatWearer = address(0); // todo: add existing topHat address
         Data.admin1 = alice;
         Data.admin2 = address(0);
         Data.cohortSize = 20;

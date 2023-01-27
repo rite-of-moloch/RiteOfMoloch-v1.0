@@ -19,7 +19,6 @@ contract RiteOfMolochFactory is InitializationData, HatsAccessControl {
         address membershipCriteria,
         address stakingAsset,
         address treasury,
-        address topHatWearer,
         uint256 threshold,
         uint256 assetAmount,
         uint256 stakeDuration
@@ -88,7 +87,6 @@ contract RiteOfMolochFactory is InitializationData, HatsAccessControl {
             initData.membershipCriteria,
             initData.stakingAsset,
             initData.treasury,
-            initData.topHatWearer,
             initData.threshold,
             initData.assetAmount,
             initData.stakeDuration

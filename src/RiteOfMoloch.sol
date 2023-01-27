@@ -4,79 +4,28 @@ pragma solidity ^0.8.4;
 
 import "lib/openzeppelin-contracts-upgradeable/contracts/utils/CountersUpgradeable.sol";
 import "lib/openzeppelin-contracts-upgradeable/contracts/token/ERC721/ERC721Upgradeable.sol";
-import "./InitializationData.sol";
+import "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
+import "src/InitializationData.sol";
+import "src/RiteOfMolochUtilities.sol";
 import "src/hats/HatsAccessControl.sol";
 import {IHats} from "src/hats/IHats.sol";
-
-interface MolochDAO {
-    struct Member {
-        address delegateKey; // the key responsible for submitting proposals and voting - defaults to member address unless updated
-        uint256 shares; // the # of voting shares assigned to this member
-        uint256 loot; // the loot amount available to this member (combined with shares on ragequit)
-        bool exists; // always true once a member has been created
-        uint256 highestIndexYesVote; // highest proposal index # on which the member voted YES
-        uint256 jailed; // set to proposalIndex of a passing guild kick proposal for this member, prevents voting on and sponsoring proposals
-    }
-
-    function members(address memberAddress)
-        external
-        view
-        returns (Member calldata member);
-}
-
-interface Token {
-    function transferFrom(
-        address from,
-        address to,
-        uint256 amount
-    ) external returns (bool);
-
-    function transfer(address to, uint256 amount) external returns (bool);
-}
+import {IBaal} from "src/baal/IBaal.sol";
 
 contract RiteOfMoloch is
     InitializationData,
     ERC721Upgradeable,
-    HatsAccessControl
+    HatsAccessControl,
+    RiteOfMolochUtilities
 {
     using CountersUpgradeable for CountersUpgradeable.Counter;
-
     mapping(bytes32 => RoleData) public _roles;
 
-    // role constants
     bytes32 public constant SUPER_ADMIN = keccak256("SUPER_ADMIN");
     bytes32 public constant ADMIN = keccak256("ADMIN");
 
     /*************************
-     MAPPING STRUCTS EVENTS
+     MAPPINGS AND ARRAYS
      *************************/
-
-    // logs new initiation data
-    event Initiation(
-        address newInitiate,
-        address benefactor,
-        uint256 tokenId,
-        uint256 stake,
-        uint256 deadline
-    );
-
-    // logs data when failed initiates get slashed
-    event Sacrifice(address sacrifice, uint256 slashedAmount, address slasher);
-
-    // logs data when a user successfully claims back their stake
-    event Claim(address newMember, uint256 claimAmount);
-
-    // log the new staking requirement
-    event ChangedStake(uint256 newStake);
-
-    // log the new minimum shares for DAO membership
-    event ChangedShares(uint256 newShare);
-
-    // log the new duration before an initiate can be slashed
-    event ChangedTime(uint256 newTime);
-
-    // log feedback data on chain for aggregation and graph
-    event Feedback(address user, address treasury, string feedback);
 
     // initiation participant token balances
     mapping(address => uint256) internal _staked;
@@ -87,15 +36,26 @@ contract RiteOfMoloch is
     // the number of user's a member has sacrificed
     mapping(address => uint256) public totalSlash;
 
+    // list of initiates in current cohort
+    address[] internal initiates;
+
+    // list of carry-over initiates from previous cohort
+    address[] internal survivors;
+
     /*************************
      STATE VARIABLES
      *************************/
 
     CountersUpgradeable.Counter internal _tokenIdCounter;
 
-    MolochDAO public dao;
+    // Baal DAO
+    IBaal public baal;
 
-    Token private _token;
+    // Baal sharesToken
+    IERC20 private _sharesToken;
+
+    // ERC20 interface for staking asset
+    IERC20 private _token;
 
     // cohort's base URI for accessing token metadata
     string internal __baseURI;
@@ -106,7 +66,13 @@ contract RiteOfMoloch is
     // cohort size limit
     uint256 public cohortSize;
 
-    // cohort join time limit
+    // cohort size count
+    uint256 public cohortCounter;
+
+    // cohort join duration
+    uint256 public joinDuration;
+
+    // cohort join expiration
     uint256 public joinEndTime;
 
     // minimum amount of dao shares required to be considered a member
@@ -124,7 +90,7 @@ contract RiteOfMoloch is
     // Hats protocol:
     IHats public HATS;
 
-    // Hats
+    // Hats variables
     uint256 public topHat;
     uint256 public superAdminHat;
     uint256 public adminHat;
@@ -152,45 +118,32 @@ contract RiteOfMoloch is
         // set size limit on cohort
         cohortSize = initData.cohortSize;
 
-        // set join time limit
-        joinEndTime = block.timestamp + initData.joinDuration;
+        // set join duration
+        joinDuration = initData.joinDuration;
+
+        // set join expiration
+        joinEndTime = block.timestamp + joinDuration;
 
         // initialize the SBT
         __ERC721_init(initData.sbtName, initData.sbtSymbol);
 
-        // set the interface for accessing the DAO's public members mapping
-        dao = MolochDAO(initData.membershipCriteria);
+        // set the interface for accessing the Baal's public members mapping
+        baal = IBaal(initData.membershipCriteria);
+
+        // reference sharesToken of Baal
+        _sharesToken = IERC20(baal.sharesToken());
 
         // store the treasury daoAddress
         treasury = initData.treasury;
 
         // set the interface for accessing the required staking token
-        _token = Token(initData.stakingAsset);
-
-        // set the minimum shares
-        minimumShare = initData.threshold;
-
-        // point to Hats Protocol
-        HATS = IHats(hatsProtocol);
-
-        // point access control functionality to Hats protocol
-        _changeHatsContract(hatsProtocol);
-
-        // create/mint Hats
-        if (
-            initData.topHatWearer != address(0) &&
-            initData.topHatId != 0 &&
-            HATS.isWearerOfHat(initData.topHatWearer, initData.topHatId)
-        ) {
-            // todo: add logic for existing topHat
-
-            return;
-        } else {
-            _buildNewHatTree(caller_, initData.admin1, initData.admin2);
-        }
+        _token = IERC20(initData.stakingAsset);
 
         // set the minimum stake requirement
         _setMinimumStake(initData.assetAmount);
+
+        // set the minimum shares
+        _setShareThreshold(initData.threshold);
 
         // set the cohort staking duration
         _setMaxDuration(initData.stakeDuration);
@@ -198,7 +151,31 @@ contract RiteOfMoloch is
         // set the cohort token's base uri
         _setBaseUri(initData.baseUri);
 
-        // todo: send proposal to DAO for ROM to become a Shaman
+        // point to Hats Protocol
+        HATS = IHats(hatsProtocol);
+
+        // point access control functionality to Hats protocol
+        _changeHatsContract(hatsProtocol);
+
+        // encode data for Baal proposal
+        bytes memory data1 = _encodeShamanProposal(address(this), 2);
+        bytes memory multisendMetaTx;
+
+        // create/mint Hats
+        if (
+            initData.topHatId != 0 &&
+            HATS.isWearerOfHat(address(baal), initData.topHatId)
+        ) {
+            topHat = initData.topHatId;
+            bytes memory data2 = _encodeCreateHatProposal(topHat);
+            multisendMetaTx = _encodeMultiMetaTx([data1, data2]);
+        } else {
+            _buildNewHatTree(caller_, initData.admin1, initData.admin2);
+            multisendMetaTx = _encodeSingleMetaTx(data1);
+        }
+
+        // send multiSend proposal to Baal
+        _submitBaalProposal(multisendMetaTx);
     }
 
     /*************************
@@ -234,7 +211,6 @@ contract RiteOfMoloch is
      * Stakes required tokens and mints soul bound token
      */
     function joinInitiation(address user) public callerIsUser {
-        // enforce time and size contraints
         require(block.timestamp <= joinEndTime, "This cohort is now closed");
         require(
             _tokenIdCounter.current() <= cohortSize,
@@ -243,6 +219,9 @@ contract RiteOfMoloch is
 
         // enforce the initiate or sponsor transfers correct tokens to the contract
         require(_stake(user), "Staking failed!");
+
+        // add user to initiate's list
+        initiates.push(user);
 
         // issue a soul bound token
         _soulBind(user);
@@ -262,7 +241,6 @@ contract RiteOfMoloch is
      */
     function cryForHelp(string calldata feedback) public {
         require(balanceOf(msg.sender) == 1, "Only cohort participants!");
-
         emit Feedback(msg.sender, treasury, feedback);
     }
 
@@ -274,15 +252,19 @@ contract RiteOfMoloch is
      ACCESS CONTROL FUNCTIONS
      *************************/
 
-    /**
-     * @dev Claims the life force of failed initiates for the dao
-     * @param failedInitiates an array of user's who have failed to join the DAO
-     */
-    function sacrifice(address[] calldata failedInitiates)
-        public
+    function changeJoinTimeDuration(uint256 _joinDuration)
+        external
         onlyRole(ADMIN)
     {
-        _darkRitual(failedInitiates);
+        joinDuration = _joinDuration;
+    }
+
+    function extendJoinTimeLimit(uint256 _extension) external onlyRole(ADMIN) {
+        joinEndTime = joinEndTime + _extension;
+    }
+
+    function changeJoinSizeLimit(uint256 _cohortSize) external onlyRole(ADMIN) {
+        cohortSize = _cohortSize;
     }
 
     /**
@@ -301,43 +283,40 @@ contract RiteOfMoloch is
         external
         onlyRole(ADMIN)
     {
-        // enforce that the minimum share threshold isn't zero
-        require(
-            newShareThreshold > 0,
-            "Minimum shares must be greater than zero!"
-        );
-
-        // set the minimum number of DAO shares required to graduate
-        minimumShare = newShareThreshold;
-
-        // log data for the new minimum share threshold
-        emit ChangedShares(newShareThreshold);
-    }
-
-    function extendJoinTimeLimit(uint256 _extension) external onlyRole(ADMIN) {
-        joinEndTime = joinEndTime + _extension;
+        _setShareThreshold(newShareThreshold);
     }
 
     /**
      * @dev Allows changing the maximum initiation duration
      * @param newMaxTime the length in seconds until an initiate's stake is forfeit
      */
-    function setMaxDuration(uint256 newMaxTime) external onlyRole(SUPER_ADMIN) {
+    function setMaxDuration(uint256 newMaxTime) external onlyRole(ADMIN) {
         _setMaxDuration(newMaxTime);
     }
 
-    function changeJoinSizeLimit(uint256 _cohortSize)
-        external
-        onlyRole(SUPER_ADMIN)
-    {
-        cohortSize = _cohortSize;
+    /* DEPRECATED
+     * @dev Claims the life force of failed initiates for the dao
+     * @param failedInitiates an array of user's who have failed to join the DAO
+     */
+    // function sacrifice(address[] calldata failedInitiates)
+    //     external
+    //     onlyRole(ADMIN)
+    // {
+    //     _darkRitual(failedInitiates);
+    // }
+
+    /**
+     * @dev Claims the life force of failed initiates for the dao
+     */
+    function sacrifice() external onlyRole(SUPER_ADMIN) {
+        _darkRitual();
     }
 
     /*************************
      PRIVATE OR INTERNAL
      *************************/
 
-    function _setMinimumStake(uint256 newMinimumStake) internal {
+    function _setMinimumStake(uint256 newMinimumStake) internal virtual {
         // enforce that the minimum stake isn't zero
         require(
             newMinimumStake > 0,
@@ -349,6 +328,20 @@ contract RiteOfMoloch is
 
         //  new staking requirement data
         emit ChangedStake(newMinimumStake);
+    }
+
+    function _setShareThreshold(uint256 newShareThreshold) internal virtual {
+        // enforce that the minimum share threshold isn't zero
+        require(
+            newShareThreshold > 0,
+            "Minimum shares must be greater than zero!"
+        );
+
+        // set the minimum number of DAO shares required to graduate
+        minimumShare = newShareThreshold;
+
+        // log data for the new minimum share threshold
+        emit ChangedShares(newShareThreshold);
     }
 
     function _setMaxDuration(uint256 newMaxTime) internal virtual {
@@ -435,59 +428,98 @@ contract RiteOfMoloch is
         _mint(_user, tokenId);
     }
 
-    /**
+    /* DEPRECATED
      * @dev Claims failed initiate tokens for the DAO
      * @param _failedInitiates an array of user's who have failed to join the DAO
      */
-    function _darkRitual(address[] calldata _failedInitiates) internal virtual {
+    //  function _darkRitual(address[] calldata _failedInitiates) internal virtual {}
+
+    /**
+     * @dev Claims failed initiate tokens for the DAO
+     */
+    function _darkRitual() internal virtual {
         // the total amount of blood debt
         uint256 total;
 
-        for (uint256 i = 0; i < _failedInitiates.length; ++i) {
+        for (uint256 i = 0; i < initiates.length; ++i) {
             // store each initiate's address
-            address initiate = _failedInitiates[i];
+            address initiate = initiates[i];
 
             // access each initiate's starting time
             uint256 deadline = deadlines[initiate];
 
             if (block.timestamp > deadline && _staked[initiate] > 0) {
-                // access each initiate's balance
-                uint256 balance = _staked[initiate];
-
-                // calculate the total blood debt
-                total += balance;
-
-                // log sacrifice data
-                emit Sacrifice(initiate, balance, msg.sender);
-
-                // remove the sacrifice's balance
-                delete _staked[initiate];
-
-                // remove the sacrifice's starting time
-                delete deadlines[initiate];
+                total += _bloodLetting(initiate);
+                delete initiates[i];
             } else {
                 continue;
             }
         }
 
+        _bloodFeast(total);
+        _consolidateSurvivors();
+        _riseFromAshes();
+    }
+
+    function _bloodLetting(address _failedInitiate)
+        internal
+        virtual
+        returns (uint256)
+    {
+        // access each initiate's balance
+        uint256 balance = _staked[_failedInitiate];
+
+        // log sacrifice data
+        emit Sacrifice(_failedInitiate, balance, msg.sender);
+
+        // remove the sacrifice's balance
+        delete _staked[_failedInitiate];
+
+        // remove the sacrifice's starting time
+        delete deadlines[_failedInitiate];
+
+        return balance;
+    }
+
+    function _bloodFeast(uint256 _blood) internal virtual {
         // drain the life force from the sacrifice
-        require(_token.transfer(treasury, total), "Failed Sacrifice!");
+        require(_token.transfer(treasury, _blood), "Failed Sacrifice!");
 
         // increase the slasher's essence
-        totalSlash[msg.sender] += total;
+        totalSlash[msg.sender] += _blood;
+    }
+
+    function _consolidateSurvivors() internal virtual {
+        for (uint256 i = 0; i < initiates.length; i++) {
+            if (initiates[i] != address(0)) {
+                // add survivors of bloodLetting to survivors list
+                survivors.push(initiates[i]);
+            } else {
+                continue;
+            }
+        }
+        // replace initiates list with updated survivors list
+        initiates = survivors;
+
+        // reset survivors to an empty list
+        delete survivors;
+    }
+
+    function _riseFromAshes() internal virtual {
+        // reset to initData values
+        require(
+            cohortCounter <= initiates.length,
+            "Carry-over initiates exceed cohort-count"
+        );
+        cohortCounter = initiates.length;
+        joinEndTime = block.timestamp + joinDuration;
     }
 
     /**
      * @dev Authenticates users through the DAO contract
      */
     function _checkMember() internal virtual {
-        // access membership data from the DAO
-        MolochDAO.Member memory member = dao.members(msg.sender);
-
-        // access the user's total shares
-        uint256 shares = member.shares;
-
-        // enforce that the user is a member
+        uint256 shares = _sharesToken.balanceOf(msg.sender);
         require(shares >= minimumShare, "You must be a member!");
     }
 
@@ -501,30 +533,8 @@ contract RiteOfMoloch is
         address _admin2
     ) internal virtual {
         topHat = HATS.mintTopHat(address(this), "ROM TopHat", "");
-
-        // super-admin privileges: grant/revoke other admin, access control
-        superAdminHat = HATS.createHat(
-            topHat,
-            "ROM Super-Admin",
-            1,
-            address(dao),
-            address(dao),
-            true,
-            ""
-        );
-
-        // admin privileges: access control
-        // 1 hat for address(this) + additional hats for number of admin
-        adminHat = HATS.createHat(
-            superAdminHat,
-            "ROM Admin",
-            3,
-            _deployer,
-            _deployer,
-            true,
-            ""
-        );
-
+        superAdminHat = _createSuperAdminHat();
+        adminHat = _createAdminHats(_deployer);
         /**
          * @dev Mint superAdmin & admin hats to Deployer
          * DAO can grant/revoke superAdmin (after topHat is transferred below)
@@ -544,7 +554,35 @@ contract RiteOfMoloch is
         _grantRole(SUPER_ADMIN, superAdminHat);
         _grantRole(ADMIN, adminHat);
 
-        HATS.transferHat(topHat, address(this), address(dao));
+        HATS.transferHat(topHat, address(this), address(baal));
+    }
+
+    function _createSuperAdminHat() internal returns (uint256) {
+        // super-admin privileges: grant/revoke other admin, access control
+        return
+            HATS.createHat(
+                topHat,
+                "ROM Super-Admin",
+                1,
+                address(baal),
+                address(baal),
+                true,
+                ""
+            );
+    }
+
+    function _createAdminHats(address _deployer) internal returns (uint256) {
+        // admin privileges: access control
+        return
+            HATS.createHat(
+                superAdminHat,
+                "ROM Admin",
+                3,
+                _deployer,
+                _deployer,
+                true,
+                ""
+            );
     }
 
     /*************************
@@ -561,12 +599,8 @@ contract RiteOfMoloch is
     /**
      * @dev returns the user's member status
      */
-    function isMember(address user) public view returns (bool memberStatus) {
-        // access membership data from the DAO
-        MolochDAO.Member memory member = dao.members(user);
-
-        // access the user's total shares
-        uint256 shares = member.shares;
+    function isMember(address user) public returns (bool memberStatus) {
+        uint256 shares = _sharesToken.balanceOf(msg.sender);
 
         if (shares >= minimumShare) {
             return true;

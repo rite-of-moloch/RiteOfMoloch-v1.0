@@ -63,7 +63,6 @@ contract TestHelper is Test, InitializationData {
         Data.membershipCriteria = dao;
         Data.stakingAsset = address(daoToken);
         Data.treasury = dao;
-        Data.topHatWearer = address(0);
         Data.admin1 = alice;
         Data.admin2 = address(0);
         Data.cohortSize = 3;

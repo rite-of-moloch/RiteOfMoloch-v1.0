@@ -27,7 +27,6 @@ contract InitializationData {
         address membershipCriteria;
         address stakingAsset;
         address treasury;
-        address topHatWearer;
         address admin1;
         address admin2;
         uint256 cohortSize;

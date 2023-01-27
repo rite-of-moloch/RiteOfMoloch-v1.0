@@ -9,22 +9,23 @@ import {IHats} from "src/hats/IHats.sol";
 import {ERC20} from "lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
 
 // create with verify
-// forge script script/test/CohortUser.s.sol:CohortUserScript --rpc-url $RU --private-key $PK --broadcast --verify --etherscan-api-key $EK -vvvv
+// forge script script/test/DeployCloneWtopHat.s.sol:DeployCloneWtopHatScript --rpc-url $RU --private-key $PK --broadcast --verify --etherscan-api-key $EK -vvvv
 
 // create without verify
-// forge script script/test/CohortUser.s.sol:CohortUserScript --rpc-url $RU --private-key $PK --broadcast -vvvv
+// forge script script/test/DeployCloneWtopHat.s.sol:DeployCloneWtopHatScript --rpc-url $RU --private-key $PK --broadcast -vvvv
 
-contract CohortUserScript is Script, InitializationData {
+contract DeployCloneWtopHatScript is Script, InitializationData {
     // constants
     ERC20 constant token = ERC20(0xA49dF10dD5B84257dE634F4350218f615471Fc69);
-    address constant baalV3 = 0x6c9110CBbCD400b768646729E5b400F0B5A6BCC7;
+    address constant baalV3 = 0x6053dE194226843E4FD99A82C1386B4C76E19E34;
     address constant deployer = 0x1A4B691738C9c8Db8f2EDf0b9207f6acb24ADF07;
     address constant admin1 = 0xa25256073cB38b8CAF83b208949E7f746f3BEBDc;
     uint256 constant minStake = 250 * 10e18;
 
     // variables
     InitData Data;
-    RiteOfMolochFactory public ROMF;
+    RiteOfMolochFactory public constant ROMF =
+        RiteOfMolochFactory(0x00b52e6d26026C853f89dC895F0ae2b0Ba7FECaA);
     RiteOfMoloch public ROM;
 
     // Hats
@@ -40,13 +41,9 @@ contract CohortUserScript is Script, InitializationData {
 
         vm.startBroadcast();
 
-        ROMF = new RiteOfMolochFactory(hatsProtocol, factoryOperatorHat);
+        // ROMF = new RiteOfMolochFactory(hatsProtocol, factoryOperatorHat);
 
         ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
-
-        token.approve(address(ROM), minStake + 100);
-
-        ROM.joinInitiation(deployer);
 
         vm.stopBroadcast();
     }
@@ -62,7 +59,8 @@ contract CohortUserScript is Script, InitializationData {
         Data.threshold = 10;
         Data.assetAmount = minStake;
         Data.stakeDuration = 10 days;
-        Data.topHatId = 0;
+        Data
+            .topHatId = 1428877173358983909117351799612040425702768654394650341498491343208448;
         Data.cohortName = "SeasonV";
         Data.sbtName = "RiteOfMolochSBT";
         Data.sbtSymbol = "SBTMoloch";
