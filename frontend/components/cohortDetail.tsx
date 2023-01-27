@@ -27,7 +27,6 @@ const CohortDetail: FC<CohortDetailProps> = ({
   memberOrAdmin,
 }) => {
   const { chain } = useNetwork();
-  const router = useRouter();
 
   const blockExplorerLink = (address: string) => (
     <Link

@@ -1,54 +1,80 @@
 import {
   Button,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  useDisclosure,
   Text,
   SimpleGrid,
   Box,
   Link,
-  Flex,
   VStack,
   Image,
 } from "@raidguild/design-system";
-import { Modal } from "@chakra-ui/modal";
-import { CohortMetadata, MemberData } from "utils/types/subgraphQueries";
-import { useNetwork } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 import { unixToUTC } from "utils/general";
 import { COHORT_INITIATES, COHORT_METADATA } from "utils/subgraph/queries";
 import { useRouter } from "next/router";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { ReactNode } from "react";
 import BackButton from "components/BackButton";
-// import useIsMember from "hooks/useIsMember";
 
 interface CohortDetailModalProps {
   children: ReactNode;
 }
 
 /**
- * Returns a modal containing data about msg.sender if he has staked to the cohort. Gives option to claim stake back
+ * Checks if msg.sender has staked to the cohort passed in by cohortAddress. Displays data about cohortAddress. msg.sender can re-claim stake, or redirect to page and
  *
- * @param address address of cohort. Gets passed into subgraphquery endpoing COHORT_INITIATES and extracts data about msg.sender
- * @returns modal with data about initiate
+ * @param cohortAddress gets passed into subgraphquery endpoints
+ * @returns
  */
 
 const CohortDetailModal: React.FC<CohortDetailModalProps> = ({ children }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure({ defaultIsOpen: true });
   const { chain } = useNetwork();
-
+  const { address } = useAccount();
   const router = useRouter();
   const { address: cohortAddress } = router.query;
 
+  // get general data about cohort
+  const cohortMetadata = useSubgraphQuery(
+    COHORT_METADATA(cohortAddress),
+    Boolean(cohortAddress)
+  );
+  const cohortData = cohortMetadata?.data?.cohort;
+  // console.log(cohortData);
+
+  // check if msg.sender has staked to cohort or not
   const cohortInitiates = useSubgraphQuery(
     COHORT_INITIATES(cohortAddress),
     Boolean(cohortAddress)
   );
-  console.log(cohortInitiates);
+  // console.log(cohortInitiates);
+
+  const isMsgSenderStaked = (): [Boolean, string | undefined] => {
+    const initiateList = cohortInitiates?.data?.cohort.initiates?.map(
+      (initiate: { [x: string]: string }) => {
+        if (address === initiate.address) {
+          return [initiate?.joinedAt, true];
+        } else {
+          return ["not staked", false];
+        }
+      }
+    );
+    console.log(initiateList);
+
+    let joinedAt: undefined | string;
+    let staked: Boolean = false;
+    initiateList?.forEach((initiate: [string, Boolean]) => {
+      console.log(initiate[1]);
+      if (initiate[1]) {
+        let joinedAt = initiate[0];
+        let staked = true;
+      } else {
+        let staked = false;
+      }
+    });
+    console.log([staked, joinedAt]);
+    return [staked, joinedAt];
+  };
+  const isStaked = isMsgSenderStaked();
+  console.log(isStaked);
 
   const blockExplorerLink = (address: string) => (
     <Link
@@ -59,21 +85,23 @@ const CohortDetailModal: React.FC<CohortDetailModalProps> = ({ children }) => {
     </Link>
   );
 
-  const handleStakeCohort = () => {
-    console.log("stake to cohort function");
-    // Ethers slash function
-  };
+  const stakeButton = (
+    <Link href={`/stake/${cohortAddress}`}>
+      <Button size="xs">Stake</Button>
+    </Link>
+  );
 
   const handleClaimStake = () => {
     console.log("claim stake function");
   };
+
   return (
     <>
       <VStack
         border="1px solid #FF3864"
         rounded="xl"
         bg="gradientSBTPrev"
-        py={10}
+        py={6}
         w={["full", "90%", "70%"]}
       >
         <SimpleGrid columns={3} spacingX={2} w="full">
@@ -100,37 +128,24 @@ const CohortDetailModal: React.FC<CohortDetailModalProps> = ({ children }) => {
           alignItems="center"
         >
           <Box justifySelf="start" textAlign="center" w="full">
-            <Text>
-              cohort address
-              {/* {blockExplorerLink(address)} */}
-            </Text>
+            {blockExplorerLink(cohortData?.id)}
           </Box>
-          <Box justifyContent="center" textAlign="center" w="full">
-            <Text>
-              stake
-              {/* {stake} */}
-            </Text>
+          <Box justifySelf="center" textAlign="center" w="full">
+            {cohortData?.tokenAmount}
           </Box>
-          <Box justifyContent="center" textAlign="center" w="full">
-            <Text>ok</Text>
+          {/* show dateStaked for msg.sender */}
+          <Box justifySelf="center" textAlign="center" w="full">
+            {isStaked[0] ? unixToUTC(isStaked[1] || "") : stakeButton}
           </Box>
         </SimpleGrid>
-        {/* <Flex border="1px" w="full" m="auto"> */}
         <Image
           m="auto"
           src={"/assets/season-v-token.svg"}
           alt="SBT image preview"
-          w="50%"
+          w="250px"
         />
-        {/* </Flex> */}
-
         <Box>
-          <Button
-            variant="solid"
-            size="md"
-            onClick={handleClaimStake}
-            // disabled={true}
-          >
+          <Button size="md" onClick={handleClaimStake} disabled={!isStaked[0]}>
             Claim Stake
           </Button>
         </Box>
