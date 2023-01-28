@@ -15,7 +15,7 @@ contract TestHelper is Test, InitializationData {
     uint256 constant DAY_IN_SECONDS = 86400;
 
     address dao = 0x90F79bf6EB2c4f870365E785982E1f101E93b906;
-    TestToken public daoToken;
+    TestToken public stakingAsset;
     InitData Data;
 
     // DAO members
@@ -44,16 +44,22 @@ contract TestHelper is Test, InitializationData {
     // staking
     uint256 minStake = 200;
 
+    function setUp() public virtual {
+        // set and deploy ROM-Factory
+        setUpFactory();
+        // set initial data for ROM clone
+        createInitData();
+        // // deploy ROM clone
+        ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
+    }
+
     function setUpFactory() public {
         // deploy Hats protocol
         HATS = new Hats("Local-Hats", "");
-
         // set token to be staked
-        daoToken = new TestToken();
-
+        stakingAsset = new TestToken();
         // factory hats setup
         createFactoryHats();
-
         // deploy ROM factory
         ROMF = new RiteOfMolochFactory(address(HATS), factoryOperatorHat);
     }
@@ -61,7 +67,7 @@ contract TestHelper is Test, InitializationData {
     // INIT CLONE DATA
     function createInitData() public virtual {
         Data.membershipCriteria = dao;
-        Data.stakingAsset = address(daoToken);
+        Data.stakingAsset = address(stakingAsset);
         Data.treasury = dao;
         Data.admin1 = alice;
         Data.admin2 = address(0);
@@ -75,18 +81,19 @@ contract TestHelper is Test, InitializationData {
         Data.sbtName = "RiteOfMolochSBT";
         Data.sbtSymbol = "SBTMoloch";
         Data.baseUri = "x";
+        Data.shamanOn = false;
     }
 
     // UTILS
     function mintTokens(address[4] memory eoas) public {
         for (uint256 i = 0; i < eoas.length; i++) {
-            daoToken.mint(eoas[i], 1000);
+            stakingAsset.mint(eoas[i], 1000);
         }
     }
 
     function prankJoinInititation(address initiate) public {
         vm.startPrank(initiate);
-        daoToken.approve(address(ROM), minStake);
+        stakingAsset.approve(address(ROM), minStake);
         ROM.joinInitiation(initiate);
         vm.stopPrank();
     }
@@ -112,10 +119,8 @@ contract TestHelper is Test, InitializationData {
             true,
             ""
         );
-
         // mint factory operator
         HATS.mintHat(factoryOperatorHat, msg.sender);
-
         HATS.transferHat(factoryTopHat, address(this), address(444444));
     }
 
@@ -124,9 +129,15 @@ contract TestHelper is Test, InitializationData {
         // deployer address
         emit log_named_address("ROM  Deployer", deployer);
 
-        factoryDeployment();
-        cloneDeployment();
-        hatsIdentities();
+        // LOGS COMMENTED OUT
+        // factoryDeployment();
+        // tokenDeployment();
+        // hatsIdentities();
+        // cloneDeployment();
+    }
+
+    function tokenDeployment() public {
+        emit log_named_address("Staking Asset", address(stakingAsset));
     }
 
     // factory deployment
@@ -139,7 +150,6 @@ contract TestHelper is Test, InitializationData {
         // contract addresses
         emit log_named_address("ROM  Contract", address(ROM));
         emit log_named_address("ROM  Treasury", ROM.treasury());
-
         // cohort settings
         emit log_named_uint("Min     Share", ROM.minimumShare());
         emit log_named_uint("Min     Stake", ROM.minimumStake());
@@ -155,7 +165,6 @@ contract TestHelper is Test, InitializationData {
         emit log_named_address("Hats Protocol", address(ROM.HATS()));
         // hats
         emit log_named_uint("Top       Hat", ROM.topHat());
-        emit log_named_uint("SupAdmin  Hat", ROM.superAdminHat());
         emit log_named_uint("Admin     Hat", ROM.adminHat());
     }
 }

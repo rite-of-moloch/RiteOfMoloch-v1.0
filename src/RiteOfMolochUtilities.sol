@@ -89,7 +89,7 @@ contract RiteOfMolochUtilities {
             );
     }
 
-    function _encodeMintHatProposal(uint256 _superAdminHat, address _deployer)
+    function _encodeMintHatProposal(uint256 _adminHat, address _deployer)
         internal
         pure
         returns (bytes memory)
@@ -97,7 +97,7 @@ contract RiteOfMolochUtilities {
         return
             abi.encodeWithSignature(
                 "mintHat(uint256,address)",
-                _superAdminHat,
+                _adminHat,
                 _deployer
             );
     }
@@ -132,7 +132,7 @@ contract RiteOfMolochUtilities {
     /**
      * @dev Format multiSend for a single encoded function
      */
-    function _encodeSingleMetaTx(bytes memory _data)
+    function _encodeSingleMetaTx(bytes memory _data, address _target)
         internal
         view
         returns (bytes memory)
@@ -142,7 +142,7 @@ contract RiteOfMolochUtilities {
         metaTx = abi.encodePacked(
             metaTx,
             uint8(0),
-            address(baal),
+            address(_target),
             uint256(0),
             uint256(_data.length),
             _data

@@ -20,7 +20,6 @@ contract RiteOfMoloch is
     using CountersUpgradeable for CountersUpgradeable.Counter;
     mapping(bytes32 => RoleData) public _roles;
 
-    bytes32 public constant SUPER_ADMIN = keccak256("SUPER_ADMIN");
     bytes32 public constant ADMIN = keccak256("ADMIN");
 
     /*************************
@@ -63,6 +62,9 @@ contract RiteOfMoloch is
     // cohort name
     string public cohortName;
 
+    // cohort season counter (increases after each Sacrifice)
+    uint256 public cohortSeason;
+
     // cohort size limit
     uint256 public cohortSize;
 
@@ -92,7 +94,6 @@ contract RiteOfMoloch is
 
     // Hats variables
     uint256 public topHat;
-    uint256 public superAdminHat;
     uint256 public adminHat;
 
     constructor() {
@@ -131,7 +132,9 @@ contract RiteOfMoloch is
         baal = IBaal(initData.membershipCriteria);
 
         // reference sharesToken of Baal
-        _sharesToken = IERC20(baal.sharesToken());
+        // todo: uncomment / comment out for Forge testing
+        _sharesToken = IERC20(initData.stakingAsset); // <= for testing only
+        // _sharesToken = IERC20(baal.sharesToken()); // <= correct
 
         // store the treasury daoAddress
         treasury = initData.treasury;
@@ -157,25 +160,39 @@ contract RiteOfMoloch is
         // point access control functionality to Hats protocol
         _changeHatsContract(hatsProtocol);
 
-        // encode data for Baal proposal
-        bytes memory data1 = _encodeShamanProposal(address(this), 2);
-        bytes memory multisendMetaTx;
+        // encoded variables for Baal proposal
+        bytes memory hatsData;
+        bytes memory shamanData;
 
-        // create/mint Hats
-        if (
-            initData.topHatId != 0 &&
-            HATS.isWearerOfHat(address(baal), initData.topHatId)
-        ) {
-            topHat = initData.topHatId;
-            bytes memory data2 = _encodeCreateHatProposal(topHat);
-            multisendMetaTx = _encodeMultiMetaTx([data1, data2]);
-        } else {
-            _buildNewHatTree(caller_, initData.admin1, initData.admin2);
-            multisendMetaTx = _encodeSingleMetaTx(data1);
+        // check if DAO topHat already exists
+        bool baalHasTopHat = HATS.isWearerOfHat(
+            address(baal),
+            initData.topHatId
+        );
+
+        if (initData.shamanOn) {
+            // encode shaman proposal
+            shamanData = _encodeShamanProposal(address(this), 2);
         }
 
-        // send multiSend proposal to Baal
-        _submitBaalProposal(multisendMetaTx);
+        if (baalHasTopHat) {
+            // encode hats proposal
+            topHat = initData.topHatId;
+            hatsData = _encodeCreateHatProposal(topHat);
+        } else {
+            _buildNewHatTree(caller_, initData.admin1, initData.admin2);
+        }
+
+        if (initData.shamanOn && baalHasTopHat) {
+            // submit SHAMAN + HATS proposal
+            _submitBaalProposal(_encodeMultiMetaTx([shamanData, hatsData]));
+        } else if (!initData.shamanOn && baalHasTopHat) {
+            // submit ONLY HATS proposal
+            _submitBaalProposal(_encodeSingleMetaTx(hatsData, hatsProtocol));
+        } else if (initData.shamanOn && !baalHasTopHat) {
+            // submit ONLY SHAMAN proposal
+            _submitBaalProposal(_encodeSingleMetaTx(shamanData, address(baal)));
+        }
     }
 
     /*************************
@@ -222,6 +239,9 @@ contract RiteOfMoloch is
 
         // add user to initiate's list
         initiates.push(user);
+
+        // increment cohort count
+        cohortCounter++;
 
         // issue a soul bound token
         _soulBind(user);
@@ -308,7 +328,7 @@ contract RiteOfMoloch is
     /**
      * @dev Claims the life force of failed initiates for the dao
      */
-    function sacrifice() external onlyRole(SUPER_ADMIN) {
+    function sacrifice() external onlyRole(ADMIN) {
         _darkRitual();
     }
 
@@ -507,12 +527,16 @@ contract RiteOfMoloch is
 
     function _riseFromAshes() internal virtual {
         // reset to initData values
+        cohortCounter = initiates.length;
+
+        // carry-over is less then cohort
         require(
-            cohortCounter <= initiates.length,
+            cohortCounter <= cohortSize,
             "Carry-over initiates exceed cohort-count"
         );
-        cohortCounter = initiates.length;
+
         joinEndTime = block.timestamp + joinDuration;
+        cohortSeason++;
     }
 
     /**
@@ -533,14 +557,11 @@ contract RiteOfMoloch is
         address _admin2
     ) internal virtual {
         topHat = HATS.mintTopHat(address(this), "ROM TopHat", "");
-        superAdminHat = _createSuperAdminHat();
-        adminHat = _createAdminHats(_deployer);
+        adminHat = _createAdminHat();
         /**
-         * @dev Mint superAdmin & admin hats to Deployer
-         * DAO can grant/revoke superAdmin (after topHat is transferred below)
-         * Deployer can grant/revoke other admin
+         * @dev Mint admin hats to Deployer & admin addresses
+         * DAO can grant/revoke adminHats (after topHat is transferred below)
          */
-        HATS.mintHat(superAdminHat, _deployer);
         HATS.mintHat(adminHat, _deployer);
 
         if (_admin1 != address(0)) {
@@ -551,35 +572,20 @@ contract RiteOfMoloch is
         }
 
         // grant Hat Access Control roles
-        _grantRole(SUPER_ADMIN, superAdminHat);
         _grantRole(ADMIN, adminHat);
 
         HATS.transferHat(topHat, address(this), address(baal));
     }
 
-    function _createSuperAdminHat() internal returns (uint256) {
-        // super-admin privileges: grant/revoke other admin, access control
-        return
-            HATS.createHat(
-                topHat,
-                "ROM Super-Admin",
-                1,
-                address(baal),
-                address(baal),
-                true,
-                ""
-            );
-    }
-
-    function _createAdminHats(address _deployer) internal returns (uint256) {
+    function _createAdminHat() internal returns (uint256) {
         // admin privileges: access control
         return
             HATS.createHat(
-                superAdminHat,
+                topHat,
                 "ROM Admin",
                 3,
-                _deployer,
-                _deployer,
+                address(baal),
+                address(baal),
                 true,
                 ""
             );
@@ -592,14 +598,14 @@ contract RiteOfMoloch is
     /**
      * @dev returns the user's deadline for onboarding
      */
-    function getDeadline(address user) public view returns (uint256 deadline) {
+    function getDeadline(address user) public view returns (uint256) {
         return deadlines[user];
     }
 
     /**
      * @dev returns the user's member status
      */
-    function isMember(address user) public returns (bool memberStatus) {
+    function isMember(address user) public returns (bool) {
         uint256 shares = _sharesToken.balanceOf(msg.sender);
 
         if (shares >= minimumShare) {

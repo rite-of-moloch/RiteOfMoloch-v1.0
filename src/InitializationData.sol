@@ -6,7 +6,7 @@ contract InitializationData {
     // object is used to initialize new cohorts
 
     // PARAMS:
-    // membershipCriteria_ (Moloch DAO address) the contract address read from in order to ascertain cohort completion
+    // membershipCriteria_ (BaalV3 DAO address) the contract address read from in order to ascertain cohort completion
     // stakingAsset_ (tokenAddress) the contract address for the asset which is staked into the cohort contract
     // treasury_ the address which receives tokens when initiates are slashed (e.g. Gnosis safe, smart contract, etc.)
     // topHatWearer_ [OPTIONAL] address of topHat (DAO address that wears topHat)
@@ -22,6 +22,7 @@ contract InitializationData {
     // stbName_ the name for the cohort's soul bound tokens (SBT)
     // sbtSymbol_ the ticker symbol for cohort's SBT
     // baseURI_ the uniform resource identifier for accessing SBT metadata
+    // shamanOn_ automate Shaman proposal request to DAO
 
     struct InitData {
         address membershipCriteria;
@@ -39,5 +40,6 @@ contract InitializationData {
         string sbtName;
         string sbtSymbol;
         string baseUri;
+        bool shamanOn;
     }
 }

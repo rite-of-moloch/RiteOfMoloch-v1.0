@@ -3,15 +3,15 @@ pragma solidity ^0.8.4;
 
 import "test/TestHelper.sol";
 
-// forge test --match-contract SacrificeB -vv
+// forge test --match-contract Sacrifice -vv
 
 /**
  * @dev disable callerIsUser on RiteOfMoloch contract for these tests
  */
-contract SacrificeB is TestHelper {
+contract Sacrifice is TestHelper {
     address[] failedInitiates = [alice, bob, charlie];
 
-    function setUp() public {
+    function setUp() public override {
         // set and deploy ROM-Factory
         setUpFactory();
         // mint tokens to alice & bob
@@ -21,22 +21,32 @@ contract SacrificeB is TestHelper {
         // deploy ROM clone
         ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
 
+        emit log_named_uint("Cohort Counter", ROM.cohortCounter());
         prankJoinInititation(alice);
+
+        emit log_named_uint("Cohort Counter", ROM.cohortCounter());
         prankJoinInititation(bob);
 
         vm.warp(2 days);
+        emit log_named_uint("Cohort Counter", ROM.cohortCounter());
         prankJoinInititation(charlie);
+        emit log_named_uint("Cohort Counter", ROM.cohortCounter());
     }
 
     /**
      * TESTS
      */
     function testSacrfice() public {
+        assertEq(0, ROM.cohortSeason());
+        emit log_named_uint("Cohort Season", ROM.cohortSeason());
+        emit log_named_uint("Join Endtime", ROM.joinEndTime());
+
         emitUserDeadline("Alice", alice);
         emitUserDeadline("Bob", bob);
         emitUserDeadline("Charlie", charlie);
 
         vm.warp(8 days);
+
         vm.startPrank(alice);
         // check current timeStamp
         emit log_named_uint("Timestamp", block.timestamp / DAY_IN_SECONDS);
@@ -50,8 +60,7 @@ contract SacrificeB is TestHelper {
         }
 
         // sacrifice those that are eligible
-        /**  todo: edit with new params
-        // ROM.sacrifice(failedInitiates);
+        ROM.sacrifice();
 
         // stakes after
         uint256[3] memory userStakesAfter = checkAllUserStakes();
@@ -64,8 +73,13 @@ contract SacrificeB is TestHelper {
 
         vm.stopPrank();
 
-        */
+        assertEq(1, ROM.cohortSeason());
+        emit log_named_uint("Cohort Season", ROM.cohortSeason());
+        emit log_named_uint("Join Endtime", ROM.joinEndTime());
+        emit log_named_uint("Cohort Counter", ROM.cohortCounter());
     }
+
+    // todo: test initiates & cohorst list sizes and carry-over, and reset variables
 
     // UTILS
     function checkAllUserStakes() public returns (uint256[3] memory) {
