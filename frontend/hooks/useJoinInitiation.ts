@@ -1,7 +1,7 @@
 import useWriteContract from "./useWriteContract";
 
 /**
- *
+ * @param address DAO contract address
  * @param args user: user address
  */
 

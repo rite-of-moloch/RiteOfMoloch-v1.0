@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import ConnectWallet from "./ConnectWallet";
-import { Box, Grid, GridItem } from "@raidguild/design-system";
+import { Box } from "@raidguild/design-system";
 import HeaderOne from "./Header0ne";
 
 interface NotConnectedProps {
@@ -10,7 +10,7 @@ interface NotConnectedProps {
 const NotConnected: React.FC<NotConnectedProps> = ({ children }) => {
   return (
     <>
-      {/* <HeaderOne /> */}
+      <HeaderOne />
       <Box
         bg="gradientSBTPrev"
         border="red 1px solid"

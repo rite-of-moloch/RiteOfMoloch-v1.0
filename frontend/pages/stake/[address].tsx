@@ -11,11 +11,11 @@ import StakingFlow from "components/StakingFlow";
 import NotConnected from "components/NotConnected";
 import HeaderOne from "components/Header0ne";
 
-interface HomeProps {
+interface StakeProps {
   children?: ReactNode;
 }
 
-const Home: React.FC<HomeProps> = ({ children }): any => {
+const Stake: React.FC<StakeProps> = ({ children }): any => {
   const { address, isConnected } = useAccount();
 
   function userAddress(): string {
@@ -66,4 +66,4 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
   );
 };
 
-export default Home;
+export default Stake;

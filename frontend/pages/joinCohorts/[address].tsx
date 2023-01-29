@@ -15,8 +15,9 @@ import { useRouter } from "next/router";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { ReactNode } from "react";
 import BackButton from "components/BackButton";
+import NotConnected from "components/NotConnected";
 
-interface CohortDetailModalProps {
+interface CohortPageProps {
   children: ReactNode;
 }
 
@@ -27,9 +28,9 @@ interface CohortDetailModalProps {
  * @returns
  */
 
-const CohortDetailModal: React.FC<CohortDetailModalProps> = ({ children }) => {
+const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
   const { chain } = useNetwork();
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
   const router = useRouter();
   const { address: cohortAddress } = router.query;
 
@@ -98,65 +99,72 @@ const CohortDetailModal: React.FC<CohortDetailModalProps> = ({ children }) => {
 
   return (
     <>
-      <VStack
-        border="1px solid #FF3864"
-        rounded="xl"
-        bg="gradientSBTPrev"
-        py={6}
-        w={["full", "90%", "70%"]}
-      >
-        <Heading as="h2" fontSize="md" color="red" my={3}>
-          <Text>{cohortData?.id}</Text>
-        </Heading>
-        <SimpleGrid columns={3} spacingX={2} w="full">
-          <Box justifySelf="start" textAlign="center" w="full">
-            Address
-          </Box>
-          <Box justifySelf="center" textAlign="center" w="full">
-            Shares
-          </Box>
-          <Box justifySelf="center" textAlign="center" w="full">
-            Date Staked
-          </Box>
-        </SimpleGrid>
-        <SimpleGrid
-          columns={3}
-          spacingX={2}
-          px={2}
-          pt={2}
-          pb={2.5}
-          w="full"
-          bg="black"
-          borderTop="1px solid #FF3864"
-          borderBottom="1px solid #FF3864"
-          alignItems="center"
+      {!isConnected && <NotConnected />}
+      {isConnected && (
+        <VStack
+          border="1px solid #FF3864"
+          rounded="xl"
+          bg="gradientSBTPrev"
+          py={6}
+          w={["full", "90%", "70%"]}
         >
-          <Box justifySelf="start" textAlign="center" w="full">
-            {blockExplorerLink(cohortData?.id)}
+          <Heading as="h2" fontSize="md" color="red" my={3}>
+            <Text>{cohortData?.id}</Text>
+          </Heading>
+          <SimpleGrid columns={3} spacingX={2} w="full">
+            <Box justifySelf="start" textAlign="center" w="full">
+              Address
+            </Box>
+            <Box justifySelf="center" textAlign="center" w="full">
+              Shares
+            </Box>
+            <Box justifySelf="center" textAlign="center" w="full">
+              Date Staked
+            </Box>
+          </SimpleGrid>
+          <SimpleGrid
+            columns={3}
+            spacingX={2}
+            px={2}
+            pt={2}
+            pb={2.5}
+            w="full"
+            bg="black"
+            borderTop="1px solid #FF3864"
+            borderBottom="1px solid #FF3864"
+            alignItems="center"
+          >
+            <Box justifySelf="start" textAlign="center" w="full">
+              {blockExplorerLink(cohortData?.id)}
+            </Box>
+            <Box justifySelf="center" textAlign="center" w="full">
+              {cohortData?.tokenAmount}
+            </Box>
+            {/* show dateStaked for msg.sender */}
+            <Box justifySelf="center" textAlign="center" w="full">
+              {isStaked[0] ? unixToUTC(isStaked[1] || "") : stakeButton}
+            </Box>
+          </SimpleGrid>
+          <Image
+            m="auto"
+            src={"/assets/season-v-token.svg"}
+            alt="SBT image preview"
+            w="250px"
+          />
+          <Box>
+            <Button
+              size="md"
+              onClick={handleClaimStake}
+              disabled={!isStaked[0]}
+            >
+              Claim Stake
+            </Button>
           </Box>
-          <Box justifySelf="center" textAlign="center" w="full">
-            {cohortData?.tokenAmount}
-          </Box>
-          {/* show dateStaked for msg.sender */}
-          <Box justifySelf="center" textAlign="center" w="full">
-            {isStaked[0] ? unixToUTC(isStaked[1] || "") : stakeButton}
-          </Box>
-        </SimpleGrid>
-        <Image
-          m="auto"
-          src={"/assets/season-v-token.svg"}
-          alt="SBT image preview"
-          w="250px"
-        />
-        <Box>
-          <Button size="md" onClick={handleClaimStake} disabled={!isStaked[0]}>
-            Claim Stake
-          </Button>
-        </Box>
-      </VStack>
-      <BackButton path="/joinCohorts" />
+        </VStack>
+      )}
+      {isConnected && <BackButton path="/joinCohorts" />}
     </>
   );
 };
 
-export default CohortDetailModal;
+export default CohortPage;

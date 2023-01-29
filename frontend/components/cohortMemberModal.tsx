@@ -45,7 +45,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
     Boolean(cohortAddress)
   );
   const cohort: CohortMetadata | null = metadata?.data?.cohort;
-  // console.log("cohort", cohort);
+  console.log("cohort", cohort);
 
   const getDeadline = (): string => {
     const deadline = (
