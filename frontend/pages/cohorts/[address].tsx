@@ -19,7 +19,7 @@ import InitiateData from "components/InitiateData";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";
-import useIsMember from "hooks/useIsMember";
+// import useIsMember from "hooks/useIsMember";
 import NobodyStaked from "components/NobodyStaked";
 import { unixToUTC } from "utils/general";
 
@@ -35,8 +35,8 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
 
   const userAddress: string = address ? address : "";
 
-  const isMember = useIsMember([userAddress]);
-  console.log("isMember", isMember);
+  // const isMember = useIsMember([userAddress]);
+  // console.log("isMember", isMember);
 
   const { data: initiates, isLoading } = useSubgraphQuery(
     COHORT_INITIATES(cohortAddress),

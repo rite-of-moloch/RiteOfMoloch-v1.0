@@ -15,13 +15,14 @@ import { convertBigNumber } from "utils/general";
 
 const useReadContract = (
   contractName: string,
+  abiName: string,
   functionName: string,
   args?: any
 ) => {
   const { chain } = useNetwork();
 
   let contractAddress = useContractAddress(contractName);
-  const abi = useAbi(contractName);
+  const abi = useAbi(abiName);
   let output: string;
 
   const { data } = useContractRead({

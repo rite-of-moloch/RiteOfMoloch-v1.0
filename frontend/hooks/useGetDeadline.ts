@@ -12,6 +12,7 @@ export const useGetDeadline = (
 ): string => {
   const { output: deadline } = useReadContract(
     contractAddress,
+    "riteOfMolochAddress",
     "getDeadline",
     args
   );

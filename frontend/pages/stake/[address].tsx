@@ -1,34 +1,39 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { ReactNode } from "react";
+import React from "react";
 import { Flex } from "@raidguild/design-system";
 import { useAccount } from "wagmi";
 import { useGetDeadline } from "hooks/useGetDeadline";
-import { useRiteBalanceOf } from "hooks/useRiteBalanceOf";
+import useRiteBalanceOf from "hooks/useRiteBalanceOf";
 import RiteStaked from "components/RiteStaked";
 import StakingFlow from "components/StakingFlow";
 import NotConnected from "components/NotConnected";
 
 import { useRouter } from "next/router";
+import useContractAddress from "hooks/useContractAddress";
 // import { isValidAddress } from "utils/general";
 
-interface StakeProps {
-  children?: ReactNode;
-}
-
-const Stake: React.FC<StakeProps> = ({ children }): any => {
+const Stake: React.FC = (): any => {
   const { address, isConnected } = useAccount();
   const router = useRouter();
 
   const { address: cohortAddress } = router.query;
-  const correctAddressLogic = cohortAddress || "riteOfMolochAddress";
+  const correctAddressLogicROM =
+    cohortAddress || useContractAddress("riteOfMolochAddress");
 
   function userAddress(): string {
     if (typeof address === "string") return address;
     else return "";
   }
 
-  const deadline: string = useGetDeadline(correctAddressLogic, [userAddress()]);
-  const riteBalance: string = useRiteBalanceOf([userAddress()]);
+  const deadline: string = useGetDeadline(correctAddressLogicROM.toString(), [
+    userAddress(),
+  ]);
+
+  console.log("deadline", deadline);
+  const riteBalance: string = useRiteBalanceOf(
+    correctAddressLogicROM.toString(),
+    [userAddress()]
+  );
 
   const hasRite = (): boolean => {
     let rites = Number(riteBalance);

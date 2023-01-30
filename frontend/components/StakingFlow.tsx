@@ -92,25 +92,37 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     else return "";
   }
 
-  const minimumStake: string = cohort?.tokenAmount || useMinimumStake() || "0";
-
   // pass correctAddressLogic variable into `balanceOf` and `useApproveRaid`
-  const correctAddressLogic =
+  const correctAddressLogicROM =
     cohort?.id || useContractAddress("riteOfMolochAddress");
 
-  const balanceOf: string = useBalanceOf(correctAddressLogic, [userAddress()]);
+  const correctAddressLogicERC20 =
+    cohort?.token || useContractAddress("erc20TokenAddress");
+
+  const minimumStake: string =
+    cohort?.tokenAmount || useMinimumStake(correctAddressLogicROM) || "0";
+
+  const balanceOf: string = useBalanceOf(correctAddressLogicERC20, [
+    userAddress(),
+  ]);
 
   // TO-DO: double check useApproveRaid
   const { approveRaid, isLoadingApprove, isSuccessApprove, isErrorApprove } =
-    useApproveRaid(correctAddressLogic, [correctAddressLogic, minimumStake]);
+    useApproveRaid(correctAddressLogicERC20, [
+      correctAddressLogicERC20,
+      minimumStake,
+    ]);
 
-  const allowance = useGetAllowance(correctAddressLogic, [
+  const allowance = useGetAllowance(correctAddressLogicERC20, [
     userAddress(),
     cohort?.token || useContractAddress("erc20TokenAddress"),
   ]);
 
   const { writeJoinInitiation, isLoadingStake, isSuccessStake, isErrorStake } =
-    useJoinInitiation(!willSponsor ? [userAddress()] : [initiateAddress]);
+    useJoinInitiation(
+      correctAddressLogicROM,
+      !willSponsor ? [userAddress()] : [initiateAddress]
+    );
 
   const canUserStake: boolean = canStake(
     allowance || "",

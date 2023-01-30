@@ -2,7 +2,7 @@ import useReadContract from "./useReadContract";
 /**
  * @remarks calls `allowance` function on token contract
  *
- * @param contractAddress riteOfMolochAddress type. Should be dynamic address from subgraphQuery, or string of 'erc20TokenAddress'. If dynamic, should come from /stake/[address].tsx component
+ * @param contractAddress Should be dynamic address from subgraphQuery from /stake/[address].tsx component
  * @param args [_owner: address, _spender: address]
  * @outputs uint256 (string)
  */
@@ -12,6 +12,7 @@ const useGetAllowance = (
 ): string => {
   const { output: allowance } = useReadContract(
     contractAddress,
+    "erc20TokenAddress",
     "allowance",
     args
   );

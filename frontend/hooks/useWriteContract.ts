@@ -6,7 +6,6 @@ import {
   useTransaction,
 } from "wagmi";
 import useContractAddress from "./useContractAddress";
-import abiERC20 from "../contracts/erc20TokenAddress.json";
 import useAbi from "./useAbi";
 import { useCustomToast } from "@raidguild/design-system";
 
@@ -21,17 +20,18 @@ import { useCustomToast } from "@raidguild/design-system";
 
 const useWriteContract = (
   contractName: string,
+  abiName: string,
   functionName: string,
   args?: any
 ) => {
   const { chain } = useNetwork();
   const toast = useCustomToast();
   const contractAddress = useContractAddress(contractName);
-  const abi = useAbi(contractName);
+  const abi = useAbi(abiName);
 
   const { config } = usePrepareContractWrite({
     addressOrName: contractName || contractAddress,
-    contractInterface: abi || abiERC20,
+    contractInterface: abi,
     functionName,
     chainId: chain?.id,
     args,

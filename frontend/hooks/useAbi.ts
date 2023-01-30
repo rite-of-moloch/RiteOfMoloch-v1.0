@@ -4,11 +4,16 @@ import abiROMFac from "../contracts/riteOfMolochFactoryAddress.json";
 
 type ABI = {}[];
 
-const useAbi = (contractName: string): ABI => {
+/**
+ * @remarks returns abi based on contract type
+ * @param contract
+ * @returns
+ */
+const useAbi = (contract: string): ABI => {
   let abi;
-  if (contractName === "riteOfMolochAddress") {
+  if (contract === "riteOfMolochAddress") {
     abi = abiROM;
-  } else if (contractName === "riteOfMolochFactoryAddress") {
+  } else if (contract === "riteOfMolochFactoryAddress") {
     abi = abiROMFac;
   } else {
     abi = abiERC20;

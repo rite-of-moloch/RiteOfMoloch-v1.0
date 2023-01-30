@@ -1,17 +1,22 @@
 import useWriteContract from "./useWriteContract";
 
 /**
- * @param address DAO contract address
- * @param args user: user address
+ * @param contractAddress should be dynamic address from subgraphQuery from /stake/[address].tsx component
+ * @param args [user address]
  */
 
-const useJoinInitiation = (args: [string]) => {
+const useJoinInitiation = (contractAddress: string, args: [string]) => {
   const {
     write: writeJoinInitiation,
     isLoading: isLoadingStake,
     isSuccess: isSuccessStake,
     isError: isErrorStake,
-  } = useWriteContract("riteOfMolochAddress", "joinInitiation", args);
+  } = useWriteContract(
+    contractAddress,
+    "riteOfMolochAddress",
+    "joinInitiation",
+    args
+  );
 
   return { writeJoinInitiation, isLoadingStake, isSuccessStake, isErrorStake };
 };
