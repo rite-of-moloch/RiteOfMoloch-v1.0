@@ -17,7 +17,12 @@ import { useAccount, useNetwork } from "wagmi";
 import { utils } from "ethers";
 import { TOKEN_TICKER } from "../utils/constants";
 import { UserContext } from "context/UserContext";
-import { approveTooltip, canStake, stakeTooltip } from "utils/general";
+import {
+  approveTooltip,
+  canStake,
+  isValidAddress,
+  stakeTooltip,
+} from "utils/general";
 import useMinimumStake from "hooks/useMinimumStake";
 import useBalanceOf from "hooks/useBalanceOf";
 import useApproveRaid from "hooks/useApproveRaid";
@@ -26,19 +31,39 @@ import useJoinInitiation from "hooks/useJoinInitiation";
 import useGetAllowance from "hooks/useGetAllowance";
 
 import { FiAlertTriangle } from "react-icons/fi";
+import { useSubgraphQuery } from "hooks/useSubgraphQuery";
+import { COHORT_METADATA } from "utils/subgraph/queries";
+import { CohortMetadata } from "utils/types/subgraphQueries";
 
 interface StakingFlowProps {
-  children?: ReactNode;
+  contractAddress: string | string[];
 }
 
 type FormValues = {
   initiateAddress: string;
 };
 
-const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
+/**
+ * @remarks if invalid address passed into url query string, values for RaidGuild cohort will be used by default. If cohort exists, address is equal to `cohort.id`, token address equals `cohort.token`, minimum stake equals `cohort.tokenAmount`
+ *
+ * @param contractAddress is cohortAddress inherited from [address].tsx component. This address should be passed into smart contract functions. If address is not valid Ethereum address, use return value from useContractAddress function
+ * @returns data about cohort that where a user can stake
+ */
+const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   const { address } = useAccount();
   const { chain } = useNetwork();
   const { willSponsor, handleWillSponsor } = useContext(UserContext);
+
+  // check if contractAddress from [address].tsx is valid. Returns Boolean
+  // const validAddress = isValidAddress(contractAddress);
+
+  // if contractAddress isn't a valid cohort, `cohort` object will return as undefined
+  const metadata = useSubgraphQuery(
+    COHORT_METADATA(contractAddress),
+    Boolean(contractAddress)
+  );
+  const cohort: CohortMetadata | null = metadata?.data?.cohort;
+  // console.log("cohort", cohort);
 
   const localForm = useForm<FormValues>({
     defaultValues: {
@@ -67,16 +92,19 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
     else return "";
   }
 
-  const minimumStake: string = useMinimumStake() || "0";
+  const minimumStake: string = cohort?.tokenAmount || useMinimumStake() || "0";
 
   const balanceOf: string = useBalanceOf([userAddress()]);
 
   const { approveRaid, isLoadingApprove, isSuccessApprove, isErrorApprove } =
-    useApproveRaid([useContractAddress("riteOfMolochAddress"), minimumStake]);
+    useApproveRaid([
+      cohort?.id || useContractAddress("riteOfMolochAddress"),
+      minimumStake,
+    ]);
 
   const allowance = useGetAllowance([
     userAddress(),
-    useContractAddress("erc20TokenAddress"),
+    cohort?.token || useContractAddress("erc20TokenAddress"),
   ]);
 
   const { writeJoinInitiation, isLoadingStake, isSuccessStake, isErrorStake } =
@@ -229,7 +257,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
           </Box>
         </HStack>
       </Flex>
-      {children}
     </>
   );
 };

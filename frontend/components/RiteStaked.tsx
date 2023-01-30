@@ -7,9 +7,14 @@ import { UserContext } from "context/UserContext";
 interface RiteStakedProps {
   riteBalance: string;
   deadline: string;
+  contractAddress: string | string[];
 }
 
-const RiteStaked: React.FC<RiteStakedProps> = ({ riteBalance, deadline }) => {
+const RiteStaked: React.FC<RiteStakedProps> = ({
+  riteBalance,
+  deadline,
+  contractAddress,
+}) => {
   const { handleWillSponsor, willSponsor } = useContext(UserContext);
 
   return (
@@ -36,7 +41,7 @@ const RiteStaked: React.FC<RiteStakedProps> = ({ riteBalance, deadline }) => {
           hidden={willSponsor ? true : false}
         />
       </Flex>
-      {willSponsor && <StakingFlow />}
+      {willSponsor && <StakingFlow contractAddress={contractAddress || ""} />}
     </VStack>
   );
 };

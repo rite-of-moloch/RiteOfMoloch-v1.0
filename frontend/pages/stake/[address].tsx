@@ -1,15 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { ReactNode } from "react";
-import { Box, Flex } from "@raidguild/design-system";
+import { Flex } from "@raidguild/design-system";
 import { useAccount } from "wagmi";
 import { useGetDeadline } from "hooks/useGetDeadline";
 import { useRiteBalanceOf } from "hooks/useRiteBalanceOf";
-import BoxHeader from "components/BoxHeader";
-
 import RiteStaked from "components/RiteStaked";
 import StakingFlow from "components/StakingFlow";
 import NotConnected from "components/NotConnected";
-import HeaderOne from "components/Header0ne";
+
+import { useRouter } from "next/router";
+// import { isValidAddress } from "utils/general";
 
 interface StakeProps {
   children?: ReactNode;
@@ -17,6 +17,10 @@ interface StakeProps {
 
 const Stake: React.FC<StakeProps> = ({ children }): any => {
   const { address, isConnected } = useAccount();
+  const router = useRouter();
+
+  const { address: cohortAddress } = router.query;
+  // const validAddress = isValidAddress(cohortAddress);
 
   function userAddress(): string {
     if (typeof address === "string") return address;
@@ -48,18 +52,16 @@ const Stake: React.FC<StakeProps> = ({ children }): any => {
       {!isConnected && <NotConnected />}
       {isConnected && (
         <Flex direction="column">
-          <Box mb={"1rem"}>
-            <HeaderOne />
-          </Box>
-          {isConnected && Number(deadline) === 0 && (
-            <BoxHeader text="Commit Your Stake To Join Our Cohort!" />
+          {isConnected && !hasRite() && (
+            <StakingFlow contractAddress={cohortAddress || ""} />
           )}
-
-          {isConnected && !hasRite() && <StakingFlow />}
           {isConnected && hasRite() && (
-            <RiteStaked riteBalance={riteBalance} deadline={deadline} />
+            <RiteStaked
+              riteBalance={riteBalance}
+              deadline={deadline}
+              contractAddress={cohortAddress || ""}
+            />
           )}
-          {children}
         </Flex>
       )}
     </>

@@ -1,6 +1,13 @@
 import { useNetwork } from "wagmi";
 import { CONTRACT_ADDRESSES } from "utils/constants";
 
+/**
+ * @remarks hook is used to get RaidGuild address if user visits `/stake' or 'stake/[address].tsx' and doens't provide valid address
+ *
+ * @param contract string that represents correct smart contract address
+ * @returns string of address
+ */
+
 const useContractAddress = (contract: string): string => {
   const { chain } = useNetwork();
   let contractAddress: string = "";
