@@ -20,14 +20,14 @@ const Stake: React.FC<StakeProps> = ({ children }): any => {
   const router = useRouter();
 
   const { address: cohortAddress } = router.query;
-  // const validAddress = isValidAddress(cohortAddress);
+  const correctAddressLogic = cohortAddress || "riteOfMolochAddress";
 
   function userAddress(): string {
     if (typeof address === "string") return address;
     else return "";
   }
 
-  const deadline: string = useGetDeadline([userAddress()]);
+  const deadline: string = useGetDeadline(correctAddressLogic, [userAddress()]);
   const riteBalance: string = useRiteBalanceOf([userAddress()]);
 
   const hasRite = (): boolean => {

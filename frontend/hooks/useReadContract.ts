@@ -25,7 +25,7 @@ const useReadContract = (
   let output: string;
 
   const { data } = useContractRead({
-    addressOrName: contractAddress,
+    addressOrName: contractName || contractAddress,
     contractInterface: abi,
     functionName,
     args,

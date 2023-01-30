@@ -94,15 +94,17 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
 
   const minimumStake: string = cohort?.tokenAmount || useMinimumStake() || "0";
 
-  const balanceOf: string = useBalanceOf([userAddress()]);
+  // pass correctAddressLogic variable into `balanceOf` and `useApproveRaid`
+  const correctAddressLogic =
+    cohort?.id || useContractAddress("riteOfMolochAddress");
 
+  const balanceOf: string = useBalanceOf(correctAddressLogic, [userAddress()]);
+
+  // TO-DO: double check useApproveRaid
   const { approveRaid, isLoadingApprove, isSuccessApprove, isErrorApprove } =
-    useApproveRaid([
-      cohort?.id || useContractAddress("riteOfMolochAddress"),
-      minimumStake,
-    ]);
+    useApproveRaid(correctAddressLogic, [correctAddressLogic, minimumStake]);
 
-  const allowance = useGetAllowance([
+  const allowance = useGetAllowance(correctAddressLogic, [
     userAddress(),
     cohort?.token || useContractAddress("erc20TokenAddress"),
   ]);

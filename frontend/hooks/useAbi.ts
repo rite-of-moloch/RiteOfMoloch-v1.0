@@ -6,12 +6,12 @@ type ABI = {}[];
 
 const useAbi = (contractName: string): ABI => {
   let abi;
-  if (contractName === "erc20TokenAddress") {
-    abi = abiERC20;
-  } else if (contractName === "riteOfMolochAddress") {
+  if (contractName === "riteOfMolochAddress") {
     abi = abiROM;
-  } else {
+  } else if (contractName === "riteOfMolochFactoryAddress") {
     abi = abiROMFac;
+  } else {
+    abi = abiERC20;
   }
   return abi;
 };

@@ -11,10 +11,11 @@ import useAbi from "./useAbi";
 import { useCustomToast } from "@raidguild/design-system";
 
 /**
+ * @remarks hook to prepare wagmi hook contract instances
  *
- * @param contractName - pass in contract name
+ * @param contractName - pass in contract name. If contract name is 'riteOfMolochAddress', value should be passed in dynaically from URL query in stake/[address].tsx component. If this address is not a valid cohort, contractName will be `riteOfMolochAddress`, which then gets passed into useContractAddress hook and gets RaidGuild default values
  * @param functionName - pass name of function
- * @param args - option array of args
+ * @param args - array of arguments to be passed into smart contract function
  * @returns
  */
 
@@ -29,7 +30,7 @@ const useWriteContract = (
   const abi = useAbi(contractName);
 
   const { config } = usePrepareContractWrite({
-    addressOrName: contractAddress,
+    addressOrName: contractName || contractAddress,
     contractInterface: abi || abiERC20,
     functionName,
     chainId: chain?.id,
@@ -45,10 +46,6 @@ const useWriteContract = (
     },
     onError(err) {
       console.log(err);
-      toast.error({
-        status: "error",
-        title: `Transaction Error... ${err.message}`,
-      });
     },
   });
 
