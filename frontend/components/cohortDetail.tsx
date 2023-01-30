@@ -42,7 +42,7 @@ const CohortDetail: FC<CohortDetailProps> = ({
       <SimpleGrid
         columns={4}
         fontFamily="texturina"
-        border="1px #FF3864 solid"
+        border="1px red solid"
         justifyContent="center"
         alignItems="center"
         bg="black"

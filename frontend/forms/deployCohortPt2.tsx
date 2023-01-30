@@ -95,7 +95,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="assetAmount"
-              render={({ message }) => <Text color="#FF3864">{message}</Text>}
+              render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box>
 
@@ -122,7 +122,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="cohortSize"
-              render={({ message }) => <Text color="#FF3864">{message}</Text>}
+              render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box>
           <Tooltip
@@ -153,7 +153,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               <ErrorMessage
                 errors={errors}
                 name="shareThreshold"
-                render={({ message }) => <Text color="#FF3864">{message}</Text>}
+                render={({ message }) => <Text color="red">{message}</Text>}
               />
             </Box>
           </Tooltip>
@@ -180,7 +180,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="onboardingPeriod"
-              render={({ message }) => <Text color="#FF3864">{message}</Text>}
+              render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box>
 
@@ -205,7 +205,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="stakingAsset"
-              render={({ message }) => <Text color="#FF3864">{message}</Text>}
+              render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box>
 
@@ -232,7 +232,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="stakeDuration"
-              render={({ message }) => <Text color="#FF3864">{message}</Text>}
+              render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box>
         </SimpleGrid>
@@ -258,7 +258,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="treasury"
-              render={({ message }) => <Text color="#FF3864">{message}</Text>}
+              render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box>
         </SimpleGrid>
@@ -268,7 +268,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               mt={10}
               variant="ghost"
               w="full"
-              color="#FF3864"
+              color="red"
               border="1px"
               rounded="sm"
               onClick={handleBack}

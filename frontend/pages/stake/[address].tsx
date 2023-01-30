@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
-import { Flex } from "@raidguild/design-system";
+import { Box, HStack, Heading, Stack } from "@raidguild/design-system";
 import { useAccount } from "wagmi";
 import { useGetDeadline } from "hooks/useGetDeadline";
 import useRiteBalanceOf from "hooks/useRiteBalanceOf";
@@ -56,18 +56,42 @@ const Stake: React.FC = (): any => {
     <>
       {!isConnected && <NotConnected />}
       {isConnected && (
-        <Flex direction="column">
+        <HStack
+          direction="column"
+          border="1px solid red"
+          rounded="lg"
+          bg="gradientSBTPrev"
+          w={["full", "full", "80%"]}
+          justifyContent="center"
+          alignContent="center"
+          m="auto"
+        >
           {isConnected && !hasRite() && (
-            <StakingFlow contractAddress={cohortAddress || ""} />
+            <Stack w="full" pt="3rem" pb="2rem">
+              <Box
+                bg="black"
+                borderTop="solid red 1px"
+                borderBottom="solid red 1px"
+                py={1}
+              >
+                <Heading as="h2" fontSize="md" textAlign="center">
+                  {cohortAddress}
+                </Heading>
+              </Box>
+              <Box w={["80%", "80%", "60%"]} alignSelf="center" py="1rem">
+                <StakingFlow contractAddress={cohortAddress || ""} />
+              </Box>
+
+              {isConnected && hasRite() && (
+                <RiteStaked
+                  riteBalance={riteBalance}
+                  deadline={deadline}
+                  contractAddress={cohortAddress || ""}
+                />
+              )}
+            </Stack>
           )}
-          {isConnected && hasRite() && (
-            <RiteStaked
-              riteBalance={riteBalance}
-              deadline={deadline}
-              contractAddress={cohortAddress || ""}
-            />
-          )}
-        </Flex>
+        </HStack>
       )}
     </>
   );

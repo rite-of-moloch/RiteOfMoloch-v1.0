@@ -65,11 +65,7 @@ const ConnectWallet = () => {
             return (
               <Flex gap={3}>
                 <Menu offset={[0, 4]} placement="bottom-end" autoSelect={false}>
-                  <Button
-                    variant="ghost"
-                    color="#FF3864"
-                    onClick={openChainModal}
-                  >
+                  <Button variant="ghost" color="red" onClick={openChainModal}>
                     <Image
                       alt={chain.name ?? "Chain icon"}
                       src={chain.iconUrl}
@@ -83,7 +79,7 @@ const ConnectWallet = () => {
                   <MenuButton
                     as={Button}
                     variant="ghost"
-                    color="#FF3864"
+                    color="red"
                     rightIcon={
                       <Icon as={FiChevronDown} color="brand.primary.600" />
                     }

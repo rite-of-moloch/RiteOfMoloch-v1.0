@@ -149,13 +149,13 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   return (
     <>
       <Flex w="100%" direction="column" alignItems="flex-start" p="15px">
-        <HStack mb="1rem">
+        <HStack mb="1rem" justifyContent="space-between" w="full">
           <Text color="red">Required Stake</Text>
           <Text color="white">
             {utils.formatEther(minimumStake)} {TOKEN_TICKER[chainId()]}
           </Text>
         </HStack>
-        <HStack>
+        <HStack justifyContent="space-between" w="full">
           <Text color="red" fontFamily="jetbrains" fontSize=".8rem">
             Your {TOKEN_TICKER[chainId()]} balance
           </Text>
@@ -163,7 +163,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
             {utils.formatUnits(balanceOf, "ether")} {TOKEN_TICKER[chainId()]}
           </Text>
         </HStack>
-        <HStack>
+        <HStack justifyContent="space-between" w="full">
           <Text color="red" fontFamily="jetbrains" fontSize=".8rem">
             Your {TOKEN_TICKER[chainId()]} allowance
           </Text>

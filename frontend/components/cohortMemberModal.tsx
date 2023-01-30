@@ -111,8 +111,8 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
               pt={2}
               pb={2.5}
               bg="black"
-              borderTop="1px solid #FF3864"
-              borderBottom="1px solid #FF3864"
+              borderTop="1px solid red"
+              borderBottom="1px solid red"
               alignItems="center"
             >
               <Box justifySelf="center" textAlign="center" w="full">

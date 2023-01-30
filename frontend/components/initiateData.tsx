@@ -21,7 +21,7 @@ const initiateData: FC<MemberData> = ({ address, id, joinedAt, stake }) => {
   return (
     <SimpleGrid
       columns={4}
-      border="1px #FF3864 solid"
+      border="1px red solid"
       justifyContent="center"
       alignItems="center"
       bg="black"

@@ -78,7 +78,7 @@ export const theme = extendTheme({
         display: "none",
       },
       "&::-webkit-scrollbar-thumb": {
-        background: "#ff3864",
+        background: "red",
         borderRadius: "5px",
       },
       "&::-webkit-scrollbar-thumb:hover": {

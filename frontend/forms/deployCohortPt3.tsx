@@ -189,7 +189,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="topHatWearer"
-              render={({ message }) => <Text color="#FF3864">{message}</Text>}
+              render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box>
           <Box display={hasTophat ? "flex" : "none"} flexDir="column">
@@ -211,7 +211,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="tophatID"
-              render={({ message }) => <Text color="#FF3864">{message}</Text>}
+              render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box>
         </SimpleGrid>
@@ -267,7 +267,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="admin1"
-              render={({ message }) => <Text color="#FF3864">{message}</Text>}
+              render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box>
 
@@ -293,7 +293,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="admin2"
-              render={({ message }) => <Text color="#FF3864">{message}</Text>}
+              render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box>
           {/* start buttons */}
@@ -301,7 +301,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
             <Button
               variant="ghost"
               w="full"
-              color="#FF3864"
+              color="red"
               border="1px"
               mt={10}
               rounded="sm"

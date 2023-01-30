@@ -102,7 +102,7 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
       {!isConnected && <NotConnected />}
       {isConnected && (
         <VStack
-          border="1px solid #FF3864"
+          border="1px solid red"
           rounded="xl"
           bg="gradientSBTPrev"
           py={6}
@@ -130,8 +130,8 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
             pb={2.5}
             w="full"
             bg="black"
-            borderTop="1px solid #FF3864"
-            borderBottom="1px solid #FF3864"
+            borderTop="1px solid red"
+            borderBottom="1px solid red"
             alignItems="center"
           >
             <Box justifySelf="start" textAlign="center" w="full">

@@ -6,7 +6,7 @@ const NumberInput = helpers.defineMultiStyleConfig({
   baseStyle: {
     field: {
       bg: "black",
-      border: "solid #FF3864 1px",
+      border: "solid red 1px",
       fontFamily: "texturina",
       color: "#FFFFFF",
       _placeholder: {
