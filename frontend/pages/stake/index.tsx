@@ -14,7 +14,7 @@ const StakeRedirect = () => {
   const { chain } = useNetwork();
 
   const raidGuildCohort =
-    CONTRACT_ADDRESSES[chain?.id || 5]["erc20TokenAddress"];
+    CONTRACT_ADDRESSES[chain?.id || 5]["riteOfMolochAddress"];
 
   useEffect(() => {
     if (router.pathname === "/stake") {

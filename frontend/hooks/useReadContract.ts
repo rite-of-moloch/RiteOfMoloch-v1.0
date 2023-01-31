@@ -1,15 +1,16 @@
 import { useContractRead, useNetwork } from "wagmi";
 import useAbi from "./useAbi";
 import useContractAddress from "./useContractAddress";
-import { convertBigNumber } from "utils/general";
+import { convertBigNumber } from "../utils/general";
 
 /**
  *
- * hook for react contract functions
+ * @remarks prepare wagmi hook read contract instance
  *
  * @param contractName - pass in contract name
  * @param functionName - pass name of function
  * @param args - option array of args
+ *
  * @returns output of contract function
  */
 
@@ -21,12 +22,12 @@ const useReadContract = (
 ) => {
   const { chain } = useNetwork();
 
-  let contractAddress = useContractAddress(contractName);
+  // let contractAddress = useContractAddress(abiName);
   const abi = useAbi(abiName);
   let output: string;
 
   const { data } = useContractRead({
-    addressOrName: contractName || contractAddress,
+    addressOrName: contractName || "0x",
     contractInterface: abi,
     functionName,
     args,

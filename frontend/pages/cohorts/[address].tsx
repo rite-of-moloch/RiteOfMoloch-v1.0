@@ -111,7 +111,6 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
           {isInitiates
             ? !isLoading && renderInitiateList
             : !isLoading && <NobodyStaked />}
-
           <BackButton path="/cohorts" />
         </Stack>
       )}

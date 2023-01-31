@@ -8,14 +8,6 @@ export const convertBigNumber = (data: TxHash): string => {
   return data.toString();
 };
 
-export const isValidAddress = (address: any): Boolean => {
-  if (address) {
-    return utils.isAddress(address);
-  } else {
-    return false;
-  }
-};
-
 export const canStake = (
   allowance: string,
   minimumStake: string,

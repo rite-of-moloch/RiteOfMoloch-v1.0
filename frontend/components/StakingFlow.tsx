@@ -1,4 +1,4 @@
-import React, { useContext, ReactNode } from "react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import {
   Flex,
@@ -17,12 +17,7 @@ import { useAccount, useNetwork } from "wagmi";
 import { utils } from "ethers";
 import { TOKEN_TICKER } from "../utils/constants";
 import { UserContext } from "context/UserContext";
-import {
-  approveTooltip,
-  canStake,
-  isValidAddress,
-  stakeTooltip,
-} from "utils/general";
+import { approveTooltip, canStake, stakeTooltip } from "utils/general";
 import useMinimumStake from "hooks/useMinimumStake";
 import useBalanceOf from "hooks/useBalanceOf";
 import useApproveRaid from "hooks/useApproveRaid";
@@ -54,16 +49,13 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   const { chain } = useNetwork();
   const { willSponsor, handleWillSponsor } = useContext(UserContext);
 
-  // check if contractAddress from [address].tsx is valid. Returns Boolean
-  // const validAddress = isValidAddress(contractAddress);
-
-  // if contractAddress isn't a valid cohort, `cohort` object will return as undefined
   const metadata = useSubgraphQuery(
     COHORT_METADATA(contractAddress),
     Boolean(contractAddress)
   );
+
   const cohort: CohortMetadata | null = metadata?.data?.cohort;
-  // console.log("cohort", cohort);
+  console.log("cohort", cohort, typeof cohort);
 
   const localForm = useForm<FormValues>({
     defaultValues: {
@@ -92,28 +84,28 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     else return "";
   }
 
-  // pass correctAddressLogic variable into `balanceOf` and `useApproveRaid`
+  // if cohort is undefined, pass in data for RaidGuild ROM address
   const correctAddressLogicROM =
     cohort?.id || useContractAddress("riteOfMolochAddress");
 
-  const correctAddressLogicERC20 =
-    cohort?.token || useContractAddress("erc20TokenAddress");
+  // if cohort is undefined, pass in data for RaidGuild erc20 address
+
+  console.log(cohort?.token.toString() || "");
 
   const minimumStake: string =
-    cohort?.tokenAmount || useMinimumStake(correctAddressLogicROM) || "0";
+    cohort?.tokenAmount || useMinimumStake("riteOfMolochAddress") || "0";
 
-  const balanceOf: string = useBalanceOf(correctAddressLogicERC20, [
-    userAddress(),
-  ]);
+  console.log(minimumStake);
 
-  // TO-DO: double check useApproveRaid
+  const balanceOf: string = useBalanceOf(cohort?.id || "", [userAddress()]);
+
   const { approveRaid, isLoadingApprove, isSuccessApprove, isErrorApprove } =
-    useApproveRaid(correctAddressLogicERC20, [
-      correctAddressLogicERC20,
+    useApproveRaid(cohort?.token.toString() || "", [
+      cohort?.token.toString() || "",
       minimumStake,
     ]);
 
-  const allowance = useGetAllowance(correctAddressLogicERC20, [
+  const allowance = useGetAllowance(cohort?.token.toString() || "", [
     userAddress(),
     cohort?.token || useContractAddress("erc20TokenAddress"),
   ]);

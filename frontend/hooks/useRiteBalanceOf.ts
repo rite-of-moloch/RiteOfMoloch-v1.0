@@ -2,7 +2,7 @@ import useReadContract from "./useReadContract";
 /**
  * @param contractAddress riteOfMolochAddress type. Should be dynamic address from subgraphQuery, or string of 'riteOfMolochAddress'. If dynamic, should come from /stake/[address].tsx component
  * @param args [owner: address]
- * @ outputs: uint256
+ * @returns: uint256
  */
 const useRiteBalanceOf = (contractAddress: string, args: [string]): string => {
   const { output: riteBalance } = useReadContract(

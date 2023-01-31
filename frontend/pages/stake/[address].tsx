@@ -7,31 +7,27 @@ import useRiteBalanceOf from "hooks/useRiteBalanceOf";
 import RiteStaked from "components/RiteStaked";
 import StakingFlow from "components/StakingFlow";
 import NotConnected from "components/NotConnected";
-
 import { useRouter } from "next/router";
 import useContractAddress from "hooks/useContractAddress";
-// import { isValidAddress } from "utils/general";
 
 const Stake: React.FC = (): any => {
   const { address, isConnected } = useAccount();
   const router = useRouter();
 
   const { address: cohortAddress } = router.query;
-  const correctAddressLogicROM =
-    cohortAddress || useContractAddress("riteOfMolochAddress");
+  // const contractAddressROM = cohortAddress || useContractAddress("riteOfMolochAddress");
 
   function userAddress(): string {
     if (typeof address === "string") return address;
     else return "";
   }
 
-  const deadline: string = useGetDeadline(correctAddressLogicROM.toString(), [
+  const deadline: string = useGetDeadline(cohortAddress?.toString() || "", [
     userAddress(),
   ]);
 
-  console.log("deadline", deadline);
   const riteBalance: string = useRiteBalanceOf(
-    correctAddressLogicROM.toString(),
+    cohortAddress?.toString() || "",
     [userAddress()]
   );
 
@@ -47,11 +43,9 @@ const Stake: React.FC = (): any => {
   };
 
   /**
-   *
    * RiteStaked shown if user has staked, but wants to sponsor another address.
    * RiteStaked also renders StakingFlow
    */
-
   return (
     <>
       {!isConnected && <NotConnected />}
@@ -64,7 +58,7 @@ const Stake: React.FC = (): any => {
           w={["full", "full", "80%"]}
           justifyContent="center"
           alignContent="center"
-          m="auto"
+          my="1rem"
         >
           {isConnected && !hasRite() && (
             <Stack w="full" pt="3rem" pb="2rem">
