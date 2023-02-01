@@ -6,6 +6,8 @@ interface IBaal {
 
     function proposalCount() external returns (uint256);
 
+    function avatar() external returns (address);
+
     function submitProposal(
         bytes calldata proposalData,
         uint32 expiration,
@@ -14,4 +16,7 @@ interface IBaal {
     ) external payable returns (uint256);
 
     function sharesToken() external returns (address);
+
+    function mintShares(address[] calldata to, uint256[] calldata amount)
+        external;
 }

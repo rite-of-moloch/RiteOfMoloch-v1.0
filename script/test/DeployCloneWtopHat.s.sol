@@ -7,6 +7,7 @@ import {RiteOfMolochFactory} from "src/RiteOfMolochFactory.sol";
 import {RiteOfMoloch} from "src/RiteOfMoloch.sol";
 import {IHats} from "src/hats/IHats.sol";
 import {ERC20} from "lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
+import {IBaal} from "src/baal/IBaal.sol";
 
 // create with verify
 // forge script script/test/DeployCloneWtopHat.s.sol:DeployCloneWtopHatScript --rpc-url $RU --private-key $PK --broadcast --verify --etherscan-api-key $EK -vvvv
@@ -17,31 +18,44 @@ import {ERC20} from "lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol"
 contract DeployCloneWtopHatScript is Script, InitializationData {
     // constants
     ERC20 constant token = ERC20(0xA49dF10dD5B84257dE634F4350218f615471Fc69);
-    address constant baalV3 = 0x6053dE194226843E4FD99A82C1386B4C76E19E34;
+    IBaal constant baal = IBaal(0x6053dE194226843E4FD99A82C1386B4C76E19E34);
+    address constant baalAvatar = 0x473472560B4bce45249B045699dd45d761ed300d;
     address constant deployer = 0x1A4B691738C9c8Db8f2EDf0b9207f6acb24ADF07;
     address constant admin1 = 0xa25256073cB38b8CAF83b208949E7f746f3BEBDc;
     uint256 constant minStake = 250 * 10e18;
 
     // variables
     InitData Data;
-    RiteOfMolochFactory public constant ROMF =
-        RiteOfMolochFactory(0x00b52e6d26026C853f89dC895F0ae2b0Ba7FECaA);
+    RiteOfMolochFactory public ROMF;
+    // RiteOfMolochFactory public constant ROMF =
+    //     RiteOfMolochFactory(0x00b52e6d26026C853f89dC895F0ae2b0Ba7FECaA);
     RiteOfMoloch public ROM;
-
     // Hats
     IHats public HATS;
-    uint256 public topHat;
+    uint256 public topHatFactory;
+    uint256 public constant topHatMoloch =
+        1833276373366243506037357025917334885807325820732758928715045496946688;
     uint256 public factoryOperatorHat;
     address public hatsProtocol = 0xcf912a0193593f5cD55D81FF611c26c3ED63f924;
 
     function run() public {
-        hatTreeFactory();
+        require(baalAvatar == baal.avatar(), "Incorrect avatar");
+
+        HATS = IHats(hatsProtocol);
+        require(
+            HATS.isAdminOfHat(baalAvatar, topHatMoloch),
+            "DAO not owner of hat!"
+        );
+
+        require(HATS.isTopHat(topHatMoloch), "Hat is not topHat!");
+
+        hatTreeSetup();
 
         createInitData();
 
         vm.startBroadcast();
 
-        // ROMF = new RiteOfMolochFactory(hatsProtocol, factoryOperatorHat);
+        ROMF = new RiteOfMolochFactory(hatsProtocol, factoryOperatorHat);
 
         ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
 
@@ -49,9 +63,9 @@ contract DeployCloneWtopHatScript is Script, InitializationData {
     }
 
     function createInitData() public {
-        Data.membershipCriteria = baalV3;
+        Data.membershipCriteria = address(baal);
         Data.stakingAsset = address(token);
-        Data.treasury = baalV3;
+        Data.treasury = baalAvatar;
         Data.admin1 = admin1;
         Data.admin2 = address(0);
         Data.cohortSize = 5;
@@ -59,25 +73,28 @@ contract DeployCloneWtopHatScript is Script, InitializationData {
         Data.threshold = 10;
         Data.assetAmount = minStake;
         Data.stakeDuration = 10 days;
-        Data
-            .topHatId = 1428877173358983909117351799612040425702768654394650341498491343208448;
+        Data.topHatId = topHatMoloch;
         Data.cohortName = "SeasonV";
         Data.sbtName = "RiteOfMolochSBT";
         Data.sbtSymbol = "SBTMoloch";
         Data.baseUri = "";
+        Data.shamanOn = false;
     }
 
-    function hatTreeFactory() public {
-        HATS = IHats(hatsProtocol);
-
-        topHat = HATS.mintTopHat(address(this), "ROM-Factoryx TopHat", "");
+    function hatTreeSetup() public {
+        // Hats for ROM Factory
+        topHatFactory = HATS.mintTopHat(
+            address(this),
+            "ROM-Factoryx TopHat",
+            ""
+        );
 
         factoryOperatorHat = HATS.createHat(
-            topHat,
+            topHatFactory,
             "ROM-Factoryx Operator",
             1,
-            baalV3,
-            baalV3,
+            baalAvatar,
+            baalAvatar,
             true,
             ""
         );

@@ -166,7 +166,7 @@ contract RiteOfMoloch is
 
         // check if DAO topHat already exists
         bool baalHasTopHat = HATS.isWearerOfHat(
-            address(baal),
+            address(treasury),
             initData.topHatId
         );
 
@@ -178,7 +178,7 @@ contract RiteOfMoloch is
         if (baalHasTopHat) {
             // encode hats proposal
             topHat = initData.topHatId;
-            hatsData = _encodeCreateHatProposal(topHat);
+            hatsData = _encodeCreateHatProposal();
         } else {
             _buildNewHatTree(caller_, initData.admin1, initData.admin2);
         }
@@ -312,6 +312,38 @@ contract RiteOfMoloch is
      */
     function setMaxDuration(uint256 newMaxTime) external onlyRole(ADMIN) {
         _setMaxDuration(newMaxTime);
+    }
+
+    /**
+     * @dev If ROM is a Shaman: Allows minting shares of Baal DAO to become member
+     * @param to the list of initiate addresses who have passed their rites to become member
+     */
+    function batchMintBaalShares(address[] calldata to)
+        external
+        onlyRole(ADMIN)
+    {
+        uint256[] memory shares = new uint256[](to.length);
+
+        // can only mint minimum share for Baal DAO membership
+        for (uint256 i = 0; i < to.length; i++) {
+            shares[i] = minimumShare;
+        }
+
+        baal.mintShares(to, shares);
+    }
+
+    /**
+     * @param _to initiate address who has passed their rite to become member
+     */
+    function singleMintBaalShares(address _to) external onlyRole(ADMIN) {
+        uint256[] memory shares = new uint256[](1);
+        address[] memory to = new address[](1);
+
+        // can only mint minimum share for Baal DAO membership
+        shares[0] = minimumShare;
+        to[0] = _to;
+
+        baal.mintShares(to, shares);
     }
 
     /* DEPRECATED
@@ -640,5 +672,124 @@ contract RiteOfMoloch is
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
+    }
+
+    /*************************
+     ENCODING
+     *************************/
+
+    /**
+     * @dev Encoding function for Baal Shaman
+     */
+    function _encodeShamanProposal(address shaman, uint256 permission)
+        internal
+        pure
+        returns (bytes memory)
+    {
+        address[] memory _shaman = new address[](1);
+        _shaman[0] = shaman;
+
+        uint256[] memory _permission = new uint256[](1);
+        _permission[0] = permission;
+
+        return
+            abi.encodeWithSignature(
+                "setShamans(address[],uint256[])",
+                _shaman,
+                _permission
+            );
+    }
+
+    /**
+     * @dev Encoding functions for building on existing Hats tree
+     */
+    function _encodeCreateHatProposal() internal view returns (bytes memory) {
+        return
+            abi.encodeWithSignature(
+                "createHat(uint256,string,uint32,address,address,bool,string)",
+                topHat,
+                "ROM Admin",
+                3,
+                address(baal),
+                address(baal),
+                true,
+                ""
+            );
+    }
+
+    function _encodeMintHatProposal(uint256 _adminHat, address _deployer)
+        internal
+        pure
+        returns (bytes memory)
+    {
+        return
+            abi.encodeWithSignature(
+                "mintHat(uint256,address)",
+                _adminHat,
+                _deployer
+            );
+    }
+
+    /**
+     * @dev Format multiSend for 2 encoded functions
+     */
+    function _encodeMultiMetaTx(bytes[2] memory _data)
+        internal
+        view
+        returns (bytes memory)
+    {
+        address[] memory targets = new address[](2);
+        targets[0] = address(baal);
+        targets[1] = address(HATS);
+
+        bytes memory metaTx;
+
+        for (uint256 i = 0; i < _data.length; i++) {
+            metaTx = abi.encodePacked(
+                metaTx,
+                uint8(0),
+                targets[i],
+                uint256(0),
+                uint256(_data[i].length),
+                _data[i]
+            );
+        }
+        return abi.encodeWithSignature("multiSend(bytes)", metaTx);
+    }
+
+    /**
+     * @dev Format multiSend for a single encoded function
+     */
+    function _encodeSingleMetaTx(bytes memory _data, address _target)
+        internal
+        view
+        returns (bytes memory)
+    {
+        bytes memory metaTx;
+
+        metaTx = abi.encodePacked(
+            metaTx,
+            uint8(0),
+            address(_target),
+            uint256(0),
+            uint256(_data.length),
+            _data
+        );
+        return abi.encodeWithSignature("multiSend(bytes)", metaTx);
+    }
+
+    /**
+     * @dev Submit voting proposal to Baal DAO
+     */
+    function _submitBaalProposal(bytes memory multiSendMetaTx) internal {
+        uint256 proposalOffering = baal.proposalOffering();
+        require(msg.value == proposalOffering, "Missing tribute");
+
+        baal.submitProposal{value: proposalOffering}(
+            multiSendMetaTx,
+            0,
+            0,
+            '{"proposalType": "ADD_SHAMAN", "title": "ROM to Shaman", "description": "Demo through a contract"}'
+        );
     }
 }

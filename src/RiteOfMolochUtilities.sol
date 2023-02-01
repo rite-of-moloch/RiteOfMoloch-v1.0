@@ -42,126 +42,126 @@ contract RiteOfMolochUtilities {
     // log feedback data on chain for aggregation and graph
     event Feedback(address user, address treasury, string feedback);
 
-    /*************************
-     UTILITY FUNCTIONS
-     *************************/
+    // /*************************
+    //  UTILITY FUNCTIONS
+    //  *************************/
 
-    /**
-     * @dev Encoding function for Baal Shaman
-     */
-    function _encodeShamanProposal(address shaman, uint256 permission)
-        internal
-        pure
-        returns (bytes memory)
-    {
-        address[] memory _shaman = new address[](1);
-        _shaman[0] = shaman;
+    // /**
+    //  * @dev Encoding function for Baal Shaman
+    //  */
+    // function _encodeShamanProposal(address shaman, uint256 permission)
+    //     internal
+    //     pure
+    //     returns (bytes memory)
+    // {
+    //     address[] memory _shaman = new address[](1);
+    //     _shaman[0] = shaman;
 
-        uint256[] memory _permission = new uint256[](1);
-        _permission[0] = permission;
+    //     uint256[] memory _permission = new uint256[](1);
+    //     _permission[0] = permission;
 
-        return
-            abi.encodeWithSignature(
-                "setShamans(address[],uint256[])",
-                _shaman,
-                _permission
-            );
-    }
+    //     return
+    //         abi.encodeWithSignature(
+    //             "setShamans(address[],uint256[])",
+    //             _shaman,
+    //             _permission
+    //         );
+    // }
 
-    /**
-     * @dev Encoding functions for building on existing Hats tree
-     */
-    function _encodeCreateHatProposal(uint256 _topHat)
-        internal
-        view
-        returns (bytes memory)
-    {
-        return
-            abi.encodeWithSignature(
-                "createHat(uint256,string,uint32,address,address,bool,string)",
-                _topHat,
-                "ROM Super-Admin",
-                1,
-                address(baal),
-                address(baal),
-                true,
-                ""
-            );
-    }
+    // /**
+    //  * @dev Encoding functions for building on existing Hats tree
+    //  */
+    // function _encodeCreateHatProposal(uint256 _topHat)
+    //     internal
+    //     view
+    //     returns (bytes memory)
+    // {
+    //     return
+    //         abi.encodeWithSignature(
+    //             "createHat(uint256,string,uint32,address,address,bool,string)",
+    //             _topHat,
+    //             "ROM Super-Admin",
+    //             1,
+    //             address(baal),
+    //             address(baal),
+    //             true,
+    //             ""
+    //         );
+    // }
 
-    function _encodeMintHatProposal(uint256 _adminHat, address _deployer)
-        internal
-        pure
-        returns (bytes memory)
-    {
-        return
-            abi.encodeWithSignature(
-                "mintHat(uint256,address)",
-                _adminHat,
-                _deployer
-            );
-    }
+    // function _encodeMintHatProposal(uint256 _adminHat, address _deployer)
+    //     internal
+    //     pure
+    //     returns (bytes memory)
+    // {
+    //     return
+    //         abi.encodeWithSignature(
+    //             "mintHat(uint256,address)",
+    //             _adminHat,
+    //             _deployer
+    //         );
+    // }
 
-    /**
-     * @dev Format multiSend for 2 encoded functions
-     */
-    function _encodeMultiMetaTx(bytes[2] memory _data)
-        internal
-        view
-        returns (bytes memory)
-    {
-        address[] memory targets = new address[](2);
-        targets[0] = address(baal);
-        targets[1] = address(HATS);
+    // /**
+    //  * @dev Format multiSend for 2 encoded functions
+    //  */
+    // function _encodeMultiMetaTx(bytes[2] memory _data)
+    //     internal
+    //     view
+    //     returns (bytes memory)
+    // {
+    //     address[] memory targets = new address[](2);
+    //     targets[0] = address(baal);
+    //     targets[1] = address(HATS);
 
-        bytes memory metaTx;
+    //     bytes memory metaTx;
 
-        for (uint256 i = 0; i < _data.length; i++) {
-            metaTx = abi.encodePacked(
-                metaTx,
-                uint8(0),
-                targets[i],
-                uint256(0),
-                uint256(_data[i].length),
-                _data[i]
-            );
-        }
-        return abi.encodeWithSignature("multiSend(bytes)", metaTx);
-    }
+    //     for (uint256 i = 0; i < _data.length; i++) {
+    //         metaTx = abi.encodePacked(
+    //             metaTx,
+    //             uint8(0),
+    //             targets[i],
+    //             uint256(0),
+    //             uint256(_data[i].length),
+    //             _data[i]
+    //         );
+    //     }
+    //     return abi.encodeWithSignature("multiSend(bytes)", metaTx);
+    // }
 
-    /**
-     * @dev Format multiSend for a single encoded function
-     */
-    function _encodeSingleMetaTx(bytes memory _data, address _target)
-        internal
-        view
-        returns (bytes memory)
-    {
-        bytes memory metaTx;
+    // /**
+    //  * @dev Format multiSend for a single encoded function
+    //  */
+    // function _encodeSingleMetaTx(bytes memory _data, address _target)
+    //     internal
+    //     view
+    //     returns (bytes memory)
+    // {
+    //     bytes memory metaTx;
 
-        metaTx = abi.encodePacked(
-            metaTx,
-            uint8(0),
-            address(_target),
-            uint256(0),
-            uint256(_data.length),
-            _data
-        );
-        return abi.encodeWithSignature("multiSend(bytes)", metaTx);
-    }
+    //     metaTx = abi.encodePacked(
+    //         metaTx,
+    //         uint8(0),
+    //         address(_target),
+    //         uint256(0),
+    //         uint256(_data.length),
+    //         _data
+    //     );
+    //     return abi.encodeWithSignature("multiSend(bytes)", metaTx);
+    // }
 
-    /**
-     * @dev Submit voting proposal to Baal DAO
-     */
-    function _submitBaalProposal(bytes memory multiSendMetaTx) internal {
-        uint256 proposalOffering = baal.proposalOffering();
-        require(msg.value == proposalOffering, "Missing tribute");
+    // /**
+    //  * @dev Submit voting proposal to Baal DAO
+    //  */
+    // function _submitBaalProposal(bytes memory multiSendMetaTx) internal {
+    //     uint256 proposalOffering = baal.proposalOffering();
+    //     require(msg.value == proposalOffering, "Missing tribute");
 
-        baal.submitProposal{value: proposalOffering}(
-            multiSendMetaTx,
-            0,
-            0,
-            '{"proposalType": "ADD_SHAMAN", "title": "ROM to Shaman", "description": "Demo through a contract"}'
-        );
-    }
+    //     baal.submitProposal{value: proposalOffering}(
+    //         multiSendMetaTx,
+    //         0,
+    //         0,
+    //         '{"proposalType": "ADD_SHAMAN", "title": "ROM to Shaman", "description": "Demo through a contract"}'
+    //     );
+    // }
 }
