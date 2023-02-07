@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // @author st4rgard3n, bitbeckers, MrDeadce11, huntrr / Raid Guild
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.13;
 
 import "lib/openzeppelin-contracts/contracts/proxy/Clones.sol";
 import "src/RiteOfMoloch.sol";

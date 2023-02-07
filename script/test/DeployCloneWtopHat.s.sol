@@ -12,6 +12,8 @@ import {IBaal} from "src/baal/IBaal.sol";
 // create with verify
 // forge script script/test/DeployCloneWtopHat.s.sol:DeployCloneWtopHatScript --rpc-url $RU --private-key $PK --broadcast --verify --etherscan-api-key $EK -vvvv
 
+// --use solc:0.8.13
+
 // create without verify
 // forge script script/test/DeployCloneWtopHat.s.sol:DeployCloneWtopHatScript --rpc-url $RU --private-key $PK --broadcast -vvvv
 
@@ -27,14 +29,14 @@ contract DeployCloneWtopHatScript is Script, InitializationData {
     // variables
     InitData Data;
     RiteOfMolochFactory public ROMF;
-    // RiteOfMolochFactory public constant ROMF =
-    //     RiteOfMolochFactory(0x00b52e6d26026C853f89dC895F0ae2b0Ba7FECaA);
+    // RiteOfMolochFactory public ROMF =
+    //     RiteOfMolochFactory(0x225DDADbf700C5DF4dA7A3E0e02cfFE3770E3709);
     RiteOfMoloch public ROM;
     // Hats
     IHats public HATS;
     uint256 public topHatFactory;
-    uint256 public constant topHatMoloch =
-        1833276373366243506037357025917334885807325820732758928715045496946688;
+    uint256 public topHatMoloch =
+        2129835786704900543778694191874550823217334409380705226007185209688064;
     uint256 public factoryOperatorHat;
     address public hatsProtocol = 0xcf912a0193593f5cD55D81FF611c26c3ED63f924;
 
@@ -42,12 +44,13 @@ contract DeployCloneWtopHatScript is Script, InitializationData {
         require(baalAvatar == baal.avatar(), "Incorrect avatar");
 
         HATS = IHats(hatsProtocol);
+
+        require(HATS.isTopHat(topHatMoloch), "Hat is not topHat!");
+
         require(
             HATS.isAdminOfHat(baalAvatar, topHatMoloch),
             "DAO not owner of hat!"
         );
-
-        require(HATS.isTopHat(topHatMoloch), "Hat is not topHat!");
 
         hatTreeSetup();
 
@@ -82,7 +85,7 @@ contract DeployCloneWtopHatScript is Script, InitializationData {
     }
 
     function hatTreeSetup() public {
-        // Hats for ROM Factory
+        // Hat for ROM Factory
         topHatFactory = HATS.mintTopHat(
             address(this),
             "ROM-Factoryx TopHat",

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // @author st4rgard3n, bitbeckers, MrDeadce11, huntrr / Raid Guild
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.13;
 
 import "lib/openzeppelin-contracts-upgradeable/contracts/utils/CountersUpgradeable.sol";
 import "lib/openzeppelin-contracts-upgradeable/contracts/token/ERC721/ERC721Upgradeable.sol";
@@ -96,6 +96,9 @@ contract RiteOfMoloch is
     uint256 public topHat;
     uint256 public adminHat;
 
+    // Hats initializer lock
+    bool private initHatTreeLock;
+
     constructor() {
         _disableInitializers();
     }
@@ -161,14 +164,12 @@ contract RiteOfMoloch is
         _changeHatsContract(hatsProtocol);
 
         // encoded variables for Baal proposal
-        bytes memory hatsData;
         bytes memory shamanData;
+        bytes memory accessHatData;
+        bytes memory buildHatData;
 
         // check if DAO topHat already exists
-        bool baalHasTopHat = HATS.isWearerOfHat(
-            address(treasury),
-            initData.topHatId
-        );
+        bool baalHasTopHat = HATS.isWearerOfHat(treasury, initData.topHatId);
 
         if (initData.shamanOn) {
             // encode shaman proposal
@@ -176,22 +177,53 @@ contract RiteOfMoloch is
         }
 
         if (baalHasTopHat) {
-            // encode hats proposal
+            // encode hats proposals; access topHat and initialize hat tree
             topHat = initData.topHatId;
-            hatsData = _encodeCreateHatProposal();
+            accessHatData = _encodeHatProposal();
+            buildHatData = _encodeBuildHatTree(
+                caller_,
+                initData.admin1,
+                initData.admin2
+            );
         } else {
-            _buildNewHatTree(caller_, initData.admin1, initData.admin2);
+            // creates a new topHat, initialize hat tree
+            topHat = HATS.mintTopHat(address(this), "ROM TopHat", "");
+            initializeHatTree(caller_, initData.admin1, initData.admin2);
         }
 
         if (initData.shamanOn && baalHasTopHat) {
             // submit SHAMAN + HATS proposal
-            _submitBaalProposal(_encodeMultiMetaTx([shamanData, hatsData]));
+            bytes[] memory data = new bytes[](3);
+            data[0] = shamanData;
+            data[1] = accessHatData;
+            data[2] = buildHatData;
+
+            address[] memory targets = new address[](3);
+            targets[0] = address(baal);
+            targets[1] = address(HATS);
+            targets[2] = address(this);
+
+            _submitBaalProposal(_encodeMultiMetaTx(data, targets), true, true);
         } else if (!initData.shamanOn && baalHasTopHat) {
             // submit ONLY HATS proposal
-            _submitBaalProposal(_encodeSingleMetaTx(hatsData, hatsProtocol));
+            bytes[] memory data = new bytes[](2);
+            data[0] = accessHatData;
+            data[1] = buildHatData;
+
+            address[] memory targets = new address[](2);
+            targets[0] = address(HATS);
+            targets[1] = address(this);
+
+            _submitBaalProposal(_encodeMultiMetaTx(data, targets), false, true);
         } else if (initData.shamanOn && !baalHasTopHat) {
             // submit ONLY SHAMAN proposal
-            _submitBaalProposal(_encodeSingleMetaTx(shamanData, address(baal)));
+            bytes[] memory data = new bytes[](1);
+            data[0] = shamanData;
+
+            address[] memory targets = new address[](1);
+            targets[0] = address(baal);
+
+            _submitBaalProposal(_encodeMultiMetaTx(data, targets), true, false);
         }
     }
 
@@ -579,50 +611,6 @@ contract RiteOfMoloch is
         require(shares >= minimumShare, "You must be a member!");
     }
 
-    /**
-     * @dev Creates a new topHat, build Access Control tree,
-     * and transfers topHat to DAO
-     */
-    function _buildNewHatTree(
-        address _deployer,
-        address _admin1,
-        address _admin2
-    ) internal virtual {
-        topHat = HATS.mintTopHat(address(this), "ROM TopHat", "");
-        adminHat = _createAdminHat();
-        /**
-         * @dev Mint admin hats to Deployer & admin addresses
-         * DAO can grant/revoke adminHats (after topHat is transferred below)
-         */
-        HATS.mintHat(adminHat, _deployer);
-
-        if (_admin1 != address(0)) {
-            HATS.mintHat(adminHat, _admin1);
-        }
-        if (_admin2 != address(0)) {
-            HATS.mintHat(adminHat, _admin2);
-        }
-
-        // grant Hat Access Control roles
-        _grantRole(ADMIN, adminHat);
-
-        HATS.transferHat(topHat, address(this), address(baal));
-    }
-
-    function _createAdminHat() internal returns (uint256) {
-        // admin privileges: access control
-        return
-            HATS.createHat(
-                topHat,
-                "ROM Admin",
-                3,
-                address(baal),
-                address(baal),
-                true,
-                ""
-            );
-    }
-
     /*************************
      VIEW AND PURE FUNCTIONS
      *************************/
@@ -675,6 +663,49 @@ contract RiteOfMoloch is
     }
 
     /*************************
+     HATS ACCESS CONTROL SETUP
+     *************************/
+
+    /**
+     * @dev create & mint admin hats to deployer & admin addresses
+     * DAO can grant/revoke adminHats (after topHat is transferred below)
+     */
+    function initializeHatTree(
+        address _deployer,
+        address _admin1,
+        address _admin2
+    ) public {
+        require(initHatTreeLock == false, "Hats already initialized");
+        initHatTreeLock = true;
+
+        // admin privileges: access control
+        adminHat = HATS.createHat(
+            topHat,
+            "ROM Admin",
+            3,
+            address(baal),
+            address(baal),
+            true,
+            ""
+        );
+
+        HATS.mintHat(adminHat, _deployer);
+
+        if (_admin1 != address(0)) {
+            HATS.mintHat(adminHat, _admin1);
+        }
+        if (_admin2 != address(0)) {
+            HATS.mintHat(adminHat, _admin2);
+        }
+
+        // grant Hat Access Control roles
+        _grantRole(ADMIN, adminHat);
+
+        // return topHat to  Baal Avatar
+        HATS.transferHat(topHat, address(this), treasury);
+    }
+
+    /*************************
      ENCODING
      *************************/
 
@@ -701,54 +732,50 @@ contract RiteOfMoloch is
     }
 
     /**
-     * @dev Encoding functions for building on existing Hats tree
+     * @dev Encoding function for accessing an existing topHat
      */
-    function _encodeCreateHatProposal() internal view returns (bytes memory) {
+    function _encodeHatProposal() internal view returns (bytes memory) {
         return
             abi.encodeWithSignature(
-                "createHat(uint256,string,uint32,address,address,bool,string)",
+                "transferHat(uint256,address,address)",
                 topHat,
-                "ROM Admin",
-                3,
-                address(baal),
-                address(baal),
-                true,
-                ""
-            );
-    }
-
-    function _encodeMintHatProposal(uint256 _adminHat, address _deployer)
-        internal
-        pure
-        returns (bytes memory)
-    {
-        return
-            abi.encodeWithSignature(
-                "mintHat(uint256,address)",
-                _adminHat,
-                _deployer
+                treasury,
+                address(this)
             );
     }
 
     /**
-     * @dev Format multiSend for 2 encoded functions
+     * @dev Encoding function for building on existing Hats tree
      */
-    function _encodeMultiMetaTx(bytes[2] memory _data)
+    function _encodeBuildHatTree(
+        address _deployer,
+        address _admin1,
+        address _admin2
+    ) internal view returns (bytes memory) {
+        return
+            abi.encodeWithSignature(
+                "initializeHatTree(address,address,address)",
+                _deployer,
+                _admin1,
+                _admin2
+            );
+    }
+
+    /**
+     * @dev Format multiSend for encoded functions
+     */
+    function _encodeMultiMetaTx(bytes[] memory _data, address[] memory _targets)
         internal
         view
         returns (bytes memory)
     {
-        address[] memory targets = new address[](2);
-        targets[0] = address(baal);
-        targets[1] = address(HATS);
-
         bytes memory metaTx;
 
         for (uint256 i = 0; i < _data.length; i++) {
             metaTx = abi.encodePacked(
                 metaTx,
                 uint8(0),
-                targets[i],
+                _targets[i],
                 uint256(0),
                 uint256(_data[i].length),
                 _data[i]
@@ -758,38 +785,33 @@ contract RiteOfMoloch is
     }
 
     /**
-     * @dev Format multiSend for a single encoded function
-     */
-    function _encodeSingleMetaTx(bytes memory _data, address _target)
-        internal
-        view
-        returns (bytes memory)
-    {
-        bytes memory metaTx;
-
-        metaTx = abi.encodePacked(
-            metaTx,
-            uint8(0),
-            address(_target),
-            uint256(0),
-            uint256(_data.length),
-            _data
-        );
-        return abi.encodeWithSignature("multiSend(bytes)", metaTx);
-    }
-
-    /**
      * @dev Submit voting proposal to Baal DAO
      */
-    function _submitBaalProposal(bytes memory multiSendMetaTx) internal {
+    function _submitBaalProposal(
+        bytes memory multiSendMetaTx,
+        bool shaman,
+        bool hats
+    ) internal {
         uint256 proposalOffering = baal.proposalOffering();
         require(msg.value == proposalOffering, "Missing tribute");
+
+        string memory metaString;
+
+        if (shaman && hats) {
+            metaString = '{"proposalType": "ADD_SHAMAN", "title": "Rite of Moloch", "description": "Add Shaman, Build on TopHat"}';
+        } else if (shaman && !hats) {
+            metaString = '{"proposalType": "ADD_SHAMAN", "title": "Rite of Moloch", "description": "Add Shaman only"}';
+        } else if (!shaman && hats) {
+            metaString = '{"proposalType": "HATS", "title": "Rite of Moloch", "description": "Build on TopHat only"}';
+        } else {
+            return;
+        }
 
         baal.submitProposal{value: proposalOffering}(
             multiSendMetaTx,
             0,
             0,
-            '{"proposalType": "ADD_SHAMAN", "title": "ROM to Shaman", "description": "Demo through a contract"}'
+            metaString
         );
     }
 }
