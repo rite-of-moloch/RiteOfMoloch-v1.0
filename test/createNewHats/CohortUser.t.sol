@@ -6,7 +6,7 @@ import "test/TestHelper.sol";
 // forge test --match-contract CohortUser -vv
 
 /**
- * @dev disable callerIsUser on RiteOfMoloch contract for these tests
+ * @dev see note on TestHelper
  */
 contract CohortUser is TestHelper {
     function setUp() public override {

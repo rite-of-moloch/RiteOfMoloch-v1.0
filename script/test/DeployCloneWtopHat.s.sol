@@ -1,14 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {TestHelperScript} from "script/utils/TestHelper.s.sol";
+import {TestHelperScript} from "script/test/utils/TestHelper.s.sol";
+import {RiteOfMoloch} from "src/RiteOfMoloch.sol";
 
 // create with verify
 // forge script script/test/DeployCloneWtopHat.s.sol:DeployCloneWtopHatScript --rpc-url $RU --private-key $PK --broadcast --verify --etherscan-api-key $EK -vvvv
 
 contract DeployCloneWtopHatScript is TestHelperScript {
     function run() public {
-        setUp();
+        vm.startBroadcast();
+
+        setUpHelper();
 
         // DAO's topHat id
         topHatMoloch = 2129835786704900543778694191874550823217334409380705226007185209688064;
@@ -25,10 +28,7 @@ contract DeployCloneWtopHatScript is TestHelperScript {
         // topHat: YES, shaman: NO
         createInitData(topHatMoloch, false);
 
-        vm.startBroadcast();
-
-        // deploy ROM-factory and produce ROM-clone
-        ROMF = new RiteOfMolochFactory(hatsProtocol, factoryOperatorHat);
+        // deploy ROM-clone
         ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
 
         vm.stopBroadcast();

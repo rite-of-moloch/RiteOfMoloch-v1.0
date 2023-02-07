@@ -6,7 +6,7 @@ import "test/TestHelper.sol";
 // forge test --match-contract Sacrifice -vv
 
 /**
- * @dev disable callerIsUser on RiteOfMoloch contract for these tests
+ * @dev see note on TestHelper
  */
 contract Sacrifice is TestHelper {
     address[] failedInitiates = [alice, bob, charlie];

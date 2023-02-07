@@ -11,6 +11,17 @@ import {Hats} from "test/utils/hats/HatsT.sol";
 
 // forge test --match-contract TestHelper -vv
 
+/**
+ * @dev RiteOfMoloch line 139 needs to be changed for local testing:
+ * from: _sharesToken = IERC20(baal.sharesToken());
+ * to:   _sharesToken = IERC20(initData.stakingAsset);
+ */
+
+/**
+ * @dev RiteOfMoloch line 239 needs to be commented out:
+ * disable callerIsUser for Forge tests/scripts
+ */
+
 contract TestHelper is Test, InitializationData {
     uint256 constant DAY_IN_SECONDS = 86400;
 
@@ -129,7 +140,10 @@ contract TestHelper is Test, InitializationData {
         // deployer address
         emit log_named_address("ROM  Deployer", deployer);
 
-        // LOGS COMMENTED OUT
+        // LOGS
+        /**
+         * @dev uncomment logs to view deployment confirmations
+         */
         // factoryDeployment();
         // tokenDeployment();
         // hatsIdentities();

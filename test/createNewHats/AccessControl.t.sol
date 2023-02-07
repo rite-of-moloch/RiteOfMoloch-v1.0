@@ -6,6 +6,9 @@ import "test/utils/hats/interfaces/HatsErrorsT.sol";
 
 // forge test --match-contract AccessControl -vv
 
+/**
+ * @dev see note on TestHelper
+ */
 contract AccessControl is TestHelper {
     bytes32 public constant SUPER_ADMIN = keccak256("SUPER_ADMIN");
     bytes32 public constant ADMIN = keccak256("ADMIN");

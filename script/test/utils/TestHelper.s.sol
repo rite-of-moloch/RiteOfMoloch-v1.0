@@ -9,10 +9,16 @@ import {IHats} from "src/hats/IHats.sol";
 import {ERC20} from "lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
 import {IBaal} from "src/baal/IBaal.sol";
 
+/**
+ * @dev RiteOfMoloch line 239 needs to be commented out:
+ * disable callerIsUser for Forge tests/scripts
+ */
+
 contract TestHelperScript is Script, InitializationData {
     // test token for staking asset
     ERC20 public constant token =
         ERC20(0xA49dF10dD5B84257dE634F4350218f615471Fc69);
+    uint256 public constant minStake = 250 * 10e18;
 
     // Baal V3 address and Gnosis Safe Avatar (treasury)
     IBaal public constant baal =
@@ -56,7 +62,7 @@ contract TestHelperScript is Script, InitializationData {
         Data.cohortSize = 5;
         Data.joinDuration = 10 days;
         Data.threshold = 10;
-        Data.assetAmount = 250 * 10e18;
+        Data.assetAmount = minStake;
         Data.stakeDuration = 10 days;
         Data.topHatId = _topHat; // hats proposal data
         Data.cohortName = "SeasonV";
@@ -71,16 +77,12 @@ contract TestHelperScript is Script, InitializationData {
      */
     function hatTreeSetup() public {
         // this Script contract will be the admin of the factory (for development only)
-        topHatFactory = HATS.mintTopHat(
-            address(this),
-            "ROM-Factory TopHat",
-            ""
-        );
+        topHatFactory = HATS.mintTopHat(msg.sender, "ROM-Factory TopHat", "");
 
         factoryOperatorHat = HATS.createHat(
             topHatFactory,
             "ROM-Factory Operator",
-            1,
+            2,
             address(333), // arbitrary elgibility addr
             address(333), // arbitrary toggle addr
             true,
@@ -90,7 +92,7 @@ contract TestHelperScript is Script, InitializationData {
         HATS.mintHat(factoryOperatorHat, msg.sender);
     }
 
-    function setUp() public {
+    function setUpHelper() public {
         // check link between Baal and Avatar
         require(baalAvatar == baal.avatar(), "Incorrect avatar");
 
@@ -99,5 +101,8 @@ contract TestHelperScript is Script, InitializationData {
 
         // create Hats tree for ROM-Factory
         hatTreeSetup();
+
+        // deploy ROM-factory
+        ROMF = new RiteOfMolochFactory(hatsProtocol, factoryOperatorHat);
     }
 }
