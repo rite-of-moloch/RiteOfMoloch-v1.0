@@ -37,10 +37,7 @@ contract RiteOfMolochFactory is InitializationData, HatsAccessControl {
     uint256 public factoryOperatorHat;
 
     /**
-     * @param _hatsProtocol implementations:
-     * Polygon = 0x95647f88dcbc12986046fc4f49064edd11a25d38
-     * Gnosis = 0x6B49b86D21aBc1D60611bD85c843a9766B5493DB
-     * Georli = 0xcf912a0193593f5cD55D81FF611c26c3ED63f924
+     * @param _hatsProtocol current release: 0x96bD657Fcc04c71B47f896a829E5728415cbcAa1
      */
     constructor(address _hatsProtocol, uint256 _factoryOperatorHat) {
         // point to Hats implementation

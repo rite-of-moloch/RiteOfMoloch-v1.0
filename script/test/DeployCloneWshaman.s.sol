@@ -5,9 +5,9 @@ import {TestHelperScript} from "script/test/utils/TestHelper.s.sol";
 import {RiteOfMoloch} from "src/RiteOfMoloch.sol";
 
 // create with verify
-// forge script script/test/DeployClone.s.sol:DeployCloneScript --rpc-url $RU --private-key $PK --broadcast --verify --etherscan-api-key $EK -vvvv
+// forge script script/test/DeployCloneWshaman.s.sol:DeployCloneWshamanScript --rpc-url $RU --private-key $PK --broadcast --verify --etherscan-api-key $EK -vvvv
 
-contract DeployCloneScript is TestHelperScript {
+contract DeployCloneWshamanScript is TestHelperScript {
     function run() public {
         vm.startBroadcast();
 

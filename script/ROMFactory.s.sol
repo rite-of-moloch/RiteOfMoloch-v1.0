@@ -8,9 +8,6 @@ import {IHats} from "src/hats/IHats.sol";
 // create with verify
 // forge script script/ROMFactory.s.sol:ROMFactoryScript --rpc-url $RU --private-key $PK --broadcast --verify --etherscan-api-key $EK -vvvv
 
-// create without verify
-// forge script script/ROMFactory.s.sol:ROMFactoryScript --rpc-url $RU --private-key $PK --broadcast -vvvv
-
 contract ROMFactoryScript is Script {
     // ROM factory contract
     RiteOfMolochFactory public ROMF;
@@ -19,12 +16,7 @@ contract ROMFactoryScript is Script {
     IHats public HATS;
 
     // Hats protocol implementation
-    address public hatsProtocolGoerli =
-        0xcf912a0193593f5cD55D81FF611c26c3ED63f924;
-    address public hatsProtocolPolygon =
-        0x95647F88dcbC12986046fc4f49064Edd11a25d38;
-    address public hatsProtocolGnosis =
-        0x6B49b86D21aBc1D60611bD85c843a9766B5493DB;
+    address public hatsProtocol = 0x96bD657Fcc04c71B47f896a829E5728415cbcAa1;
 
     // Hats / roles
     uint256 public topHat;
@@ -35,10 +27,10 @@ contract ROMFactoryScript is Script {
 
     function setUp() public {
         // point to Hats implementation
-        HATS = IHats(hatsProtocolGoerli);
+        HATS = IHats(hatsProtocol);
 
         // mint topHat
-        topHat = HATS.mintTopHat(address(this), "ROM-Factory TopHat", "");
+        topHat = HATS.mintTopHat(msg.sender, "ROM-Factory TopHat", "");
 
         // create factory operator hat
         factoryOperatorHat = HATS.createHat(
@@ -59,7 +51,7 @@ contract ROMFactoryScript is Script {
         vm.startBroadcast();
 
         // change Hats Protocol for chain
-        ROMF = new RiteOfMolochFactory(hatsProtocolGoerli, factoryOperatorHat);
+        ROMF = new RiteOfMolochFactory(hatsProtocol, factoryOperatorHat);
 
         vm.stopBroadcast();
     }

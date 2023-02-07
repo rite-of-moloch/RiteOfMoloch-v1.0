@@ -14,7 +14,7 @@ contract DeployCloneWtopHatScript is TestHelperScript {
         setUpHelper();
 
         // DAO's topHat id
-        topHatMoloch = 2129835786704900543778694191874550823217334409380705226007185209688064;
+        topHatMoloch = 215679573337205118357336120696157045389097155380324579848828881993728;
 
         // check id is topHat
         require(HATS.isTopHat(topHatMoloch), "Hat is not topHat!");

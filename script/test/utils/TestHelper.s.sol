@@ -39,7 +39,7 @@ contract TestHelperScript is Script, InitializationData {
     // Hats interface and current deployment release
     IHats public HATS;
     address public constant hatsProtocol =
-        0xcf912a0193593f5cD55D81FF611c26c3ED63f924;
+        0x96bD657Fcc04c71B47f896a829E5728415cbcAa1;
 
     // Hats topHat for testing Baal proposal with existing topHat
     uint256 public topHatMoloch;
