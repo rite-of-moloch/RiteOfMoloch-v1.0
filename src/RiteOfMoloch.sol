@@ -135,9 +135,8 @@ contract RiteOfMoloch is
         baal = IBaal(initData.membershipCriteria);
 
         // reference sharesToken of Baal
-        // todo: uncomment / comment out for Forge testing
-        _sharesToken = IERC20(initData.stakingAsset); // <= for testing only
-        // _sharesToken = IERC20(baal.sharesToken()); // <= correct
+        // _sharesToken = IERC20(initData.stakingAsset); // <= for local testing only
+        _sharesToken = IERC20(baal.sharesToken()); // <= correct
 
         // store the treasury daoAddress
         treasury = initData.treasury;
@@ -819,11 +818,11 @@ contract RiteOfMoloch is
         string memory metaString;
 
         if (shaman && hats) {
-            metaString = '{"proposalType": "ADD_SHAMAN", "title": "Rite of Moloch", "description": "Add Shaman, Build on TopHat"}';
+            metaString = '{"proposalType": "ADD_SHAMAN", "title": "Rite of Moloch (ROM)", "description": "Initialize: Add Manager-Shaman, Build from DAO-TopHat"}';
         } else if (shaman && !hats) {
-            metaString = '{"proposalType": "ADD_SHAMAN", "title": "Rite of Moloch", "description": "Add Shaman only"}';
+            metaString = '{"proposalType": "ADD_SHAMAN", "title": "Rite of Moloch (ROM)", "description": "Initialize: Add Manager-Shaman only"}';
         } else if (!shaman && hats) {
-            metaString = '{"proposalType": "HATS", "title": "Rite of Moloch", "description": "Build on TopHat only"}';
+            metaString = '{"proposalType": "BORROW_TOPHAT", "title": "Rite of Moloch (ROM)", "description": "Build from DAO-TopHat only"}';
         } else {
             return;
         }
