@@ -162,20 +162,26 @@ contract RiteOfMoloch is
         // point access control functionality to Hats protocol
         _changeHatsContract(hatsProtocol);
 
-        // encoded variables for Baal proposal
-        bytes memory shamanData;
-        bytes memory accessHatData;
-        bytes memory buildHatData;
-
-        // check if DAO topHat already exists
-        bool baalHasTopHat = HATS.isWearerOfHat(treasury, initData.topHatId);
-
         if (initData.shamanOn) {
+            bytes memory shamanData;
+
             // encode shaman proposal
             shamanData = _encodeShamanProposal(address(this), 2);
+
+            // submit SHAMAN proposal
+            bytes[] memory data = new bytes[](1);
+            data[0] = shamanData;
+
+            address[] memory targets = new address[](1);
+            targets[0] = address(baal);
+
+            _submitBaalProposal(_encodeMultiMetaTx(data, targets), true);
         }
 
-        if (baalHasTopHat) {
+        if (HATS.isWearerOfHat(treasury, initData.topHatId) == true) {
+            bytes memory accessHatData;
+            bytes memory buildHatData;
+
             // encode hats proposals; access topHat and initialize hat tree
             topHat = initData.topHatId;
             accessHatData = _encodeHatProposal();
@@ -184,27 +190,8 @@ contract RiteOfMoloch is
                 initData.admin1,
                 initData.admin2
             );
-        } else {
-            // creates a new topHat, initialize hat tree
-            topHat = HATS.mintTopHat(address(this), "ROM TopHat", "");
-            initializeHatTree(caller_, initData.admin1, initData.admin2);
-        }
 
-        if (initData.shamanOn && baalHasTopHat) {
-            // submit SHAMAN + HATS proposal
-            bytes[] memory data = new bytes[](3);
-            data[0] = shamanData;
-            data[1] = accessHatData;
-            data[2] = buildHatData;
-
-            address[] memory targets = new address[](3);
-            targets[0] = address(baal);
-            targets[1] = address(HATS);
-            targets[2] = address(this);
-
-            _submitBaalProposal(_encodeMultiMetaTx(data, targets), true, true);
-        } else if (!initData.shamanOn && baalHasTopHat) {
-            // submit ONLY HATS proposal
+            // submit HATS proposal
             bytes[] memory data = new bytes[](2);
             data[0] = accessHatData;
             data[1] = buildHatData;
@@ -213,16 +200,11 @@ contract RiteOfMoloch is
             targets[0] = address(HATS);
             targets[1] = address(this);
 
-            _submitBaalProposal(_encodeMultiMetaTx(data, targets), false, true);
-        } else if (initData.shamanOn && !baalHasTopHat) {
-            // submit ONLY SHAMAN proposal
-            bytes[] memory data = new bytes[](1);
-            data[0] = shamanData;
-
-            address[] memory targets = new address[](1);
-            targets[0] = address(baal);
-
-            _submitBaalProposal(_encodeMultiMetaTx(data, targets), true, false);
+            _submitBaalProposal(_encodeMultiMetaTx(data, targets), false);
+        } else {
+            // creates a new topHat, initialize hat tree
+            topHat = HATS.mintTopHat(address(this), "ROM TopHat", "");
+            initializeHatTree(caller_, initData.admin1, initData.admin2);
         }
     }
 
@@ -807,24 +789,18 @@ contract RiteOfMoloch is
     /**
      * @dev Submit voting proposal to Baal DAO
      */
-    function _submitBaalProposal(
-        bytes memory multiSendMetaTx,
-        bool shaman,
-        bool hats
-    ) internal {
+    function _submitBaalProposal(bytes memory multiSendMetaTx, bool shaman)
+        internal
+    {
         uint256 proposalOffering = baal.proposalOffering();
         require(msg.value == proposalOffering, "Missing tribute");
 
         string memory metaString;
 
-        if (shaman && hats) {
-            metaString = '{"proposalType": "ADD_SHAMAN", "title": "Rite of Moloch (ROM)", "description": "Initialize: Add Manager-Shaman, Build from DAO-TopHat"}';
-        } else if (shaman && !hats) {
-            metaString = '{"proposalType": "ADD_SHAMAN", "title": "Rite of Moloch (ROM)", "description": "Initialize: Add Manager-Shaman only"}';
-        } else if (!shaman && hats) {
-            metaString = '{"proposalType": "BORROW_TOPHAT", "title": "Rite of Moloch (ROM)", "description": "Build from DAO-TopHat only"}';
+        if (shaman) {
+            metaString = '{"proposalType": "ADD_SHAMAN", "title": "Rite of Moloch (ROM): Shaman Proposal", "description": "Assign ROM as a Manager-Shaman to mint minimum DAO shares"}';
         } else {
-            return;
+            metaString = '{"proposalType": "BORROW_TOPHAT", "title": "Rite of Moloch (ROM): Hats Proposal", "description": "Create and mint ROM-Admin hats from DAO TopHat"}';
         }
 
         baal.submitProposal{value: proposalOffering}(
