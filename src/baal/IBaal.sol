@@ -17,6 +17,8 @@ interface IBaal {
 
     function sharesToken() external returns (address);
 
+    function isManager(address shaman) external view returns (bool);
+
     function mintShares(address[] calldata to, uint256[] calldata amount)
         external;
 }

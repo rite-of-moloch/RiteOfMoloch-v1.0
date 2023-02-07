@@ -250,6 +250,15 @@ contract RiteOfMoloch is
         _;
     }
 
+    /**
+     * @dev Modifier for checkin that RiteOfMoloch has Shaman privileges
+     * Prevents calling functions that will revert
+     */
+    modifier onlyShaman() {
+        _checkManager();
+        _;
+    }
+
     /*************************
      USER FUNCTIONS
      *************************/
@@ -353,6 +362,7 @@ contract RiteOfMoloch is
     function batchMintBaalShares(address[] calldata to)
         external
         onlyRole(ADMIN)
+        onlyShaman
     {
         uint256[] memory shares = new uint256[](to.length);
 
@@ -367,7 +377,11 @@ contract RiteOfMoloch is
     /**
      * @param _to initiate address who has passed their rite to become member
      */
-    function singleMintBaalShares(address _to) external onlyRole(ADMIN) {
+    function singleMintBaalShares(address _to)
+        external
+        onlyRole(ADMIN)
+        onlyShaman
+    {
         uint256[] memory shares = new uint256[](1);
         address[] memory to = new address[](1);
 
@@ -609,6 +623,13 @@ contract RiteOfMoloch is
     function _checkMember() internal virtual {
         uint256 shares = _sharesToken.balanceOf(msg.sender);
         require(shares >= minimumShare, "You must be a member!");
+    }
+
+    function _checkManager() internal virtual {
+        require(
+            baal.isManager(address(this)) == true,
+            "This RiteOfMoloch is not a Manager-Shaman!"
+        );
     }
 
     /*************************
