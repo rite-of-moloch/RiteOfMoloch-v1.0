@@ -5,17 +5,17 @@ pragma solidity ^0.8.13;
 import "lib/openzeppelin-contracts-upgradeable/contracts/utils/CountersUpgradeable.sol";
 import "lib/openzeppelin-contracts-upgradeable/contracts/token/ERC721/ERC721Upgradeable.sol";
 import "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
-import "src/InitializationData.sol";
-import "src/RiteOfMolochUtilities.sol";
+import "src/interfaces/IInitData.sol";
+import "src/interfaces/IRiteOfMolochEvents.sol";
 import "src/hats/HatsAccessControl.sol";
 import {IHats} from "src/hats/IHats.sol";
 import {IBaal} from "src/baal/IBaal.sol";
 
 contract RiteOfMoloch is
-    InitializationData,
+    IInitData,
     ERC721Upgradeable,
     HatsAccessControl,
-    RiteOfMolochUtilities
+    IRiteOfMolochEvents
 {
     using CountersUpgradeable for CountersUpgradeable.Counter;
     mapping(bytes32 => RoleData) public _roles;
@@ -178,7 +178,7 @@ contract RiteOfMoloch is
             _submitBaalProposal(_encodeMultiMetaTx(data, targets), true);
         }
 
-        if (HATS.isWearerOfHat(treasury, initData.topHatId) == true) {
+        if (HATS.isWearerOfHat(treasury, initData.topHatId)) {
             bytes memory accessHatData;
             bytes memory buildHatData;
 
@@ -345,10 +345,11 @@ contract RiteOfMoloch is
         onlyRole(ADMIN)
         onlyShaman
     {
-        uint256[] memory shares = new uint256[](to.length);
+        uint256 length = to.length;
+        uint256[] memory shares = new uint256[](length);
 
         // can only mint minimum share for Baal DAO membership
-        for (uint256 i = 0; i < to.length; i++) {
+        for (uint256 i = 0; i < length; i++) {
             shares[i] = minimumShare;
         }
 
@@ -372,17 +373,6 @@ contract RiteOfMoloch is
 
         baal.mintShares(to, shares);
     }
-
-    /* DEPRECATED
-     * @dev Claims the life force of failed initiates for the dao
-     * @param failedInitiates an array of user's who have failed to join the DAO
-     */
-    // function sacrifice(address[] calldata failedInitiates)
-    //     external
-    //     onlyRole(ADMIN)
-    // {
-    //     _darkRitual(failedInitiates);
-    // }
 
     /**
      * @dev Claims the life force of failed initiates for the dao
@@ -476,11 +466,11 @@ contract RiteOfMoloch is
         // delete the deadline timestamp
         delete deadlines[msgSender];
 
-        // log data for this successful claim
-        emit Claim(msgSender, balance);
-
         // return the new member's original stake
         return _token.transfer(msgSender, balance);
+
+        // log data for this successful claim
+        emit Claim(msgSender, balance);
     }
 
     /**
@@ -491,6 +481,12 @@ contract RiteOfMoloch is
         // store the current token counter
         uint256 tokenId = _tokenIdCounter.current();
 
+        // increment the token counter
+        _tokenIdCounter.increment();
+
+        // mint the user's soul bound initiation token
+        _mint(_user, tokenId);
+
         // log the initiation data
         emit Initiation(
             _user,
@@ -499,19 +495,7 @@ contract RiteOfMoloch is
             minimumStake,
             deadlines[_user]
         );
-
-        // increment the token counter
-        _tokenIdCounter.increment();
-
-        // mint the user's soul bound initiation token
-        _mint(_user, tokenId);
     }
-
-    /* DEPRECATED
-     * @dev Claims failed initiate tokens for the DAO
-     * @param _failedInitiates an array of user's who have failed to join the DAO
-     */
-    //  function _darkRitual(address[] calldata _failedInitiates) internal virtual {}
 
     /**
      * @dev Claims failed initiate tokens for the DAO
@@ -568,19 +552,25 @@ contract RiteOfMoloch is
         totalSlash[msg.sender] += _blood;
     }
 
+    /**
+     * @dev initiates who were sacrificed in _darkRitual are no longer in initiates array
+     * so, the remaining initiates are survivors and added to the survivors array
+     * the initiates array is deleted to remove all zeroed placeholders
+     * then repopulated with the survivors
+     */
     function _consolidateSurvivors() internal virtual {
         for (uint256 i = 0; i < initiates.length; i++) {
             if (initiates[i] != address(0)) {
-                // add survivors of bloodLetting to survivors list
+                // add survivors of bloodLetting to survivors array
                 survivors.push(initiates[i]);
             } else {
                 continue;
             }
         }
-        // replace initiates list with updated survivors list
+        // replace initiates array with updated survivors array
         initiates = survivors;
 
-        // reset survivors to an empty list
+        // reset survivors to an empty array
         delete survivors;
     }
 
@@ -630,11 +620,7 @@ contract RiteOfMoloch is
     function isMember(address user) public returns (bool) {
         uint256 shares = _sharesToken.balanceOf(msg.sender);
 
-        if (shares >= minimumShare) {
-            return true;
-        } else {
-            return false;
-        }
+        return (shares >= minimumShare);
     }
 
     /*************************
@@ -691,6 +677,9 @@ contract RiteOfMoloch is
             ""
         );
 
+        // grant Hat Access Control role
+        _grantRole(ADMIN, adminHat);
+
         HATS.mintHat(adminHat, _deployer);
 
         if (_admin1 != address(0)) {
@@ -699,9 +688,6 @@ contract RiteOfMoloch is
         if (_admin2 != address(0)) {
             HATS.mintHat(adminHat, _admin2);
         }
-
-        // grant Hat Access Control roles
-        _grantRole(ADMIN, adminHat);
 
         // return topHat to  Baal Avatar
         HATS.transferHat(topHat, address(this), treasury);

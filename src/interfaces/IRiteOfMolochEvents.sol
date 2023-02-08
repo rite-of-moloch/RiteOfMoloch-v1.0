@@ -5,7 +5,7 @@ pragma solidity ^0.8.13;
 import {IBaal} from "src/baal/IBaal.sol";
 
 // todo: change this contract into an interface
-contract RiteOfMolochUtilities {
+contract IRiteOfMolochEvents {
     // Baal DAO
     IBaal private baal;
 
