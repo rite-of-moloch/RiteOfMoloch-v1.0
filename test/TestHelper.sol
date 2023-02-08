@@ -4,7 +4,7 @@ pragma solidity ^0.8.13;
 import "forge-std/Test.sol";
 import "../src/RiteOfMoloch.sol";
 import "../src/RiteOfMolochFactory.sol";
-import "../src/interfaces/IInitData.sol";
+import {IInitData} from "../src/interfaces/IInitData.sol";
 import "./utils/TestToken.sol";
 import {Hats} from "./utils/hats/HatsT.sol";
 
@@ -21,7 +21,7 @@ import {Hats} from "./utils/hats/HatsT.sol";
  * disable callerIsUser for Forge tests/scripts
  */
 
-contract TestHelper is Test, InitializationData {
+contract TestHelper is Test, IInitData {
     uint256 constant DAY_IN_SECONDS = 86400;
 
     address dao = 0x90F79bf6EB2c4f870365E785982E1f101E93b906;

@@ -2,7 +2,7 @@
 pragma solidity ^0.8.13;
 
 import "forge-std/Script.sol";
-import "../../../src/interfaces/IInitData.sol";
+import {IInitData} from "../../../src/interfaces/IInitData.sol";
 import {RiteOfMolochFactory} from "../../../src/RiteOfMolochFactory.sol";
 import {RiteOfMoloch} from "../../../src/RiteOfMoloch.sol";
 import {IHats} from "../../../src/hats/IHats.sol";
@@ -14,7 +14,7 @@ import {IBaal} from "../../../src/baal/IBaal.sol";
  * disable callerIsUser for Forge tests/scripts
  */
 
-contract TestHelperScript is Script, InitializationData {
+contract TestHelperScript is Script, IInitData {
     // test token for staking asset
     ERC20 public constant token =
         ERC20(0xA49dF10dD5B84257dE634F4350218f615471Fc69);
