@@ -14,14 +14,9 @@ import {
 } from "@raidguild/design-system";
 import { useAccount, useNetwork } from "wagmi";
 import { utils } from "ethers";
-import { CONTRACT_ADDRESSES, TOKEN_TICKER } from "../utils/constants";
+import { CONTRACT_ADDRESSES } from "../utils/constants";
 import { UserContext } from "context/UserContext";
-import {
-  approveTooltip,
-  canStake,
-  convertBigNumber,
-  stakeTooltip,
-} from "utils/general";
+import { approveTooltip, canStake, stakeTooltip } from "utils/general";
 import useMinimumStake from "hooks/useMinimumStake";
 import useBalanceOf from "hooks/useBalanceOf";
 import useApproveRaid from "hooks/useApproveRaid";
@@ -102,23 +97,25 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
 
   // if cohort is undefined, pass in data for RaidGuild ROM address
   const raidGuildCohortID = useContractAddress("riteOfMolochAddress");
+  const minimumRAID = useMinimumStake(raidGuildCohortID) || "";
+  const minimumStake = cohort?.tokenAmount || minimumRAID || "0";
 
-  const minimumRAID = useMinimumStake(raidGuildCohortID);
-
-  const minimumStake =
-    cohort?.tokenAmount.toString() || minimumRAID.toString() || "0";
+  console.log("minimumRAID", minimumRAID);
 
   // pass in tokenID from cohort metadata, or RAID token address
   const balanceOf: string = useBalanceOf(cohort?.token || raidTokenAddress(), [
     userAddress(),
   ]);
-
+  console.log(raidTokenAddress());
   /**
    * arg1 should be token erc20 address or $RAID erc20 address
+   *
+   * [args] first should be spender address (ROM address), 2nd should be amount
    */
+
   const { approveRaid, isLoadingApprove, isSuccessApprove, isErrorApprove } =
     useApproveRaid(cohort?.token || raidTokenAddress(), [
-      cohort?.token || raidTokenAddress(),
+      cohort?.id || raidGuildCohortID,
       minimumStake,
     ]);
 
@@ -163,7 +160,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
         <HStack mb="1rem" justifyContent="space-between" w="full">
           <Text color="red">Required Stake</Text>
           <Text color="white">
-            {utils.formatEther(minimumStake)} {tokenSymbol}
+            {minimumStake} {tokenSymbol}
           </Text>
         </HStack>
         <HStack justifyContent="space-between" w="full">

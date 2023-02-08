@@ -26,6 +26,8 @@ const Stake: React.FC = (): any => {
     userAddress(),
   ]);
 
+  console.log("deadline", deadline);
+
   const riteBalance: string = useRiteBalanceOf(
     cohortAddress?.toString() || "",
     [userAddress()]

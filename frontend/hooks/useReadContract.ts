@@ -1,7 +1,6 @@
 import { useContractRead, useNetwork } from "wagmi";
 import useAbi from "./useAbi";
-// import useContractAddress from "./useContractAddress";
-import { convertBigNumber } from "../utils/general";
+import { convertBigNumber } from "utils/general";
 
 /**
  *
@@ -23,27 +22,29 @@ const useReadContract = (
 ) => {
   const { chain } = useNetwork();
   const abi = useAbi(abiName);
-  let output: any;
+  let output: string;
 
-  const { data } = useContractRead({
+  const { data, isError, isLoading } = useContractRead({
     addressOrName: contractAddress,
     contractInterface: abi,
     functionName,
     args,
     chainId: chain?.id,
-    enabled: Boolean(contractAddress),
+    enabled: Boolean(contractAddress) && Boolean(abiName),
     onError(err) {
-      // console.log(err);
+      console.log("err:", err);
     },
   });
 
-  console.log(contractAddress, abiName, functionName, "data", data);
-  console.log("data", data);
+  // console.log("data, isError, isLoading", data, isError, isLoading);
 
-  if (typeof data === "boolean" || typeof data === "string") {
-    output = data;
-  } else output = "";
-  // else if (data) output = convertBigNumber(data);
+  if (typeof data === "boolean") {
+    return data;
+  } else if (data) {
+    output = convertBigNumber(data);
+  } else {
+    output = "";
+  }
 
   return { output };
 };
