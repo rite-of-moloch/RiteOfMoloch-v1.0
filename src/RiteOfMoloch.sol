@@ -2,14 +2,14 @@
 // @author st4rgard3n, bitbeckers, MrDeadce11, huntrr / Raid Guild
 pragma solidity ^0.8.13;
 
-import "lib/openzeppelin-contracts-upgradeable/contracts/utils/CountersUpgradeable.sol";
-import "lib/openzeppelin-contracts-upgradeable/contracts/token/ERC721/ERC721Upgradeable.sol";
-import "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
-import "src/interfaces/IInitData.sol";
-import "src/interfaces/IRiteOfMoloch.sol";
-import "src/hats/HatsAccessControl.sol";
-import {IHats} from "src/hats/IHats.sol";
-import {IBaal} from "src/baal/IBaal.sol";
+import "openzeppelin-contracts-upgradeable/utils/CountersUpgradeable.sol";
+import "openzeppelin-contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
+import "openzeppelin-contracts/token/ERC20/IERC20.sol";
+import "./interfaces/IInitData.sol";
+import "./interfaces/IRiteOfMoloch.sol";
+import "./hats/HatsAccessControl.sol";
+import {IHats} from "./hats/IHats.sol";
+import {IBaal} from "./baal/IBaal.sol";
 
 contract RiteOfMoloch is
     IInitData,
@@ -136,8 +136,8 @@ contract RiteOfMoloch is
         baal = IBaal(initData.membershipCriteria);
 
         // reference sharesToken of Baal
-        // _sharesToken = IERC20(initData.stakingAsset); // <= for local testing only
-        _sharesToken = IERC20(baal.sharesToken()); // <= correct
+        _sharesToken = IERC20(initData.stakingAsset); // <= for local testing only
+        // _sharesToken = IERC20(baal.sharesToken()); // <= correct
 
         // store the treasury daoAddress
         treasury = initData.treasury;

@@ -12,4 +12,3 @@ broadcast/
 .env
 
 # smart contract libs
-lib/

@@ -4,8 +4,8 @@ pragma solidity >=0.8.13;
 import {ERC1155} from "./erc1155/ERC1155.sol";
 import "./interfaces/IHatsT.sol";
 import "./HatsIdUtilitiesT.sol";
-import "lib/solbase/src/utils/Base64.sol";
-import "lib/solbase/src/utils/LibString.sol";
+import "solbase/utils/Base64.sol";
+import "solbase/utils/LibString.sol";
 
 contract Hats is IHats, ERC1155, HatsIdUtilitiesT {
     /*//////////////////////////////////////////////////////////////
@@ -245,10 +245,10 @@ contract Hats is IHats, ERC1155, HatsIdUtilitiesT {
         return true;
     }
 
-    function batchMintHats(uint256[] memory _hatIds, address[] memory _wearers)
-        public
-        returns (bool)
-    {
+    function batchMintHats(
+        uint256[] memory _hatIds,
+        address[] memory _wearers
+    ) public returns (bool) {
         uint256 length = _hatIds.length;
         if (length != _wearers.length) revert BatchArrayLengthMismatch();
 
@@ -263,10 +263,10 @@ contract Hats is IHats, ERC1155, HatsIdUtilitiesT {
     /// @dev The msg.sender must be set as the hat's toggle
     /// @param _hatId The id of the Hat for which to adjust status
     /// @return bool Whether the status was toggled
-    function setHatStatus(uint256 _hatId, bool newStatus)
-        external
-        returns (bool)
-    {
+    function setHatStatus(
+        uint256 _hatId,
+        bool newStatus
+    ) external returns (bool) {
         Hat storage hat = _hats[_hatId];
 
         if (msg.sender != hat.toggle) {
@@ -331,10 +331,10 @@ contract Hats is IHats, ERC1155, HatsIdUtilitiesT {
     /// @dev Burns the wearer's hat, if revoked
     /// @param _hatId The id of the hat
     /// @param _wearer The address of the Hat wearer whose status report is being requested
-    function checkHatWearerStatus(uint256 _hatId, address _wearer)
-        public
-        returns (bool)
-    {
+    function checkHatWearerStatus(
+        uint256 _hatId,
+        address _wearer
+    ) public returns (bool) {
         Hat memory hat = _hats[_hatId];
         bool eligible;
         bool standing;
@@ -417,10 +417,10 @@ contract Hats is IHats, ERC1155, HatsIdUtilitiesT {
     }
 
     // TODO write comment
-    function _processHatStatus(uint256 _hatId, bool _newStatus)
-        internal
-        returns (bool updated)
-    {
+    function _processHatStatus(
+        uint256 _hatId,
+        bool _newStatus
+    ) internal returns (bool updated) {
         // optimize later
         Hat storage hat = _hats[_hatId];
 
@@ -465,11 +465,7 @@ contract Hats is IHats, ERC1155, HatsIdUtilitiesT {
         // emit WearerStatus(_hatId, _wearer, _eligible, _standing);
     }
 
-    function transferHat(
-        uint256 _hatId,
-        address _from,
-        address _to
-    ) public {
+    function transferHat(uint256 _hatId, address _from, address _to) public {
         _checkAdmin(_hatId);
 
         // Checks storage instead of `isWearerOfHat` since admins may want to transfer revoked Hats to new wearers
@@ -515,9 +511,10 @@ contract Hats is IHats, ERC1155, HatsIdUtilitiesT {
     /// @dev Hat must be mutable
     /// @param _hatId The id of the Hat to change
     /// @param _newDetails The new details
-    function changeHatDetails(uint256 _hatId, string memory _newDetails)
-        external
-    {
+    function changeHatDetails(
+        uint256 _hatId,
+        string memory _newDetails
+    ) external {
         _checkAdmin(_hatId);
         Hat storage hat = _hats[_hatId];
 
@@ -534,9 +531,10 @@ contract Hats is IHats, ERC1155, HatsIdUtilitiesT {
     /// @dev Hat must be mutable
     /// @param _hatId The id of the Hat to change
     /// @param _newEligibility The new eligibility module
-    function changeHatEligibility(uint256 _hatId, address _newEligibility)
-        external
-    {
+    function changeHatEligibility(
+        uint256 _hatId,
+        address _newEligibility
+    ) external {
         _checkAdmin(_hatId);
         Hat storage hat = _hats[_hatId];
 
@@ -570,9 +568,10 @@ contract Hats is IHats, ERC1155, HatsIdUtilitiesT {
     /// @dev Hat must be mutable
     /// @param _hatId The id of the Hat to change
     /// @param _newImageURI The new imageURI
-    function changeHatImageURI(uint256 _hatId, string memory _newImageURI)
-        external
-    {
+    function changeHatImageURI(
+        uint256 _hatId,
+        string memory _newImageURI
+    ) external {
         _checkAdmin(_hatId);
         Hat storage hat = _hats[_hatId];
 
@@ -621,7 +620,9 @@ contract Hats is IHats, ERC1155, HatsIdUtilitiesT {
     /// @return lastHatId The most recently created Hat with this Hat as admin; also the count of Hats with this Hat as admin
     /// @return mutable_ Whether this hat's properties can be changed
     /// @return active Whether the Hat is current active, as read from `_isActive`
-    function viewHat(uint256 _hatId)
+    function viewHat(
+        uint256 _hatId
+    )
         public
         view
         returns (
@@ -653,11 +654,10 @@ contract Hats is IHats, ERC1155, HatsIdUtilitiesT {
     /// @param _user The address in question
     /// @param _hatId The id of the Hat that the `_user` might wear
     /// @return bool Whether the `_user` wears the Hat.
-    function isWearerOfHat(address _user, uint256 _hatId)
-        public
-        view
-        returns (bool)
-    {
+    function isWearerOfHat(
+        address _user,
+        uint256 _hatId
+    ) public view returns (bool) {
         return (balanceOf(_user, _hatId) >= 1);
     }
 
@@ -666,11 +666,10 @@ contract Hats is IHats, ERC1155, HatsIdUtilitiesT {
     /// @param _user The address in question
     /// @param _hatId The id of the Hat for which the `_user` might be the admin
     /// @return bool Whether the `_user` has admin rights for the Hat
-    function isAdminOfHat(address _user, uint256 _hatId)
-        public
-        view
-        returns (bool)
-    {
+    function isAdminOfHat(
+        address _user,
+        uint256 _hatId
+    ) public view returns (bool) {
         if (isTopHat(_hatId)) {
             return (isWearerOfHat(_user, _hatId));
         }
@@ -693,11 +692,10 @@ contract Hats is IHats, ERC1155, HatsIdUtilitiesT {
     /// @param _hat The Hat struct
     /// @param _hatId The id of the hat
     /// @return active The active status of the hat
-    function _isActive(Hat memory _hat, uint256 _hatId)
-        internal
-        view
-        returns (bool)
-    {
+    function _isActive(
+        Hat memory _hat,
+        uint256 _hatId
+    ) internal view returns (bool) {
         bytes memory data = abi.encodeWithSignature(
             "getHatStatus(uint256)",
             _hatId
@@ -745,11 +743,10 @@ contract Hats is IHats, ERC1155, HatsIdUtilitiesT {
     /// @param _wearer The address of the Hat wearer
     /// @param _hatId The id of the Hat
     /// @return standing Whether the wearer is in good standing
-    function isInGoodStanding(address _wearer, uint256 _hatId)
-        public
-        view
-        returns (bool standing)
-    {
+    function isInGoodStanding(
+        address _wearer,
+        uint256 _hatId
+    ) public view returns (bool standing) {
         (bool success, bytes memory returndata) = _hats[_hatId]
             .eligibility
             .staticcall(
@@ -801,11 +798,10 @@ contract Hats is IHats, ERC1155, HatsIdUtilitiesT {
     /// @param _hatId The id of the Hat
     /// @param _wearer The address to check
     /// @return bool
-    function isEligible(address _wearer, uint256 _hatId)
-        public
-        view
-        returns (bool)
-    {
+    function isEligible(
+        address _wearer,
+        uint256 _hatId
+    ) public view returns (bool) {
         // Hat memory hat = _hats[_hatId];
         return _isEligible(_wearer, _hats[_hatId], _hatId);
     }
@@ -815,11 +811,9 @@ contract Hats is IHats, ERC1155, HatsIdUtilitiesT {
     ///      its admin
     /// @param _hatId The hat whose imageURI we're looking for
     /// @return imageURI The imageURI of this hat or, if empty, its admin
-    function getImageURIForHat(uint256 _hatId)
-        public
-        view
-        returns (string memory)
-    {
+    function getImageURIForHat(
+        uint256 _hatId
+    ) public view returns (string memory) {
         // check _hatId first to potentially avoid the `getHatLevel` call
         Hat memory hat = _hats[_hatId];
 
@@ -870,11 +864,9 @@ contract Hats is IHats, ERC1155, HatsIdUtilitiesT {
     /// @notice Constructs the URI for a Hat, using data from the Hat struct
     /// @param _hatId The id of the Hat
     /// @return An ERC1155-compatible JSON string
-    function _constructURI(uint256 _hatId)
-        internal
-        view
-        returns (string memory)
-    {
+    function _constructURI(
+        uint256 _hatId
+    ) internal view returns (string memory) {
         Hat memory hat = _hats[_hatId];
 
         uint256 hatAdmin;
@@ -951,12 +943,10 @@ contract Hats is IHats, ERC1155, HatsIdUtilitiesT {
     /// @param wearer The address whose balance is being checked
     /// @param hatId The id of the Hat
     /// @return balance The `_user`'s balance of the Hat tokens. Will typically not be greater than 1.
-    function balanceOf(address wearer, uint256 hatId)
-        public
-        view
-        override(ERC1155, IHats)
-        returns (uint256 balance)
-    {
+    function balanceOf(
+        address wearer,
+        uint256 hatId
+    ) public view override(ERC1155, IHats) returns (uint256 balance) {
         Hat memory hat = _hats[hatId];
 
         balance = 0;
@@ -991,11 +981,7 @@ contract Hats is IHats, ERC1155, HatsIdUtilitiesT {
     /// @param from The wearer from which to burn the Hat token
     /// @param id The id of the Hat to burn, cast to uint256
     /// @param amount Must always be 1, since it's not possible wear >1 Hat
-    function _burn(
-        address from,
-        uint256 id,
-        uint256 amount
-    ) internal override {
+    function _burn(address from, uint256 id, uint256 amount) internal override {
         _balanceOf[from][id] -= amount;
 
         // decrement Hat supply counter
@@ -1004,11 +990,10 @@ contract Hats is IHats, ERC1155, HatsIdUtilitiesT {
         emit TransferSingle(msg.sender, from, address(0), id, amount);
     }
 
-    function setApprovalForAll(address operator, bool approved)
-        public
-        pure
-        override
-    {
+    function setApprovalForAll(
+        address operator,
+        bool approved
+    ) public pure override {
         revert();
     }
 
@@ -1039,12 +1024,9 @@ contract Hats is IHats, ERC1155, HatsIdUtilitiesT {
     /// @notice View the uri for a Hat
     /// @param id The id of the Hat
     /// @return string An 1155-compatible JSON object
-    function uri(uint256 id)
-        public
-        view
-        override(ERC1155, IHats)
-        returns (string memory)
-    {
+    function uri(
+        uint256 id
+    ) public view override(ERC1155, IHats) returns (string memory) {
         return _constructURI(uint256(id));
     }
 }

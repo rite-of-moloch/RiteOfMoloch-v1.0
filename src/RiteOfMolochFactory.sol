@@ -2,10 +2,10 @@
 // @author st4rgard3n, bitbeckers, MrDeadce11, huntrr / Raid Guild
 pragma solidity ^0.8.13;
 
-import "lib/openzeppelin-contracts/contracts/proxy/Clones.sol";
-import "src/RiteOfMoloch.sol";
-import "src/interfaces/IInitData.sol";
-import "src/hats/HatsAccessControl.sol";
+import "openzeppelin-contracts/proxy/Clones.sol";
+import "./RiteOfMoloch.sol";
+import "./interfaces/IInitData.sol";
+import "./hats/HatsAccessControl.sol";
 
 contract RiteOfMolochFactory is IInitData, HatsAccessControl {
     bytes32 public constant FACTORY_OPERATOR = keccak256("FACTORY_OPERATOR");
