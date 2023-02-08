@@ -5,51 +5,48 @@ import {
   useWaitForTransaction,
   useTransaction,
 } from "wagmi";
-import useContractAddress from "./useContractAddress";
 import useAbi from "./useAbi";
 import { useCustomToast } from "@raidguild/design-system";
 
 /**
  * @remarks hook to prepare wagmi hook contract instances
  *
- * @param contractName - pass in contract name. If contract name is 'riteOfMolochAddress', value should be passed in dynaically from URL query in stake/[address].tsx component. If this address is not a valid cohort, contractName will be `riteOfMolochAddress`, which then gets passed into useContractAddress hook and gets RaidGuild default values
+ * @param contractAddress - pass in contract name. If contract name is 'riteOfMolochAddress', value should be passed in dynaically from URL query in stake/[address].tsx component. If this address is not a valid cohort, contractAddress will be `riteOfMolochAddress`, which then gets passed into useContractAddress hook and gets RaidGuild default values
  * @param functionName - pass name of function
  * @param args - array of arguments to be passed into smart contract function
  * @returns
  */
 
 const useWriteContract = (
-  contractName: string,
+  contractAddress: string,
   abiName: string,
   functionName: string,
   args?: any
 ) => {
   const { chain } = useNetwork();
   const toast = useCustomToast();
-  const contractAddress = useContractAddress(contractName);
   const abi = useAbi(abiName);
 
   const { config } = usePrepareContractWrite({
-    addressOrName: contractName || contractAddress,
+    addressOrName: contractAddress || contractAddress,
     contractInterface: abi,
     functionName,
     chainId: chain?.id,
     args,
     cacheTime: 2_000,
+    enabled: Boolean(contractAddress),
   });
 
   const { data, write } = useContractWrite({
     ...config,
     request: config.request,
     onSuccess(data) {
-      console.log(data);
+      console.log("data", data);
     },
     onError(err) {
-      console.log(err);
+      console.log("err:", err);
     },
   });
-
-  // console.log(data);
 
   const {
     data: txData,
@@ -57,6 +54,7 @@ const useWriteContract = (
     isSuccess,
     isError,
   } = useWaitForTransaction({
+    enabled: Boolean(data),
     hash: data?.hash,
     onError(error) {
       console.log("Error", error);
@@ -67,6 +65,7 @@ const useWriteContract = (
   });
 
   const { data: txResponse } = useTransaction({
+    enabled: Boolean(txData),
     hash: (txData?.transactionHash as `0x${string}`) || "",
     onSettled(data, error) {
       console.log("Settled", { data, error });

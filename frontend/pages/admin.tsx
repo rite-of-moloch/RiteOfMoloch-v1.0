@@ -26,14 +26,14 @@ const Admin: React.FC<AdminProps> = ({ children }): any => {
                 </Button>
               </Link>
             </GridItem>
-
             <GridItem w="100%" textAlign="center" my="1rem">
-              <Link href="#">
+              <Link href="/cohorts">
                 <Button variant="red" w="full" p="1.5rem">
-                  Cohort Administration
+                  Manage Cohorts
                 </Button>
               </Link>
             </GridItem>
+
             <GridItem w="100%" textAlign="center" my="1rem">
               <Link href="#">
                 <Button variant="red" w="full" p="1.5rem">
@@ -42,9 +42,9 @@ const Admin: React.FC<AdminProps> = ({ children }): any => {
               </Link>
             </GridItem>
             <GridItem w="100%" textAlign="center" my="1rem">
-              <Link href="/cohorts">
+              <Link href="#">
                 <Button variant="red" w="full" p="1.5rem">
-                  Review Ongoing Cohorts
+                  Metrics
                 </Button>
               </Link>
             </GridItem>

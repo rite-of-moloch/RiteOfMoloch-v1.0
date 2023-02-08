@@ -12,12 +12,16 @@ import {
   Stack,
   VStack,
 } from "@raidguild/design-system";
-
 import { useAccount, useNetwork } from "wagmi";
 import { utils } from "ethers";
-import { TOKEN_TICKER } from "../utils/constants";
+import { CONTRACT_ADDRESSES, TOKEN_TICKER } from "../utils/constants";
 import { UserContext } from "context/UserContext";
-import { approveTooltip, canStake, stakeTooltip } from "utils/general";
+import {
+  approveTooltip,
+  canStake,
+  convertBigNumber,
+  stakeTooltip,
+} from "utils/general";
 import useMinimumStake from "hooks/useMinimumStake";
 import useBalanceOf from "hooks/useBalanceOf";
 import useApproveRaid from "hooks/useApproveRaid";
@@ -29,6 +33,7 @@ import { FiAlertTriangle } from "react-icons/fi";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { COHORT_METADATA } from "utils/subgraph/queries";
 import { CohortMetadata } from "utils/types/subgraphQueries";
+import useTokenSymbol from "hooks/useTokenSymbol";
 
 interface StakingFlowProps {
   contractAddress: string | string[];
@@ -55,7 +60,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   );
 
   const cohort: CohortMetadata | null = metadata?.data?.cohort;
-  console.log("cohort", cohort, typeof cohort);
+  console.log("cohort", cohort);
 
   const localForm = useForm<FormValues>({
     defaultValues: {
@@ -79,40 +84,52 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     else return 100;
   };
 
-  function userAddress(): string {
+  const userAddress = (): string => {
     if (typeof address === "string") return address;
     else return "";
-  }
+  };
+
+  // returns $RAID erc20 address
+  const raidTokenAddress = (): string => {
+    let address: string;
+    if (chain?.id) {
+      address = CONTRACT_ADDRESSES[chain?.id].erc20TokenAddress;
+    } else {
+      address = "";
+    }
+    return address;
+  };
 
   // if cohort is undefined, pass in data for RaidGuild ROM address
-  const correctAddressLogicROM =
-    cohort?.id || useContractAddress("riteOfMolochAddress");
+  const raidGuildCohortID = useContractAddress("riteOfMolochAddress");
 
-  // if cohort is undefined, pass in data for RaidGuild erc20 address
+  const minimumRAID = useMinimumStake(raidGuildCohortID);
 
-  console.log(cohort?.token.toString() || "");
+  const minimumStake =
+    cohort?.tokenAmount.toString() || minimumRAID.toString() || "0";
 
-  const minimumStake: string =
-    cohort?.tokenAmount || useMinimumStake("riteOfMolochAddress") || "0";
+  // pass in tokenID from cohort metadata, or RAID token address
+  const balanceOf: string = useBalanceOf(cohort?.token || raidTokenAddress(), [
+    userAddress(),
+  ]);
 
-  console.log(minimumStake);
-
-  const balanceOf: string = useBalanceOf(cohort?.id || "", [userAddress()]);
-
+  /**
+   * arg1 should be token erc20 address or $RAID erc20 address
+   */
   const { approveRaid, isLoadingApprove, isSuccessApprove, isErrorApprove } =
-    useApproveRaid(cohort?.token.toString() || "", [
-      cohort?.token.toString() || "",
+    useApproveRaid(cohort?.token || raidTokenAddress(), [
+      cohort?.token || raidTokenAddress(),
       minimumStake,
     ]);
 
-  const allowance = useGetAllowance(cohort?.token.toString() || "", [
+  const allowance = useGetAllowance(cohort?.token || raidTokenAddress(), [
     userAddress(),
-    cohort?.token || useContractAddress("erc20TokenAddress"),
+    cohort?.token || raidTokenAddress(),
   ]);
 
   const { writeJoinInitiation, isLoadingStake, isSuccessStake, isErrorStake } =
     useJoinInitiation(
-      correctAddressLogicROM,
+      cohort?.id || raidGuildCohortID,
       !willSponsor ? [userAddress()] : [initiateAddress]
     );
 
@@ -138,29 +155,31 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     minimumStake
   );
 
+  const tokenSymbol = useTokenSymbol(cohort?.token || raidTokenAddress());
+
   return (
     <>
       <Flex w="100%" direction="column" alignItems="flex-start" p="15px">
         <HStack mb="1rem" justifyContent="space-between" w="full">
           <Text color="red">Required Stake</Text>
           <Text color="white">
-            {utils.formatEther(minimumStake)} {TOKEN_TICKER[chainId()]}
+            {utils.formatEther(minimumStake)} {tokenSymbol}
           </Text>
         </HStack>
         <HStack justifyContent="space-between" w="full">
           <Text color="red" fontFamily="jetbrains" fontSize=".8rem">
-            Your {TOKEN_TICKER[chainId()]} balance
+            Your {tokenSymbol} balance
           </Text>
           <Text color="white" fontSize=".8rem">
-            {utils.formatUnits(balanceOf, "ether")} {TOKEN_TICKER[chainId()]}
+            {utils.formatUnits(balanceOf, "ether")} {tokenSymbol}
           </Text>
         </HStack>
         <HStack justifyContent="space-between" w="full">
           <Text color="red" fontFamily="jetbrains" fontSize=".8rem">
-            Your {TOKEN_TICKER[chainId()]} allowance
+            Your {tokenSymbol} allowance
           </Text>
           <Text color="white" fontSize=".8rem">
-            {utils.formatEther(allowance)} {TOKEN_TICKER[chainId()]}
+            {utils.formatEther(allowance)} {tokenSymbol}
           </Text>
         </HStack>
         <Stack mt={8} w="full">
