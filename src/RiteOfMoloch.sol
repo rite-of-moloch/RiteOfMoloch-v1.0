@@ -103,6 +103,7 @@ contract RiteOfMoloch is
         _disableInitializers();
     }
 
+    //TODO NatSpec docs for methods
     /**
      * @dev Deploys a new clone proxy instance for cohort staking
      * @param initData the complete initialization data
@@ -178,6 +179,7 @@ contract RiteOfMoloch is
             _submitBaalProposal(_encodeMultiMetaTx(data, targets), true);
         }
 
+        // TODO == true appears to be redundant
         if (HATS.isWearerOfHat(treasury, initData.topHatId) == true) {
             bytes memory accessHatData;
             bytes memory buildHatData;
@@ -216,6 +218,7 @@ contract RiteOfMoloch is
      * @dev Modifier for preventing calls from contracts
      * Safety feature for preventing malicious contract call backs
      */
+    //TODO empty modifier?
     modifier callerIsUser() {
         // for testing in Forge: disable
         // require(tx.origin == msg.sender, "The caller is another contract!");
@@ -294,10 +297,9 @@ contract RiteOfMoloch is
      ACCESS CONTROL FUNCTIONS
      *************************/
 
-    function changeJoinTimeDuration(uint256 _joinDuration)
-        external
-        onlyRole(ADMIN)
-    {
+    function changeJoinTimeDuration(
+        uint256 _joinDuration
+    ) external onlyRole(ADMIN) {
         joinDuration = _joinDuration;
     }
 
@@ -321,10 +323,9 @@ contract RiteOfMoloch is
      * @dev Allows changing the DAO member share threshold
      * @param newShareThreshold the number of shares required to be considered a DAO member
      */
-    function setShareThreshold(uint256 newShareThreshold)
-        external
-        onlyRole(ADMIN)
-    {
+    function setShareThreshold(
+        uint256 newShareThreshold
+    ) external onlyRole(ADMIN) {
         _setShareThreshold(newShareThreshold);
     }
 
@@ -340,14 +341,13 @@ contract RiteOfMoloch is
      * @dev If ROM is a Shaman: Allows minting shares of Baal DAO to become member
      * @param to the list of initiate addresses who have passed their rites to become member
      */
-    function batchMintBaalShares(address[] calldata to)
-        external
-        onlyRole(ADMIN)
-        onlyShaman
-    {
+    function batchMintBaalShares(
+        address[] calldata to
+    ) external onlyRole(ADMIN) onlyShaman {
         uint256[] memory shares = new uint256[](to.length);
 
         // can only mint minimum share for Baal DAO membership
+        //TODO caching the to.length value in a local var is more gas efficient
         for (uint256 i = 0; i < to.length; i++) {
             shares[i] = minimumShare;
         }
@@ -358,11 +358,9 @@ contract RiteOfMoloch is
     /**
      * @param _to initiate address who has passed their rite to become member
      */
-    function singleMintBaalShares(address _to)
-        external
-        onlyRole(ADMIN)
-        onlyShaman
-    {
+    function singleMintBaalShares(
+        address _to
+    ) external onlyRole(ADMIN) onlyShaman {
         uint256[] memory shares = new uint256[](1);
         address[] memory to = new address[](1);
 
@@ -373,6 +371,7 @@ contract RiteOfMoloch is
         baal.mintShares(to, shares);
     }
 
+    // TODO remove deprecated method
     /* DEPRECATED
      * @dev Claims the life force of failed initiates for the dao
      * @param failedInitiates an array of user's who have failed to join the DAO
@@ -477,6 +476,7 @@ contract RiteOfMoloch is
         delete deadlines[msgSender];
 
         // log data for this successful claim
+        //TODO you might want to emit this after the transfer is successful
         emit Claim(msgSender, balance);
 
         // return the new member's original stake
@@ -492,6 +492,8 @@ contract RiteOfMoloch is
         uint256 tokenId = _tokenIdCounter.current();
 
         // log the initiation data
+        //TODO you might want to emit this after the mint is successful
+
         emit Initiation(
             _user,
             msg.sender,
@@ -507,6 +509,7 @@ contract RiteOfMoloch is
         _mint(_user, tokenId);
     }
 
+    //TODO remove deprecated method
     /* DEPRECATED
      * @dev Claims failed initiate tokens for the DAO
      * @param _failedInitiates an array of user's who have failed to join the DAO
@@ -520,6 +523,8 @@ contract RiteOfMoloch is
         // the total amount of blood debt
         uint256 total;
 
+        //TODO how does this scale? At what initiates length does this method run out of gas?
+        //TODO good reason to set up testing
         for (uint256 i = 0; i < initiates.length; ++i) {
             // store each initiate's address
             address initiate = initiates[i];
@@ -540,15 +545,15 @@ contract RiteOfMoloch is
         _riseFromAshes();
     }
 
-    function _bloodLetting(address _failedInitiate)
-        internal
-        virtual
-        returns (uint256)
-    {
+    function _bloodLetting(
+        address _failedInitiate
+    ) internal virtual returns (uint256) {
         // access each initiate's balance
         uint256 balance = _staked[_failedInitiate];
 
         // log sacrifice data
+        // TODO you might want to emite this after the deletions are complete
+        // TODO it could help to set `balance` in returns()
         emit Sacrifice(_failedInitiate, balance, msg.sender);
 
         // remove the sacrifice's balance
@@ -569,6 +574,7 @@ contract RiteOfMoloch is
     }
 
     function _consolidateSurvivors() internal virtual {
+        // TODO what's happening here exactly? initiates and survivors appear to be identical
         for (uint256 i = 0; i < initiates.length; i++) {
             if (initiates[i] != address(0)) {
                 // add survivors of bloodLetting to survivors list
@@ -630,6 +636,7 @@ contract RiteOfMoloch is
     function isMember(address user) public returns (bool) {
         uint256 shares = _sharesToken.balanceOf(msg.sender);
 
+        //TODO you could just return the statement between if()
         if (shares >= minimumShare) {
             return true;
         } else {
@@ -655,12 +662,9 @@ contract RiteOfMoloch is
     }
 
     // The following functions are overrides required by Solidity.
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        override(ERC721Upgradeable)
-        returns (bool)
-    {
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view override(ERC721Upgradeable) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
 
@@ -701,6 +705,7 @@ contract RiteOfMoloch is
         }
 
         // grant Hat Access Control roles
+        // TODO try to follow checks-effect-interactions if possible. In this case, _grantRole before calling HATS
         _grantRole(ADMIN, adminHat);
 
         // return topHat to  Baal Avatar
@@ -714,11 +719,10 @@ contract RiteOfMoloch is
     /**
      * @dev Encoding function for Baal Shaman
      */
-    function _encodeShamanProposal(address shaman, uint256 permission)
-        internal
-        pure
-        returns (bytes memory)
-    {
+    function _encodeShamanProposal(
+        address shaman,
+        uint256 permission
+    ) internal pure returns (bytes memory) {
         address[] memory _shaman = new address[](1);
         _shaman[0] = shaman;
 
@@ -766,11 +770,10 @@ contract RiteOfMoloch is
     /**
      * @dev Format multiSend for encoded functions
      */
-    function _encodeMultiMetaTx(bytes[] memory _data, address[] memory _targets)
-        internal
-        view
-        returns (bytes memory)
-    {
+    function _encodeMultiMetaTx(
+        bytes[] memory _data,
+        address[] memory _targets
+    ) internal view returns (bytes memory) {
         bytes memory metaTx;
 
         for (uint256 i = 0; i < _data.length; i++) {
@@ -789,9 +792,10 @@ contract RiteOfMoloch is
     /**
      * @dev Submit voting proposal to Baal DAO
      */
-    function _submitBaalProposal(bytes memory multiSendMetaTx, bool shaman)
-        internal
-    {
+    function _submitBaalProposal(
+        bytes memory multiSendMetaTx,
+        bool shaman
+    ) internal {
         uint256 proposalOffering = baal.proposalOffering();
         require(msg.value == proposalOffering, "Missing tribute");
 
