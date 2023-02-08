@@ -5,17 +5,17 @@ pragma solidity ^0.8.13;
 import "lib/openzeppelin-contracts-upgradeable/contracts/utils/CountersUpgradeable.sol";
 import "lib/openzeppelin-contracts-upgradeable/contracts/token/ERC721/ERC721Upgradeable.sol";
 import "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
-import "src/InitializationData.sol";
-import "src/RiteOfMolochUtilities.sol";
+import "src/interfaces/IInitData.sol";
+import "src/interfaces/IRiteOfMoloch.sol";
 import "src/hats/HatsAccessControl.sol";
 import {IHats} from "src/hats/IHats.sol";
 import {IBaal} from "src/baal/IBaal.sol";
 
 contract RiteOfMoloch is
-    InitializationData,
+    IInitData,
     ERC721Upgradeable,
     HatsAccessControl,
-    RiteOfMolochUtilities
+    IRiteOfMoloch
 {
     using CountersUpgradeable for CountersUpgradeable.Counter;
     mapping(bytes32 => RoleData) public _roles;

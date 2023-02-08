@@ -2,7 +2,7 @@
 // @author st4rgard3n, bitbeckers, MrDeadce11, huntrr / Raid Guild
 pragma solidity ^0.8.13;
 
-contract InitializationData {
+interface IInitData {
     // object is used to initialize new cohorts
 
     // PARAMS:

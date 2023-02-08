@@ -4,10 +4,10 @@ pragma solidity ^0.8.13;
 
 import "lib/openzeppelin-contracts/contracts/proxy/Clones.sol";
 import "src/RiteOfMoloch.sol";
-import "src/InitializationData.sol";
+import "src/interfaces/IInitData.sol";
 import "src/hats/HatsAccessControl.sol";
 
-contract RiteOfMolochFactory is InitializationData, HatsAccessControl {
+contract RiteOfMolochFactory is IInitData, HatsAccessControl {
     bytes32 public constant FACTORY_OPERATOR = keccak256("FACTORY_OPERATOR");
 
     mapping(bytes32 => RoleData) public _roles;
