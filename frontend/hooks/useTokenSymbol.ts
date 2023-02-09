@@ -4,6 +4,7 @@ import useReadContract from "./useReadContract";
  * @outputs string of symbol
  */
 const useTokenSymbol = (contractAddress: string) => {
+  console.log(contractAddress);
   const { output: tokenSymbol } = useReadContract(
     contractAddress,
     "erc20TokenAddress",

@@ -76,9 +76,10 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     nameSBT,
     symbolSBT,
     uriSBT,
+    false,
   ];
 
-  // console.log(initData);
+  console.log("initData", initData);
   const { createCohort, isLoadingApprove, isSuccessApprove } = useCreateCohort([
     initData,
     1,
@@ -86,6 +87,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
 
   const handleDeployCohort = (): void => {
     console.log("deploying");
+    console.log(createCohort);
     createCohort && createCohort();
   };
 
@@ -110,30 +112,49 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
                 {nameCohort.toUpperCase()}
               </Text>
               <Text>
-                <span style={{ color: "gray" }}>Name SBT:</span>
+                <span style={{ color: "gray", marginRight: "0.25em" }}>
+                  Name SBT:
+                </span>
                 {nameSBT}
               </Text>
               <Text>
-                <span style={{ color: "gray" }}>Symbol SBT:</span> {symbolSBT}
+                <span style={{ color: "gray", marginRight: "0.25em" }}>
+                  Symbol SBT:
+                </span>
+                {symbolSBT}
               </Text>
               <Text>
-                <span style={{ color: "gray" }}>Stake per member:</span>
-                {assetAmount} {assetAmount && assetAmount > 1 && "days"}
+                <span style={{ color: "gray", marginRight: "0.25em" }}>
+                  Stake per member:
+                </span>
+                <span style={{ marginRight: "0.25em" }}>{assetAmount}</span>
+                {assetAmount && assetAmount > 1 && "days"}
               </Text>
               <Text>
-                <span style={{ color: "gray" }}>Staking duration:</span>
+                <span style={{ color: "gray", marginRight: "0.25em" }}>
+                  Staking duration:
+                </span>
                 {stakeDuration} {stakeDuration && stakeDuration > 1 && "days"}
               </Text>
               <Text>
-                <span style={{ color: "gray" }}>Cohort size:</span> {cohortSize}
+                <span style={{ color: "gray", marginRight: "0.25em" }}>
+                  Cohort size:
+                </span>
+                {cohortSize}
               </Text>
               <Text>
-                <span style={{ color: "gray" }}>Shares per member:</span>{" "}
+                <span style={{ color: "gray", marginRight: "0.25em" }}>
+                  Shares per member:
+                </span>
                 {shareThreshold}
               </Text>
               <Text>
-                <span style={{ color: "gray" }}>Onboarding period:</span>{" "}
-                {onboardingPeriod}{" "}
+                <span style={{ color: "gray", marginRight: "0.25em" }}>
+                  Onboarding period:
+                </span>
+                <span style={{ marginRight: "0.25em" }}>
+                  {onboardingPeriod}
+                </span>
                 {onboardingPeriod && onboardingPeriod > 1 && "days"}
               </Text>
               <Text>
@@ -152,7 +173,6 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
 
               <Text>
                 <span style={{ color: "gray" }}>Treasury address:</span>
-
                 <Text fontSize="xx-small">{blockExplorerLink(treasury)}</Text>
               </Text>
               {topHatWearer !== "" && (

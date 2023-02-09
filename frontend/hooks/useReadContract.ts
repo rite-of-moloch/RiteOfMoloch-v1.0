@@ -1,7 +1,7 @@
 import { useContractRead } from "wagmi";
 import useAbi from "./useAbi";
 import { convertBigNumber } from "utils/general";
-import { TxHash } from "utils/types/TxHash";
+// import { TxHash } from "utils/types/TxHash";
 
 /**
  *
@@ -21,10 +21,8 @@ const useReadContract = (
   functionName: string,
   args?: any
 ) => {
-  let output;
-
-  const { data, isError, isLoading } = useContractRead({
-    addressOrName: contractAddress || "",
+  const { data, error, isLoading } = useContractRead({
+    addressOrName: contractAddress,
     contractInterface: useAbi(abiName),
     functionName,
     args,
@@ -33,9 +31,10 @@ const useReadContract = (
       console.log("err:", err);
     },
   });
-
+  console.log("error:", error);
   console.log("data:", data);
 
+  let output;
   if (typeof data === "boolean") {
     output = data;
     return output;

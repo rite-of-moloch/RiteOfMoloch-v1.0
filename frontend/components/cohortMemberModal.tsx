@@ -14,13 +14,12 @@ import {
   Link,
 } from "@raidguild/design-system";
 import { Modal } from "@chakra-ui/modal";
-import { CohortMetadata, MemberData } from "utils/types/subgraphQueries";
+import { CohortMetadata } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
-import { unixToUTC } from "utils/general";
+import { getDeadline } from "utils/general";
 import { COHORT_METADATA } from "utils/subgraph/queries";
 import { useRouter } from "next/router";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
-// import useIsMember from "hooks/useIsMember";
 
 interface CohortMemberModalProps {
   address: string;
@@ -47,14 +46,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
   const cohort: CohortMetadata | null = metadata?.data?.cohort;
   console.log("cohort", cohort);
 
-  const getDeadline = (): string => {
-    const deadline = (
-      Number(cohort?.createdAt) +
-      Number(cohort?.time) * 1000
-    ).toString();
-
-    return unixToUTC(deadline);
-  };
+  const deadline = getDeadline(cohort?.createdAt, cohort?.time);
 
   // const daysLeftToSlash = () => {
   //   const todayUnix = new Date().getTime();
@@ -146,7 +138,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
                 Slash Stake
               </Button>
               <Text mt={1} fontSize="xx-small" color="red" textAlign="center">
-                Slashing is available on {getDeadline()}
+                Slashing is available on {deadline}
               </Text>
             </Box>
           </ModalFooter>

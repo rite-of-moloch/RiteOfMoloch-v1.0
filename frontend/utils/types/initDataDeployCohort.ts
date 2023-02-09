@@ -14,5 +14,6 @@ export type initDataDeployCohort = [
   cohortName: string,
   sbtName: string,
   sbtSymbol: string,
-  baseUri: string
+  baseUri: string,
+  shamanOn: boolean
 ];

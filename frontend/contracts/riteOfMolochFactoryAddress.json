@@ -101,12 +101,6 @@
       },
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "topHatWearer",
-        "type": "address"
-      },
-      {
-        "indexed": false,
         "internalType": "uint256",
         "name": "threshold",
         "type": "uint256"
@@ -307,11 +301,6 @@
             "type": "address"
           },
           { "internalType": "address", "name": "treasury", "type": "address" },
-          {
-            "internalType": "address",
-            "name": "topHatWearer",
-            "type": "address"
-          },
           { "internalType": "address", "name": "admin1", "type": "address" },
           { "internalType": "address", "name": "admin2", "type": "address" },
           {
@@ -339,9 +328,10 @@
           { "internalType": "string", "name": "cohortName", "type": "string" },
           { "internalType": "string", "name": "sbtName", "type": "string" },
           { "internalType": "string", "name": "sbtSymbol", "type": "string" },
-          { "internalType": "string", "name": "baseUri", "type": "string" }
+          { "internalType": "string", "name": "baseUri", "type": "string" },
+          { "internalType": "bool", "name": "shamanOn", "type": "bool" }
         ],
-        "internalType": "struct InitializationData.InitData",
+        "internalType": "struct IInitData.InitData",
         "name": "initData",
         "type": "tuple"
       },

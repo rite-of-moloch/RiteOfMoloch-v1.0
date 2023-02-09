@@ -74,3 +74,12 @@ export const unixToUTC = (unix: string): string => {
   const localDate = utc.toLocaleDateString();
   return localDate;
 };
+
+export const getDeadline = (
+  createdAt: string | undefined,
+  time: string | undefined
+): string => {
+  let deadline = (Number(createdAt) + Number(time) * 1000).toString();
+
+  return unixToUTC(deadline) || "";
+};

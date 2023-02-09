@@ -8,7 +8,7 @@ import useReadContract from "./useReadContract";
  */
 export const useGetDeadline = (contractAddress: string, args: [string]) => {
   const { output: deadline } = useReadContract(
-    contractAddress,
+    contractAddress || "0x",
     "riteOfMolochAddress",
     "getDeadline",
     args

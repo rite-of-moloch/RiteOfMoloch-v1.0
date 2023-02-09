@@ -24,11 +24,13 @@ const useWriteContract = (
   args?: any
 ) => {
   const { chain } = useNetwork();
-  const toast = useCustomToast();
   const abi = useAbi(abiName);
+  const toast = useCustomToast();
 
-  const { config } = usePrepareContractWrite({
-    addressOrName: contractAddress || contractAddress,
+  console.log("address:", contractAddress);
+
+  const { config, error } = usePrepareContractWrite({
+    addressOrName: contractAddress,
     contractInterface: abi,
     functionName,
     chainId: chain?.id,
@@ -36,6 +38,8 @@ const useWriteContract = (
     cacheTime: 2_000,
     enabled: Boolean(contractAddress),
   });
+  console.log("error", error);
+  console.log("config", config);
 
   const { data, write } = useContractWrite({
     ...config,
@@ -47,6 +51,8 @@ const useWriteContract = (
       console.log("err:", err);
     },
   });
+
+  console.log("data", data, "write", write);
 
   const {
     data: txData,
