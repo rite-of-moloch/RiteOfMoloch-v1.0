@@ -14,13 +14,13 @@ import {
 } from "@raidguild/design-system";
 import { useAccount, useNetwork } from "wagmi";
 import { utils } from "ethers";
-import { CONTRACT_ADDRESSES } from "../utils/constants";
+// import { CONTRACT_ADDRESSES } from "../utils/constants";
 import { UserContext } from "context/UserContext";
 import { approveTooltip, canStake, stakeTooltip } from "utils/general";
-import useMinimumStake from "hooks/useMinimumStake";
+// import useMinimumStake from "hooks/useMinimumStake";
 import useBalanceOf from "hooks/useBalanceOf";
 import useApproveRaid from "hooks/useApproveRaid";
-import useContractAddress from "hooks/useContractAddress";
+// import useContractAddress from "hooks/useContractAddress";
 import useJoinInitiation from "hooks/useJoinInitiation";
 import useGetAllowance from "hooks/useGetAllowance";
 
@@ -46,7 +46,7 @@ type FormValues = {
  */
 const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   const { address } = useAccount();
-  const { chain } = useNetwork();
+  // const { chain } = useNetwork();
   const { willSponsor, handleWillSponsor } = useContext(UserContext);
 
   const metadata = useSubgraphQuery(
@@ -74,59 +74,28 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   const values = getValues();
   const initiateAddress: string = values?.initiateAddress || "";
 
-  const chainId = (): number => {
-    if (chain?.id) return chain?.id;
-    else return 100;
-  };
-
   const userAddress = (): string => {
     if (typeof address === "string") return address;
     else return "";
   };
 
-  // returns $RAID erc20 address
-  const raidTokenAddress = (): string => {
-    let address: string;
-    if (chain?.id) {
-      address = CONTRACT_ADDRESSES[chain?.id].erc20TokenAddress;
-    } else {
-      address = "";
-    }
-    return address;
-  };
+  const minimumStake = cohort?.tokenAmount || "0";
 
-  // if cohort is undefined, pass in data for RaidGuild ROM address
-  const raidGuildCohortID = useContractAddress("riteOfMolochAddress");
-  const minimumRAID = useMinimumStake(raidGuildCohortID) || "";
-  const minimumStake = cohort?.tokenAmount || minimumRAID || "0";
-
-  console.log("minimumRAID", minimumRAID);
-
-  // pass in tokenID from cohort metadata, or RAID token address
-  const balanceOf: string = useBalanceOf(cohort?.token || raidTokenAddress(), [
+  const balanceOf: string = useBalanceOf(cohort?.token || "0x", [
     userAddress(),
   ]);
-  console.log(raidTokenAddress());
-  /**
-   * arg1 should be token erc20 address or $RAID erc20 address
-   *
-   * [args] first should be spender address (ROM address), 2nd should be amount
-   */
 
   const { approveRaid, isLoadingApprove, isSuccessApprove, isErrorApprove } =
-    useApproveRaid(cohort?.token || raidTokenAddress(), [
-      cohort?.id || raidGuildCohortID,
-      minimumStake,
-    ]);
+    useApproveRaid(cohort?.token || "0x", [cohort?.id || "", minimumStake]);
 
-  const allowance = useGetAllowance(cohort?.token || raidTokenAddress(), [
+  const allowance = useGetAllowance(cohort?.token || "0x", [
     userAddress(),
-    cohort?.token || raidTokenAddress(),
+    cohort?.token || "0x",
   ]);
 
   const { writeJoinInitiation, isLoadingStake, isSuccessStake, isErrorStake } =
     useJoinInitiation(
-      cohort?.id || raidGuildCohortID,
+      cohort?.id || "",
       !willSponsor ? [userAddress()] : [initiateAddress]
     );
 
@@ -152,7 +121,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     minimumStake
   );
 
-  const tokenSymbol = useTokenSymbol(cohort?.token || raidTokenAddress());
+  const tokenSymbol = useTokenSymbol(cohort?.token || "0x");
 
   return (
     <>

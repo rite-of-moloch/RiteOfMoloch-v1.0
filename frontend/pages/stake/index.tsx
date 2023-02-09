@@ -11,14 +11,10 @@ import NotConnected from "components/NotConnected";
 const StakeRedirect = () => {
   const router = useRouter();
   const { isConnected } = useAccount();
-  const { chain } = useNetwork();
-
-  const raidGuildCohort =
-    CONTRACT_ADDRESSES[chain?.id || 5]["riteOfMolochAddress"];
 
   useEffect(() => {
     if (router.pathname === "/stake") {
-      router.push(`/stake/${raidGuildCohort}`);
+      router.push("/joinCohorts");
     }
   }, [router]);
 
