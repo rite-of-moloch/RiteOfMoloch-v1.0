@@ -13,6 +13,8 @@ const useBalanceOf = (contractAddress: string, args: [string]): string => {
     args
   );
 
+  console.log("balanceOf", balanceOf);
+
   if (!balanceOf) return "0";
   else return balanceOf;
 };

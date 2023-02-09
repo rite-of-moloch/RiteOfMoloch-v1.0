@@ -8,7 +8,7 @@ import RiteStaked from "components/RiteStaked";
 import StakingFlow from "components/StakingFlow";
 import NotConnected from "components/NotConnected";
 import { useRouter } from "next/router";
-import useContractAddress from "hooks/useContractAddress";
+// import useContractAddress from "hooks/useContractAddress";
 
 const Stake: React.FC = (): any => {
   const { address, isConnected } = useAccount();
@@ -68,7 +68,8 @@ const Stake: React.FC = (): any => {
                 bg="black"
                 borderTop="solid red 1px"
                 borderBottom="solid red 1px"
-                py={1}
+                pt={1}
+                pb={2}
               >
                 <Heading as="h2" fontSize="md" textAlign="center">
                   {cohortAddress}

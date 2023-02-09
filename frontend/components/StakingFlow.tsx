@@ -14,13 +14,10 @@ import {
 } from "@raidguild/design-system";
 import { useAccount, useNetwork } from "wagmi";
 import { utils } from "ethers";
-// import { CONTRACT_ADDRESSES } from "../utils/constants";
 import { UserContext } from "context/UserContext";
 import { approveTooltip, canStake, stakeTooltip } from "utils/general";
-// import useMinimumStake from "hooks/useMinimumStake";
 import useBalanceOf from "hooks/useBalanceOf";
 import useApproveRaid from "hooks/useApproveRaid";
-// import useContractAddress from "hooks/useContractAddress";
 import useJoinInitiation from "hooks/useJoinInitiation";
 import useGetAllowance from "hooks/useGetAllowance";
 
@@ -39,14 +36,13 @@ type FormValues = {
 };
 
 /**
- * @remarks if invalid address passed into url query string, values for RaidGuild cohort will be used by default. If cohort exists, address is equal to `cohort.id`, token address equals `cohort.token`, minimum stake equals `cohort.tokenAmount`
+ * @remarks if invalid address passed into url query string, redirect user to /joinCohort page
  *
- * @param contractAddress is cohortAddress inherited from [address].tsx component. This address should be passed into smart contract functions. If address is not valid Ethereum address, use return value from useContractAddress function
- * @returns data about cohort that where a user can stake
+ * @param contractAddress is cohortAddress inherited from [address].tsx component. This address should be passed into smart contract functions.
+ * @returns data about active cohort
  */
 const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   const { address } = useAccount();
-  // const { chain } = useNetwork();
   const { willSponsor, handleWillSponsor } = useContext(UserContext);
 
   const metadata = useSubgraphQuery(
