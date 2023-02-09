@@ -9,8 +9,6 @@ import "test/TestHelper.sol";
  * @dev see note on TestHelper
  */
 contract Sacrifice is TestHelper {
-    address[] failedInitiates = [alice, bob, charlie];
-
     function setUp() public override {
         // set and deploy ROM-Factory
         setUpFactory();

@@ -19,40 +19,38 @@ contract ROMFactoryScript is Script {
     address public hatsProtocol = 0x96bD657Fcc04c71B47f896a829E5728415cbcAa1;
 
     // Hats / roles
-    uint256 public topHat;
+    uint256 public topHatFactory;
     uint256 public factoryOperatorHat;
-
-    // fake DAO address
-    address constant molochDAO = address(1);
 
     function setUp() public {
         // point to Hats implementation
         HATS = IHats(hatsProtocol);
-
-        // mint topHat
-        topHat = HATS.mintTopHat(msg.sender, "ROM-Factory TopHat", "");
-
-        // create factory operator hat
-        factoryOperatorHat = HATS.createHat(
-            topHat,
-            "ROM-Factory Operator",
-            1,
-            molochDAO,
-            molochDAO,
-            true,
-            ""
-        );
-
-        // mint factory operator
-        HATS.mintHat(factoryOperatorHat, msg.sender);
     }
 
     function run() public {
         vm.startBroadcast();
+        hatTreeSetup();
 
         // change Hats Protocol for chain
         ROMF = new RiteOfMolochFactory(hatsProtocol, factoryOperatorHat);
 
         vm.stopBroadcast();
+    }
+
+    function hatTreeSetup() public {
+        // this Script contract will be the admin of the factory (for development only)
+        topHatFactory = HATS.mintTopHat(msg.sender, "ROM-Factory TopHat", "");
+
+        factoryOperatorHat = HATS.createHat(
+            topHatFactory,
+            "ROM-Factory Operator",
+            2,
+            0x37c5B029f9c3691B3d47cb024f84E5E257aEb0BB,
+            0x37c5B029f9c3691B3d47cb024f84E5E257aEb0BB,
+            true,
+            ""
+        );
+
+        HATS.mintHat(factoryOperatorHat, msg.sender);
     }
 }
