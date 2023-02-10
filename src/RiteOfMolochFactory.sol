@@ -4,25 +4,11 @@ pragma solidity ^0.8.13;
 
 import {Clones} from "lib/openzeppelin-contracts/contracts/proxy/Clones.sol";
 import {RiteOfMoloch} from "src/RiteOfMoloch.sol";
-import {IInitData} from "src/interfaces/IInitData.sol";
+import {IRiteOfMolochFactory} from "src/interfaces/IROMFactory.sol";
 import {HatsAccessControl} from "hats-auth/HatsAccessControl.sol";
 
-contract RiteOfMolochFactory is IInitData, HatsAccessControl {
+contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
     bytes32 public constant FACTORY_OPERATOR = keccak256("FACTORY_OPERATOR");
-
-    mapping(bytes32 => RoleData) public _roles;
-
-    event NewRiteOfMoloch(
-        address cohortContract,
-        address deployer,
-        address implementation,
-        address membershipCriteria,
-        address stakingAsset,
-        address treasury,
-        uint256 threshold,
-        uint256 assetAmount,
-        uint256 stakeDuration
-    );
 
     // access an existing implementation of cohort staking sbt contracts
     mapping(uint256 => address) public implementations;

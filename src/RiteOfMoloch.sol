@@ -6,7 +6,7 @@ import {CountersUpgradeable} from"openzeppelin-contracts-upgradeable/utils/Count
 import {ERC721Upgradeable, ContextUpgradeable} from "openzeppelin-contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import {IERC20} from "openzeppelin-contracts/token/ERC20/IERC20.sol";
 import {IInitData} from "src/interfaces/IInitData.sol";
-import {IRiteOfMoloch} from "src/interfaces/IRiteOfMoloch.sol";
+import {IRiteOfMoloch} from "src/interfaces/IROM.sol";
 import {HatsAccessControl, IHats, Context} from "hats-auth/HatsAccessControl.sol";
 import {IBaal} from "src/baal/IBaal.sol";
 

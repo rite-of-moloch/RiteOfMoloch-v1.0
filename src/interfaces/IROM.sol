@@ -2,8 +2,8 @@
 // @author huntrr / Raid Guild
 pragma solidity ^0.8.13;
 
-import {IRiteOfMolochAdmin} from "src/interfaces/IRiteOfMolochAdmin.sol";
-import {IRiteOfMolochUser} from "src/interfaces/IRiteOfMolochUser.sol";
+import {IRiteOfMolochAdmin} from "src/interfaces/IROMAdmin.sol";
+import {IRiteOfMolochUser} from "src/interfaces/IROMUser.sol";
 
 // todo: change this contract into an interface
 interface IRiteOfMoloch is IRiteOfMolochAdmin, IRiteOfMolochUser{
