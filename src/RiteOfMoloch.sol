@@ -653,12 +653,12 @@ contract RiteOfMoloch is
 
     // Cohort NFTs cannot be transferred
     function _beforeTokenTransfer(
-        address,
+        address _from,
         address,
         uint256, /* firstTokenId */
         uint256
     ) internal virtual override {
-        revert("SBT cannot be transferred");
+        require(_from == address(0), "SBT cannot be transferred");
     }
 
     // The following functions are overrides required by Solidity.
