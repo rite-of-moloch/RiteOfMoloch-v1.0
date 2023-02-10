@@ -4,7 +4,6 @@ pragma solidity ^0.8.13;
 
 import {CountersUpgradeable} from"openzeppelin-contracts-upgradeable/utils/CountersUpgradeable.sol";
 import {ERC721Upgradeable, ContextUpgradeable} from "openzeppelin-contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
-
 import {IERC20} from "openzeppelin-contracts/token/ERC20/IERC20.sol";
 import {IInitData} from "src/interfaces/IInitData.sol";
 import {IRiteOfMoloch} from "src/interfaces/IRiteOfMoloch.sol";
