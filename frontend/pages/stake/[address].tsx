@@ -35,7 +35,7 @@ const Stake: React.FC = (): any => {
 
   const deadline = getDeadline(cohort?.createdAt, cohort?.time);
 
-  console.log("deadline", deadline);
+  // console.log("deadline", deadline);
 
   const riteBalance: string = useRiteBalanceOf(
     cohortAddress?.toString() || "",

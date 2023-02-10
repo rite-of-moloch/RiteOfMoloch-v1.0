@@ -1,8 +1,8 @@
 import useWriteContract from "./useWriteContract";
 /**
- *
- * @param contractAddress erc20TokenAddress type. Should be dynamic address from subgraphQuery, or RaidGuild $RAID token erc20 address. comes from /stake/[address].tsx component
- * @param args [_to: address, _value: uint256]
+ * @remarks erc20 token address contract must approve the ROM contract to spend the erc20 token amount that gets approved
+ * @param contractAddress erc20TokenAddress type. Should be dynamic address from subgraphQuery, comes from /stake/[address].tsx component
+ * @param args [_to: address, _value: uint256]. _to is the ROM contract
  * @Returns bool
  */
 const useApproveRaid = (contractAddress: string, args: [string, string]) => {

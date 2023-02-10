@@ -21,7 +21,7 @@ const useReadContract = (
   functionName: string,
   args?: any
 ) => {
-  const { data, error, isLoading } = useContractRead({
+  const { data, error, isError, isLoading } = useContractRead({
     addressOrName: contractAddress,
     contractInterface: useAbi(abiName),
     functionName,

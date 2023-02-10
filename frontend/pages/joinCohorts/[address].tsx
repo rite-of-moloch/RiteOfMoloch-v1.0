@@ -34,7 +34,6 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
   const router = useRouter();
   const { address: cohortAddress } = router.query;
 
-  // get general data about cohort
   const cohortMetadata = useSubgraphQuery(
     COHORT_METADATA(cohortAddress),
     Boolean(cohortAddress)
@@ -42,13 +41,13 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
   const cohortData = cohortMetadata?.data?.cohort;
   // console.log(cohortData);
 
-  // check if msg.sender has staked to cohort or not
   const cohortInitiates = useSubgraphQuery(
     COHORT_INITIATES(cohortAddress),
     Boolean(cohortAddress)
   );
   // console.log(cohortInitiates);
 
+  // check if msg.sender has staked to cohort or not
   const isMsgSenderStaked = (): [Boolean, string | undefined] => {
     const initiateList = cohortInitiates?.data?.cohort.initiates?.map(
       (initiate: { [x: string]: string }) => {
@@ -59,7 +58,7 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
         }
       }
     );
-    console.log(initiateList);
+    // console.log(initiateList);
 
     let joinedAt: undefined | string;
     let staked: Boolean = false;

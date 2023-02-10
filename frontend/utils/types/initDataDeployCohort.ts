@@ -2,7 +2,6 @@ export type initDataDeployCohort = [
   membershipCriteria: string,
   stakingAsset: string,
   treasury: string,
-  topHatWearer: string | null,
   admin1: string | null,
   admin2: string | null,
   cohortSize: number | null,

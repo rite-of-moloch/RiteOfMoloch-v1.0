@@ -6,7 +6,7 @@ export const CONTRACT_ADDRESSES: { [key: string]: { [key: string]: string } } =
     },
     100: {
       erc20TokenAddress: "0x18E9262e68Cc6c6004dB93105cc7c001BB103e49",
-      // * TODO: update Gnosis factory address
+      // TODO update Gnosis factory address
       riteOfMolochFactoryAddress: "0xBb7353efB505D63408D1C762A5C3A1636E9Ca003",
     },
   };

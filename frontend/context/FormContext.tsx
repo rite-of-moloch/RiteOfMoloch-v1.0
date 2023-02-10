@@ -47,6 +47,8 @@ export const FormContext = createContext<{
   setSuperadmin1: any;
   superadmin2: boolean;
   setSuperadmin2: any;
+  shamanOn: boolean;
+  setShamanOn: any;
 }>({
   displayPart1: true,
   setDisplayPart1: null,
@@ -94,6 +96,8 @@ export const FormContext = createContext<{
   setSuperadmin1: null,
   superadmin2: false,
   setSuperadmin2: null,
+  shamanOn: false,
+  setShamanOn: null,
 });
 
 interface FormProviderProps {
@@ -124,6 +128,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   const [admin2, setAdmin2] = useState("");
   const [superadmin1, setSuperadmin1] = useState(false);
   const [superadmin2, setSuperadmin2] = useState(false);
+  const [shamanOn, setShamanOn] = useState(false);
 
   const value = {
     displayPart1,
@@ -172,6 +177,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
     setSuperadmin1,
     superadmin2,
     setSuperadmin2,
+    shamanOn,
+    setShamanOn,
   };
 
   return <FormContext.Provider value={value}>{children}</FormContext.Provider>;
@@ -225,6 +232,8 @@ export const useFormContext = () => {
     setSuperadmin1,
     superadmin2,
     setSuperadmin2,
+    shamanOn,
+    setShamanOn,
   } = useContext(FormContext);
   return {
     displayPart1,
@@ -273,5 +282,7 @@ export const useFormContext = () => {
     setSuperadmin1,
     superadmin2,
     setSuperadmin2,
+    shamanOn,
+    setShamanOn,
   };
 };

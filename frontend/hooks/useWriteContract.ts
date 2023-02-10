@@ -27,8 +27,6 @@ const useWriteContract = (
   const abi = useAbi(abiName);
   const toast = useCustomToast();
 
-  console.log("address:", contractAddress);
-
   const { config, error } = usePrepareContractWrite({
     addressOrName: contractAddress,
     contractInterface: abi,
@@ -39,7 +37,7 @@ const useWriteContract = (
     enabled: Boolean(contractAddress),
   });
   console.log("error", error);
-  console.log("config", config);
+  console.log("config:", config);
 
   const { data, write } = useContractWrite({
     ...config,

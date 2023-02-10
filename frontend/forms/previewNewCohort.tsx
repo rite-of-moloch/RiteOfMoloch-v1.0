@@ -28,7 +28,6 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     membershipCriteria,
     stakingAsset,
     treasury,
-    topHatWearer,
     admin1,
     admin2,
     cohortSize,
@@ -63,7 +62,6 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     membershipCriteria,
     stakingAsset,
     treasury,
-    topHatWearer !== "" ? topHatWearer : zeroAddress,
     admin1 !== "" ? admin1 : zeroAddress,
     admin2 !== "" ? admin2 : zeroAddress,
     Number(cohortSize),
@@ -175,7 +173,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
                 <span style={{ color: "gray" }}>Treasury address:</span>
                 <Text fontSize="xx-small">{blockExplorerLink(treasury)}</Text>
               </Text>
-              {topHatWearer !== "" && (
+              {/* {topHatWearer !== "" && (
                 <Text>
                   <span style={{ color: "gray" }}>TOP HAT address:</span>
 
@@ -187,7 +185,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
                     }
                   </span>
                 </Text>
-              )}
+              )} */}
               {tophatID && (
                 <Text>
                   <span style={{ color: "gray" }}>TOP HAT ID:</span> {tophatID}
