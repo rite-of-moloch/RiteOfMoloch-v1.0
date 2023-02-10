@@ -17,7 +17,6 @@ contract RiteOfMoloch is
     IRiteOfMoloch
 {
     using CountersUpgradeable for CountersUpgradeable.Counter;
-    mapping(bytes32 => RoleData) public _roles;
 
     bytes32 public constant ADMIN = keccak256("ADMIN");
 
