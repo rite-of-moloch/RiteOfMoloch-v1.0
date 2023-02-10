@@ -285,7 +285,7 @@ contract RiteOfMoloch is
         emit Feedback(msg.sender, treasury, feedback);
     }
 
-    function checkStake(address user) external returns (uint256) {
+    function checkStake(address user) external view returns (uint256) {
         return _staked[user];
     }
 
@@ -644,7 +644,7 @@ contract RiteOfMoloch is
         return msg.sender;
     }
 
-    function _msgData() internal view override(Context, ContextUpgradeable) returns(bytes calldata) {
+    function _msgData() internal pure override(Context, ContextUpgradeable) returns(bytes calldata) {
         return msg.data;
     }
 
@@ -760,7 +760,7 @@ contract RiteOfMoloch is
         address _deployer,
         address _admin1,
         address _admin2
-    ) internal view returns (bytes memory) {
+    ) internal pure returns (bytes memory) {
         return
             abi.encodeWithSignature(
                 "initializeHatTree(address,address,address)",
@@ -775,7 +775,7 @@ contract RiteOfMoloch is
      */
     function _encodeMultiMetaTx(bytes[] memory _data, address[] memory _targets)
         internal
-        view
+        pure
         returns (bytes memory)
     {
         bytes memory metaTx;
