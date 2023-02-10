@@ -626,8 +626,8 @@ contract RiteOfMoloch is
     /**
      * @dev returns the user's member status
      */
-    function isMember(address user) public returns (bool) {
-        uint256 shares = _sharesToken.balanceOf(msg.sender);
+    function isMember(address user) public view returns (bool) {
+        uint256 shares = _sharesToken.balanceOf(user);
 
         if (shares >= minimumShare) {
             return true;
