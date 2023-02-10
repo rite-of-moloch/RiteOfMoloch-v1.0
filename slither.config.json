@@ -1,0 +1,17 @@
+{
+    "exclude_informational": true,
+    "exclude_low": true,
+    "exclude_medium": false,
+    "exclude_high": false,
+    "disable_color": false,
+    "legacy_ast": false,
+    "foundry_ignore_compile": true,
+    "solc_remaps": [
+        "ds-test/=lib/forge-std/lib/ds-test/src/",
+        "erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/",
+        "forge-std/=lib/forge-std/src/",
+        "openzeppelin-contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/",
+        "openzeppelin-contracts/=lib/openzeppelin-contracts/contracts/",
+        "solbase/=lib/solbase/src/"
+    ]
+}

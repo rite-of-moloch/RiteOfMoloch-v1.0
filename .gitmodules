@@ -13,3 +13,9 @@
 [submodule "lib/hats-protocol"]
 	path = lib/hats-protocol
 	url = https://github.com/Hats-Protocol/hats-protocol
+[submodule "lib/solbase"]
+	path = lib/solbase
+	url = https://github.com/Sol-DAO/solbase
+[submodule "lib/baal"]
+	path = lib/Baal
+	url = https://github.com/HausDAO/Baal
