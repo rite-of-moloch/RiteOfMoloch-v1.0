@@ -110,5 +110,6 @@ contract RiteOfMolochFactory is IInitData, HatsAccessControl {
         onlyRole(FACTORY_OPERATOR)
     {
         hatsProtocol = _hatsProtocol;
+        _changeHatsContract(_hatsProtocol);
     }
 }
