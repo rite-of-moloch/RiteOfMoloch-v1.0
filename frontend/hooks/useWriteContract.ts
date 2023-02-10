@@ -1,5 +1,4 @@
 import {
-  useNetwork,
   usePrepareContractWrite,
   useContractWrite,
   useWaitForTransaction,
@@ -23,15 +22,13 @@ const useWriteContract = (
   functionName: string,
   args?: any
 ) => {
-  const { chain } = useNetwork();
   const abi = useAbi(abiName);
   const toast = useCustomToast();
 
   const { config, error } = usePrepareContractWrite({
-    addressOrName: contractAddress,
+    address: contractAddress,
     contractInterface: abi,
     functionName,
-    chainId: chain?.id,
     args,
     cacheTime: 2_000,
     enabled: Boolean(contractAddress),
@@ -70,7 +67,8 @@ const useWriteContract = (
 
   const { data: txResponse } = useTransaction({
     enabled: Boolean(txData),
-    hash: (txData?.transactionHash as `0x${string}`) || "",
+    hash: txData?.transactionHash || "",
+    // as `0x${string}`) || "",
     onSettled(data, error) {
       console.log("Settled", { data, error });
     },

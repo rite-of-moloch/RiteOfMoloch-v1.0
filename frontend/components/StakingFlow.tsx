@@ -121,7 +121,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
 
   console.log(
     "symbol:",
-    useTokenSymbol(" 0x1Cfb862056ecF2677615F9eB3420B04fb4911C01")
+    useTokenSymbol("0x1Cfb862056ecF2677615F9eB3420B04fb4911C01")
   );
 
   return (

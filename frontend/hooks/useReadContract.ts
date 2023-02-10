@@ -22,7 +22,7 @@ const useReadContract = (
   args?: any
 ) => {
   const { data, error, isError, isLoading } = useContractRead({
-    addressOrName: contractAddress,
+    address: contractAddress,
     contractInterface: useAbi(abiName),
     functionName,
     args,
@@ -31,7 +31,7 @@ const useReadContract = (
       console.log("err:", err);
     },
   });
-  console.log("error:", error);
+  console.log("error:", error, "isError:", isError);
   console.log("data:", data);
 
   let output;
