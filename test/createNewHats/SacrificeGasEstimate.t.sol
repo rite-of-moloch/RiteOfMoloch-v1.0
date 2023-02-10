@@ -3,7 +3,7 @@ pragma solidity ^0.8.13;
 
 import "test/TestHelper.sol";
 
-// forge test --match-contract SacrificeGasEstimate -vvvv
+// forge test --match-contract SacrificeGasEstimate -vv
 
 /**
  * @dev see note on TestHelper

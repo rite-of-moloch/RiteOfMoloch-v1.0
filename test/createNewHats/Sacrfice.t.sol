@@ -35,7 +35,7 @@ contract Sacrifice is TestHelper {
      * TESTS
      */
     function testSacrfice() public {
-        assertEq(0, ROM.cohortSeason());
+        assertEq(1, ROM.cohortSeason());
         emit log_named_uint("Cohort Season", ROM.cohortSeason());
         emit log_named_uint("Join Endtime", ROM.joinEndTime());
 
@@ -71,7 +71,7 @@ contract Sacrifice is TestHelper {
 
         vm.stopPrank();
 
-        assertEq(1, ROM.cohortSeason());
+        assertEq(2, ROM.cohortSeason());
         emit log_named_uint("Cohort Season", ROM.cohortSeason());
         emit log_named_uint("Join Endtime", ROM.joinEndTime());
         emit log_named_uint("Cohort Counter", ROM.cohortCounter());

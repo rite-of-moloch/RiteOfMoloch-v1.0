@@ -35,11 +35,9 @@ contract RiteOfMoloch is
     // the number of user's a member has sacrificed
     mapping(address => uint256) public totalSlash;
 
-    // list of initiates in current cohort
-    address[] internal initiates;
-
-    // list of carry-over initiates from previous cohort
-    address[] internal survivors;
+    // initiates by season
+    // season => id => initiate address
+    mapping(uint256 => mapping(uint256 => address)) initiates;
 
     /*************************
      STATE VARIABLES
@@ -116,6 +114,9 @@ contract RiteOfMoloch is
         // increment the counter so our first sbt has token id of one
         _tokenIdCounter.increment();
 
+        // set cohort season to 1
+        cohortSeason = 1;
+
         // set cohort name
         cohortName = initData.cohortName;
 
@@ -135,8 +136,8 @@ contract RiteOfMoloch is
         baal = IBaal(initData.membershipCriteria);
 
         // reference sharesToken of Baal
-        // _sharesToken = IERC20(initData.stakingAsset); // <= for local testing only
-        _sharesToken = IERC20(baal.sharesToken()); // <= correct
+        _sharesToken = IERC20(initData.stakingAsset); // <= for local testing only
+        // _sharesToken = IERC20(baal.sharesToken()); // <= correct
 
         // store the treasury daoAddress
         treasury = initData.treasury;
@@ -260,10 +261,12 @@ contract RiteOfMoloch is
         require(_stake(user), "Staking failed!");
 
         // add user to initiate's list
-        initiates.push(user);
+        // initiates.push(user);
 
         // increment cohort count
         cohortCounter++;
+
+        initiates[cohortSeason][cohortCounter] = msg.sender;
 
         // issue a soul bound token
         _soulBind(user);
@@ -381,6 +384,14 @@ contract RiteOfMoloch is
         _darkRitual();
     }
 
+    function sacrificeSingle(address _sacrificialLamb)
+        external
+        onlyRole(ADMIN)
+    {
+        _bloodLetting(_sacrificialLamb);
+        cohortCounter--;
+    }
+
     /*************************
      PRIVATE OR INTERNAL
      *************************/
@@ -466,11 +477,11 @@ contract RiteOfMoloch is
         // delete the deadline timestamp
         delete deadlines[msgSender];
 
-        // return the new member's original stake
-        return _token.transfer(msgSender, balance);
-
         // log data for this successful claim
         emit Claim(msgSender, balance);
+
+        // return the new member's original stake
+        return _token.transfer(msgSender, balance);
     }
 
     /**
@@ -497,31 +508,42 @@ contract RiteOfMoloch is
         );
     }
 
-    /**
-     * @dev Claims failed initiate tokens for the DAO
-     */
     function _darkRitual() internal virtual {
         // the total amount of blood debt
-        uint256 total;
+        uint256 blood;
+        uint256 newCohortCount;
+        uint256 season = cohortSeason;
 
-        for (uint256 i = 0; i < initiates.length; ++i) {
+        for (uint256 i = 1; i <= cohortCounter; i++) {
             // store each initiate's address
-            address initiate = initiates[i];
+            address initiate = initiates[season][i];
+            uint256 index = 1;
 
-            // access each initiate's starting time
-            uint256 deadline = deadlines[initiate];
-
-            if (block.timestamp > deadline && _staked[initiate] > 0) {
-                total += _bloodLetting(initiate);
-                delete initiates[i];
+            if (
+                block.timestamp > deadlines[initiate] && _staked[initiate] > 0
+            ) {
+                // slash failed initiate
+                blood += _bloodLetting(initiate);
+                delete initiates[season][i];
+            } else if (_staked[initiate] == 0) {
+                // delete successful initiates that claimed their stake
+                delete initiates[season][i];
             } else {
-                continue;
+                // carry-over non-failed active initiates into next cohort
+                initiates[season + 1][index] = initiate;
+                index++;
+                newCohortCount++;
+                delete initiates[season][i];
             }
         }
 
-        _bloodFeast(total);
-        _consolidateSurvivors();
-        _riseFromAshes();
+        // blood feast for Baal
+        require(_token.transfer(treasury, blood), "Failed Sacrifice!");
+
+        // reset cohortCount, reset joinInitiation period, increase season
+        cohortCounter = newCohortCount;
+        joinEndTime = block.timestamp + joinDuration;
+        cohortSeason++;
     }
 
     function _bloodLetting(address _failedInitiate)
@@ -532,60 +554,16 @@ contract RiteOfMoloch is
         // access each initiate's balance
         uint256 balance = _staked[_failedInitiate];
 
-        // log sacrifice data
-        emit Sacrifice(_failedInitiate, balance, msg.sender);
-
         // remove the sacrifice's balance
         delete _staked[_failedInitiate];
 
         // remove the sacrifice's starting time
         delete deadlines[_failedInitiate];
 
+        // log sacrifice data
+        emit Sacrifice(_failedInitiate, balance, msg.sender);
+
         return balance;
-    }
-
-    function _bloodFeast(uint256 _blood) internal virtual {
-        // drain the life force from the sacrifice
-        require(_token.transfer(treasury, _blood), "Failed Sacrifice!");
-
-        // increase the slasher's essence
-        totalSlash[msg.sender] += _blood;
-    }
-
-    /**
-     * @dev initiates who were sacrificed in _darkRitual are no longer in initiates array
-     * so, the remaining initiates are survivors and added to the survivors array
-     * the initiates array is deleted to remove all zeroed placeholders
-     * then repopulated with the survivors
-     */
-    function _consolidateSurvivors() internal virtual {
-        for (uint256 i = 0; i < initiates.length; i++) {
-            if (initiates[i] != address(0)) {
-                // add survivors of bloodLetting to survivors array
-                survivors.push(initiates[i]);
-            } else {
-                continue;
-            }
-        }
-        // replace initiates array with updated survivors array
-        initiates = survivors;
-
-        // reset survivors to an empty array
-        delete survivors;
-    }
-
-    function _riseFromAshes() internal virtual {
-        // reset to initData values
-        cohortCounter = initiates.length;
-
-        // carry-over is less then cohort
-        require(
-            cohortCounter <= cohortSize,
-            "Carry-over initiates exceed cohort-count"
-        );
-
-        joinEndTime = block.timestamp + joinDuration;
-        cohortSeason++;
     }
 
     /**
@@ -695,6 +673,7 @@ contract RiteOfMoloch is
 
     /**
      * @dev send proposal to Baal to mint another admin
+     * protected by Hats protocol logic and Baal governance
      */
     function mintAdminHatProposal(address _to) external {
         bytes memory hatData;
@@ -712,6 +691,7 @@ contract RiteOfMoloch is
 
     /**
      * @dev send proposal to Baal to transfer adminHat to new EOA
+     * protected by Hats protocol logic and Baal governance
      */
     function transferAdminHat(address _from, address _to) external {
         bytes memory hatData;
@@ -803,7 +783,7 @@ contract RiteOfMoloch is
      */
     function _encodeMultiMetaTx(bytes[] memory _data, address[] memory _targets)
         internal
-        view
+        pure
         returns (bytes memory)
     {
         bytes memory metaTx;
