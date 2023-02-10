@@ -12,5 +12,6 @@ broadcast/
 # Dotenv file
 .env
 
-# smart contract libs
-lib/
+.DS_Store
+
+
