@@ -175,7 +175,7 @@ contract RiteOfMoloch is
             address[] memory targets = new address[](1);
             targets[0] = address(baal);
 
-            _submitBaalProposal(_encodeMultiMetaTx(data, targets), true);
+            _submitBaalProposal(_encodeMultiMetaTx(data, targets), 1);
         }
 
         if (HATS.isWearerOfHat(treasury, initData.topHatId)) {
@@ -184,7 +184,7 @@ contract RiteOfMoloch is
 
             // encode hats proposals; access topHat and initialize hat tree
             topHat = initData.topHatId;
-            accessHatData = _encodeHatProposal();
+            accessHatData = _encodeTransferHat(topHat, treasury, address(this));
             buildHatData = _encodeBuildHatTree(
                 caller_,
                 initData.admin1,
@@ -200,7 +200,7 @@ contract RiteOfMoloch is
             targets[0] = address(HATS);
             targets[1] = address(this);
 
-            _submitBaalProposal(_encodeMultiMetaTx(data, targets), false);
+            _submitBaalProposal(_encodeMultiMetaTx(data, targets), 2);
         } else {
             // creates a new topHat, initialize hat tree
             topHat = HATS.mintTopHat(address(this), "ROM TopHat", "");
@@ -286,7 +286,7 @@ contract RiteOfMoloch is
         emit Feedback(msg.sender, treasury, feedback);
     }
 
-    function checkStake(address user) external returns (uint256) {
+    function checkStake(address user) external view returns (uint256) {
         return _staked[user];
     }
 
@@ -693,6 +693,40 @@ contract RiteOfMoloch is
         HATS.transferHat(topHat, address(this), treasury);
     }
 
+    /**
+     * @dev send proposal to Baal to mint another admin
+     */
+    function mintAdminHatProposal(address _to) external {
+        bytes memory hatData;
+
+        hatData = _encodeMintHat(adminHat, _to);
+
+        bytes[] memory data = new bytes[](1);
+        data[0] = hatData;
+
+        address[] memory targets = new address[](1);
+        targets[0] = address(HATS);
+
+        _submitBaalProposal(_encodeMultiMetaTx(data, targets), 3);
+    }
+
+    /**
+     * @dev send proposal to Baal to transfer adminHat to new EOA
+     */
+    function transferAdminHat(address _from, address _to) external {
+        bytes memory hatData;
+
+        hatData = _encodeTransferHat(adminHat, _from, _to);
+
+        bytes[] memory data = new bytes[](1);
+        data[0] = hatData;
+
+        address[] memory targets = new address[](1);
+        targets[0] = address(HATS);
+
+        _submitBaalProposal(_encodeMultiMetaTx(data, targets), 4);
+    }
+
     /*************************
      ENCODING
      *************************/
@@ -722,14 +756,29 @@ contract RiteOfMoloch is
     /**
      * @dev Encoding function for accessing an existing topHat
      */
-    function _encodeHatProposal() internal view returns (bytes memory) {
+    function _encodeTransferHat(
+        uint256 _hat,
+        address _from,
+        address _to
+    ) internal pure returns (bytes memory) {
         return
             abi.encodeWithSignature(
                 "transferHat(uint256,address,address)",
-                topHat,
-                treasury,
-                address(this)
+                _hat,
+                _from,
+                _to
             );
+    }
+
+    /**
+     * @dev Encoding function for minting an adminHat
+     */
+    function _encodeMintHat(uint256 _hat, address _to)
+        internal
+        pure
+        returns (bytes memory)
+    {
+        return abi.encodeWithSignature("mintHat(uint256,address)", _hat, _to);
     }
 
     /**
@@ -739,7 +788,7 @@ contract RiteOfMoloch is
         address _deployer,
         address _admin1,
         address _admin2
-    ) internal view returns (bytes memory) {
+    ) internal pure returns (bytes memory) {
         return
             abi.encodeWithSignature(
                 "initializeHatTree(address,address,address)",
@@ -775,7 +824,7 @@ contract RiteOfMoloch is
     /**
      * @dev Submit voting proposal to Baal DAO
      */
-    function _submitBaalProposal(bytes memory multiSendMetaTx, bool shaman)
+    function _submitBaalProposal(bytes memory multiSendMetaTx, uint256 options)
         internal
     {
         uint256 proposalOffering = baal.proposalOffering();
@@ -783,10 +832,16 @@ contract RiteOfMoloch is
 
         string memory metaString;
 
-        if (shaman) {
+        if (options == 1) {
             metaString = '{"proposalType": "ADD_SHAMAN", "title": "Rite of Moloch (ROM): Shaman Proposal", "description": "Assign ROM as a Manager-Shaman to mint minimum DAO shares"}';
-        } else {
+        } else if (options == 2) {
             metaString = '{"proposalType": "BORROW_TOPHAT", "title": "Rite of Moloch (ROM): Hats Proposal", "description": "Create and mint ROM-Admin hats from DAO TopHat"}';
+        } else if (options == 3) {
+            metaString = '{"proposalType": "MINT_ADMINHAT", "title": "Rite of Moloch (ROM): Mint Admin Hat", "description": "Mint ROM-Admin hat to EOA"}';
+        } else if (options == 4) {
+            metaString = '{"proposalType": "TRANSFER_ADMINHAT", "title": "Rite of Moloch (ROM): Transfer Admin Hat", "description": "Transfer ROM-Admin hat to EOA"}';
+        } else {
+            metaString = '{"proposalType": "UNDEFINED", "title": "Rite of Moloch (ROM): undefined", "description": "Undefined"}';
         }
 
         baal.submitProposal{value: proposalOffering}(
