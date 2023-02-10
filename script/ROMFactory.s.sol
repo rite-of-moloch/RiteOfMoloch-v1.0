@@ -3,7 +3,7 @@ pragma solidity ^0.8.13;
 
 import "forge-std/Script.sol";
 import {RiteOfMolochFactory} from "src/RiteOfMolochFactory.sol";
-import {IHats} from "src/hats/IHats.sol";
+import {IHats} from "hats-protocol/Interfaces/IHats.sol";
 
 // create with verify
 // forge script script/ROMFactory.s.sol:ROMFactoryScript --rpc-url $RU --private-key $PK --broadcast --verify --etherscan-api-key $EK -vvvv

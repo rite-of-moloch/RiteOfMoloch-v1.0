@@ -5,7 +5,7 @@ import "forge-std/Script.sol";
 import "src/interfaces/IInitData.sol";
 import {RiteOfMolochFactory} from "src/RiteOfMolochFactory.sol";
 import {RiteOfMoloch} from "src/RiteOfMoloch.sol";
-import {IHats} from "src/hats/IHats.sol";
+import {IHats} from "hats-protocol/Interfaces/IHats.sol";
 import {ERC20} from "lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
 import {IBaal} from "src/baal/IBaal.sol";
 

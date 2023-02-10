@@ -2,7 +2,7 @@
 pragma solidity ^0.8.13;
 
 import "test/TestHelper.sol";
-import "test/utils/hats/interfaces/HatsErrorsT.sol";
+import {HatsAccessControl} from "hats-auth/HatsAccessControl.sol";
 
 // forge test --match-contract AccessControl -vv
 
@@ -38,7 +38,7 @@ contract AccessControl is TestHelper {
 
         vm.expectRevert(
             abi.encodeWithSelector(
-                HatsErrorsT.NotWearingRoleHat.selector,
+                HatsAccessControl.NotWearingRoleHat.selector,
                 ADMIN,
                 adminHat,
                 charlie

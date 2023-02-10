@@ -2,13 +2,13 @@
 // @author st4rgard3n, bitbeckers, MrDeadce11, huntrr / Raid Guild
 pragma solidity ^0.8.13;
 
-import "openzeppelin-contracts-upgradeable/utils/CountersUpgradeable.sol";
-import "openzeppelin-contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
-import "openzeppelin-contracts/token/ERC20/IERC20.sol";
-import "src/interfaces/IInitData.sol";
-import "src/interfaces/IRiteOfMoloch.sol";
-import "src/hats/HatsAccessControl.sol";
-import {IHats} from "src/hats/IHats.sol";
+import {CountersUpgradeable} from"openzeppelin-contracts-upgradeable/utils/CountersUpgradeable.sol";
+import {ERC721Upgradeable, ContextUpgradeable} from "openzeppelin-contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
+
+import {IERC20} from "openzeppelin-contracts/token/ERC20/IERC20.sol";
+import {IInitData} from "src/interfaces/IInitData.sol";
+import {IRiteOfMoloch} from "src/interfaces/IRiteOfMoloch.sol";
+import {HatsAccessControl, IHats, Context} from "hats-auth/HatsAccessControl.sol";
 import {IBaal} from "src/baal/IBaal.sol";
 
 contract RiteOfMoloch is
@@ -640,6 +640,14 @@ contract RiteOfMoloch is
     /*************************
      OVERRIDES
      *************************/
+
+    function _msgSender() internal view override(Context, ContextUpgradeable) returns(address) {
+        return msg.sender;
+    }
+
+    function _msgData() internal view override(Context, ContextUpgradeable) returns(bytes calldata) {
+        return msg.data;
+    }
 
     function _baseURI() internal view override returns (string memory) {
         return __baseURI;
