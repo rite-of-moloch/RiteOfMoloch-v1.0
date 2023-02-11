@@ -32,11 +32,7 @@ contract RiteOfMoloch is
     // the time a participant joined the initiation
     mapping(address => uint256) public deadlines;
 
-    // the number of user's a member has sacrificed
-    mapping(address => uint256) public totalSlash;
-
-    // initiates by season
-    // season => id => initiate address
+    // initiates by season: season# => id# => initiateAddress
     mapping(uint256 => mapping(uint256 => address)) initiates;
 
     /*************************
@@ -260,12 +256,10 @@ contract RiteOfMoloch is
         // enforce the initiate or sponsor transfers correct tokens to the contract
         require(_stake(user), "Staking failed!");
 
-        // add user to initiate's list
-        // initiates.push(user);
-
         // increment cohort count
         cohortCounter++;
 
+        // add initiate to tracker by season and id
         initiates[cohortSeason][cohortCounter] = msg.sender;
 
         // issue a soul bound token
@@ -378,16 +372,16 @@ contract RiteOfMoloch is
     }
 
     /**
-     * @dev Claims the life force of failed initiates for the dao
+     * @dev Bleeds the life force of failed initiates into the treasury
      */
     function sacrifice() external onlyRole(ADMIN) {
         _darkRitual();
     }
 
-    function sacrificeSingle(address _sacrificialLamb)
-        external
-        onlyRole(ADMIN)
-    {
+    /**
+     * @dev Bleeds the life force of a single failed initiate into the treasury
+     */
+    function slaughter(address _sacrificialLamb) external onlyRole(ADMIN) {
         _bloodLetting(_sacrificialLamb);
         cohortCounter--;
     }
@@ -526,7 +520,7 @@ contract RiteOfMoloch is
                 blood += _bloodLetting(initiate);
                 delete initiates[season][i];
             } else if (_staked[initiate] == 0) {
-                // delete successful initiates that claimed their stake
+                // delete initiates that have already claimed their stake or been slaughtered
                 delete initiates[season][i];
             } else {
                 // carry-over non-failed active initiates into next cohort
