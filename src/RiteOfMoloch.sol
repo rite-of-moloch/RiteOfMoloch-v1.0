@@ -33,7 +33,7 @@ contract RiteOfMoloch is
     mapping(address => uint256) public deadlines;
 
     // initiates by season: season# => id# => initiateAddress
-    mapping(uint256 => mapping(uint256 => address)) initiates;
+    mapping(uint256 => mapping(uint256 => address)) internal initiates;
 
     /*************************
      STATE VARIABLES
@@ -132,8 +132,8 @@ contract RiteOfMoloch is
         baal = IBaal(initData.membershipCriteria);
 
         // reference sharesToken of Baal
-        _sharesToken = IERC20(initData.stakingAsset); // <= for local testing only
-        // _sharesToken = IERC20(baal.sharesToken()); // <= correct
+        // _sharesToken = IERC20(initData.stakingAsset); // <= for local testing only
+        _sharesToken = IERC20(baal.sharesToken()); // <= correct
 
         // store the treasury daoAddress
         treasury = initData.treasury;
@@ -507,26 +507,27 @@ contract RiteOfMoloch is
         uint256 blood;
         uint256 newCohortCount;
         uint256 season = cohortSeason;
+        uint256 nextSeason = cohortSeason + 1;
 
         for (uint256 i = 1; i <= cohortCounter; i++) {
             // store each initiate's address
             address initiate = initiates[season][i];
             uint256 index = 1;
 
-            if (
-                block.timestamp > deadlines[initiate] && _staked[initiate] > 0
-            ) {
-                // slash failed initiate
-                blood += _bloodLetting(initiate);
-                delete initiates[season][i];
-            } else if (_staked[initiate] == 0) {
-                // delete initiates that have already claimed their stake or been slaughtered
-                delete initiates[season][i];
+            if (_staked[initiate] > 0) {
+                if (block.timestamp > deadlines[initiate]) {
+                    // slash failed initiate
+                    blood += _bloodLetting(initiate);
+                    delete initiates[season][i];
+                } else {
+                    // carry-over non-failed active initiates into next cohort
+                    initiates[nextSeason][index] = initiate;
+                    index++;
+                    newCohortCount++;
+                    delete initiates[season][i];
+                }
             } else {
-                // carry-over non-failed active initiates into next cohort
-                initiates[season + 1][index] = initiate;
-                index++;
-                newCohortCount++;
+                // delete initiates that have already claimed their stake or been slaughtered
                 delete initiates[season][i];
             }
         }
@@ -589,8 +590,8 @@ contract RiteOfMoloch is
     /**
      * @dev returns the user's member status
      */
-    function isMember(address user) public returns (bool) {
-        uint256 shares = _sharesToken.balanceOf(msg.sender);
+    function isMember(address user) public view returns (bool) {
+        uint256 shares = _sharesToken.balanceOf(user);
 
         return (shares >= minimumShare);
     }
