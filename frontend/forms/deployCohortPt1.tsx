@@ -159,7 +159,6 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               accept=".png, .jpg, .jpeg, .gif"
               placeholder="Upload image for SBT"
 
-              // @ts-ignore
               localForm={localForm}
               {...register("sbtImage", {
                 required: {

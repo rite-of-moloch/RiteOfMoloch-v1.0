@@ -172,7 +172,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
                 placeholder="enter wallet address"
                 type="text"
                 autoComplete="off"
-                // @ts-ignore
                 localForm={localForm}
                 {...register("initiateAddress", {
                   validate: (initiate: string) =>

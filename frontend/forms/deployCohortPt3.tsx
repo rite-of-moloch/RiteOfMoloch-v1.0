@@ -191,7 +191,6 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               id="topHatWearer"
               placeholder="Input address of TOP HAT owner"
               autoComplete="off"
-              // @ts-ignore
               localForm={localForm}
               {...register("topHatWearer", {
                 validate: () =>
@@ -211,7 +210,6 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               placeholder="TOP HAT ID"
               type="number"
               autoComplete="off"
-              // @ts-ignore
               localForm={localForm}
               {...register("tophatID", {
                 required: {
@@ -243,7 +241,6 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               // isDisabled
               my={4}
               label=""
-              // @ts-ignore
               localForm={localForm}
               {...(register("addAdmin"),
               {
@@ -265,7 +262,6 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               id="admin1"
               placeholder="Input address 1"
               autoComplete="off"
-              // @ts-ignore
               localForm={localForm}
               {...register("admin1", {
                 required: {
@@ -289,7 +285,6 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               id="admin2"
               placeholder="Input address 2"
               autoComplete="off"
-              // @ts-ignore
               localForm={localForm}
               {...register("admin2", {
                 required: false,
@@ -325,7 +320,6 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
             <Switch
               my={4}
               label=""
-              // @ts-ignore
               localForm={localForm}
               {...(register("shamanOn"),
               {

@@ -250,7 +250,6 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               id="treasury"
               placeholder="Slashed stake will be sent here..."
               autoComplete="off"
-              // @ts-ignore
               localForm={localForm}
               {...register("treasury", {
                 required: {
