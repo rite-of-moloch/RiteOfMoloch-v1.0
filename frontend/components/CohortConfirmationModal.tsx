@@ -43,11 +43,11 @@ const CohortConfirmationModal: React.FC<CohortConfirmationModalProps> = ({
 
           <ModalBody>
             <Text textAlign="center">
-              You've successfull deployed a chohort
+              You&apos;ve successfull deployed a chohort
             </Text>
           </ModalBody>
           <Box maxH="150px" mx="auto" my={"1rem"}>
-            <Image src="/assets/guild_sunset.png" />
+            <Image src="/assets/guild_sunset.png" alt="guild-sunset-logo" />
           </Box>
           <ModalFooter>
             <Box w="full" textAlign="center">

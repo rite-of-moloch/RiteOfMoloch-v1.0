@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
-import { Flex, Text, Checkbox, Box, VStack } from "@raidguild/design-system";
+import { Flex, Text, Box, VStack, Checkbox } from "@raidguild/design-system";
 import CountdownTimer from "./CountdownTimer";
 import StakingFlow from "./StakingFlow";
 import { UserContext } from "context/UserContext";
+import { useForm } from "react-hook-form";
 
 interface RiteStakedProps {
   riteBalance: string;
@@ -15,7 +16,11 @@ const RiteStaked: React.FC<RiteStakedProps> = ({
   deadline,
   contractAddress,
 }) => {
+  const _localForm = useForm();
   const { handleWillSponsor, willSponsor } = useContext(UserContext);
+
+  //TODO options were incorrect and localForm was missing
+  //TODO might want to use a simple <input type=checkbox>
 
   return (
     <VStack>
@@ -31,11 +36,13 @@ const RiteStaked: React.FC<RiteStakedProps> = ({
 
       <Flex mt="1em">
         <Checkbox
+          localForm={_localForm}
           size="md"
           color="red"
           defaultValue={["false"]}
+          label="Sponsor an Initiate"
           value="Sponsor an Initiate"
-          options={[{ label: "Sponsor an Initiate", value: "false" }]}
+          options={["Sponsor an Initiate"]}
           isChecked={willSponsor}
           onChange={handleWillSponsor}
           hidden={willSponsor ? true : false}

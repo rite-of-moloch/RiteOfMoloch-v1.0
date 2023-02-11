@@ -171,7 +171,6 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               // isDisabled
               label=""
               id="hasTopHat"
-              // @ts-ignore
               localForm={localForm}
               {...register("hasTophat", {
                 onChange: () => {

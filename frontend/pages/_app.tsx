@@ -25,6 +25,7 @@ const App = ({ Component, pageProps }: AppProps) => {
             <FormProvider>
               <UserProvider>
                 <Layout>
+                  Hello
                   <Component {...pageProps} />
                 </Layout>
               </UserProvider>
