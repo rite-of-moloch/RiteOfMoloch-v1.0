@@ -1,12 +1,17 @@
 import React, { FC, ReactNode } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import {
   Box,
   Button,
+  ChakraNumberInput,
   FormControl,
   Input,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
   NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   SimpleGrid,
   Text,
   Tooltip,
@@ -36,6 +41,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
   const localForm = useForm();
 
   const {
+    control,
     register,
     watch,
     getValues,
@@ -72,40 +78,45 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
     <FormControl onSubmit={handleSubmit(handleBack)}>
       <Box display={displayPart2 ? "inline" : "none"}>
         <SimpleGrid columns={2} spacingX={4} spacingY={3}>
-          <Box>
-            <NumberInput
-              label="Stake per member"
-              id="assetAmount"
-              placeholder="Stake per member"
-              autoComplete="off"
-              // @ts-ignore
-              localForm={localForm}
-              {...register("assetAmount", {
-                validate: (val) => val > 0,
-                required: {
-                  value: true,
-                  message: "Input cannot be blank",
-                },
-                min: {
-                  value: 0.01,
-                  message: "Value cannot be 0",
-                },
-              })}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="assetAmount"
-              render={({ message }) => <Text color="red">{message}</Text>}
-            />
-          </Box>
+          <Controller
+            control={control}
+            name="amount"
+            rules={{
+              validate: (val: number) => val > 0,
+              required: {
+                value: true,
+                message: "Input cannot be blank",
+              },
+              min: {
+                value: 0.01,
+                message: "Value must be greater than 0",
+              },
+            }}
+            render={({ field: { ref, ...restField } }) => (
+              <ChakraNumberInput
+                variant="outline"
+                step={0.1}
+                id="assetAmount"
+                placeholder="Stake per member"
+                precision={2}
+                {...restField}
+              >
+                <NumberInputField ref={ref} name={restField.name} />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </ChakraNumberInput>
+            )}
+          />
 
           <Box>
             <NumberInput
+              variant="outline"
               label="Cohort size"
               id="cohortSize"
               placeholder="Cohort size"
               autoComplete="off"
-              // @ts-ignore
               localForm={localForm}
               {...register("cohortSize", {
                 validate: (val) => val > 0,
@@ -136,7 +147,6 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
                 id="shareThreshold"
                 placeholder="shares per member"
                 autoComplete="off"
-                // @ts-ignore
                 localForm={localForm}
                 {...register("shareThreshold", {
                   validate: (val) => val > 0,
@@ -163,7 +173,6 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               id="onboardindPeriod"
               placeholder="enter time in days..."
               autoComplete="off"
-              // @ts-ignore
               localForm={localForm}
               {...register("onboardingPeriod", {
                 validate: (val) => val > 0,
@@ -190,7 +199,6 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               id="stakingAsset"
               placeholder="enter token address"
               autoComplete="off"
-              // @ts-ignore
               localForm={localForm}
               {...register("stakingAsset", {
                 required: {
@@ -215,7 +223,6 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               id="stakeDuration"
               placeholder="amount in days..."
               autoComplete="off"
-              // @ts-ignore
               localForm={localForm}
               {...register("stakeDuration", {
                 validate: (val) => val > 0,
@@ -243,7 +250,6 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               id="treasury"
               placeholder="Slashed stake will be sent here..."
               autoComplete="off"
-              // @ts-ignore
               localForm={localForm}
               {...register("treasury", {
                 required: {

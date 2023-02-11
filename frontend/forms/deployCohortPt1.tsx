@@ -83,7 +83,6 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               id="nameCohort"
               placeholder="Name cohort"
               autoComplete="off"
-              // @ts-ignore
               localForm={localForm}
               {...register("nameCohort", {
                 required: {
@@ -109,7 +108,6 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
                 id="membershipCriteria"
                 placeholder="enter address"
                 autoComplete="off"
-                // @ts-ignore
                 localForm={localForm}
                 {...register("membershipCriteria", {
                   required: {
@@ -135,7 +133,6 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               id="nameSBT"
               placeholder="Name SBT"
               autoComplete="off"
-              // @ts-ignore
               localForm={localForm}
               {...register("nameSBT", {
                 required: {
@@ -162,7 +159,6 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               accept=".png, .jpg, .jpeg, .gif"
               placeholder="Upload image for SBT"
 
-              // @ts-ignore
               localForm={localForm}
               {...register("sbtImage", {
                 required: {
@@ -188,7 +184,6 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               id="symbolSBT"
               placeholder="SBT Symbol"
               autoComplete="off"
-              // @ts-ignore
               localForm={localForm}
               {...register("symbolSBT", {
                 required: {
@@ -213,7 +208,6 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               id="uriSBT"
               placeholder="enter SBT URI"
               autoComplete="off"
-              // @ts-ignore
               localForm={localForm}
               {...register("uriSBT", {
                 required: {

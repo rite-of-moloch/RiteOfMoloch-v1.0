@@ -13,7 +13,7 @@ const Home: React.FC<HomeProps> = ({ children }): any => {
   const { isConnected } = useAccount();
 
   return (
-    <>
+    <>HELLO
       {!isConnected && <NotConnected />}
       {isConnected && (
         <HStack justifyContent="space-around">

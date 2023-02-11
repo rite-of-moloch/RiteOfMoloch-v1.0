@@ -44,6 +44,7 @@ type FormValues = {
 const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   const { address } = useAccount();
   const { willSponsor, handleWillSponsor } = useContext(UserContext);
+  const _localForm = useForm();
 
   const metadata = useSubgraphQuery(
     COHORT_METADATA(contractAddress),
@@ -117,7 +118,10 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     minimumStake
   );
 
-  const tokenSymbol = cohort?.token && useTokenSymbol(cohort?.token);
+  let tokenSymbol = useTokenSymbol(cohort?.token || "");
+  if (!tokenSymbol) {
+    tokenSymbol = "N/A";
+  }
 
   console.log(
     "symbol:",
@@ -152,11 +156,12 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
         <Stack mt={8} w="full">
           <VStack alignItems={"start"}>
             <Checkbox
+              localForm={_localForm}
               size="md"
               color="red"
               defaultValue={["false"]}
               value="Sponsor an Initiate"
-              options={[{ label: "Sponsor an Initiate", value: "false" }]}
+              options={["Sponsor an Initiate"]}
               isChecked={willSponsor}
               onChange={handleWillSponsor}
             />
@@ -167,7 +172,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
                 placeholder="enter wallet address"
                 type="text"
                 autoComplete="off"
-                // @ts-ignore
                 localForm={localForm}
                 {...register("initiateAddress", {
                   validate: (initiate: string) =>

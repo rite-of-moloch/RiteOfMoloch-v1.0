@@ -1,10 +1,15 @@
 import { Box, Link, SimpleGrid } from "@raidguild/design-system";
-import { FC } from "react";
+import React, { FC } from "react";
 import { MemberData } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
 import CohortMemberModal from "./CohortMemberModal";
 
-const initiateData: FC<MemberData> = ({ address, id, joinedAt, stake }) => {
+export const InitiateData: React.FC<MemberData> = ({
+  address,
+  id,
+  joinedAt,
+  stake,
+}) => {
   const { chain } = useNetwork();
 
   // const timeUTC = (time: string) => new Date(time).toUTCString();
@@ -45,5 +50,3 @@ const initiateData: FC<MemberData> = ({ address, id, joinedAt, stake }) => {
     </SimpleGrid>
   );
 };
-
-export default initiateData;

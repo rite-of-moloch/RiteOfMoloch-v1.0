@@ -25,6 +25,9 @@ const gnosis: Chain = {
     symbol: "xDAI",
   },
   rpcUrls: {
+    public: {
+      http: ["https://rpc.gnosischain.com"],
+    },
     default: {
       http: ["https://rpc.gnosischain.com"],
     },
