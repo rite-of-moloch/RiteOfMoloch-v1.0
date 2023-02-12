@@ -1,19 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { ReactNode } from "react";
+import React from "react";
 import { Box, Button, HStack } from "@raidguild/design-system";
 import { useAccount } from "wagmi";
 import Link from "next/link";
 import NotConnected from "components/NotConnected";
 
-interface HomeProps {
-  children: ReactNode;
-}
-
-const Home: React.FC<HomeProps> = ({ children }): any => {
+const Home = () => {
   const { isConnected } = useAccount();
-
+  console.log("hi");
+  console.log(isConnected);
   return (
-    <>HELLO
+    <>
       {!isConnected && <NotConnected />}
       {isConnected && (
         <HStack justifyContent="space-around">

@@ -22,14 +22,13 @@ const App = ({ Component, pageProps }: AppProps) => {
       <QueryClientProvider client={queryClient}>
         <WagmiConfig client={wagmiClient}>
           <RainbowKitProvider chains={chains} theme={darkTheme()}>
-            <FormProvider>
-              <UserProvider>
+            <UserProvider>
+              <FormProvider>
                 <Layout>
-                  Hello
                   <Component {...pageProps} />
                 </Layout>
-              </UserProvider>
-            </FormProvider>
+              </FormProvider>
+            </UserProvider>
           </RainbowKitProvider>
         </WagmiConfig>
       </QueryClientProvider>

@@ -1,5 +1,5 @@
 import React, { FC, ReactNode } from "react";
-import { useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import {
   Box,
@@ -32,7 +32,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
     setDisplayPart2,
   } = useFormContext();
 
-  const localForm = useForm({
+  const localForm = useForm<FieldValues>({
     defaultValues: {
       nameCohort: "",
       // sbtImage: "",

@@ -1,5 +1,5 @@
-import React, { FC, ReactNode } from "react";
-import { Controller, useForm } from "react-hook-form";
+import React from "react";
+import { Controller, FieldValues, useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import {
   Box,
@@ -19,11 +19,7 @@ import {
 import { useFormContext } from "context/FormContext";
 import { utils } from "ethers";
 
-interface DeployCohortPt2Props {
-  children?: ReactNode;
-}
-
-const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
+const DeployCohortPt2 = () => {
   const {
     setAssetAmount,
     setCohortSize,
@@ -38,7 +34,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
     setDisplayPart3,
   } = useFormContext();
 
-  const localForm = useForm();
+  const localForm = useForm<FieldValues>();
 
   const {
     control,
@@ -53,6 +49,18 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
   watch();
   const values = getValues();
   // console.log(values);
+
+  const numberInputRules = {
+    validate: (val: number) => val > 0,
+    required: {
+      value: true,
+      message: "Input cannot be blank",
+    },
+    min: {
+      value: 0.01,
+      message: "Value must be greater than 0",
+    },
+  };
 
   const handleBack = (): void => {
     setDisplayPart1(true);
@@ -81,17 +89,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
           <Controller
             control={control}
             name="amount"
-            rules={{
-              validate: (val: number) => val > 0,
-              required: {
-                value: true,
-                message: "Input cannot be blank",
-              },
-              min: {
-                value: 0.01,
-                message: "Value must be greater than 0",
-              },
-            }}
+            rules={numberInputRules}
             render={({ field: { ref, ...restField } }) => (
               <ChakraNumberInput
                 variant="outline"
@@ -111,7 +109,28 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
           />
 
           <Box>
-            <NumberInput
+            <Controller
+              control={control}
+              name="amount"
+              rules={numberInputRules}
+              render={({ field: { ref, ...restField } }) => (
+                <ChakraNumberInput
+                  variant="outline"
+                  step={0.1}
+                  id="cohortSize"
+                  placeholder="cohort size..."
+                  precision={2}
+                  {...restField}
+                >
+                  <NumberInputField ref={ref} name={restField.name} />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </ChakraNumberInput>
+              )}
+            />
+            {/* <NumberInput
               variant="outline"
               label="Cohort size"
               id="cohortSize"
@@ -129,7 +148,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
                   message: "Minimum of 1 required",
                 },
               })}
-            />
+            /> */}
             <ErrorMessage
               errors={errors}
               name="cohortSize"
@@ -142,11 +161,33 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
             hasArrow
           >
             <Box>
-              <NumberInput
+              <Controller
+                control={control}
+                name="amount"
+                rules={numberInputRules}
+                render={({ field: { ref, ...restField } }) => (
+                  <ChakraNumberInput
+                    variant="outline"
+                    step={0.1}
+                    id="shareThreshold"
+                    placeholder="shares required for membership..."
+                    precision={2}
+                    {...restField}
+                  >
+                    <NumberInputField ref={ref} name={restField.name} />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
+                    </NumberInputStepper>
+                  </ChakraNumberInput>
+                )}
+              />
+              {/* <NumberInput
                 label="Shares per member"
                 id="shareThreshold"
                 placeholder="shares per member"
                 autoComplete="off"
+                variant="outline"
                 localForm={localForm}
                 {...register("shareThreshold", {
                   validate: (val) => val > 0,
@@ -159,7 +200,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
                     message: "Minimum of 1 required",
                   },
                 })}
-              />
+              /> */}
               <ErrorMessage
                 errors={errors}
                 name="shareThreshold"
@@ -168,11 +209,33 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
             </Box>
           </Tooltip>
           <Box>
-            <NumberInput
+            <Controller
+              control={control}
+              name="amount"
+              rules={numberInputRules}
+              render={({ field: { ref, ...restField } }) => (
+                <ChakraNumberInput
+                  variant="outline"
+                  step={0.1}
+                  id="onboardingPeriod"
+                  placeholder="time in days..."
+                  precision={2}
+                  {...restField}
+                >
+                  <NumberInputField ref={ref} name={restField.name} />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </ChakraNumberInput>
+              )}
+            />
+            {/* <NumberInput
               label="Onboarding period in days"
               id="onboardindPeriod"
               placeholder="enter time in days..."
               autoComplete="off"
+              variant="outline"
               localForm={localForm}
               {...register("onboardingPeriod", {
                 validate: (val) => val > 0,
@@ -185,7 +248,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
                   message: "Minimum of 1 required",
                 },
               })}
-            />
+            /> */}
             <ErrorMessage
               errors={errors}
               name="onboardingPeriod"
@@ -218,11 +281,33 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
           </Box>
 
           <Box>
-            <NumberInput
+            <Controller
+              control={control}
+              name="amount"
+              rules={numberInputRules}
+              render={({ field: { ref, ...restField } }) => (
+                <ChakraNumberInput
+                  variant="outline"
+                  step={0.1}
+                  id="stakeDuration"
+                  placeholder="amount in days..."
+                  precision={2}
+                  {...restField}
+                >
+                  <NumberInputField ref={ref} name={restField.name} />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </ChakraNumberInput>
+              )}
+            />
+            {/* <NumberInput
               label="Staking duration in days"
               id="stakeDuration"
               placeholder="amount in days..."
               autoComplete="off"
+              variant="outline"
               localForm={localForm}
               {...register("stakeDuration", {
                 validate: (val) => val > 0,
@@ -235,7 +320,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
                   message: "Minimum of 1 required",
                 },
               })}
-            />
+            /> */}
             <ErrorMessage
               errors={errors}
               name="stakeDuration"

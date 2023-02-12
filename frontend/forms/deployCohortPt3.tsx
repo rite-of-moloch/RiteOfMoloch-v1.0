@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import {
   Box,
@@ -45,7 +45,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
     setShamanOn,
   } = useFormContext();
 
-  const localForm = useForm<FormValues>({
+  const localForm = useForm<FieldValues>({
     defaultValues: {
       hasTophat: false,
       topHatWearer: "",
