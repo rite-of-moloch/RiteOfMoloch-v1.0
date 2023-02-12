@@ -37,10 +37,9 @@ const Stake: React.FC = (): any => {
 
   // console.log("deadline", deadline);
 
-  const riteBalance: string = useRiteBalanceOf(
-    cohortAddress?.toString() || "",
-    [userAddress()]
-  );
+  const riteBalance = useRiteBalanceOf(cohortAddress?.toString() || "", [
+    userAddress(),
+  ]);
 
   const hasRite = (): boolean => {
     let rites = Number(riteBalance);
@@ -101,7 +100,7 @@ const Stake: React.FC = (): any => {
 
               {isConnected && hasRite() && (
                 <RiteStaked
-                  riteBalance={riteBalance}
+                  riteBalance={riteBalance?.toString() || ""}
                   deadline={deadline}
                   contractAddress={cohortAddress || ""}
                 />

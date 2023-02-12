@@ -25,10 +25,8 @@ export const useSubgraphQuery = (query: string, enabled: Boolean) => {
   });
   */
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: [query],
-    queryFn: (context: QueryFunctionContext): Promise<any> => getData(),
-    enabled,
+  const { data, isLoading, error } = useQuery([query], getData, {
+    enabled: true,
   });
 
   return { data, isLoading, error };

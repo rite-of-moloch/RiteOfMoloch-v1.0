@@ -6,15 +6,20 @@ import useReadContract from "./useReadContract";
  * @returns Boolean
  */
 
-const useIsMember = (contractAddress: string, args: [string]): string => {
-  const { output: isMember } = useReadContract(
-    contractAddress,
+const useIsMember = (contractAddress: string, args: [string]) => {
+  const { data, error, isError, isLoading } = useReadContract(
+    contractAddress as `0x${string}`,
     "riteOfMolochAddress",
     "isMember",
     args
   );
 
-  return isMember;
+  if (isError) {
+    console.log("Error: ", error);
+    return null;
+  }
+
+  return data as Boolean;
 };
 
 export default useIsMember;

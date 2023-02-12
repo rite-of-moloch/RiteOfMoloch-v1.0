@@ -1,3 +1,4 @@
+import { BigNumber } from "ethers";
 import useReadContract from "./useReadContract";
 /**
  * @remarks calls `allowance` function on token contract
@@ -7,18 +8,22 @@ import useReadContract from "./useReadContract";
  * @outputs uint256 (string)
  */
 const useGetAllowance = (
-  contractAddress: string,
+  contractAddress: `0x${string}`,
   args: [string, string]
-): string => {
-  const { output: allowance } = useReadContract(
+) => {
+  const { data, error, isError, isLoading } = useReadContract(
     contractAddress,
     "erc20TokenAddress",
     "allowance",
     args
   );
 
-  if (allowance) return allowance;
-  else return "0";
+  if (isError) {
+    console.log("Error: ", error);
+    return null;
+  }
+
+  return data as BigNumber;
 };
 
 export default useGetAllowance;

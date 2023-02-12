@@ -1,3 +1,4 @@
+import { BigNumber } from "ethers";
 import useReadContract from "./useReadContract";
 /**
  * @param contractAddress Should be dynamic address from subgraphQuery from /stake/[address].tsx component
@@ -5,18 +6,22 @@ import useReadContract from "./useReadContract";
  * @outputs uint256
  *
  */
-const useBalanceOf = (contractAddress: string, args: [string]): string => {
-  const { output: balanceOf } = useReadContract(
+const useBalanceOf = (contractAddress: `0x${string}`, args: [string]) => {
+  const { data, error, isError } = useReadContract(
     contractAddress,
     "erc20TokenAddress",
     "balanceOf",
     args
   );
 
-  console.log("balanceOf", balanceOf);
+  if (isError) {
+    console.log("Error: ", error);
+    return null;
+  }
 
-  if (!balanceOf) return "0";
-  else return balanceOf;
+  console.log("balanceOf", data);
+
+  return data as BigNumber;
 };
 
 export default useBalanceOf;

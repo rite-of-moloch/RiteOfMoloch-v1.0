@@ -5,7 +5,7 @@ import {
   useTransaction,
 } from "wagmi";
 import useAbi from "./useAbi";
-import { useCustomToast } from "@raidguild/design-system";
+import { useChakraToast } from "@raidguild/design-system";
 
 /**
  * @remarks hook to prepare wagmi hook contract instances
@@ -23,11 +23,11 @@ const useWriteContract = (
   args?: any
 ) => {
   const abi = useAbi(abiName);
-  const toast = useCustomToast();
+  const toast = useChakraToast();
 
   const { config, error } = usePrepareContractWrite({
-    address: contractAddress,
-    contractInterface: abi,
+    address: contractAddress as `0x${string}`,
+    abi,
     functionName,
     args,
     cacheTime: 2_000,
@@ -67,14 +67,14 @@ const useWriteContract = (
 
   const { data: txResponse } = useTransaction({
     enabled: Boolean(txData),
-    hash: txData?.transactionHash || "",
+    hash: (txData?.transactionHash as `0x${string}`) || "0x",
     // as `0x${string}`) || "",
     onSettled(data, error) {
       console.log("Settled", { data, error });
     },
     onSuccess(data) {
       console.log("success", data);
-      toast.success({
+      toast({
         status: "success",
         title: `Transaction success! ${data?.hash}`,
         size: "base",
@@ -82,7 +82,7 @@ const useWriteContract = (
     },
     onError(err) {
       console.log(err);
-      toast.success({
+      toast({
         status: "error",
         title: `Transaction Error... ${err.message}`,
       });

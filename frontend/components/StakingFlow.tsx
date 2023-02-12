@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import {
   Flex,
   Box,
@@ -13,7 +13,7 @@ import {
   VStack,
 } from "@raidguild/design-system";
 import { useAccount, useNetwork } from "wagmi";
-import { utils } from "ethers";
+import { BigNumber, utils } from "ethers";
 import { UserContext } from "context/UserContext";
 import { approveTooltip, canStake, stakeTooltip } from "utils/general";
 import useBalanceOf from "hooks/useBalanceOf";
@@ -54,11 +54,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   const cohort: CohortMetadata | null = metadata?.data?.cohort;
   console.log("cohort", cohort);
 
-  const localForm = useForm<FormValues>({
-    defaultValues: {
-      initiateAddress: "",
-    },
-  });
+  const localForm = useForm<FieldValues>();
 
   const {
     register,
@@ -78,17 +74,28 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
 
   const minimumStake = cohort?.tokenAmount || "0";
 
-  const balanceOf: string = useBalanceOf(cohort?.token || "0x", [
+  let balanceOf = useBalanceOf((cohort?.token as `0x${string}`) || "0x", [
     userAddress(),
   ]);
+
+  //TODO better handling of balanceOf === null
+  if (!balanceOf) {
+    balanceOf = BigNumber.from("0");
+  }
 
   const { approveRaid, isLoadingApprove, isSuccessApprove, isErrorApprove } =
     useApproveRaid(cohort?.token || "0x", [cohort?.id || "", minimumStake]);
 
-  const allowance = useGetAllowance(cohort?.token || "0x", [
+  let allowance = useGetAllowance((cohort?.token as `0x${string}`) || "0x", [
     userAddress(),
     cohort?.token || "0x",
   ]);
+
+  //TODO better handling of allowance === null
+
+  if (!allowance) {
+    allowance = BigNumber.from("0");
+  }
 
   const { writeJoinInitiation, isLoadingStake, isSuccessStake, isErrorStake } =
     useJoinInitiation(
@@ -96,25 +103,26 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
       !willSponsor ? [userAddress()] : [initiateAddress]
     );
 
-  const canUserStake: boolean = canStake(
-    allowance || "",
+  //TODO methods can accept BigNumbers instead of Strings
+  const canUserStake = canStake(
+    allowance.toString(),
     minimumStake || "",
-    balanceOf || "",
+    balanceOf.toString(),
     initiateAddress,
     willSponsor
   );
 
   const approveTooltiplabel = approveTooltip(
-    allowance,
+    allowance.toString(),
     minimumStake,
-    balanceOf
+    balanceOf.toString()
   );
 
-  const stakeToolTipLabel: string | null = stakeTooltip(
+  const stakeToolTipLabel = stakeTooltip(
     willSponsor,
     initiateAddress,
-    balanceOf,
-    allowance,
+    balanceOf.toString(),
+    allowance.toString(),
     minimumStake
   );
 
