@@ -4,7 +4,7 @@ import { MemberData } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
 import CohortMemberModal from "./CohortMemberModal";
 
-export const InitiateData: React.FC<MemberData> = ({
+const InitiateData: React.FC<MemberData> = ({
   address,
   id,
   joinedAt,
@@ -50,3 +50,5 @@ export const InitiateData: React.FC<MemberData> = ({
     </SimpleGrid>
   );
 };
+
+export default InitiateData;

@@ -18,21 +18,19 @@ interface AppProps {
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
-    <RGThemeProvider theme={theme}>
-      <QueryClientProvider client={queryClient}>
-        <WagmiConfig client={wagmiClient}>
-          <RainbowKitProvider chains={chains} theme={darkTheme()}>
-            <UserProvider>
-              <FormProvider>
-                <Layout>
-                  <Component {...pageProps} />
-                </Layout>
-              </FormProvider>
-            </UserProvider>
-          </RainbowKitProvider>
-        </WagmiConfig>
-      </QueryClientProvider>
-    </RGThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <WagmiConfig client={wagmiClient}>
+        <RainbowKitProvider chains={chains} theme={darkTheme()}>
+          <UserProvider>
+            <FormProvider>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </FormProvider>
+          </UserProvider>
+        </RainbowKitProvider>
+      </WagmiConfig>
+    </QueryClientProvider>
   );
 };
 
