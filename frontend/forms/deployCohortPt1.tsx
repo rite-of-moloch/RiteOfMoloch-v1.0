@@ -32,17 +32,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
     setDisplayPart2,
   } = useFormContext();
 
-  const localForm = useForm<FieldValues>({
-    defaultValues: {
-      nameCohort: "",
-      // sbtImage: "",
-      nameSBT: "",
-      symbolSBT: "",
-      uriSBT: "",
-      treasury: "",
-      membershipCriteria: "",
-    },
-  });
+  const localForm = useForm<FieldValues>();
 
   const {
     register,

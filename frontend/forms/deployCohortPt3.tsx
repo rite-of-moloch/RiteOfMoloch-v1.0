@@ -45,16 +45,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
     setShamanOn,
   } = useFormContext();
 
-  const localForm = useForm<FieldValues>({
-    defaultValues: {
-      hasTophat: false,
-      topHatWearer: "",
-      addAdmin: false,
-      admin1: "",
-      admin2: "",
-      shamanOn: false,
-    },
-  });
+  const localForm = useForm<FieldValues>();
 
   const {
     register,
