@@ -8,7 +8,6 @@ import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
 import { WagmiConfig } from "wagmi";
 import { wagmiClient, chains } from "../utils/wagmiConfig";
 import "@rainbow-me/rainbowkit/styles.css";
-import { Header } from "components/Header";
 
 const queryClient = new QueryClient();
 
@@ -18,25 +17,21 @@ interface AppProps {
 }
 
 const App = ({ Component, pageProps }: AppProps) => {
-  return <RGThemeProvider theme={theme}>Hello</RGThemeProvider>;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <WagmiConfig client={wagmiClient}>
+        <RainbowKitProvider chains={chains} theme={darkTheme()}>
+          <UserProvider>
+            <FormProvider>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </FormProvider>
+          </UserProvider>
+        </RainbowKitProvider>
+      </WagmiConfig>
+    </QueryClientProvider>
+  );
 };
-
-{
-  /* <RGThemeProvider theme={theme}>
-<QueryClientProvider client={queryClient}>
-  <WagmiConfig client={wagmiClient}>
-    <RainbowKitProvider chains={chains} theme={darkTheme()}>
-      <UserProvider>
-        <FormProvider>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </FormProvider>
-      </UserProvider>
-    </RainbowKitProvider>
-  </WagmiConfig>
-</QueryClientProvider>
-</RGThemeProvider> */
-}
 
 export default App;
