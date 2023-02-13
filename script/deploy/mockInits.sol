@@ -24,8 +24,6 @@ import {IInitData} from "src/interfaces/IInitData.sol";
 */
 
 
-// create with verify
-// forge script script/ROMFactory.s.sol:ROMFactoryScript --rpc-url $RU --private-key $PK --broadcast --verify --etherscan-api-key $EK -vvvv
 
 contract MockInits is IInitData {
 

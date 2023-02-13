@@ -6,7 +6,7 @@ import {RiteOfMolochFactory} from "src/RiteOfMolochFactory.sol";
 import {DeployHelper} from "script/deploy/helpers.sol";
 
 
-// forge script script/deploy/deployCohorts.s.sol:DeployMockCohorts --fork-url https://eth-goerli.g.alchemy.com/v2/ld62l45P8mlwdUKr-lKsQX8U2EMGNKKw --broadcast
+// forge script script/deploy/deployCohorts.s.sol:DeployMockCohorts --fork-url <URL> --broadcast
 
 /// @notice deploys mock cohorts to Goerli for an existing factory
 contract DeployMockCohorts is Script, DeployHelper {
