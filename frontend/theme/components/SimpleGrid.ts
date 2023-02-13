@@ -1,6 +1,6 @@
 const SimpleGrid = {
   baseStyle: {
-    fontFamily: "texturina",
+    fontFamily: "Texturina",
     border: "1px solid #FF3864",
     py: 3,
     px: 4,

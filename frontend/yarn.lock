@@ -774,7 +774,7 @@
   dependencies:
     "@chakra-ui/utils" "2.0.15"
 
-"@chakra-ui/react@^2.4.6":
+"@chakra-ui/react@^2.4.7":
   version "2.4.9"
   resolved "https://registry.yarnpkg.com/@chakra-ui/react/-/react-2.4.9.tgz#7c80c462aeaec7f1bd91ec6439940e3ef5c66ad9"
   integrity sha512-lY++xW+zhLp0zQr2Sf5phjYMIphOmjGV/o5A1oDQPrqwLJFm4mL2+eXvpAFrLnZoh00qa4iBqarxJCW7qpHeiA==
@@ -1667,17 +1667,17 @@
     "@ethersproject/properties" "^5.7.0"
     "@ethersproject/strings" "^5.7.0"
 
-"@floating-ui/core@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-1.2.0.tgz#ae7ae7923d41f3d84cb2fd88740a89436610bbec"
-  integrity sha512-GHUXPEhMEmTpnpIfesFA2KAoMJPb1SPQw964tToQwt+BbGXdhqTCWT1rOb0VURGylsxsYxiGMnseJ3IlclVpVA==
+"@floating-ui/core@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-1.2.1.tgz#074182a1d277f94569c50a6b456e62585d463c8e"
+  integrity sha512-LSqwPZkK3rYfD7GKoIeExXOyYx6Q1O4iqZWwIehDNuv3Dv425FIAE8PRwtAx1imEolFTHgBEcoFHm9MDnYgPCg==
 
 "@floating-ui/dom@^1.0.1":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.2.0.tgz#a60212069cc58961c478037c30eba4b191c75316"
-  integrity sha512-QXzg57o1cjLz3cGETzKXjI3kx1xyS49DW9l7kV2jw2c8Yftd434t2hllX0sVGn2Q8MtcW/4pNm8bfE1/4n6mng==
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.2.1.tgz#8f93906e1a3b9f606ce78afb058e874344dcbe07"
+  integrity sha512-Rt45SmRiV8eU+xXSB9t0uMYiQ/ZWGE/jumse2o3i5RGlyvcbqOF4q+1qBnzLE2kZ5JGhq0iMkcGXUKbFe7MpTA==
   dependencies:
-    "@floating-ui/core" "^1.2.0"
+    "@floating-ui/core" "^1.2.1"
 
 "@hookform/error-message@^2.0.1":
   version "2.0.1"
@@ -1995,18 +1995,18 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.6.tgz#cee20bd55e68a1720bdab363ecf0c821ded4cd45"
   integrity sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==
 
-"@raidguild/design-system@0.4.42":
-  version "0.4.42"
-  resolved "https://registry.yarnpkg.com/@raidguild/design-system/-/design-system-0.4.42.tgz#5a43d8873265148192626b15cb9f880f3980be76"
-  integrity sha512-StU0KfErdd//jO3sNWO+qKu5NS6PTBn3jtc+9ylA2QtJeSdoxFaHA/V85pZ1iuiQsRdajlsWG6irdRa31UPlVw==
+"@raidguild/design-system@^0.4.43":
+  version "0.4.43"
+  resolved "https://registry.yarnpkg.com/@raidguild/design-system/-/design-system-0.4.43.tgz#86149870f2019b3f6eddebcb1d7e49775d0faddb"
+  integrity sha512-gQhDFgShCwEUTXFu3H4pYs4FPLBSbZyo0DWMug4aLyFUOdWS6XfK15bzLktSSpoxMUw2CVWK0rKm0rYRTMT2Ug==
   dependencies:
-    "@chakra-ui/react" "^2.4.6"
+    "@chakra-ui/react" "^2.4.7"
     "@chakra-ui/theme-tools" "^2.0.16"
     "@emotion/react" "^11.10.5"
     "@emotion/styled" "^11.10.5"
     "@rollup/plugin-replace" "^3.0.0"
-    "@storybook/react" "^7.0.0-alpha.43"
-    "@storybook/theming" "^7.0.0-alpha.43"
+    "@storybook/react" "^7.0.0-beta.46"
+    "@storybook/theming" "^7.0.0-beta.46"
     "@types/react-datepicker" "^4.8.0"
     chakra-react-select "^4.4.3"
     framer-motion "^7.6.2"
@@ -2367,7 +2367,7 @@
     ts-dedent "^2.0.0"
     util-deprecate "^1.0.2"
 
-"@storybook/react@^7.0.0-alpha.43":
+"@storybook/react@^7.0.0-beta.46":
   version "7.0.0-beta.46"
   resolved "https://registry.yarnpkg.com/@storybook/react/-/react-7.0.0-beta.46.tgz#8a91ae666b171d3513d8ef004e7b18a4c4679755"
   integrity sha512-SYLtbUAvOhLOBX6wJSBW0Dio4CovtXF4J6AcLqxV49KKCvuGfd03cieiv5gBEpjFUbA4574obtJ9q1kCJIWtOA==
@@ -2393,7 +2393,7 @@
     type-fest "^2.19.0"
     util-deprecate "^1.0.2"
 
-"@storybook/theming@^7.0.0-alpha.43":
+"@storybook/theming@^7.0.0-beta.46":
   version "7.0.0-beta.46"
   resolved "https://registry.yarnpkg.com/@storybook/theming/-/theming-7.0.0-beta.46.tgz#936de29e74c4f322b4d0ac0ffe230977ef3a0f70"
   integrity sha512-Zhiu8gEWgUoHYP8VMCXuI1TyjG+MwMDLqooFGoNoaX/p0Fg+orf+Y4u1J8eXUMv75tlPEoBvmAv8pa8REvxYGw==
@@ -5223,17 +5223,6 @@ framer-motion@^7.6.2:
     "@motionone/dom" "^10.15.3"
     hey-listen "^1.0.8"
     tslib "2.4.0"
-  optionalDependencies:
-    "@emotion/is-prop-valid" "^0.8.2"
-
-framer-motion@^8.0.2:
-  version "8.5.5"
-  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-8.5.5.tgz#e30e9087bfc9b3367459f83b4d9fe7efd5acade6"
-  integrity sha512-5IDx5bxkjWHWUF3CVJoSyUVOtrbAxtzYBBowRE2uYI/6VYhkEBD+rbTHEGuUmbGHRj6YqqSfoG7Aa1cLyWCrBA==
-  dependencies:
-    "@motionone/dom" "^10.15.3"
-    hey-listen "^1.0.8"
-    tslib "^2.4.0"
   optionalDependencies:
     "@emotion/is-prop-valid" "^0.8.2"
 

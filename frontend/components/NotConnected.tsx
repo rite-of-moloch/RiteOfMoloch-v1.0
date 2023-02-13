@@ -1,7 +1,6 @@
 import React, { ReactNode } from "react";
 import ConnectWallet from "./ConnectWallet";
-import { Box } from "@raidguild/design-system";
-import HeaderOne from "./Header0ne";
+import { Box, Heading } from "@raidguild/design-system";
 
 interface NotConnectedProps {
   children?: ReactNode;
@@ -10,7 +9,9 @@ interface NotConnectedProps {
 const NotConnected: React.FC<NotConnectedProps> = ({ children }) => {
   return (
     <>
-      <HeaderOne />
+      <Heading as="h1" fontFamily="uncial" color="red" textAlign="center">
+        SLAY OR BE SLAIN...
+      </Heading>
       <Box
         bg="gradientSBTPrev"
         border="red 1px solid"

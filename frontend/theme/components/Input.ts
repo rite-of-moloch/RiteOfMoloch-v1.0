@@ -2,15 +2,15 @@ import { createMultiStyleConfigHelpers } from "@chakra-ui/styled-system";
 
 const helpers = createMultiStyleConfigHelpers(["field"]);
 
-const NumberInput = helpers.defineMultiStyleConfig({
+const Input = helpers.defineMultiStyleConfig({
   baseStyle: {
     field: {
       bg: "black",
       border: "solid red 1px",
-      fontFamily: "texturina",
+      fontFamily: "Texturina",
       color: "#FFFFFF",
       _placeholder: {
-        fontFamily: "spaceMono",
+        fontFamily: "Space_Mono",
         color: "#323232",
       },
     },
@@ -20,4 +20,4 @@ const NumberInput = helpers.defineMultiStyleConfig({
   },
 });
 
-export default NumberInput;
+export default Input;

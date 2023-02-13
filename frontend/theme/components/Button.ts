@@ -102,7 +102,7 @@ const Button = {
     size: "default",
     variant: "solid",
     fontWeight: "400",
-    fontFamily: "texturina",
+    fontFamily: "Texturina",
   },
 };
 

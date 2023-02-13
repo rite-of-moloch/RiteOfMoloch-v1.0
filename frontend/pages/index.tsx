@@ -7,7 +7,7 @@ import NotConnected from "components/NotConnected";
 
 const Home = () => {
   const { isConnected } = useAccount();
-  console.log("hi");
+  console.log("hello world");
   console.log(isConnected);
   return (
     <>

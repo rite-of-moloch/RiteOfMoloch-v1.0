@@ -131,24 +131,24 @@ const DeployCohortPt2 = () => {
               )}
             />
             {/* <NumberInput
-              variant="outline"
-              label="Cohort size"
-              id="cohortSize"
-              placeholder="Cohort size"
-              autoComplete="off"
-              localForm={localForm}
-              {...register("cohortSize", {
-                validate: (val) => val > 0,
-                required: {
-                  value: true,
-                  message: "Input cannot be blank",
-                },
-                min: {
-                  value: 1,
-                  message: "Minimum of 1 required",
-                },
-              })}
-            /> */}
+                variant="outline"
+                label="Cohort size"
+                id="cohortSize"
+                placeholder="Cohort size"
+                autoComplete="off"
+                localForm={localForm}
+                {...register("cohortSize", {
+                  validate: (val) => val > 0,
+                  required: {
+                    value: true,
+                    message: "Input cannot be blank",
+                  },
+                  min: {
+                    value: 1,
+                    message: "Minimum of 1 required",
+                  },
+                })}
+              /> */}
             <ErrorMessage
               errors={errors}
               name="cohortSize"
@@ -183,24 +183,24 @@ const DeployCohortPt2 = () => {
                 )}
               />
               {/* <NumberInput
-                label="Shares per member"
-                id="shareThreshold"
-                placeholder="shares per member"
-                autoComplete="off"
-                variant="outline"
-                localForm={localForm}
-                {...register("shareThreshold", {
-                  validate: (val) => val > 0,
-                  required: {
-                    value: true,
-                    message: "Input cannot be blank",
-                  },
-                  min: {
-                    value: 1,
-                    message: "Minimum of 1 required",
-                  },
-                })}
-              /> */}
+                  label="Shares per member"
+                  id="shareThreshold"
+                  placeholder="shares per member"
+                  autoComplete="off"
+                  variant="outline"
+                  localForm={localForm}
+                  {...register("shareThreshold", {
+                    validate: (val) => val > 0,
+                    required: {
+                      value: true,
+                      message: "Input cannot be blank",
+                    },
+                    min: {
+                      value: 1,
+                      message: "Minimum of 1 required",
+                    },
+                  })}
+                /> */}
               <ErrorMessage
                 errors={errors}
                 name="shareThreshold"
@@ -231,24 +231,24 @@ const DeployCohortPt2 = () => {
               )}
             />
             {/* <NumberInput
-              label="Onboarding period in days"
-              id="onboardindPeriod"
-              placeholder="enter time in days..."
-              autoComplete="off"
-              variant="outline"
-              localForm={localForm}
-              {...register("onboardingPeriod", {
-                validate: (val) => val > 0,
-                required: {
-                  value: true,
-                  message: "Input cannot be blank",
-                },
-                min: {
-                  value: 1,
-                  message: "Minimum of 1 required",
-                },
-              })}
-            /> */}
+                label="Onboarding period in days"
+                id="onboardindPeriod"
+                placeholder="enter time in days..."
+                autoComplete="off"
+                variant="outline"
+                localForm={localForm}
+                {...register("onboardingPeriod", {
+                  validate: (val) => val > 0,
+                  required: {
+                    value: true,
+                    message: "Input cannot be blank",
+                  },
+                  min: {
+                    value: 1,
+                    message: "Minimum of 1 required",
+                  },
+                })}
+              /> */}
             <ErrorMessage
               errors={errors}
               name="onboardingPeriod"
@@ -303,24 +303,24 @@ const DeployCohortPt2 = () => {
               )}
             />
             {/* <NumberInput
-              label="Staking duration in days"
-              id="stakeDuration"
-              placeholder="amount in days..."
-              autoComplete="off"
-              variant="outline"
-              localForm={localForm}
-              {...register("stakeDuration", {
-                validate: (val) => val > 0,
-                required: {
-                  value: true,
-                  message: "Input cannot be blank",
-                },
-                min: {
-                  value: 1,
-                  message: "Minimum of 1 required",
-                },
-              })}
-            /> */}
+                label="Staking duration in days"
+                id="stakeDuration"
+                placeholder="amount in days..."
+                autoComplete="off"
+                variant="outline"
+                localForm={localForm}
+                {...register("stakeDuration", {
+                  validate: (val) => val > 0,
+                  required: {
+                    value: true,
+                    message: "Input cannot be blank",
+                  },
+                  min: {
+                    value: 1,
+                    message: "Minimum of 1 required",
+                  },
+                })}
+              /> */}
             <ErrorMessage
               errors={errors}
               name="stakeDuration"

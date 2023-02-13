@@ -15,7 +15,7 @@ const Modal = helpers.defineMultiStyleConfig({
     dialogContainer: {
       position: "fixed",
       border: "1px solid #FF3864",
-      fontFamily: "texturina",
+      fontFamily: "Texturina",
       h: "fit",
       bg: "gradientSBTPrev",
       rounded: "2xl",
