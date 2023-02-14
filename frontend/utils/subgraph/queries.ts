@@ -7,6 +7,7 @@ query {
     deployer
     dao
     token
+    sbtUrl
   }
 }
 `;
@@ -21,7 +22,7 @@ export const COHORTS: QueryBuilder = () => `
             tokenAmount
             dao
             createdAt
-
+            sbtUrl
         }
     }
 `;
@@ -50,6 +51,7 @@ export const COHORT_METADATA: QueryBuilder = (id: string) => `
             tokenAmount
             dao
             createdAt
+            sbtUrl
         }
     }
 `;
