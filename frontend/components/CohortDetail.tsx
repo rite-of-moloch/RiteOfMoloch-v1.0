@@ -1,11 +1,13 @@
 import React, { FC } from "react";
-import { Box, Button, SimpleGrid, Link } from "@raidguild/design-system";
+import { Box, Button, SimpleGrid, Link, Text } from "@raidguild/design-system";
 import { useNetwork } from "wagmi";
 import { useRouter } from "next/router";
+import useTokenSymbol from "hooks/useTokenSymbol";
 
 interface CohortDetailProps {
   address: string;
   stake: string;
+  stakingAsset: string;
   stakingDate: string;
   memberOrAdmin: string | number;
 }
@@ -23,6 +25,7 @@ interface CohortDetailProps {
 const CohortDetail: FC<CohortDetailProps> = ({
   address,
   stake,
+  stakingAsset,
   stakingDate,
   memberOrAdmin,
 }) => {
@@ -53,7 +56,14 @@ const CohortDetail: FC<CohortDetailProps> = ({
         spacingX={2}
       >
         <Box justifySelf="start">{blockExplorerLink(address)}</Box>
-        <Box justifySelf="center">{stake}</Box>
+        <Box justifySelf="center">
+          <Text>
+            <span>{stake}</span>
+            <span style={{ marginLeft: "0.25em" }}>
+              {useTokenSymbol(stakingAsset)}
+            </span>
+          </Text>
+        </Box>
         <Box justifySelf="center">{stakingDate}</Box>
         <Box justifySelf="end">
           <Link

@@ -17,20 +17,17 @@ import { TxHash } from "utils/types/TxHash";
  */
 
 const useReadContract = (
-  contractAddress: `0x${string}`,
-  abiName: string,
+  address: `0x${string}`,
+  abi: string,
   functionName: string,
   args?: any
 ) => {
   const { data, error, isError, isLoading } = useContractRead({
-    address: contractAddress,
-    abi: useAbi(abiName),
+    address,
+    abi: useAbi(abi),
     functionName,
     args,
-    enabled: Boolean(contractAddress),
-    onError(err) {
-      console.log("err:", err);
-    },
+    enabled: Boolean(address),
   });
   console.log("error:", error, "isError:", isError);
   console.log("data:", data);

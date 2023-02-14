@@ -16,6 +16,7 @@ import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { ReactNode } from "react";
 import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";
+import useTokenSymbol from "hooks/useTokenSymbol";
 
 interface CohortPageProps {
   children: ReactNode;
@@ -137,7 +138,12 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
               {blockExplorerLink(cohortData?.id)}
             </Box>
             <Box justifySelf="center" textAlign="center" w="full">
-              {cohortData?.tokenAmount}
+              <Text>
+                <span>{cohortData?.tokenAmount}</span>
+                <span style={{ marginLeft: "0.25em" }}>
+                  {useTokenSymbol(cohortData.token)}
+                </span>
+              </Text>
             </Box>
             {/* show dateStaked for msg.sender */}
             <Box justifySelf="center" textAlign="center" w="full">

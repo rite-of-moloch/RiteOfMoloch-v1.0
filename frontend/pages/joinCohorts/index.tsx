@@ -15,6 +15,7 @@ import { unixToUTC } from "utils/general";
 import { COHORTS } from "utils/subgraph/queries";
 import { Cohort } from "utils/types/subgraphQueries";
 import { useAccount } from "wagmi";
+import useTokenSymbol from "../../hooks/useTokenSymbol";
 
 interface JoinCohortsProps {
   children?: ReactNode;
@@ -37,6 +38,7 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
   const isLoading = cohortList.isLoading;
 
   const cohort: Cohort[] | undefined = cohortList?.data?.cohorts;
+  console.log(cohort);
 
   const renderCohorts = cohort?.map((cohort: Cohort) => {
     const deadline = (
@@ -48,6 +50,7 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
       <CohortDetail
         address={cohort.id}
         stake={cohort.tokenAmount}
+        stakingAsset={cohort.token}
         stakingDate={unixToUTC(deadline)}
         key={cohort.id}
         memberOrAdmin={"member"}

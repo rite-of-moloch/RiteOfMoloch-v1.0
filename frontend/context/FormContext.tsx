@@ -100,7 +100,7 @@ export const FormContext = createContext<{
   setShamanOn: null,
 });
 
-console.log("FORMCONTEXT: ", FormContext);
+// console.log("FORMCONTEXT: ", FormContext);
 
 interface FormProviderProps {
   children: React.ReactNode;
@@ -132,7 +132,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   const [superadmin2, setSuperadmin2] = useState(false);
   const [shamanOn, setShamanOn] = useState(false);
 
-  console.log("LOADING FORM PROVIDER");
+  // console.log("LOADING FORM PROVIDER");
   const value = {
     displayPart1,
     setDisplayPart1,
