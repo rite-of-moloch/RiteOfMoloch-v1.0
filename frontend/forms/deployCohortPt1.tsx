@@ -13,6 +13,7 @@ import {
 import { useFormContext } from "context/FormContext";
 import PreviewModal from "components/PreviewModal";
 import { utils } from "ethers";
+import FormErrorText from "components/FormErrorText";
 
 interface deployCohortPt1Props {
   children?: ReactNode;
@@ -21,7 +22,6 @@ interface deployCohortPt1Props {
 const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
   const {
     setNameCohort,
-    // setSbtImage,
     setNameSBT,
     setSymbolSBT,
     setUriSBT,
@@ -52,7 +52,6 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
     console.log(isValid);
     if (isValid) {
       setNameCohort(values.nameCohort);
-      // setSbtImage(values.sbtImage);
       setNameSBT(values.nameSBT);
       setSymbolSBT(values.symbolSBT);
       setUriSBT(values.uriSBT);
@@ -84,7 +83,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="nameCohort"
-              render={({ message }) => <Text color="red">{message}</Text>}
+              render={({ message }) => <FormErrorText message={message} />}
             />
           </Box>
           <Tooltip
@@ -113,7 +112,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               <ErrorMessage
                 errors={errors}
                 name="membershipCriteria"
-                render={({ message }) => <Text color="red">{message}</Text>}
+                render={({ message }) => <FormErrorText message={message} />}
               />
             </Box>
           </Tooltip>
@@ -137,37 +136,9 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="nameSBT"
-              render={({ message }) => <Text color="red">{message}</Text>}
+              render={({ message }) => <FormErrorText message={message} />}
             />
           </Box>
-          {/* image uploader - needs to be connected to IPFS */}
-          {/* <Box>
-            <Input
-              label="Upload SBT image"
-              type="file"
-              id="sbtImage"
-              accept=".png, .jpg, .jpeg, .gif"
-              placeholder="Upload image for SBT"
-
-              localForm={localForm}
-              {...register("sbtImage", {
-                required: {
-                  value: true,
-                  message: "Image required",
-                },
-                onChange(e) {
-                  const file = e.target.files[0];
-                  const url = URL.createObjectURL(file);
-                  setValue("sbtImage", url);
-                },
-              })}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="sbtImage"
-              render={({ message }) => <Text color="red">{message}</Text>}
-            />
-          </Box> */}
           <Box>
             <Input
               label="SBT Symbol"
@@ -188,7 +159,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="symbolSBT"
-              render={({ message }) => <Text color="red">{message}</Text>}
+              render={({ message }) => <FormErrorText message={message} />}
             />
           </Box>
 
@@ -209,7 +180,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="uriSBT"
-              render={({ message }) => <Text color="#FF3864">{message}</Text>}
+              render={({ message }) => <FormErrorText message={message} />}
             />
           </Box>
 

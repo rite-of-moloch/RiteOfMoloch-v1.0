@@ -32,6 +32,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     admin2,
     cohortSize,
     stakeDuration,
+    topHatWearer,
     tophatID,
     nameCohort,
     nameSBT,
@@ -40,6 +41,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     assetAmount,
     shareThreshold,
     onboardingPeriod,
+    shamanOn,
   } = useFormContext();
 
   const blockExplorerLink = (address: string) => (
@@ -49,6 +51,18 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     >
       {address}
     </Link>
+  );
+
+  const responseText = (question: string, response: any, days?: any) => (
+    <Text>
+      <span style={{ color: "gray", marginRight: "0.25em" }}>{question}:</span>
+      <span style={{ fontSize: "small" }}>{response}</span>
+      {days && (
+        <span style={{ fontSize: "small", marginLeft: "0.25em" }}>
+          {days && days > 1 ? "days" : "day"}
+        </span>
+      )}
+    </Text>
   );
 
   const handleBack = (): void => {
@@ -109,102 +123,39 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
               <Text fontSize="lg" color="red" fontWeight="semibold">
                 {nameCohort.toUpperCase()}
               </Text>
-              <Text>
-                <span style={{ color: "gray", marginRight: "0.25em" }}>
-                  Name SBT:
-                </span>
-                {nameSBT}
-              </Text>
-              <Text>
-                <span style={{ color: "gray", marginRight: "0.25em" }}>
-                  Symbol SBT:
-                </span>
-                {symbolSBT}
-              </Text>
-              <Text>
-                <span style={{ color: "gray", marginRight: "0.25em" }}>
-                  Stake per member:
-                </span>
-                <span style={{ marginRight: "0.25em" }}>{assetAmount}</span>
-                {assetAmount && assetAmount > 1 && "days"}
-              </Text>
-              <Text>
-                <span style={{ color: "gray", marginRight: "0.25em" }}>
-                  Staking duration:
-                </span>
-                {stakeDuration} {stakeDuration && stakeDuration > 1 && "days"}
-              </Text>
-              <Text>
-                <span style={{ color: "gray", marginRight: "0.25em" }}>
-                  Cohort size:
-                </span>
-                {cohortSize}
-              </Text>
-              <Text>
-                <span style={{ color: "gray", marginRight: "0.25em" }}>
-                  Shares per member:
-                </span>
-                {shareThreshold}
-              </Text>
-              <Text>
-                <span style={{ color: "gray", marginRight: "0.25em" }}>
-                  Onboarding period:
-                </span>
-                <span style={{ marginRight: "0.25em" }}>
-                  {onboardingPeriod}
-                </span>
-                {onboardingPeriod && onboardingPeriod > 1 && "days"}
-              </Text>
-              <Text>
-                <span style={{ color: "gray" }}>Staking asset address:</span>
-                <Text fontSize="xx-small">
-                  {blockExplorerLink(stakingAsset)}
-                </Text>
-              </Text>
-              <Text>
-                <span style={{ color: "gray" }}>Moloch DAO address:</span>
-
-                <Text fontSize="xx-small">
-                  {blockExplorerLink(membershipCriteria)}
-                </Text>
-              </Text>
-
-              <Text>
-                <span style={{ color: "gray" }}>Treasury address:</span>
-                <Text fontSize="xx-small">{blockExplorerLink(treasury)}</Text>
-              </Text>
-              {/* {topHatWearer !== "" && (
-                <Text>
-                  <span style={{ color: "gray" }}>TOP HAT address:</span>
-
-                  <span>
-                    {
-                      <Text fontSize="xx-small">
-                        {blockExplorerLink(topHatWearer)}
-                      </Text>
-                    }
-                  </span>
-                </Text>
-              )} */}
-              {tophatID && (
-                <Text>
-                  <span style={{ color: "gray" }}>TOP HAT ID:</span> {tophatID}
-                </Text>
+              {responseText("Name SBT", nameSBT)}
+              {responseText("Symbol SBT", symbolSBT)}
+              {responseText("Stake per member", assetAmount, assetAmount)}
+              {responseText("Staking duration", stakeDuration, stakeDuration)}
+              {responseText("Cohort size", cohortSize)}
+              {responseText("Shares per member", shareThreshold)}
+              {responseText(
+                "Onboarding period",
+                onboardingPeriod,
+                onboardingPeriod
               )}
-              {admin1 !== "" && (
-                <Text>
-                  <span style={{ color: "gray" }}>Admin address 1:</span>
-
-                  {<Text fontSize="xx-small">{blockExplorerLink(admin1)}</Text>}
-                </Text>
+              {responseText("Asset address", stakingAsset)}
+              {responseText(
+                "Moloch DAO address",
+                blockExplorerLink(membershipCriteria)
               )}
-              {admin2 !== "" && (
-                <Text>
-                  <span style={{ color: "gray" }}>Admin address 2:</span>
-
-                  {<Text fontSize="xx-small">{blockExplorerLink(admin2)}</Text>}
-                </Text>
-              )}
+              {responseText("Treasury address", blockExplorerLink(treasury))}
+              {topHatWearer !== "" &&
+                responseText(
+                  "TOP HAT address",
+                  blockExplorerLink(topHatWearer)
+                )}
+              {tophatID && responseText("TOP HAT ID", tophatID)}
+              {admin1 !== "" &&
+                responseText("Admin address 1", blockExplorerLink(admin1))}
+              {admin2 !== "" &&
+                responseText("Admin address 2", blockExplorerLink(admin2))}
+              <Text>
+                <span style={{ color: "gray" }}>
+                  Make contract address a shaman:
+                </span>
+                <Text fontSize="small">{shamanOn ? "True" : "False"}</Text>
+              </Text>
             </Stack>
           </Box>
           <Box pt={8}>

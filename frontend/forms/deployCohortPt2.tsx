@@ -4,7 +4,6 @@ import { ErrorMessage } from "@hookform/error-message";
 import {
   Box,
   Button,
-  ChakraNumberInput,
   FormControl,
   Input,
   NumberDecrementStepper,
@@ -18,6 +17,7 @@ import {
 } from "@raidguild/design-system";
 import { useFormContext } from "context/FormContext";
 import { utils } from "ethers";
+import FormErrorText from "components/FormErrorText";
 
 const DeployCohortPt2 = () => {
   const {
@@ -48,7 +48,6 @@ const DeployCohortPt2 = () => {
 
   watch();
   const values = getValues();
-  console.log(values);
 
   const numberInputRules = {
     validate: (val: number) => val > 0,
@@ -134,12 +133,6 @@ const DeployCohortPt2 = () => {
                 </NumberInput>
               )}
             />
-
-            <ErrorMessage
-              errors={errors}
-              name="cohortSize"
-              render={({ message }) => <Text color="red">{message}</Text>}
-            />
           </Box>
           <Tooltip
             label="Set the minimum amount of shares required for membership"
@@ -170,11 +163,11 @@ const DeployCohortPt2 = () => {
                   </NumberInput>
                 )}
               />
-              <ErrorMessage
+              {/* <ErrorMessage
                 errors={errors}
                 name="shareThreshold"
                 render={({ message }) => <Text color="red">{message}</Text>}
-              />
+              /> */}
             </Box>
           </Tooltip>
           <Box>
@@ -201,11 +194,6 @@ const DeployCohortPt2 = () => {
                 </NumberInput>
               )}
             />
-            <ErrorMessage
-              errors={errors}
-              name="onboardingPeriod"
-              render={({ message }) => <Text color="red">{message}</Text>}
-            />
           </Box>
 
           <Box>
@@ -226,7 +214,11 @@ const DeployCohortPt2 = () => {
             <ErrorMessage
               errors={errors}
               name="stakingAsset"
-              render={({ message }) => <Text color="red">{message}</Text>}
+              render={({ message }) => (
+                <Text color="#fc8181" fontSize="sm" mt={1}>
+                  {message}
+                </Text>
+              )}
             />
           </Box>
           <Box>
@@ -253,11 +245,6 @@ const DeployCohortPt2 = () => {
                 </NumberInput>
               )}
             />
-            <ErrorMessage
-              errors={errors}
-              name="stakeDuration"
-              render={({ message }) => <Text color="red">{message}</Text>}
-            />
           </Box>
         </SimpleGrid>
         <SimpleGrid my={3}>
@@ -280,7 +267,7 @@ const DeployCohortPt2 = () => {
             <ErrorMessage
               errors={errors}
               name="treasury"
-              render={({ message }) => <Text color="red">{message}</Text>}
+              render={({ message }) => <FormErrorText message={message} />}
             />
           </Box>
         </SimpleGrid>

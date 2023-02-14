@@ -22,15 +22,15 @@ interface DeployCohortFormProps {
   children?: ReactNode;
 }
 
-type FormValues = {
-  hasTophat: boolean;
-  topHatWearer: string;
-  tophatID: number | null;
-  addAdmin: boolean;
-  admin1: string;
-  admin2: string;
-  shamanOn: boolean;
-};
+// type FormValues = {
+//   hasTophat: boolean;
+//   topHatWearer: string;
+//   tophatID: number | null;
+//   addAdmin: boolean;
+//   admin1: string;
+//   admin2: string;
+//   shamanOn: boolean;
+// };
 
 const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
   const {
