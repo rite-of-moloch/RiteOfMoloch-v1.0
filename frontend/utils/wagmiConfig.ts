@@ -1,6 +1,6 @@
 import { Chain, connectorsForWallets } from "@rainbow-me/rainbowkit";
 import { configureChains, createClient } from "wagmi";
-import { goerli } from "wagmi/chains";
+import { goerli, gnosis } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
@@ -13,34 +13,34 @@ import {
   ledgerWallet,
 } from "@rainbow-me/rainbowkit/wallets";
 
-const gnosis: Chain = {
-  id: 100,
-  name: "Gnosis",
-  network: "xdai",
-  iconUrl: "https://i.imgur.com/lL4RlAZ.png",
-  iconBackground: "white",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Gnosis",
-    symbol: "xDAI",
-  },
-  rpcUrls: {
-    public: {
-      http: ["https://rpc.gnosischain.com"],
-    },
-    default: {
-      http: ["https://rpc.gnosischain.com"],
-    },
-  },
-  blockExplorers: {
-    blockscount: {
-      name: "BlockScout",
-      url: "https://blockscout.com/xdai/mainnet",
-    },
-    default: { name: "BlockScout", url: "https://blockscout.com/xdai/mainnet" },
-  },
-  testnet: false,
-};
+// const gnosis: Chain = {
+//   id: 100,
+//   name: "Gnosis",
+//   network: "xdai",
+//   iconUrl: "https://i.imgur.com/lL4RlAZ.png",
+//   iconBackground: "white",
+//   nativeCurrency: {
+//     decimals: 18,
+//     name: "Gnosis",
+//     symbol: "xDAI",
+//   },
+//   rpcUrls: {
+//     public: {
+//       http: ["https://rpc.gnosischain.com"],
+//     },
+//     default: {
+//       http: ["https://rpc.gnosischain.com"],
+//     },
+//   },
+//   blockExplorers: {
+//     blockscount: {
+//       name: "BlockScout",
+//       url: "https://blockscout.com/xdai/mainnet",
+//     },
+//     default: { name: "BlockScout", url: "https://blockscout.com/xdai/mainnet" },
+//   },
+//   testnet: false,
+// };
 
 export const { chains, provider } = configureChains(
   [gnosis, goerli],

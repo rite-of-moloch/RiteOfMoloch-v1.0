@@ -48,7 +48,7 @@ const DeployCohortPt2 = () => {
 
   watch();
   const values = getValues();
-  // console.log(values);
+  console.log(values);
 
   const numberInputRules = {
     validate: (val: number) => val > 0,
@@ -88,15 +88,17 @@ const DeployCohortPt2 = () => {
         <SimpleGrid columns={2} spacingX={4} spacingY={3}>
           <Controller
             control={control}
-            name="amount"
+            name="assetAmount"
             rules={numberInputRules}
             render={({ field: { ref, ...restField } }) => (
-              <ChakraNumberInput
-                variant="outline"
-                step={0.1}
-                id="assetAmount"
+              <NumberInput
+                label="Stake per member"
+                variant="none"
                 placeholder="Stake per member"
-                precision={2}
+                localForm={localForm}
+                step={1}
+                min={0}
+                max={Infinity}
                 {...restField}
               >
                 <NumberInputField ref={ref} name={restField.name} />
@@ -104,22 +106,24 @@ const DeployCohortPt2 = () => {
                   <NumberIncrementStepper />
                   <NumberDecrementStepper />
                 </NumberInputStepper>
-              </ChakraNumberInput>
+              </NumberInput>
             )}
           />
 
           <Box>
             <Controller
               control={control}
-              name="amount"
+              name="cohortSize"
               rules={numberInputRules}
               render={({ field: { ref, ...restField } }) => (
-                <ChakraNumberInput
-                  variant="outline"
-                  step={0.1}
-                  id="cohortSize"
+                <NumberInput
+                  label="Cohort Size"
                   placeholder="cohort size..."
-                  precision={2}
+                  localForm={localForm}
+                  step={1}
+                  variant="none"
+                  min={0}
+                  max={Infinity}
                   {...restField}
                 >
                   <NumberInputField ref={ref} name={restField.name} />
@@ -127,28 +131,10 @@ const DeployCohortPt2 = () => {
                     <NumberIncrementStepper />
                     <NumberDecrementStepper />
                   </NumberInputStepper>
-                </ChakraNumberInput>
+                </NumberInput>
               )}
             />
-            {/* <NumberInput
-                variant="outline"
-                label="Cohort size"
-                id="cohortSize"
-                placeholder="Cohort size"
-                autoComplete="off"
-                localForm={localForm}
-                {...register("cohortSize", {
-                  validate: (val) => val > 0,
-                  required: {
-                    value: true,
-                    message: "Input cannot be blank",
-                  },
-                  min: {
-                    value: 1,
-                    message: "Minimum of 1 required",
-                  },
-                })}
-              /> */}
+
             <ErrorMessage
               errors={errors}
               name="cohortSize"
@@ -163,15 +149,17 @@ const DeployCohortPt2 = () => {
             <Box>
               <Controller
                 control={control}
-                name="amount"
+                name="shareThreshold"
                 rules={numberInputRules}
                 render={({ field: { ref, ...restField } }) => (
-                  <ChakraNumberInput
-                    variant="outline"
-                    step={0.1}
-                    id="shareThreshold"
+                  <NumberInput
+                    label="Minimum shares"
+                    variant="none"
                     placeholder="shares required for membership..."
-                    precision={2}
+                    localForm={localForm}
+                    step={1}
+                    min={0}
+                    max={Infinity}
                     {...restField}
                   >
                     <NumberInputField ref={ref} name={restField.name} />
@@ -179,28 +167,9 @@ const DeployCohortPt2 = () => {
                       <NumberIncrementStepper />
                       <NumberDecrementStepper />
                     </NumberInputStepper>
-                  </ChakraNumberInput>
+                  </NumberInput>
                 )}
               />
-              {/* <NumberInput
-                  label="Shares per member"
-                  id="shareThreshold"
-                  placeholder="shares per member"
-                  autoComplete="off"
-                  variant="outline"
-                  localForm={localForm}
-                  {...register("shareThreshold", {
-                    validate: (val) => val > 0,
-                    required: {
-                      value: true,
-                      message: "Input cannot be blank",
-                    },
-                    min: {
-                      value: 1,
-                      message: "Minimum of 1 required",
-                    },
-                  })}
-                /> */}
               <ErrorMessage
                 errors={errors}
                 name="shareThreshold"
@@ -211,15 +180,17 @@ const DeployCohortPt2 = () => {
           <Box>
             <Controller
               control={control}
-              name="amount"
+              name="onboardingPeriod"
               rules={numberInputRules}
               render={({ field: { ref, ...restField } }) => (
-                <ChakraNumberInput
-                  variant="outline"
-                  step={0.1}
-                  id="onboardingPeriod"
+                <NumberInput
+                  label="Onboarding period"
+                  variant="none"
                   placeholder="time in days..."
-                  precision={2}
+                  localForm={localForm}
+                  step={1}
+                  min={0}
+                  max={Infinity}
                   {...restField}
                 >
                   <NumberInputField ref={ref} name={restField.name} />
@@ -227,28 +198,9 @@ const DeployCohortPt2 = () => {
                     <NumberIncrementStepper />
                     <NumberDecrementStepper />
                   </NumberInputStepper>
-                </ChakraNumberInput>
+                </NumberInput>
               )}
             />
-            {/* <NumberInput
-                label="Onboarding period in days"
-                id="onboardindPeriod"
-                placeholder="enter time in days..."
-                autoComplete="off"
-                variant="outline"
-                localForm={localForm}
-                {...register("onboardingPeriod", {
-                  validate: (val) => val > 0,
-                  required: {
-                    value: true,
-                    message: "Input cannot be blank",
-                  },
-                  min: {
-                    value: 1,
-                    message: "Minimum of 1 required",
-                  },
-                })}
-              /> */}
             <ErrorMessage
               errors={errors}
               name="onboardingPeriod"
@@ -259,7 +211,6 @@ const DeployCohortPt2 = () => {
           <Box>
             <Input
               label="Staking asset address"
-              id="stakingAsset"
               placeholder="enter token address"
               autoComplete="off"
               localForm={localForm}
@@ -272,26 +223,26 @@ const DeployCohortPt2 = () => {
                   utils.isAddress(values.stakingAsset) || "invalid address",
               })}
             />
-
             <ErrorMessage
               errors={errors}
               name="stakingAsset"
               render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box>
-
           <Box>
             <Controller
               control={control}
-              name="amount"
+              name="stakeDuration"
               rules={numberInputRules}
               render={({ field: { ref, ...restField } }) => (
-                <ChakraNumberInput
-                  variant="outline"
-                  step={0.1}
-                  id="stakeDuration"
+                <NumberInput
+                  label="Stake duration"
+                  variant="none"
                   placeholder="amount in days..."
-                  precision={2}
+                  localForm={localForm}
+                  step={1}
+                  min={0}
+                  max={Infinity}
                   {...restField}
                 >
                   <NumberInputField ref={ref} name={restField.name} />
@@ -299,28 +250,9 @@ const DeployCohortPt2 = () => {
                     <NumberIncrementStepper />
                     <NumberDecrementStepper />
                   </NumberInputStepper>
-                </ChakraNumberInput>
+                </NumberInput>
               )}
             />
-            {/* <NumberInput
-                label="Staking duration in days"
-                id="stakeDuration"
-                placeholder="amount in days..."
-                autoComplete="off"
-                variant="outline"
-                localForm={localForm}
-                {...register("stakeDuration", {
-                  validate: (val) => val > 0,
-                  required: {
-                    value: true,
-                    message: "Input cannot be blank",
-                  },
-                  min: {
-                    value: 1,
-                    message: "Minimum of 1 required",
-                  },
-                })}
-              /> */}
             <ErrorMessage
               errors={errors}
               name="stakeDuration"
@@ -332,7 +264,6 @@ const DeployCohortPt2 = () => {
           <Box>
             <Input
               label="Treasury address"
-              id="treasury"
               placeholder="Slashed stake will be sent here..."
               autoComplete="off"
               localForm={localForm}

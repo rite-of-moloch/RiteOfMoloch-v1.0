@@ -39,7 +39,7 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
     Boolean(cohortAddress)
   );
   const cohortData = cohortMetadata?.data?.cohort;
-  // console.log(cohortData);
+  console.log(cohortData);
 
   const cohortInitiates = useSubgraphQuery(
     COHORT_INITIATES(cohortAddress),
@@ -146,7 +146,7 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
           </SimpleGrid>
           <Image
             m="auto"
-            src={"/assets/season-v-token.svg"}
+            src={cohortData.sbtUrl}
             alt="SBT image preview"
             w="250px"
           />
