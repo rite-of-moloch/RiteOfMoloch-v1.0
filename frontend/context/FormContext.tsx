@@ -184,9 +184,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
     setShamanOn,
   };
 
-  console.log("FORMPROVIDER value: ", value);
-
-  console.log("RETURNING FROM PROVIDER");
+  // console.log("FORMPROVIDER value: ", value);
+  // console.log("RETURNING FROM PROVIDER");
 
   return <FormContext.Provider value={value}>{children}</FormContext.Provider>;
 };

@@ -45,24 +45,30 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
   } = useFormContext();
 
   const blockExplorerLink = (address: string) => (
-    <Link
-      href={`${chain?.blockExplorers?.default.url}/address/${address}`}
-      isExternal
-    >
-      {address}
-    </Link>
+    <Text>
+      <Link
+        href={`${chain?.blockExplorers?.default.url}/address/${address}`}
+        isExternal
+      >
+        {address}
+      </Link>
+    </Text>
   );
 
   const responseText = (question: string, response: any, days?: any) => (
-    <Text>
-      <span style={{ color: "gray", marginRight: "0.25em" }}>{question}:</span>
-      <span style={{ fontSize: "small" }}>{response}</span>
-      {days && (
-        <span style={{ fontSize: "small", marginLeft: "0.25em" }}>
-          {days && days > 1 ? "days" : "day"}
+    <Box>
+      <Text>
+        <span style={{ color: "gray", marginRight: "0.25em" }}>
+          {question}:
         </span>
-      )}
-    </Text>
+        <span style={{ fontSize: "small" }}>{response}</span>
+        {days && (
+          <span style={{ fontSize: "small", marginLeft: "0.25em" }}>
+            {days && days > 1 ? "days" : "day"}
+          </span>
+        )}
+      </Text>
+    </Box>
   );
 
   const handleBack = (): void => {
@@ -154,7 +160,9 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
                 <span style={{ color: "gray" }}>
                   Make contract address a shaman:
                 </span>
-                <Text fontSize="small">{shamanOn ? "True" : "False"}</Text>
+                <span style={{ fontSize: "small", marginLeft: "0.25em" }}>
+                  {shamanOn ? "True" : "False"}
+                </span>
               </Text>
             </Stack>
           </Box>

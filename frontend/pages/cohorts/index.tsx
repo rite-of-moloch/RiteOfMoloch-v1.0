@@ -29,15 +29,14 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
   const cohortList = useSubgraphQuery(COHORTS(), true);
 
   /**
-   * !isLoading: hook has fetched data.
-   * isLoading: hook has not yet fetched data
+   * (!isLoading): hook has fetched data.
+   * (isLoading): hook has not yet fetched data
    */
   const isLoading = cohortList.isLoading;
 
   const cohort: Cohort[] | undefined = cohortList?.data?.cohorts;
 
   const renderCohorts = cohort?.map((cohort: Cohort) => {
-    console.log(typeof cohort.tokenAmount, cohort.tokenAmount);
     const deadline = (
       Number(cohort.createdAt) +
       Number(cohort.time) * 1000
