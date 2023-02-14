@@ -44,6 +44,8 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     shamanOn,
   } = useFormContext();
 
+  console.log(shamanOn, "shamanOn");
+
   const blockExplorerLink = (address: string) => (
     <Text>
       <Link
@@ -94,7 +96,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     nameSBT,
     symbolSBT,
     uriSBT,
-    false,
+    Boolean(shamanOn),
   ];
 
   console.log("initData", initData);
@@ -161,7 +163,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
                   Make contract address a shaman:
                 </span>
                 <span style={{ fontSize: "small", marginLeft: "0.25em" }}>
-                  {shamanOn ? "True" : "False"}
+                  {shamanOn ? "yes" : "no"}
                 </span>
               </Text>
             </Stack>
