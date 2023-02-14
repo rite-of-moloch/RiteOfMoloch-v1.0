@@ -38,12 +38,12 @@ contract DeployHelper is MockInits {
 
     function _mintFactoryTopHat() internal {
         // point to Hats implementation
-        topHat = HATS.mintTopHat(msg.sender, "ROM-Factory TopHat", "");
+        topHat = HATS.mintTopHat(msg.sender, "ROM-Factory TopHat #1", "");
 
         // create factory operator hat
         factoryOperatorHat = HATS.createHat(
             topHat,
-            "ROM-Factory Operator",
+            "ROM-Factory Operator #1",
             1,
             molochDAO,
             molochDAO,

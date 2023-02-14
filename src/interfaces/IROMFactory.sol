@@ -21,7 +21,8 @@ interface IRiteOfMolochFactory is IInitData {
         address treasury,
         uint256 threshold,
         uint256 assetAmount,
-        uint256 stakeDuration
+        uint256 stakeDuration,
+        string sbtUrl
     );
 
     /*************************

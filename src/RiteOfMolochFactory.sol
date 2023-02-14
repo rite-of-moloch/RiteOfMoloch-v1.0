@@ -72,7 +72,8 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
             initData.treasury,
             initData.threshold,
             initData.assetAmount,
-            initData.stakeDuration
+            initData.stakeDuration,
+            initData.baseUri
         );
 
         return clone;

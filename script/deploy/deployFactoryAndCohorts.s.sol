@@ -6,10 +6,10 @@ import {RiteOfMolochFactory} from "src/RiteOfMolochFactory.sol";
 import {DeployHelper} from "script/deploy/helpers.sol";
 
 
-// forge script script/deploy/deployFactory.s.sol:DeployMockFactory --fork-url <URL> --broadcast
+// forge script script/deploy/deployFactoryAndCohorts.s.sol:DeployFactoryAndCohorts --fork-url <URL> --broadcast
 
 /// @notice deploys a mock ROMFactory on it's own to Goerli
-contract DeployMockFactory is Script, DeployHelper {
+contract DeployFactoryAndCohorts is Script, DeployHelper {
 
 
     function run() public {
