@@ -133,8 +133,8 @@ contract RiteOfMoloch is
         baal = IBaal(initData.membershipCriteria);
 
         // reference sharesToken of Baal
-        _sharesToken = IERC20(initData.stakingAsset); // <= for local testing only
-        // _sharesToken = IERC20(baal.sharesToken()); // <= correct
+        // _sharesToken = IERC20(initData.stakingAsset); // <= for local testing only
+        _sharesToken = IERC20(baal.sharesToken()); // <= correct
 
         // store the treasury daoAddress
         treasury = initData.treasury;
@@ -216,7 +216,7 @@ contract RiteOfMoloch is
      */
     modifier callerIsUser() {
         // for testing in Forge: disable
-        // require(tx.origin == msg.sender, "The caller is another contract!");
+        require(tx.origin == msg.sender, "The caller is another contract!");
         _;
     }
 
