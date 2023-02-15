@@ -1,0 +1,71 @@
+strict digraph {
+subgraph cluster_185_RiteOfMolochFactory {
+label = "RiteOfMolochFactory"
+"185_addImplementation" [label="addImplementation"]
+"185_changeHatsProtocol" [label="changeHatsProtocol"]
+"185_constructor" [label="constructor"]
+"185_slitherConstructorConstantVariables" [label="slitherConstructorConstantVariables"]
+"185_createCohort" [label="createCohort"]
+"185_constructor" -> "185__grantRole"
+"185_constructor" -> "185__changeHatsContract"
+"185_addImplementation" -> "185_onlyRole"
+"185_changeHatsProtocol" -> "185_onlyRole"
+}subgraph cluster_2178_HatsAccessControl {
+label = "HatsAccessControl"
+"2178_hasRole" [label="hasRole"]
+"2178_changeRoleHat" [label="changeRoleHat"]
+"2178_hatsContract" [label="hatsContract"]
+"2178__revokeRole" [label="_revokeRole"]
+"2178_changeHatsContract" [label="changeHatsContract"]
+"2178__grantRole" [label="_grantRole"]
+"2178_grantRole" [label="grantRole"]
+"2178__checkRole" [label="_checkRole"]
+"2178__setRoleAdmin" [label="_setRoleAdmin"]
+"2178_getRoleAdmin" [label="getRoleAdmin"]
+"2178_revokeRole" [label="revokeRole"]
+"2178__changeHatsContract" [label="_changeHatsContract"]
+"2178__changeRoleHat" [label="_changeRoleHat"]
+"2178_changeHatsContract" -> "2178__changeHatsContract"
+"2178_changeRoleHat" -> "2178_getRoleAdmin"
+"2178_revokeRole" -> "2178_onlyRole"
+"2178_grantRole" -> "2178_onlyRole"
+"2178__checkRole" -> "2178__msgSender"
+"2178_changeHatsContract" -> "2178_onlyRole"
+"2178__revokeRole" -> "2178__msgSender"
+"2178_grantRole" -> "2178_getRoleAdmin"
+"2178__changeRoleHat" -> "2178__grantRole"
+"2178__setRoleAdmin" -> "2178_getRoleAdmin"
+"2178_revokeRole" -> "2178__revokeRole"
+"2178__checkRole" -> "2178_hasRole"
+"2178__checkRole" -> "2178__checkRole"
+"2178_changeRoleHat" -> "2178_onlyRole"
+"2178_changeRoleHat" -> "2178__changeRoleHat"
+"2178_revokeRole" -> "2178_getRoleAdmin"
+"2178__grantRole" -> "2178__msgSender"
+"2178_grantRole" -> "2178__grantRole"
+}subgraph cluster_3891_ContextUpgradeable {
+label = "ContextUpgradeable"
+"3891___Context_init" [label="__Context_init"]
+"3891___Context_init_unchained" [label="__Context_init_unchained"]
+"3891__msgSender" [label="_msgSender"]
+"3891__msgData" [label="_msgData"]
+"3891___Context_init_unchained" -> "3891_onlyInitializing"
+"3891___Context_init" -> "3891_onlyInitializing"
+}subgraph cluster_4060_Initializable {
+label = "Initializable"
+"4060__getInitializedVersion" [label="_getInitializedVersion"]
+"4060__isInitializing" [label="_isInitializing"]
+"4060__disableInitializers" [label="_disableInitializers"]
+}subgraph cluster_solidity {
+label = "[Solidity]"
+"revert NotWearingRoleHat(bytes32,uint256,address)" 
+"revert RoleAlreadyAssigned(bytes32,uint256)" 
+"require(bool,string)" 
+"keccak256(bytes)" 
+"185_slitherConstructorConstantVariables" -> "keccak256(bytes)"
+"2178__grantRole" -> "revert RoleAlreadyAssigned(bytes32,uint256)"
+"2178__checkRole" -> "revert NotWearingRoleHat(bytes32,uint256,address)"
+"185_createCohort" -> "require(bool,string)"
+"4060__disableInitializers" -> "require(bool,string)"
+}
+}

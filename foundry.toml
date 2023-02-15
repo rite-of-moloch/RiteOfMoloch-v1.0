@@ -4,4 +4,7 @@ script = 'script'
 out = 'out'
 libs = ['lib']
 
+['rpc_endpoints']
+goerli = "${RU}"
+
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config

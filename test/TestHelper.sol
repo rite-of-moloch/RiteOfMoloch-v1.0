@@ -2,12 +2,11 @@
 pragma solidity ^0.8.13;
 
 import "forge-std/Test.sol";
-import "src/RiteOfMoloch.sol";
-import "src/RiteOfMolochFactory.sol";
-import "src/interfaces/IInitData.sol";
-import "test/TestHelper.sol";
-import "test/utils/TestToken.sol";
-import {Hats} from "test/utils/hats/HatsT.sol";
+import {RiteOfMoloch} from "src/RiteOfMoloch.sol";
+import {RiteOfMolochFactory} from "src/RiteOfMolochFactory.sol";
+import {IInitData} from "src/interfaces/IInitData.sol";
+import {TestToken} from "test/mocks/Token.sol";
+import {Hats} from "hats-protocol/Hats.sol";
 
 // forge test --match-contract TestHelper -vv
 

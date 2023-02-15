@@ -1,0 +1,287 @@
+strict digraph {
+subgraph cluster_4736_IERC165Upgradeable {
+label = "IERC165Upgradeable"
+"4736_supportsInterface" [label="supportsInterface"]
+}subgraph cluster_2178_HatsAccessControl {
+label = "HatsAccessControl"
+"2178_hasRole" [label="hasRole"]
+"2178_changeRoleHat" [label="changeRoleHat"]
+"2178_hatsContract" [label="hatsContract"]
+"2178__revokeRole" [label="_revokeRole"]
+"2178_changeHatsContract" [label="changeHatsContract"]
+"2178__grantRole" [label="_grantRole"]
+"2178_grantRole" [label="grantRole"]
+"2178__checkRole" [label="_checkRole"]
+"2178__setRoleAdmin" [label="_setRoleAdmin"]
+"2178_getRoleAdmin" [label="getRoleAdmin"]
+"2178_revokeRole" [label="revokeRole"]
+"2178__changeHatsContract" [label="_changeHatsContract"]
+"2178__changeRoleHat" [label="_changeRoleHat"]
+"2178_changeHatsContract" -> "2178__changeHatsContract"
+"2178_changeRoleHat" -> "2178_getRoleAdmin"
+"2178_revokeRole" -> "2178_onlyRole"
+"2178_grantRole" -> "2178_onlyRole"
+"2178__checkRole" -> "2178__msgSender"
+"2178_changeHatsContract" -> "2178_onlyRole"
+"2178__revokeRole" -> "2178__msgSender"
+"2178_grantRole" -> "2178_getRoleAdmin"
+"2178__changeRoleHat" -> "2178__grantRole"
+"2178__setRoleAdmin" -> "2178_getRoleAdmin"
+"2178_revokeRole" -> "2178__revokeRole"
+"2178__checkRole" -> "2178_hasRole"
+"2178__checkRole" -> "2178__checkRole"
+"2178_changeRoleHat" -> "2178_onlyRole"
+"2178_changeRoleHat" -> "2178__changeRoleHat"
+"2178_revokeRole" -> "2178_getRoleAdmin"
+"2178__grantRole" -> "2178__msgSender"
+"2178_grantRole" -> "2178__grantRole"
+}subgraph cluster_4194_IERC721Upgradeable {
+label = "IERC721Upgradeable"
+"4194_getApproved" [label="getApproved"]
+"4194_isApprovedForAll" [label="isApprovedForAll"]
+"4194_setApprovalForAll" [label="setApprovalForAll"]
+"4194_approve" [label="approve"]
+"4194_balanceOf" [label="balanceOf"]
+"4194_ownerOf" [label="ownerOf"]
+"4194_transferFrom" [label="transferFrom"]
+"4194_safeTransferFrom" [label="safeTransferFrom"]
+}subgraph cluster_1767_RiteOfMoloch {
+label = "RiteOfMoloch"
+"1767__bloodLetting" [label="_bloodLetting"]
+"1767__stake" [label="_stake"]
+"1767_extendJoinTimeLimit" [label="extendJoinTimeLimit"]
+"1767_isMember" [label="isMember"]
+"1767_slitherConstructorConstantVariables" [label="slitherConstructorConstantVariables"]
+"1767_constructor" [label="constructor"]
+"1767_batchMintBaalShares" [label="batchMintBaalShares"]
+"1767__checkManager" [label="_checkManager"]
+"1767__darkRitual" [label="_darkRitual"]
+"1767_supportsInterface" [label="supportsInterface"]
+"1767_sacrifice" [label="sacrifice"]
+"1767__checkMember" [label="_checkMember"]
+"1767__bloodFeast" [label="_bloodFeast"]
+"1767_setMaxDuration" [label="setMaxDuration"]
+"1767__encodeShamanProposal" [label="_encodeShamanProposal"]
+"1767__consolidateSurvivors" [label="_consolidateSurvivors"]
+"1767__encodeMultiMetaTx" [label="_encodeMultiMetaTx"]
+"1767_cryForHelp" [label="cryForHelp"]
+"1767_joinInitiation" [label="joinInitiation"]
+"1767_claimStake" [label="claimStake"]
+"1767__riseFromAshes" [label="_riseFromAshes"]
+"1767__submitBaalProposal" [label="_submitBaalProposal"]
+"1767_initialize" [label="initialize"]
+"1767_checkStake" [label="checkStake"]
+"1767__setMaxDuration" [label="_setMaxDuration"]
+"1767__transfer" [label="_transfer"]
+"1767__setShareThreshold" [label="_setShareThreshold"]
+"1767__soulBind" [label="_soulBind"]
+"1767_singleMintBaalShares" [label="singleMintBaalShares"]
+"1767_initializeHatTree" [label="initializeHatTree"]
+"1767_setMinimumStake" [label="setMinimumStake"]
+"1767__encodeBuildHatTree" [label="_encodeBuildHatTree"]
+"1767_changeJoinTimeDuration" [label="changeJoinTimeDuration"]
+"1767__setBaseUri" [label="_setBaseUri"]
+"1767__claim" [label="_claim"]
+"1767_setShareThreshold" [label="setShareThreshold"]
+"1767__encodeHatProposal" [label="_encodeHatProposal"]
+"1767__baseURI" [label="_baseURI"]
+"1767_changeJoinSizeLimit" [label="changeJoinSizeLimit"]
+"1767_getDeadline" [label="getDeadline"]
+"1767__setMinimumStake" [label="_setMinimumStake"]
+"1767__soulBind" -> "1767__mint"
+"1767_initialize" -> "1767__setBaseUri"
+"1767_initialize" -> "1767__setMaxDuration"
+"1767_initialize" -> "1767__changeHatsContract"
+"1767_setMinimumStake" -> "1767__setMinimumStake"
+"1767_claimStake" -> "1767_onlyMember"
+"1767_sacrifice" -> "1767__darkRitual"
+"1767_singleMintBaalShares" -> "1767_onlyRole"
+"1767_initialize" -> "1767__encodeMultiMetaTx"
+"1767_initialize" -> "1767__encodeHatProposal"
+"1767_batchMintBaalShares" -> "1767_onlyShaman"
+"1767__darkRitual" -> "1767__bloodFeast"
+"1767_setShareThreshold" -> "1767_onlyRole"
+"1767_initialize" -> "1767__setShareThreshold"
+"1767_setMaxDuration" -> "1767_onlyRole"
+"1767_initialize" -> "1767__encodeShamanProposal"
+"1767_batchMintBaalShares" -> "1767_onlyRole"
+"1767_joinInitiation" -> "1767__stake"
+"1767__stake" -> "1767_balanceOf"
+"1767_initialize" -> "1767_initializer"
+"1767_joinInitiation" -> "1767_callerIsUser"
+"1767_initialize" -> "1767___ERC721_init"
+"1767_sacrifice" -> "1767_onlyRole"
+"1767_setMaxDuration" -> "1767__setMaxDuration"
+"1767_initializeHatTree" -> "1767__grantRole"
+"1767_claimStake" -> "1767__claim"
+"1767_extendJoinTimeLimit" -> "1767_onlyRole"
+"1767_initialize" -> "1767__encodeBuildHatTree"
+"1767_setMinimumStake" -> "1767_onlyRole"
+"1767_constructor" -> "1767__disableInitializers"
+"1767__darkRitual" -> "1767__riseFromAshes"
+"1767_joinInitiation" -> "1767__soulBind"
+"1767_initialize" -> "1767_initializeHatTree"
+"1767_singleMintBaalShares" -> "1767_onlyShaman"
+"1767_cryForHelp" -> "1767_balanceOf"
+"1767__darkRitual" -> "1767__bloodLetting"
+"1767__darkRitual" -> "1767__consolidateSurvivors"
+"1767_initialize" -> "1767__setMinimumStake"
+"1767_initialize" -> "1767__submitBaalProposal"
+"1767_changeJoinTimeDuration" -> "1767_onlyRole"
+"1767_changeJoinSizeLimit" -> "1767_onlyRole"
+"1767_setShareThreshold" -> "1767__setShareThreshold"
+"1767_supportsInterface" -> "1767_supportsInterface"
+}subgraph cluster_3184_ERC721Upgradeable {
+label = "ERC721Upgradeable"
+"3184__burn" [label="_burn"]
+"3184_symbol" [label="symbol"]
+"3184__mint" [label="_mint"]
+"3184__beforeTokenTransfer" [label="_beforeTokenTransfer"]
+"3184__setApprovalForAll" [label="_setApprovalForAll"]
+"3184__transfer" [label="_transfer"]
+"3184_name" [label="name"]
+"3184__ownerOf" [label="_ownerOf"]
+"3184_getApproved" [label="getApproved"]
+"3184__requireMinted" [label="_requireMinted"]
+"3184_supportsInterface" [label="supportsInterface"]
+"3184__approve" [label="_approve"]
+"3184_ownerOf" [label="ownerOf"]
+"3184__checkOnERC721Received" [label="_checkOnERC721Received"]
+"3184_approve" [label="approve"]
+"3184_transferFrom" [label="transferFrom"]
+"3184__exists" [label="_exists"]
+"3184___ERC721_init_unchained" [label="__ERC721_init_unchained"]
+"3184__afterTokenTransfer" [label="_afterTokenTransfer"]
+"3184__safeMint" [label="_safeMint"]
+"3184_tokenURI" [label="tokenURI"]
+"3184_setApprovalForAll" [label="setApprovalForAll"]
+"3184_safeTransferFrom" [label="safeTransferFrom"]
+"3184___ERC721_init" [label="__ERC721_init"]
+"3184__safeTransfer" [label="_safeTransfer"]
+"3184__baseURI" [label="_baseURI"]
+"3184__isApprovedOrOwner" [label="_isApprovedOrOwner"]
+"3184_isApprovedForAll" [label="isApprovedForAll"]
+"3184_balanceOf" [label="balanceOf"]
+"3184_setApprovalForAll" -> "3184__setApprovalForAll"
+"3184__transfer" -> "3184_ownerOf"
+"3184__safeMint" -> "3184__checkOnERC721Received"
+"3184_tokenURI" -> "3184__requireMinted"
+"3184_ownerOf" -> "3184__ownerOf"
+"3184_approve" -> "3184__msgSender"
+"3184_safeTransferFrom" -> "3184__isApprovedOrOwner"
+"3184__isApprovedOrOwner" -> "3184_ownerOf"
+"3184__safeMint" -> "3184__mint"
+"3184__mint" -> "3184__beforeTokenTransfer"
+"3184__burn" -> "3184_ownerOf"
+"3184__checkOnERC721Received" -> "3184__msgSender"
+"3184__isApprovedOrOwner" -> "3184_isApprovedForAll"
+"3184__safeMint" -> "3184__safeMint"
+"3184_safeTransferFrom" -> "3184__safeTransfer"
+"3184__isApprovedOrOwner" -> "3184_getApproved"
+"3184_transferFrom" -> "3184__msgSender"
+"3184__requireMinted" -> "3184__exists"
+"3184_supportsInterface" -> "3184_supportsInterface"
+"3184_getApproved" -> "3184__requireMinted"
+"3184__mint" -> "3184__afterTokenTransfer"
+"3184__burn" -> "3184__beforeTokenTransfer"
+"3184_safeTransferFrom" -> "3184_safeTransferFrom"
+"3184__safeTransfer" -> "3184__checkOnERC721Received"
+"3184__safeTransfer" -> "3184__transfer"
+"3184_approve" -> "3184_isApprovedForAll"
+"3184__transfer" -> "3184__beforeTokenTransfer"
+"3184___ERC721_init_unchained" -> "3184_onlyInitializing"
+"3184__exists" -> "3184__ownerOf"
+"3184___ERC721_init" -> "3184_onlyInitializing"
+"3184___ERC721_init" -> "3184___ERC721_init_unchained"
+"3184_transferFrom" -> "3184__transfer"
+"3184_safeTransferFrom" -> "3184__msgSender"
+"3184_tokenURI" -> "3184__baseURI"
+"3184__burn" -> "3184__afterTokenTransfer"
+"3184__transfer" -> "3184__afterTokenTransfer"
+"3184__approve" -> "3184_ownerOf"
+"3184_transferFrom" -> "3184__isApprovedOrOwner"
+"3184_setApprovalForAll" -> "3184__msgSender"
+"3184__mint" -> "3184__exists"
+"3184_approve" -> "3184_ownerOf"
+"3184_approve" -> "3184__approve"
+}subgraph cluster_3891_ContextUpgradeable {
+label = "ContextUpgradeable"
+"3891___Context_init" [label="__Context_init"]
+"3891___Context_init_unchained" [label="__Context_init_unchained"]
+"3891__msgSender" [label="_msgSender"]
+"3891__msgData" [label="_msgData"]
+"3891___Context_init_unchained" -> "3891_onlyInitializing"
+"3891___Context_init" -> "3891_onlyInitializing"
+}subgraph cluster_4724_ERC165Upgradeable {
+label = "ERC165Upgradeable"
+"4724_supportsInterface" [label="supportsInterface"]
+"4724___ERC165_init" [label="__ERC165_init"]
+"4724___ERC165_init_unchained" [label="__ERC165_init_unchained"]
+"4724___ERC165_init_unchained" -> "4724_onlyInitializing"
+"4724___ERC165_init" -> "4724_onlyInitializing"
+}subgraph cluster_4060_Initializable {
+label = "Initializable"
+"4060__getInitializedVersion" [label="_getInitializedVersion"]
+"4060__isInitializing" [label="_isInitializing"]
+"4060__disableInitializers" [label="_disableInitializers"]
+}subgraph cluster_4221_IERC721MetadataUpgradeable {
+label = "IERC721MetadataUpgradeable"
+"4221_name" [label="name"]
+"4221_symbol" [label="symbol"]
+"4221_tokenURI" [label="tokenURI"]
+}subgraph cluster_solidity {
+label = "[Solidity]"
+"revert NotWearingRoleHat(bytes32,uint256,address)" 
+"abi.encodeWithSignature()" 
+"type()" 
+"keccak256(bytes)" 
+"require(bool,string)" 
+"mload(uint256)" 
+"revert(string)" 
+"abi.encodePacked()" 
+"revert RoleAlreadyAssigned(bytes32,uint256)" 
+"revert(uint256,uint256)" 
+"revert()" 
+"1767__setShareThreshold" -> "require(bool,string)"
+"2178__grantRole" -> "revert RoleAlreadyAssigned(bytes32,uint256)"
+"3184__transfer" -> "require(bool,string)"
+"3184__safeMint" -> "require(bool,string)"
+"3184_transferFrom" -> "require(bool,string)"
+"3184_ownerOf" -> "require(bool,string)"
+"3184_balanceOf" -> "require(bool,string)"
+"1767_slitherConstructorConstantVariables" -> "keccak256(bytes)"
+"1767__submitBaalProposal" -> "require(bool,string)"
+"3184__mint" -> "require(bool,string)"
+"1767_claimStake" -> "require(bool,string)"
+"3184__checkOnERC721Received" -> "revert(string)"
+"1767__setMinimumStake" -> "require(bool,string)"
+"1767_joinInitiation" -> "require(bool,string)"
+"1767__checkMember" -> "require(bool,string)"
+"3184__requireMinted" -> "require(bool,string)"
+"2178__checkRole" -> "revert NotWearingRoleHat(bytes32,uint256,address)"
+"1767__transfer" -> "revert()"
+"1767__setMaxDuration" -> "require(bool,string)"
+"3184__setApprovalForAll" -> "require(bool,string)"
+"4060__disableInitializers" -> "require(bool,string)"
+"3184_safeTransferFrom" -> "require(bool,string)"
+"3184__checkOnERC721Received" -> "mload(uint256)"
+"1767__stake" -> "require(bool,string)"
+"4724_supportsInterface" -> "type()"
+"3184__checkOnERC721Received" -> "revert(uint256,uint256)"
+"1767__claim" -> "require(bool,string)"
+"1767__riseFromAshes" -> "require(bool,string)"
+"1767__encodeShamanProposal" -> "abi.encodeWithSignature()"
+"1767__encodeMultiMetaTx" -> "abi.encodePacked()"
+"3184__safeTransfer" -> "require(bool,string)"
+"3184_approve" -> "require(bool,string)"
+"1767__encodeBuildHatTree" -> "abi.encodeWithSignature()"
+"1767__bloodFeast" -> "require(bool,string)"
+"3184_tokenURI" -> "abi.encodePacked()"
+"3184_supportsInterface" -> "type()"
+"1767__checkManager" -> "require(bool,string)"
+"1767__encodeHatProposal" -> "abi.encodeWithSignature()"
+"1767_initializeHatTree" -> "require(bool,string)"
+"1767_cryForHelp" -> "require(bool,string)"
+"1767__encodeMultiMetaTx" -> "abi.encodeWithSignature()"
+}
+}
