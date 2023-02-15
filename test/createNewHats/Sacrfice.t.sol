@@ -9,8 +9,6 @@ import "test/TestHelper.sol";
  * @dev see note on TestHelper
  */
 contract Sacrifice is TestHelper {
-    address[] failedInitiates = [alice, bob, charlie];
-
     function setUp() public override {
         // set and deploy ROM-Factory
         setUpFactory();
@@ -37,7 +35,7 @@ contract Sacrifice is TestHelper {
      * TESTS
      */
     function testSacrfice() public {
-        assertEq(0, ROM.cohortSeason());
+        assertEq(1, ROM.cohortSeason());
         emit log_named_uint("Cohort Season", ROM.cohortSeason());
         emit log_named_uint("Join Endtime", ROM.joinEndTime());
 
@@ -73,7 +71,7 @@ contract Sacrifice is TestHelper {
 
         vm.stopPrank();
 
-        assertEq(1, ROM.cohortSeason());
+        assertEq(2, ROM.cohortSeason());
         emit log_named_uint("Cohort Season", ROM.cohortSeason());
         emit log_named_uint("Join Endtime", ROM.joinEndTime());
         emit log_named_uint("Cohort Counter", ROM.cohortCounter());

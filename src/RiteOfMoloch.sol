@@ -2,6 +2,7 @@
 // @author st4rgard3n, bitbeckers, MrDeadce11, huntrr / Raid Guild
 pragma solidity ^0.8.13;
 
+
 import {CountersUpgradeable} from"openzeppelin-contracts-upgradeable/utils/CountersUpgradeable.sol";
 import {ERC721Upgradeable, ContextUpgradeable} from "openzeppelin-contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import {IERC20} from "openzeppelin-contracts/token/ERC20/IERC20.sol";
@@ -30,14 +31,8 @@ contract RiteOfMoloch is
     // the time a participant joined the initiation
     mapping(address => uint256) public deadlines;
 
-    // the number of user's a member has sacrificed
-    mapping(address => uint256) public totalSlash;
-
-    // list of initiates in current cohort
-    address[] internal initiates;
-
-    // list of carry-over initiates from previous cohort
-    address[] internal survivors;
+    // initiates by season: season# => id# => initiateAddress
+    mapping(uint256 => mapping(uint256 => address)) internal initiates;
 
     /*************************
      STATE VARIABLES
@@ -114,6 +109,9 @@ contract RiteOfMoloch is
         // increment the counter so our first sbt has token id of one
         _tokenIdCounter.increment();
 
+        // set cohort season to 1
+        cohortSeason = 1;
+
         // set cohort name
         cohortName = initData.cohortName;
 
@@ -173,16 +171,16 @@ contract RiteOfMoloch is
             address[] memory targets = new address[](1);
             targets[0] = address(baal);
 
-            _submitBaalProposal(_encodeMultiMetaTx(data, targets), true);
+            _submitBaalProposal(_encodeMultiMetaTx(data, targets), 1);
         }
 
-        if (HATS.isWearerOfHat(treasury, initData.topHatId) == true) {
+        if (HATS.isWearerOfHat(treasury, initData.topHatId)) {
             bytes memory accessHatData;
             bytes memory buildHatData;
 
             // encode hats proposals; access topHat and initialize hat tree
             topHat = initData.topHatId;
-            accessHatData = _encodeHatProposal();
+            accessHatData = _encodeTransferHat(topHat, treasury, address(this));
             buildHatData = _encodeBuildHatTree(
                 caller_,
                 initData.admin1,
@@ -198,7 +196,7 @@ contract RiteOfMoloch is
             targets[0] = address(HATS);
             targets[1] = address(this);
 
-            _submitBaalProposal(_encodeMultiMetaTx(data, targets), false);
+            _submitBaalProposal(_encodeMultiMetaTx(data, targets), 2);
         } else {
             // creates a new topHat, initialize hat tree
             topHat = HATS.mintTopHat(address(this), "ROM TopHat", "");
@@ -257,11 +255,11 @@ contract RiteOfMoloch is
         // enforce the initiate or sponsor transfers correct tokens to the contract
         require(_stake(user), "Staking failed!");
 
-        // add user to initiate's list
-        initiates.push(user);
-
         // increment cohort count
         cohortCounter++;
+
+        // add initiate to tracker by season and id
+        initiates[cohortSeason][cohortCounter] = msg.sender;
 
         // issue a soul bound token
         _soulBind(user);
@@ -343,10 +341,11 @@ contract RiteOfMoloch is
         onlyRole(ADMIN)
         onlyShaman
     {
-        uint256[] memory shares = new uint256[](to.length);
+        uint256 length = to.length;
+        uint256[] memory shares = new uint256[](length);
 
         // can only mint minimum share for Baal DAO membership
-        for (uint256 i = 0; i < to.length; i++) {
+        for (uint256 i = 0; i < length; i++) {
             shares[i] = minimumShare;
         }
 
@@ -371,22 +370,19 @@ contract RiteOfMoloch is
         baal.mintShares(to, shares);
     }
 
-    /* DEPRECATED
-     * @dev Claims the life force of failed initiates for the dao
-     * @param failedInitiates an array of user's who have failed to join the DAO
-     */
-    // function sacrifice(address[] calldata failedInitiates)
-    //     external
-    //     onlyRole(ADMIN)
-    // {
-    //     _darkRitual(failedInitiates);
-    // }
-
     /**
-     * @dev Claims the life force of failed initiates for the dao
+     * @dev Bleeds the life force of failed initiates into the treasury
      */
     function sacrifice() external onlyRole(ADMIN) {
         _darkRitual();
+    }
+
+    /**
+     * @dev Bleeds the life force of a single failed initiate into the treasury
+     */
+    function slaughter(address _sacrificialLamb) external onlyRole(ADMIN) {
+        _bloodLetting(_sacrificialLamb);
+        cohortCounter--;
     }
 
     /*************************
@@ -489,6 +485,12 @@ contract RiteOfMoloch is
         // store the current token counter
         uint256 tokenId = _tokenIdCounter.current();
 
+        // increment the token counter
+        _tokenIdCounter.increment();
+
+        // mint the user's soul bound initiation token
+        _mint(_user, tokenId);
+
         // log the initiation data
         emit Initiation(
             _user,
@@ -497,45 +499,45 @@ contract RiteOfMoloch is
             minimumStake,
             deadlines[_user]
         );
-
-        // increment the token counter
-        _tokenIdCounter.increment();
-
-        // mint the user's soul bound initiation token
-        _mint(_user, tokenId);
     }
 
-    /* DEPRECATED
-     * @dev Claims failed initiate tokens for the DAO
-     * @param _failedInitiates an array of user's who have failed to join the DAO
-     */
-    //  function _darkRitual(address[] calldata _failedInitiates) internal virtual {}
-
-    /**
-     * @dev Claims failed initiate tokens for the DAO
-     */
     function _darkRitual() internal virtual {
         // the total amount of blood debt
-        uint256 total;
+        uint256 blood;
+        uint256 newCohortCount;
+        uint256 season = cohortSeason;
+        uint256 nextSeason = cohortSeason + 1;
 
-        for (uint256 i = 0; i < initiates.length; ++i) {
+        for (uint256 i = 1; i <= cohortCounter; i++) {
             // store each initiate's address
-            address initiate = initiates[i];
+            address initiate = initiates[season][i];
+            uint256 index = 1;
 
-            // access each initiate's starting time
-            uint256 deadline = deadlines[initiate];
-
-            if (block.timestamp > deadline && _staked[initiate] > 0) {
-                total += _bloodLetting(initiate);
-                delete initiates[i];
+            if (_staked[initiate] > 0) {
+                if (block.timestamp > deadlines[initiate]) {
+                    // slash failed initiate
+                    blood += _bloodLetting(initiate);
+                    delete initiates[season][i];
+                } else {
+                    // carry-over non-failed active initiates into next cohort
+                    initiates[nextSeason][index] = initiate;
+                    index++;
+                    newCohortCount++;
+                    delete initiates[season][i];
+                }
             } else {
-                continue;
+                // delete initiates that have already claimed their stake or been slaughtered
+                delete initiates[season][i];
             }
         }
 
-        _bloodFeast(total);
-        _consolidateSurvivors();
-        _riseFromAshes();
+        // blood feast for Baal
+        require(_token.transfer(treasury, blood), "Failed Sacrifice!");
+
+        // reset cohortCount, reset joinInitiation period, increase season
+        cohortCounter = newCohortCount;
+        joinEndTime = block.timestamp + joinDuration;
+        cohortSeason++;
     }
 
     function _bloodLetting(address _failedInitiate)
@@ -546,54 +548,16 @@ contract RiteOfMoloch is
         // access each initiate's balance
         uint256 balance = _staked[_failedInitiate];
 
-        // log sacrifice data
-        emit Sacrifice(_failedInitiate, balance, msg.sender);
-
         // remove the sacrifice's balance
         delete _staked[_failedInitiate];
 
         // remove the sacrifice's starting time
         delete deadlines[_failedInitiate];
 
+        // log sacrifice data
+        emit Sacrifice(_failedInitiate, balance, msg.sender);
+
         return balance;
-    }
-
-    function _bloodFeast(uint256 _blood) internal virtual {
-        // drain the life force from the sacrifice
-        require(_token.transfer(treasury, _blood), "Failed Sacrifice!");
-
-        // increase the slasher's essence
-        totalSlash[msg.sender] += _blood;
-    }
-
-    function _consolidateSurvivors() internal virtual {
-        for (uint256 i = 0; i < initiates.length; i++) {
-            if (initiates[i] != address(0)) {
-                // add survivors of bloodLetting to survivors list
-                survivors.push(initiates[i]);
-            } else {
-                continue;
-            }
-        }
-        // replace initiates list with updated survivors list
-        initiates = survivors;
-
-        // reset survivors to an empty list
-        delete survivors;
-    }
-
-    function _riseFromAshes() internal virtual {
-        // reset to initData values
-        cohortCounter = initiates.length;
-
-        // carry-over is less then cohort
-        require(
-            cohortCounter <= cohortSize,
-            "Carry-over initiates exceed cohort-count"
-        );
-
-        joinEndTime = block.timestamp + joinDuration;
-        cohortSeason++;
     }
 
     /**
@@ -628,11 +592,7 @@ contract RiteOfMoloch is
     function isMember(address user) public view returns (bool) {
         uint256 shares = _sharesToken.balanceOf(user);
 
-        if (shares >= minimumShare) {
-            return true;
-        } else {
-            return false;
-        }
+        return (shares >= minimumShare);
     }
 
     /*************************
@@ -698,6 +658,9 @@ contract RiteOfMoloch is
             ""
         );
 
+        // grant Hat Access Control role
+        _grantRole(ADMIN, adminHat);
+
         HATS.mintHat(adminHat, _deployer);
 
         if (_admin1 != address(0)) {
@@ -707,11 +670,44 @@ contract RiteOfMoloch is
             HATS.mintHat(adminHat, _admin2);
         }
 
-        // grant Hat Access Control roles
-        _grantRole(ADMIN, adminHat);
-
         // return topHat to  Baal Avatar
         HATS.transferHat(topHat, address(this), treasury);
+    }
+
+    /**
+     * @dev send proposal to Baal to mint another admin
+     * protected by Hats protocol logic and Baal governance
+     */
+    function mintAdminHatProposal(address _to) external {
+        bytes memory hatData;
+
+        hatData = _encodeMintHat(adminHat, _to);
+
+        bytes[] memory data = new bytes[](1);
+        data[0] = hatData;
+
+        address[] memory targets = new address[](1);
+        targets[0] = address(HATS);
+
+        _submitBaalProposal(_encodeMultiMetaTx(data, targets), 3);
+    }
+
+    /**
+     * @dev send proposal to Baal to transfer adminHat to new EOA
+     * protected by Hats protocol logic and Baal governance
+     */
+    function transferAdminHat(address _from, address _to) external {
+        bytes memory hatData;
+
+        hatData = _encodeTransferHat(adminHat, _from, _to);
+
+        bytes[] memory data = new bytes[](1);
+        data[0] = hatData;
+
+        address[] memory targets = new address[](1);
+        targets[0] = address(HATS);
+
+        _submitBaalProposal(_encodeMultiMetaTx(data, targets), 4);
     }
 
     /*************************
@@ -743,14 +739,29 @@ contract RiteOfMoloch is
     /**
      * @dev Encoding function for accessing an existing topHat
      */
-    function _encodeHatProposal() internal view returns (bytes memory) {
+    function _encodeTransferHat(
+        uint256 _hat,
+        address _from,
+        address _to
+    ) internal pure returns (bytes memory) {
         return
             abi.encodeWithSignature(
                 "transferHat(uint256,address,address)",
-                topHat,
-                treasury,
-                address(this)
+                _hat,
+                _from,
+                _to
             );
+    }
+
+    /**
+     * @dev Encoding function for minting an adminHat
+     */
+    function _encodeMintHat(uint256 _hat, address _to)
+        internal
+        pure
+        returns (bytes memory)
+    {
+        return abi.encodeWithSignature("mintHat(uint256,address)", _hat, _to);
     }
 
     /**
@@ -796,7 +807,7 @@ contract RiteOfMoloch is
     /**
      * @dev Submit voting proposal to Baal DAO
      */
-    function _submitBaalProposal(bytes memory multiSendMetaTx, bool shaman)
+    function _submitBaalProposal(bytes memory multiSendMetaTx, uint256 options)
         internal
     {
         uint256 proposalOffering = baal.proposalOffering();
@@ -804,10 +815,16 @@ contract RiteOfMoloch is
 
         string memory metaString;
 
-        if (shaman) {
+        if (options == 1) {
             metaString = '{"proposalType": "ADD_SHAMAN", "title": "Rite of Moloch (ROM): Shaman Proposal", "description": "Assign ROM as a Manager-Shaman to mint minimum DAO shares"}';
-        } else {
+        } else if (options == 2) {
             metaString = '{"proposalType": "BORROW_TOPHAT", "title": "Rite of Moloch (ROM): Hats Proposal", "description": "Create and mint ROM-Admin hats from DAO TopHat"}';
+        } else if (options == 3) {
+            metaString = '{"proposalType": "MINT_ADMINHAT", "title": "Rite of Moloch (ROM): Mint Admin Hat", "description": "Mint ROM-Admin hat to EOA"}';
+        } else if (options == 4) {
+            metaString = '{"proposalType": "TRANSFER_ADMINHAT", "title": "Rite of Moloch (ROM): Transfer Admin Hat", "description": "Transfer ROM-Admin hat to EOA"}';
+        } else {
+            metaString = '{"proposalType": "UNDEFINED", "title": "Rite of Moloch (ROM): undefined", "description": "Undefined"}';
         }
 
         baal.submitProposal{value: proposalOffering}(

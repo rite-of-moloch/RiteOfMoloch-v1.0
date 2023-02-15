@@ -62,32 +62,4 @@ contract AccessControl is TestHelper {
 
         vm.stopPrank();
     }
-
-    // DEPRECATED TESTS
-
-    // function testSetAdminLimit() public {
-    //     uint256 adminHat = ROM.adminHat();
-
-    //     HATS.mintHat(adminHat, bob);
-
-    //     // all hats have been minted, next hat [for charlie] should revert
-    //     vm.expectRevert(
-    //         abi.encodeWithSelector(HatsErrorsT.AllHatsWorn.selector, adminHat)
-    //     );
-    //     HATS.mintHat(adminHat, charlie);
-    // }
-
-    // function testDoubleMintGuard() public {
-    //     uint256 adminHat = ROM.adminHat();
-
-    //     // alice already has a admin hat
-    //     vm.expectRevert(
-    //         abi.encodeWithSelector(
-    //             HatsErrorsT.AlreadyWearingHat.selector,
-    //             alice,
-    //             adminHat
-    //         )
-    //     );
-    //     HATS.mintHat(adminHat, alice);
-    // }
 }
