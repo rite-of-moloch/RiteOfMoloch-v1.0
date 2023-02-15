@@ -688,7 +688,7 @@ contract RiteOfMoloch is
      * @dev send proposal to Baal to transfer adminHat to new EOA
      * protected by Hats protocol logic and Baal governance
      */
-    function transferAdminHat(address _from, address _to) external {
+    function transferAdminHatProposal(address _from, address _to) external {
         bytes memory hatData;
 
         hatData = _encodeTransferHat(adminHat, _from, _to);
