@@ -1,12 +1,16 @@
 # Compiler files
 cache/
-out/
-
+out/*
+!out/RiteOfMoloch.sol/
+!out/RiteOfMolochFactory.sol/
 # Ignores development broadcast logs
 broadcast/
-!/broadcast
 /broadcast/*/31337/
 /broadcast/**/dry-run/
 
 # Dotenv file
 .env
+
+.DS_Store
+
+
