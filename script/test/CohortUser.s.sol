@@ -5,11 +5,14 @@ import {TestHelperScript} from "script/test/utils/TestHelper.s.sol";
 import {RiteOfMoloch} from "src/RiteOfMoloch.sol";
 
 // create with verify
-// forge script script/test/CohortUser.s.sol:CohortUserScript --rpc-url $RU --private-key $PK --broadcast --verify --etherscan-api-key $EK -vvvv
+// forge script script/test/CohortUser.s.sol:CohortUserScript --rpc-url $RU --broadcast --verify --etherscan-api-key $EK -vvvv
+
+// test; no broadcast
+// forge script script/test/CohortUser.s.sol:CohortUserScript --rpc-url $RU -vvvv
 
 contract CohortUserScript is TestHelperScript {
     function run() public {
-        vm.startBroadcast();
+        vm.startBroadcast(vm.envUint("PK1"));
 
         setUpHelper();
 
@@ -20,19 +23,13 @@ contract CohortUserScript is TestHelperScript {
         ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
 
         // test joinInitiation
-        joinCohort();
+        joinCohort(deployer);
+
+        ROM.cryForHelp("testing 1, 2, 3...");
+
+        require(ROM.checkStake(deployer) > 0);
+        require(ROM.checkStake(address(9)) == 0);
 
         vm.stopBroadcast();
-    }
-
-    function joinCohort() public {
-        // approve tokens to be used by ROM
-        token.approve(address(ROM), minStake);
-
-        // stake on ROM contract
-        ROM.joinInitiation(deployer);
-
-        // check staking deadline (to confirm successful join)
-        ROM.deadlines(deployer);
     }
 }

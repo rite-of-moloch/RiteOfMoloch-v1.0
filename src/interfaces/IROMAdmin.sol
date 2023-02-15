@@ -4,10 +4,8 @@ pragma solidity ^0.8.13;
 
 import {IInitData} from "src/interfaces/IInitData.sol";
 
-
 // todo: change this contract into an interface
 interface IRiteOfMolochAdmin is IInitData {
-
     function initialize(
         InitData calldata initData,
         address hatsProtocol,
@@ -50,8 +48,12 @@ interface IRiteOfMolochAdmin is IInitData {
     function singleMintBaalShares(address _to) external;
 
     /**
-     * @dev Claims the life force of failed initiates for the dao
+     * @dev Bleeds the life force of failed initiates into the treasury
      */
     function sacrifice() external;
 
+    /**
+     * @dev Bleeds the life force of a single failed initiate into the treasury
+     */
+    function slaughter(address _sacrificialLamb) external;
 }

@@ -2,8 +2,7 @@
 // @author st4rgard3n, bitbeckers, MrDeadce11, huntrr / Raid Guild
 pragma solidity ^0.8.13;
 
-
-import {CountersUpgradeable} from"openzeppelin-contracts-upgradeable/utils/CountersUpgradeable.sol";
+import {CountersUpgradeable} from "openzeppelin-contracts-upgradeable/utils/CountersUpgradeable.sol";
 import {ERC721Upgradeable, ContextUpgradeable} from "openzeppelin-contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import {IERC20} from "openzeppelin-contracts/token/ERC20/IERC20.sol";
 import {IInitData} from "src/interfaces/IInitData.sol";
@@ -599,11 +598,21 @@ contract RiteOfMoloch is
      OVERRIDES
      *************************/
 
-    function _msgSender() internal view override(Context, ContextUpgradeable) returns(address) {
+    function _msgSender()
+        internal
+        view
+        override(Context, ContextUpgradeable)
+        returns (address)
+    {
         return msg.sender;
     }
 
-    function _msgData() internal pure override(Context, ContextUpgradeable) returns(bytes calldata) {
+    function _msgData()
+        internal
+        pure
+        override(Context, ContextUpgradeable)
+        returns (bytes calldata)
+    {
         return msg.data;
     }
 

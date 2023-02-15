@@ -18,7 +18,7 @@ contract TestHelperScript is Script, IInitData {
     // test token for staking asset
     ERC20 public constant token =
         ERC20(0xA49dF10dD5B84257dE634F4350218f615471Fc69);
-    uint256 public constant minStake = 250 * 10e18;
+    uint256 public constant minStake = (1 * 10e18) / 2; // 0.5 erc20token
 
     // Baal V3 address and Gnosis Safe Avatar (treasury)
     IBaal public constant baal =
@@ -77,7 +77,7 @@ contract TestHelperScript is Script, IInitData {
      */
     function hatTreeSetup() public {
         // this Script contract will be the admin of the factory (for development only)
-        topHatFactory = HATS.mintTopHat(msg.sender, "ROM-Factory TopHat", "");
+        topHatFactory = HATS.mintTopHat(deployer, "ROM-Factory TopHat", "");
 
         factoryOperatorHat = HATS.createHat(
             topHatFactory,
@@ -89,7 +89,7 @@ contract TestHelperScript is Script, IInitData {
             ""
         );
 
-        HATS.mintHat(factoryOperatorHat, msg.sender);
+        HATS.mintHat(factoryOperatorHat, deployer);
     }
 
     function setUpHelper() public {
@@ -104,5 +104,16 @@ contract TestHelperScript is Script, IInitData {
 
         // deploy ROM-factory
         ROMF = new RiteOfMolochFactory(hatsProtocol, factoryOperatorHat);
+    }
+
+    function joinCohort(address initiate) public {
+        // approve tokens to be used by ROM
+        token.approve(address(ROM), minStake);
+
+        // stake on ROM contract
+        ROM.joinInitiation(initiate);
+
+        // check staking deadline (to confirm successful join)
+        ROM.deadlines(initiate);
     }
 }

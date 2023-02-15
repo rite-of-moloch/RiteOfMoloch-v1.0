@@ -5,11 +5,11 @@ import {TestHelperScript} from "script/test/utils/TestHelper.s.sol";
 import {RiteOfMoloch} from "src/RiteOfMoloch.sol";
 
 // create with verify
-// forge script script/test/DeployCloneWtopHat.s.sol:DeployCloneWtopHatScript --rpc-url $RU --private-key $PK --broadcast --verify --etherscan-api-key $EK -vvvv
+// forge script script/test/DeployCloneWtopHat.s.sol:DeployCloneWtopHatScript --rpc-url $RU --broadcast --verify --etherscan-api-key $EK -vvvv
 
 contract DeployCloneWtopHatScript is TestHelperScript {
     function run() public {
-        vm.startBroadcast();
+        vm.startBroadcast(vm.envUint("PK1"));
 
         setUpHelper();
 
