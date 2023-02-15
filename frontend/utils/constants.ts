@@ -2,7 +2,7 @@ export const CONTRACT_ADDRESSES: { [key: string]: { [key: string]: string } } =
   {
     5: {
       erc20TokenAddress: "0x1Cfb862056ecF2677615F9eB3420B04fb4911C01",
-      riteOfMolochFactoryAddress: "0x8C8a2a71a7aDE2E69c60a7814a359372DEdCD523",
+      riteOfMolochFactoryAddress: "0xf8edb679b7d994fc8bf93502d69d31c23d94181f",
     },
     100: {
       erc20TokenAddress: "0x18E9262e68Cc6c6004dB93105cc7c001BB103e49",

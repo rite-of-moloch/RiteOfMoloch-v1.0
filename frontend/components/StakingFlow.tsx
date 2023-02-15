@@ -44,7 +44,6 @@ type FormValues = {
 const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   const { address } = useAccount();
   const { willSponsor, handleWillSponsor } = useContext(UserContext);
-  const _localForm = useForm();
 
   const metadata = useSubgraphQuery(
     COHORT_METADATA(contractAddress),
@@ -164,7 +163,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
         <Stack mt={8} w="full">
           <VStack alignItems={"start"}>
             <Checkbox
-              localForm={_localForm}
+              localForm={localForm}
               size="md"
               color="red"
               defaultValue={["false"]}

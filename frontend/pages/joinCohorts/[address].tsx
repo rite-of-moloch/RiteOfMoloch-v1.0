@@ -59,10 +59,10 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
         }
       }
     );
-    // console.log(initiateList);
+    console.log(initiateList);
 
-    let joinedAt: undefined | string;
-    let staked: Boolean = false;
+    let joinedAt;
+    let staked = false;
     initiateList?.forEach((initiate: [string, Boolean]) => {
       console.log(initiate[1]);
       if (initiate[1]) {
@@ -93,6 +93,7 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
     </Link>
   );
 
+  // TODO: build claim stake function
   const handleClaimStake = () => {
     console.log("claim stake function");
   };
@@ -141,7 +142,8 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
               <Text>
                 <span>{cohortData?.tokenAmount}</span>
                 <span style={{ marginLeft: "0.25em" }}>
-                  {useTokenSymbol(cohortData.token)}
+                  {/* TODO: fix token symbol hook */}
+                  {/* {useTokenSymbol(cohortData?.token)} */}
                 </span>
               </Text>
             </Box>
@@ -150,12 +152,20 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
               {isStaked[0] ? unixToUTC(isStaked[1] || "") : stakeButton}
             </Box>
           </SimpleGrid>
-          <Image
-            m="auto"
-            src={cohortData.sbtUrl}
-            alt="SBT image preview"
-            w="250px"
-          />
+          <Box p={4}>
+            <Image
+              m="auto"
+              src={cohortData.sbtUrl}
+              alt="SBT image preview"
+              w="250px"
+              boxShadow="dark-lg"
+              p="2"
+              rounded="md"
+              bg="black"
+            />
+          </Box>
+          {/* TODO: add logic to render button if user if a member */}
+          {/* {!!isStaked[0] && ( */}
           <Box>
             <Button
               size="md"
@@ -165,6 +175,7 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
               Claim Stake
             </Button>
           </Box>
+          {/* )} */}
         </VStack>
       )}
       {isConnected && <BackButton path="/joinCohorts" />}
