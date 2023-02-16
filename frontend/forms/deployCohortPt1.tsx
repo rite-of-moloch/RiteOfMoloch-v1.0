@@ -184,7 +184,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
             />
           </Box>
 
-          <Box mt={8}>
+          <Box mt={10}>
             <PreviewModal
               sbtImageURL={values.uriSBT}
               sbtName={values.nameSBT}

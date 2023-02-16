@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import {
   Flex,
@@ -12,15 +12,14 @@ import {
   Stack,
   VStack,
 } from "@raidguild/design-system";
-import { useAccount, useNetwork } from "wagmi";
+import { useAccount } from "wagmi";
 import { BigNumber, utils } from "ethers";
 import { UserContext } from "context/UserContext";
 import { approveTooltip, canStake, stakeTooltip } from "utils/general";
 import useBalanceOf from "hooks/useBalanceOf";
-import useApproveRaid from "hooks/useApproveRaid";
+import useApprove from "hooks/useApprove";
 import useJoinInitiation from "hooks/useJoinInitiation";
 import useGetAllowance from "hooks/useGetAllowance";
-
 import { FiAlertTriangle } from "react-icons/fi";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { COHORT_METADATA } from "utils/subgraph/queries";
@@ -30,10 +29,6 @@ import useTokenSymbol from "hooks/useTokenSymbol";
 interface StakingFlowProps {
   contractAddress: string | string[];
 }
-
-type FormValues = {
-  initiateAddress: string;
-};
 
 /**
  * @remarks if invalid address passed into url query string, redirect user to /joinCohort page
@@ -82,8 +77,10 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     balanceOf = BigNumber.from("0") || "0";
   }
 
-  const { approveRaid, isLoadingApprove, isSuccessApprove, isErrorApprove } =
-    useApproveRaid(cohort?.token || "0x", [cohort?.id || "", minimumStake]);
+  const { approve, isLoadingApprove } = useApprove(cohort?.token || "0x", [
+    cohort?.id || "",
+    minimumStake,
+  ]);
 
   let allowance = useGetAllowance((cohort?.token as `0x${string}`) || "0x", [
     userAddress(),
@@ -107,6 +104,8 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
       !willSponsor ? [userAddress()] : [initiateAddress]
     );
 
+  console.log(writeJoinInitiation, "writeJoinInitiation");
+
   //TODO methods can accept BigNumbers instead of Strings
   const canUserStake = canStake(
     allowance.toString(),
@@ -125,8 +124,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     tokenSymbol
   );
 
-  // console.log("approveTooltiplabel", approveTooltiplabel);
-
   const stakeToolTipLabel = stakeTooltip(
     willSponsor,
     initiateAddress,
@@ -134,10 +131,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     allowance.toString(),
     minimumStake
   );
-
-  useEffect(() => {
-    console.log("allowance", allowance?.toString());
-  }, [allowance]);
 
   return (
     <>
@@ -162,6 +155,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
           </Text>
           <Text color="white" fontSize=".8rem">
             {/* TODO: double check that allowance unit formats are correct */}
+            {/* TODO:  */}
             <span style={{ marginRight: "0.5em" }}>{allowance.toString()}</span>
             {/* {utils.formatEther(allowance)} */}
             <span>{tokenSymbol}</span>
@@ -202,7 +196,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
                   },
                 })}
               />
-
               {!isValid && initiateAddress && (
                 <Box w="full" color="red" mt={3}>
                   <HStack justifyContent="center">
@@ -223,11 +216,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
               <Button
                 variant="solid"
                 w="full"
-                isLoading={
-                  isLoadingApprove
-                    ? isLoadingApprove
-                    : isSuccessApprove || isErrorApprove
-                }
+                isLoading={isLoadingApprove}
                 loadingText="Approving..."
                 isDisabled={
                   // TODO: double check number formatting
@@ -235,7 +224,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
                   // utils.formatUnits(minimumStake, "ether")
                   +balanceOf.toString() < +minimumStake.toString()
                 }
-                onClick={() => approveRaid && approveRaid()}
+                onClick={() => approve && approve()}
               >
                 Approve
               </Button>
@@ -250,11 +239,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
               <Button
                 w="full"
                 variant="solid"
-                isLoading={
-                  isLoadingStake
-                    ? isLoadingStake
-                    : isSuccessStake || isErrorStake
-                }
+                isLoading={isLoadingStake}
                 loadingText="Staking..."
                 isDisabled={!canUserStake}
                 onClick={() => writeJoinInitiation && writeJoinInitiation()}

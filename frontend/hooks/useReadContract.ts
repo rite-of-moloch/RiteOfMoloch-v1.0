@@ -27,6 +27,7 @@ const useReadContract = (
     abi: useAbi(abi),
     functionName,
     args,
+    watch: true,
     enabled: Boolean(address),
   });
   // console.log("error:", error, "isError:", isError);

@@ -91,9 +91,9 @@ const DeployCohortPt2 = () => {
             rules={numberInputRules}
             render={({ field: { ref, ...restField } }) => (
               <NumberInput
-                label="Stake per member"
+                label="Required stake"
                 variant="none"
-                placeholder="Stake per member"
+                placeholder="Required stake"
                 localForm={localForm}
                 step={1}
                 min={0}
@@ -116,7 +116,7 @@ const DeployCohortPt2 = () => {
               rules={numberInputRules}
               render={({ field: { ref, ...restField } }) => (
                 <NumberInput
-                  label="Cohort Size"
+                  label="Cohort size"
                   placeholder="cohort size..."
                   localForm={localForm}
                   step={1}
@@ -163,11 +163,6 @@ const DeployCohortPt2 = () => {
                   </NumberInput>
                 )}
               />
-              {/* <ErrorMessage
-                errors={errors}
-                name="shareThreshold"
-                render={({ message }) => <Text color="red">{message}</Text>}
-              /> */}
             </Box>
           </Tooltip>
           <Box>
@@ -195,7 +190,6 @@ const DeployCohortPt2 = () => {
               )}
             />
           </Box>
-
           <Box>
             <Input
               label="Staking asset address"
@@ -214,11 +208,7 @@ const DeployCohortPt2 = () => {
             <ErrorMessage
               errors={errors}
               name="stakingAsset"
-              render={({ message }) => (
-                <Text color="#fc8181" fontSize="sm" mt={1}>
-                  {message}
-                </Text>
-              )}
+              render={({ message }) => <FormErrorText message={message} />}
             />
           </Box>
           <Box>

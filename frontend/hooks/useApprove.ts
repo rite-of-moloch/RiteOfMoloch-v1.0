@@ -5,15 +5,15 @@ import useWriteContract from "./useWriteContract";
  * @param args [_to: address, _value: uint256]. _to is the ROM contract
  * @Returns bool
  */
-const useApproveRaid = (contractAddress: string, args: [string, string]) => {
+const useApprove = (contractAddress: string, args: [string, string]) => {
   const {
-    write: approveRaid,
+    write: approve,
     isLoading: isLoadingApprove,
     isSuccess: isSuccessApprove,
     isError: isErrorApprove,
   } = useWriteContract(contractAddress, "erc20TokenAddress", "approve", args);
 
-  return { approveRaid, isLoadingApprove, isSuccessApprove, isErrorApprove };
+  return { approve, isLoadingApprove, isSuccessApprove, isErrorApprove };
 };
 
-export default useApproveRaid;
+export default useApprove;

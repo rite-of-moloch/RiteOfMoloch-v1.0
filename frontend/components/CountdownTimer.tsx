@@ -1,10 +1,13 @@
 import React from "react";
-import { Box, Flex, Text, Image, Heading } from "@raidguild/design-system";
+import {
+  Box,
+  Flex,
+  Text,
+  Image,
+  Heading,
+  HStack,
+} from "@raidguild/design-system";
 import { formattedDeadline } from "utils/general";
-
-const hourglassImage = (
-  <Image src={"/assets/hourglass.png"} alt="hourglass" w={12} opacity={0.13} />
-);
 
 interface CountdownTimerProps {
   deadline: string;
@@ -19,6 +22,16 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ deadline }) => {
    * @remarks multiplying deadline by 1000 converts it to a UNIX timestamp which can be compared to new Date()
    * @returns Boolean: if true, then the deadline is in the future and the slash cannot yet be staked
    */
+
+  const hourglassImage = (
+    <Image
+      src={"/assets/hourglass.png"}
+      alt="hourglass"
+      w={12}
+      opacity={0.13}
+    />
+  );
+
   const countdownExpired = (): Boolean => {
     const now = new Date().getTime();
     let result: boolean;
@@ -40,17 +53,24 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ deadline }) => {
 
   const renderDeadline = (
     <Box textAlign="center" color="red" fontSize={["lg", "xl"]}>
-      <Heading as="h2" fontSize="2xl" mb={2}>
-        Deadline: {formattedDeadline(deadline)}
-      </Heading>
-      <Text>
-        Failure to fulfill your duty to the cohort will result in your stake
-        getting SLASHED!
-      </Text>
-      <Text>Godspeed, Moloch soldier...</Text>
+      <HStack justifyContent="center" py={4}>
+        {hourglassImage}
+        <Text color="white" fontWeight="bold" fontSize={["xl", "2xl"]} mb={2}>
+          Deadline: {formattedDeadline(deadline)}
+        </Text>
+        {hourglassImage}
+      </HStack>
+      <Box mx={["0px", "1rem", "2rem"]}>
+        <Text>
+          Failure to perform your duties will result in your stake getting
+          SLASHED!
+        </Text>
+        <Text>Godspeed, Moloch soldier...</Text>
+      </Box>
     </Box>
   );
 
   return <Box>{renderExpiredNotice ? expiredNotice : renderDeadline}</Box>;
 };
+
 export default CountdownTimer;

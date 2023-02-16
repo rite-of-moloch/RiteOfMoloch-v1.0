@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { Box, Button, SimpleGrid, Link, Text } from "@raidguild/design-system";
 import { useNetwork } from "wagmi";
-import { useRouter } from "next/router";
+
 import useTokenSymbol from "hooks/useTokenSymbol";
 
 interface CohortDetailProps {
@@ -39,6 +39,8 @@ const CohortDetail: FC<CohortDetailProps> = ({
       {`${address?.slice(0, 4)}...${address?.slice(-6)}`}
     </Link>
   );
+
+  console.log(stakingDate);
 
   return (
     <>

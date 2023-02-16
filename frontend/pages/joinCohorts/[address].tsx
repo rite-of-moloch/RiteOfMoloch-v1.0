@@ -50,6 +50,7 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
 
   const tokenSymbol = useTokenSymbol(cohortData?.token);
 
+  // TODO: scrap code below. Instead check if address `hasRite` or if address is member
   // check if msg.sender has staked to cohort or not
   const isMsgSenderStaked = (): [Boolean, string | undefined] => {
     const initiateList = cohortInitiates?.data?.cohort.initiates?.map(

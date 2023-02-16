@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import {
   Box,
   Button,
@@ -15,11 +15,11 @@ import { useNetwork } from "wagmi";
 import { initDataDeployCohort } from "utils/types/initDataDeployCohort";
 import CohortConfirmation from "components/CohortConfirmationModal";
 
-interface PreviewNewCohortProps {
-  children?: ReactNode;
-}
-
-const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
+/**
+ * @remarks this component renders a preview of all 3 parts of form data. It also builds function handleDeployCohort, which submits data to riteOfMolochFactory contract and creates a new cohort
+ * @returns form data for user to review before creating a new instance of ROM contract
+ */
+const PreviewNewCohort = () => {
   const { chain } = useNetwork();
   const {
     setDisplayPart3,
@@ -87,10 +87,10 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     admin1 !== "" ? admin1 : zeroAddress,
     admin2 !== "" ? admin2 : zeroAddress,
     Number(cohortSize),
-    Number(onboardingPeriod) * 60 * 24,
+    Number(onboardingPeriod) * 60 * 60 * 24,
     Number(shareThreshold),
     Number(assetAmount),
-    Number(stakeDuration) * 60 * 24,
+    Number(stakeDuration) * 60 * 60 * 24,
     tophatID ? tophatID : Number(0),
     nameCohort,
     nameSBT,
@@ -99,7 +99,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     Boolean(shamanOn),
   ];
 
-  console.log("initData", initData);
+  // console.log("initData", initData);
   const { createCohort, isLoadingApprove, isSuccessApprove } = useCreateCohort([
     initData,
     1,
@@ -172,8 +172,11 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
             <Image
               src={uriSBT}
               alt={`${nameSBT} SBT image preview`}
-              rounded="xl"
               m="auto"
+              boxShadow="dark-lg"
+              p="2"
+              rounded="md"
+              bg="gray"
             />
           </Box>
         </SimpleGrid>
@@ -186,7 +189,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
               border="1px"
               rounded="sm"
               onClick={handleBack}
-              disabled={isSuccessApprove || isLoadingApprove}
+              isDisabled={isSuccessApprove || isLoadingApprove}
             >
               Back
             </Button>
@@ -199,7 +202,7 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
               onClick={() => handleDeployCohort && handleDeployCohort()}
               isLoading={isLoadingApprove}
               loadingText="creating cohort..."
-              disabled={isSuccessApprove}
+              isDisabled={isSuccessApprove}
             >
               {!isSuccessApprove ? "Deploy cohort" : "Cohort deployed!"}
             </Button>

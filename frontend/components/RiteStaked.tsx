@@ -28,20 +28,15 @@ const RiteStaked: React.FC<RiteStakedProps> = ({
   const { handleWillSponsor, willSponsor } = useContext(UserContext);
 
   const formatDeadline = formattedDeadline(deadline);
-  console.log(formatDeadline);
 
   //TODO options were incorrect and localForm was missing
   //TODO might want to use a simple <input type=checkbox>
 
   return (
-    <VStack>
-      <Box textAlign="center" py={5}>
-        <Text color="red" fontSize={{ lg: "1.2rem", sm: "1rem" }} mb="5px">
+    <VStack py="2rem" px={["1.5rem", "2rem"]}>
+      <Box textAlign="center">
+        <Text color="red" fontSize={["1rem", "1.25rem"]} mb="5px">
           You own a stake for {Number(riteBalance)} RITE
-        </Text>
-        <Text color="white" fontFamily="jetbrains" fontSize=".8rem">
-          Deadline - {formatDeadline}
-          {/* Deadline - {new Date(Number(deadline) * 1000).toLocaleString()} */}
         </Text>
       </Box>
       <CountdownTimer deadline={deadline} />

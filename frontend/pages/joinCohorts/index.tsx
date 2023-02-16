@@ -11,29 +11,25 @@ import CohortDetail from "components/CohortDetail";
 import NotConnected from "components/NotConnected";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import React, { ReactNode } from "react";
-import { unixToUTC } from "utils/general";
+import { getDeadline, unixToUTC } from "utils/general";
 import { COHORTS } from "utils/subgraph/queries";
 import { Cohort } from "utils/types/subgraphQueries";
 import { useAccount } from "wagmi";
-import useTokenSymbol from "../../hooks/useTokenSymbol";
 
 interface JoinCohortsProps {
   children?: ReactNode;
 }
 
 /**
- * Non-admin page. Page for prospective and cohort members
- *
+ * @remarks Non-admin page. Page for prospective and cohort members
  */
-
 const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
   const { isConnected } = useAccount();
 
   const cohortList = useSubgraphQuery(COHORTS(), true);
 
   /**
-   * !isLoading: hook has fetched data.
-   * isLoading: hook has not yet fetched data
+   * @remarks `!isLoading`: hook has fetched data. `isLoading`: hook has not yet fetched data
    */
   const isLoading = cohortList.isLoading;
 
@@ -41,17 +37,12 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
   console.log(cohort);
 
   const renderCohorts = cohort?.map((cohort: Cohort) => {
-    const deadline = (
-      Number(cohort.createdAt) +
-      Number(cohort.time) * 1000
-    ).toString();
-
     return (
       <CohortDetail
         address={cohort.id}
         stake={cohort.tokenAmount}
         stakingAsset={cohort.token}
-        stakingDate={unixToUTC(deadline)}
+        stakingDate={unixToUTC(getDeadline(cohort.createdAt, cohort.time))}
         key={cohort.id}
         memberOrAdmin={"member"}
       />

@@ -39,7 +39,7 @@ export const stakeTooltip = (
       label = "Please input a valid wallet address";
     } else if (utils.formatEther(allowance) < utils.formatEther(minimumStake)) {
       label =
-        "Allowance is smaller than the minimum stake amount. Please approve allowance.";
+        "You must approve the contract to spend your balance before you can stake";
     } else if (utils.formatEther(balanceOf) < utils.formatEther(minimumStake)) {
       label = "Your RAID balance is too low";
     }
@@ -64,8 +64,7 @@ export const approveTooltip = (
   if (utils.formatEther(balanceOf) < utils.formatEther(minimumStake)) {
     label = "Your RAID balance is too low";
   } else if (utils.formatEther(allowance) < utils.formatEther(minimumStake)) {
-    label =
-      "Allowance is smaller than the minimum stake amount. Please approve allowance.";
+    label = `Approve contract to spend your ${tokenSymbol}`;
   } else {
     // label = `Approve contract to use ${tokenSymbol}`;
     return null;
@@ -74,7 +73,7 @@ export const approveTooltip = (
 };
 
 export const unixToUTC = (unix: string): string => {
-  const utc = new Date(Number(unix) * 1000);
+  const utc = new Date(Number(unix));
   const localDate = utc.toLocaleDateString();
   return localDate;
 };
@@ -83,7 +82,7 @@ export const getDeadline = (
   createdAt: string | undefined,
   time: string | undefined
 ): string => {
-  let deadline = (Number(createdAt) + Number(time) * 1000).toString();
+  let deadline = (Number(createdAt) * 1000 + Number(time) * 1000).toString();
 
   return deadline;
 };
