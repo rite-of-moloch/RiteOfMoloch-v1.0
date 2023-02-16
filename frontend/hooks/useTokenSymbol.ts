@@ -10,14 +10,10 @@ const useTokenSymbol = (contractAddress: string | undefined) => {
     "symbol"
   );
 
-  console.log(data);
-
   if (isError) {
     console.log("Error: ", error);
     return null;
   }
-
-  console.log("tokenSymbol", data);
 
   return data as string;
 };

@@ -19,7 +19,7 @@ const useBalanceOf = (contractAddress: `0x${string}`, args: [string]) => {
     return null;
   }
 
-  console.log("balanceOf", data);
+  // console.log("balanceOf", data);
 
   return data as BigNumber;
 };

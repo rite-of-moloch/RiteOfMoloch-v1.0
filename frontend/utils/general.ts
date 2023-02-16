@@ -57,7 +57,8 @@ export const stakeTooltip = (
 export const approveTooltip = (
   allowance: string,
   minimumStake: string,
-  balanceOf: string
+  balanceOf: string,
+  tokenSymbol: string
 ): string | null => {
   let label: string = "";
   if (utils.formatEther(balanceOf) < utils.formatEther(minimumStake)) {
@@ -65,7 +66,10 @@ export const approveTooltip = (
   } else if (utils.formatEther(allowance) < utils.formatEther(minimumStake)) {
     label =
       "Allowance is smaller than the minimum stake amount. Please approve allowance.";
-  } else return null;
+  } else {
+    // label = `Approve contract to use ${tokenSymbol}`;
+    return null;
+  }
   return label;
 };
 

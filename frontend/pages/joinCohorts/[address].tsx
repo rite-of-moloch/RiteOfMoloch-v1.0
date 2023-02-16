@@ -48,6 +48,8 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
   );
   // console.log(cohortInitiates);
 
+  const tokenSymbol = useTokenSymbol(cohortData?.token);
+
   // check if msg.sender has staked to cohort or not
   const isMsgSenderStaked = (): [Boolean, string | undefined] => {
     const initiateList = cohortInitiates?.data?.cohort.initiates?.map(
@@ -117,7 +119,7 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
               Address
             </Box>
             <Box justifySelf="center" textAlign="center" w="full">
-              Shares
+              Minimum Stake
             </Box>
             <Box justifySelf="center" textAlign="center" w="full">
               Date Staked
@@ -141,10 +143,7 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
             <Box justifySelf="center" textAlign="center" w="full">
               <Text>
                 <span>{cohortData?.tokenAmount}</span>
-                <span style={{ marginLeft: "0.25em" }}>
-                  {/* TODO: fix token symbol hook */}
-                  {/* {useTokenSymbol(cohortData?.token)} */}
-                </span>
+                <span style={{ marginLeft: "0.25em" }}>{tokenSymbol}</span>
               </Text>
             </Box>
             {/* show dateStaked for msg.sender */}
@@ -161,7 +160,7 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
               boxShadow="dark-lg"
               p="2"
               rounded="md"
-              bg="black"
+              bg="gray"
             />
           </Box>
           {/* TODO: add logic to render button if user if a member */}

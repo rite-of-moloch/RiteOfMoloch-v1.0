@@ -25,16 +25,16 @@ const useWriteContract = (
   const abi = useAbi(abiName);
   const toast = useChakraToast();
 
-  const { config, error } = usePrepareContractWrite({
-    address: contractAddress as `0x${string}`,
+  const { config } = usePrepareContractWrite({
+    address: (contractAddress as `0x${string}`) || "",
     abi,
     functionName,
     args,
     cacheTime: 2_000,
     enabled: Boolean(contractAddress),
   });
-  console.log("error", error);
-  console.log("config:", config);
+  // console.log("error", error);
+  // console.log("config:", config);
 
   const { data, write } = useContractWrite({
     ...config,
@@ -46,8 +46,6 @@ const useWriteContract = (
       console.log("err:", err);
     },
   });
-
-  console.log("data", data, "write", write);
 
   const {
     data: txData,
@@ -68,7 +66,6 @@ const useWriteContract = (
   const { data: txResponse } = useTransaction({
     enabled: Boolean(txData),
     hash: (txData?.transactionHash as `0x${string}`) || "0x",
-    // as `0x${string}`) || "",
     onSettled(data, error) {
       console.log("Settled", { data, error });
     },

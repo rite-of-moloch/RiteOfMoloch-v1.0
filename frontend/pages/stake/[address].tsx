@@ -43,6 +43,7 @@ const Stake: React.FC = (): any => {
 
   const hasRite = (): boolean => {
     let rites = Number(riteBalance);
+    console.log("rites", rites);
     if (rites > 0) {
       return true;
     } else if (rites === 0 || !rites) {
@@ -51,6 +52,9 @@ const Stake: React.FC = (): any => {
       return false;
     }
   };
+  const isStaked = hasRite();
+
+  console.log(isStaked);
 
   /**
    * if dynamic cohortAddress isn't valid ETH address, redirect back to joinCohorts page
@@ -81,7 +85,7 @@ const Stake: React.FC = (): any => {
           alignContent="center"
           my="1rem"
         >
-          {isConnected && !hasRite() && (
+          {isConnected && !isStaked && (
             <Stack w="full" pt="3rem" pb="2rem">
               <Box
                 bg="black"
@@ -98,14 +102,21 @@ const Stake: React.FC = (): any => {
                 <StakingFlow contractAddress={cohortAddress || ""} />
               </Box>
 
-              {isConnected && hasRite() && (
+              {/* {isConnected && isStaked && (
                 <RiteStaked
                   riteBalance={riteBalance?.toString() || ""}
                   deadline={deadline}
                   contractAddress={cohortAddress || ""}
                 />
-              )}
+              )} */}
             </Stack>
+          )}
+          {isConnected && isStaked && (
+            <RiteStaked
+              riteBalance={riteBalance?.toString() || ""}
+              deadline={deadline}
+              contractAddress={cohortAddress || ""}
+            />
           )}
         </HStack>
       )}

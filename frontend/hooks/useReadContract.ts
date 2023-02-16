@@ -29,8 +29,8 @@ const useReadContract = (
     args,
     enabled: Boolean(address),
   });
-  console.log("error:", error, "isError:", isError);
-  console.log("data:", data);
+  // console.log("error:", error, "isError:", isError);
+  // console.log("data:", data);
 
   // let output;
   // if (typeof data === "boolean") {

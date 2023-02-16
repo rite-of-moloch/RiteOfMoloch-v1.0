@@ -11,11 +11,19 @@ interface RiteStakedProps {
   contractAddress: string | string[];
 }
 
+/**
+ * @remarks component renders on stake/[address] page if connected address is staked. Gives user option to stake for another initiate. Renders countdown timer if deadline is in the future
+ * @param rieBalance displays rite balance
+ * @deadline displays deadline before stake gets slashed
+ * @contractAddress gets passed into StakingFlow if use wants to sponsor another initiate
+ * @returns
+ */
 const RiteStaked: React.FC<RiteStakedProps> = ({
   riteBalance,
   deadline,
   contractAddress,
 }) => {
+  console.log(riteBalance, deadline, contractAddress);
   const _localForm = useForm();
   const { handleWillSponsor, willSponsor } = useContext(UserContext);
 
