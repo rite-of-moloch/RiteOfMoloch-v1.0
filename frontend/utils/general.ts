@@ -85,5 +85,11 @@ export const getDeadline = (
 ): string => {
   let deadline = (Number(createdAt) + Number(time) * 1000).toString();
 
-  return unixToUTC(deadline) || "";
+  return deadline;
+};
+
+export const formattedDeadline = (deadline: string) => {
+  const formattedDate = unixToUTC(deadline) || "";
+
+  return formattedDate;
 };

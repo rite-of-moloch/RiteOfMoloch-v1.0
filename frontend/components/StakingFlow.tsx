@@ -141,7 +141,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
 
   return (
     <>
-      <Flex w="100%" direction="column" alignItems="flex-start" p="15px">
+      <Flex w="100%" direction="column" alignItems="flex-start" py={5}>
         <HStack mb="1rem" justifyContent="space-between" w="full">
           <Text color="red">Required Stake</Text>
           <Text color="white">
@@ -153,7 +153,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
             Your {tokenSymbol} balance
           </Text>
           <Text color="white" fontSize=".8rem">
-            {utils.formatUnits(balanceOf, "ether")} {tokenSymbol}
+            {+utils.formatUnits(balanceOf, "ether")} {tokenSymbol}
           </Text>
         </HStack>
         <HStack justifyContent="space-between" w="full">
@@ -233,7 +233,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
                   // TODO: double check number formatting
                   // utils.formatUnits(allowance, "ether") <
                   // utils.formatUnits(minimumStake, "ether")
-                  +allowance.toString() < +minimumStake.toString()
+                  +balanceOf.toString() < +minimumStake.toString()
                 }
                 onClick={() => approveRaid && approveRaid()}
               >

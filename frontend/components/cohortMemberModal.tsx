@@ -16,7 +16,7 @@ import {
 import { Modal } from "@chakra-ui/modal";
 import { CohortMetadata } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
-import { getDeadline } from "utils/general";
+import { formattedDeadline, getDeadline } from "utils/general";
 import { COHORT_METADATA } from "utils/subgraph/queries";
 import { useRouter } from "next/router";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
@@ -138,7 +138,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
                 Slash Stake
               </Button>
               <Text mt={1} fontSize="xx-small" color="red" textAlign="center">
-                Slashing is available on {deadline}
+                Slashing is available on {formattedDeadline(deadline)}
               </Text>
             </Box>
           </ModalFooter>

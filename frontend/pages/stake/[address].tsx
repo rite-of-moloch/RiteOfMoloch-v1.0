@@ -35,7 +35,7 @@ const Stake: React.FC = (): any => {
 
   const deadline = getDeadline(cohort?.createdAt, cohort?.time);
 
-  // console.log("deadline", deadline);
+  console.log("deadline", deadline);
 
   const riteBalance = useRiteBalanceOf(cohortAddress?.toString() || "", [
     userAddress(),
@@ -101,14 +101,6 @@ const Stake: React.FC = (): any => {
               <Box w={["80%", "80%", "60%"]} alignSelf="center" py="1rem">
                 <StakingFlow contractAddress={cohortAddress || ""} />
               </Box>
-
-              {/* {isConnected && isStaked && (
-                <RiteStaked
-                  riteBalance={riteBalance?.toString() || ""}
-                  deadline={deadline}
-                  contractAddress={cohortAddress || ""}
-                />
-              )} */}
             </Stack>
           )}
           {isConnected && isStaked && (
