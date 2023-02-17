@@ -6,13 +6,8 @@ import Link from "next/link";
 import NotConnected from "components/NotConnected";
 import BackButton from "components/BackButton";
 
-interface AdminProps {
-  children: ReactNode;
-}
-
-const Admin: React.FC<AdminProps> = ({ children }): any => {
+const Admin = (): any => {
   const { isConnected } = useAccount();
-
   return (
     <>
       {!isConnected && <NotConnected />}
@@ -42,7 +37,7 @@ const Admin: React.FC<AdminProps> = ({ children }): any => {
               </Link>
             </GridItem>
             <GridItem w="100%" textAlign="center" my="1rem">
-              <Link href="#">
+              <Link href="metrics">
                 <Button variant="red" w="full" p="1.5rem">
                   Metrics
                 </Button>

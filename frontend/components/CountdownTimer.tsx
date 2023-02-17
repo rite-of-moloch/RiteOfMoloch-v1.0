@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Flex,
-  Text,
-  Image,
-  Heading,
-  HStack,
-} from "@raidguild/design-system";
+import { Box, Text, Image, HStack } from "@raidguild/design-system";
 import { unixToUTC } from "utils/general";
 
 interface CountdownTimerProps {
@@ -19,7 +12,6 @@ interface CountdownTimerProps {
 
 const CountdownTimer: React.FC<CountdownTimerProps> = ({ deadline }) => {
   /**
-   * @remarks multiplying deadline by 1000 converts it to a UNIX timestamp which can be compared to new Date()
    * @returns Boolean: if true, then the deadline is in the future and the slash cannot yet be staked
    */
 
@@ -32,7 +24,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ deadline }) => {
     />
   );
 
-  console.log(deadline);
+  // console.log(deadline);
 
   const countdownExpired = (): Boolean => {
     const now = new Date().getTime();
