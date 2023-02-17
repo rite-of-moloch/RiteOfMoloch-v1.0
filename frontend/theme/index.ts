@@ -59,6 +59,11 @@ export const theme = extendTheme({
       "linear-gradient(94.89deg, #f78040 0%, #dd459b 70.2%, #ad3bad 100%)",
     gradientSBTPrev:
       "linear-gradient(90deg, #290009 -0.56%, #060606 82.19%, #25003A 100%)",
+    purpleGradient: `radial-gradient(97.27% 170.54% at 98.7% 2.73%, #24003A 0%, rgba(0, 0, 0, 0) 100%),
+      radial-gradient(100% 350.19% at 100% 100%, #170011 0%, rgba(23, 0, 17, 0) 100%),
+      radial-gradient(50% 175.1% at 0% 100%, #130000 0%, rgba(31, 0, 0, 0) 100%),
+      radial-gradient(50% 175.1% at 0% 0%, #330F00 0%, rgba(51, 15, 0, 0) 100%),
+      linear-gradient(0deg, #000000, #000000)`,
   },
   fonts: {
     texturina: `'Texturina', serif`,
