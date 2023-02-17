@@ -61,11 +61,6 @@ export const theme = extendTheme({
       "linear-gradient(90deg, #290009 -0.56%, #060606 82.19%, #25003A 100%)",
   },
   fonts: {
-    // Texturina,
-    // JetBrains_Mono,
-    // Rubik_Mono_One,
-    // Uncial_Antiqua,
-    // Space_Mono,
     texturina: `'Texturina', serif`,
     jetbrains: `'JetBrains Mono', monospace`,
     rubik: `'Rubik Mono One', sans-serif`,

@@ -1,3 +1,4 @@
+import Document from "components/Document";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // import { RGThemeProvider } from "@raidguild/design-system";
 import { UserProvider } from "context/UserContext";
@@ -19,21 +20,24 @@ interface AppProps {
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ChakraProvider theme={theme}>
-        <WagmiConfig client={wagmiClient}>
-          <RainbowKitProvider chains={chains} theme={darkTheme()}>
-            <UserProvider>
-              <FormProvider>
-                <Layout>
-                  <Component {...pageProps} />
-                </Layout>
-              </FormProvider>
-            </UserProvider>
-          </RainbowKitProvider>
-        </WagmiConfig>
-      </ChakraProvider>
-    </QueryClientProvider>
+    <>
+      <Document />
+      <QueryClientProvider client={queryClient}>
+        <ChakraProvider theme={theme}>
+          <WagmiConfig client={wagmiClient}>
+            <RainbowKitProvider chains={chains} theme={darkTheme()}>
+              <UserProvider>
+                <FormProvider>
+                  <Layout>
+                    <Component {...pageProps} />
+                  </Layout>
+                </FormProvider>
+              </UserProvider>
+            </RainbowKitProvider>
+          </WagmiConfig>
+        </ChakraProvider>
+      </QueryClientProvider>
+    </>
   );
 };
 
