@@ -32,10 +32,12 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ deadline }) => {
     />
   );
 
+  console.log(deadline);
+
   const countdownExpired = (): Boolean => {
     const now = new Date().getTime();
     let result: boolean;
-    +deadline * 1000 > now ? (result = false) : (result = true);
+    Number(deadline) > now ? (result = false) : (result = true);
 
     return result;
   };
