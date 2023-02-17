@@ -30,7 +30,6 @@ interface CohortMemberModalProps {
 
 const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
   address,
-  id,
   joinedAt,
   stake,
 }) => {
@@ -62,7 +61,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
 
   // TODO: if current timestamp > deadline, allow for slashing of stake
   const handleSlashStake = () => {
-    console.log("slashing member stake");
+    console.log("slashing...");
     // Ethers slash function
   };
 

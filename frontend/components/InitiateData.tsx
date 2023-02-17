@@ -1,8 +1,8 @@
 import { Box, Link, SimpleGrid } from "@raidguild/design-system";
-import React, { FC } from "react";
+import React from "react";
 import { MemberData } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
-import CohortMemberModal from "./CohortMemberModal";
+import CohortMemberModal from "./cohortMemberModal";
 
 const InitiateData: React.FC<MemberData> = ({
   address,
@@ -11,8 +11,6 @@ const InitiateData: React.FC<MemberData> = ({
   stake,
 }) => {
   const { chain } = useNetwork();
-
-  // const timeUTC = (time: string) => new Date(time).toUTCString();
 
   const blockExplorerLink = (address: string) => (
     <Link
