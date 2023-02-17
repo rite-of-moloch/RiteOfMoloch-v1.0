@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import {
   Flex,
@@ -104,8 +104,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
       !willSponsor ? [userAddress()] : [initiateAddress]
     );
 
-  console.log(writeJoinInitiation, "writeJoinInitiation");
-
   //TODO methods can accept BigNumbers instead of Strings
   const canUserStake = canStake(
     allowance.toString(),
@@ -114,8 +112,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     initiateAddress,
     willSponsor
   );
-
-  console.log("canUserStake:", canUserStake);
 
   const approveTooltiplabel = approveTooltip(
     allowance.toString(),
@@ -131,6 +127,9 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     allowance.toString(),
     minimumStake
   );
+
+  // useEffect re-renders component when user creates an allowance, which lets writeJoinInitiation to become defined
+  useEffect(() => {}, [allowance]);
 
   return (
     <>

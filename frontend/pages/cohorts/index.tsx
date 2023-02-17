@@ -11,7 +11,7 @@ import CohortDetail from "components/CohortDetail";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { COHORTS } from "utils/subgraph/queries";
 import { Cohort } from "utils/types/subgraphQueries";
-import { unixToUTC } from "utils/general";
+import { getDeadline, unixToUTC } from "utils/general";
 import BackButton from "components/BackButton";
 import { useAccount } from "wagmi";
 import NotConnected from "components/NotConnected";
@@ -37,16 +37,12 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
   const cohort: Cohort[] | undefined = cohortList?.data?.cohorts;
 
   const renderCohorts = cohort?.map((cohort: Cohort) => {
-    const deadline = (
-      Number(cohort.createdAt) +
-      Number(cohort.time) * 1000
-    ).toString();
-
     return (
       <CohortDetail
         address={cohort.id}
         stake={cohort.tokenAmount}
-        stakingDate={unixToUTC(deadline)}
+        stakingAsset={cohort.token}
+        stakingDate={unixToUTC(getDeadline(cohort.createdAt, cohort.time))}
         key={cohort.id}
         memberOrAdmin={"admin"}
       />

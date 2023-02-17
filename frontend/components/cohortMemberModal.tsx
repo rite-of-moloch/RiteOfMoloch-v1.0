@@ -16,7 +16,7 @@ import {
 import { Modal } from "@chakra-ui/modal";
 import { CohortMetadata } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
-import { formattedDeadline, getDeadline } from "utils/general";
+import { getDeadline, unixToUTC } from "utils/general";
 import { COHORT_METADATA } from "utils/subgraph/queries";
 import { useRouter } from "next/router";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
@@ -44,20 +44,11 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
     Boolean(cohortAddress)
   );
   const cohort: CohortMetadata | null = metadata?.data?.cohort;
-  console.log("cohort", cohort);
+  // console.log("cohort", cohort);
 
   const deadline = getDeadline(cohort?.createdAt, cohort?.time);
 
-  // const daysLeftToSlash = () => {
-  //   const todayUnix = new Date().getTime();
-  //   const deadlineUnix =
-  //     Number(cohort?.createdAt) + Number(cohort?.time) * 1000;
-
-  //   const difference = deadlineUnix - todayUnix;
-
-  //   return deadlineUnix;
-  // };
-
+  // TODO: refactor blockExplorerLink into utils/general
   const blockExplorerLink = (address: string) => {
     return (
       <Link
@@ -69,6 +60,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
     );
   };
 
+  // TODO: if current timestamp > deadline, allow for slashing of stake
   const handleSlashStake = () => {
     console.log("slashing member stake");
     // Ethers slash function
@@ -90,7 +82,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
                 Address:
               </Box>
               <Box justifySelf="center" textAlign="center" w="full">
-                Shares:
+                Minimum shares:
               </Box>
               <Box justifySelf="center" textAlign="center" w="full">
                 Date Staked:
@@ -119,10 +111,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
                 <Text>{stake}</Text>
               </Box>
               <Box justifyContent="center" textAlign="center" w="full">
-                <Text>
-                  {joinedAt}
-                  {/* {unixToUTC(joinedAt)} */}
-                </Text>
+                <Text>{joinedAt}</Text>
               </Box>
             </SimpleGrid>
           </ModalBody>
@@ -138,7 +127,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
                 Slash Stake
               </Button>
               <Text mt={1} fontSize="xx-small" color="red" textAlign="center">
-                Slashing is available on {formattedDeadline(deadline)}
+                Slashing is available on {unixToUTC(deadline)}
               </Text>
             </Box>
           </ModalFooter>

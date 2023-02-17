@@ -19,7 +19,6 @@ import InitiateData from "components/InitiateData";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";
-// import useIsMember from "hooks/useIsMember";
 import NobodyStaked from "components/NobodyStaked";
 import { unixToUTC } from "utils/general";
 
@@ -29,14 +28,9 @@ interface CohortDetailProps {
 
 const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
   const { chain } = useNetwork();
-  const { address, isConnected } = useAccount();
+  const { isConnected } = useAccount();
   const router = useRouter();
   const { address: cohortAddress } = router.query;
-
-  const userAddress: string = address ? address : "";
-
-  // const isMember = useIsMember([userAddress]);
-  // console.log("isMember", isMember);
 
   const { data: initiates, isLoading } = useSubgraphQuery(
     COHORT_INITIATES(cohortAddress),
@@ -46,14 +40,16 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
 
   const initiateList: MemberData[] | null =
     initiates?.cohort && initiates?.cohort?.initiates;
-  // console.log("initiateList", initiateList);
+  console.log("initiateList", initiateList);
 
   const renderInitiateList = initiateList?.map((initiate: MemberData) => {
+    const dateJoined = new Date(+initiate.joinedAt * 1000).toLocaleDateString();
+
     return (
       <InitiateData
         address={initiate.address}
         id={initiate.id}
-        joinedAt={unixToUTC(initiate.joinedAt)}
+        joinedAt={dateJoined}
         stake={initiate.stake}
         key={initiate.id}
       />
@@ -62,6 +58,7 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
 
   const isInitiates = renderInitiateList && renderInitiateList.length > 0;
 
+  // TODO: Refactor blockExplorerLink into utils/general
   const blockExplorerLink = (address: string) => (
     <Link
       href={`${chain?.blockExplorers?.default.url}/address/${address}`}

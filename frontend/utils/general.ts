@@ -1,5 +1,5 @@
 import { TxHash } from "./types/TxHash";
-import { utils } from "ethers";
+import { BigNumber, utils } from "ethers";
 
 export const truncateAddress = (address: string): string =>
   `${address.slice(0, 4)}...${address.slice(-4)}`;
@@ -72,12 +72,12 @@ export const approveTooltip = (
   return label;
 };
 
-export const unixToUTC = (unix: string): string => {
-  const utc = new Date(Number(unix));
-  const localDate = utc.toLocaleDateString();
-  return localDate;
-};
-
+/**
+ *
+ * @param createdAt
+ * @param time
+ * @returns unix strring
+ */
 export const getDeadline = (
   createdAt: string | undefined,
   time: string | undefined
@@ -87,8 +87,19 @@ export const getDeadline = (
   return deadline;
 };
 
-export const formattedDeadline = (deadline: string) => {
-  const formattedDate = unixToUTC(deadline) || "";
+export const unixToUTC = (unix: string): string => {
+  const utc = new Date(Number(unix));
+  const localDate = utc.toLocaleDateString();
+  return localDate;
+};
 
-  return formattedDate;
+export const getHasRite = (riteBalance: BigNumber | null): boolean => {
+  let rites = Number(riteBalance);
+  if (rites > 0) {
+    return true;
+  } else if (rites === 0 || !rites) {
+    return false;
+  } else {
+    return false;
+  }
 };

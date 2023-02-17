@@ -9,7 +9,7 @@ import NotConnected from "components/NotConnected";
 import { useRouter } from "next/router";
 import { utils } from "ethers";
 import BackButton from "components/BackButton";
-import { getDeadline } from "utils/general";
+import { getDeadline, getHasRite } from "utils/general";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { COHORT_METADATA } from "utils/subgraph/queries";
 import { CohortMetadata } from "utils/types/subgraphQueries";
@@ -41,20 +41,9 @@ const Stake: React.FC = (): any => {
     userAddress(),
   ]);
 
-  const hasRite = (): boolean => {
-    let rites = Number(riteBalance);
-    console.log("rites", rites);
-    if (rites > 0) {
-      return true;
-    } else if (rites === 0 || !rites) {
-      return false;
-    } else {
-      return false;
-    }
-  };
-  const isStaked = hasRite();
+  const isStaked = getHasRite(riteBalance);
 
-  console.log(isStaked);
+  console.log("isStaked", isStaked);
 
   /**
    * if dynamic cohortAddress isn't valid ETH address, redirect back to joinCohorts page

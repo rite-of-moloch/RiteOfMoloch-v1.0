@@ -74,7 +74,7 @@ const useWriteContract = (
       toast({
         status: "success",
         title: `Transaction success! ${data?.hash}`,
-        size: "base",
+        size: "xs",
       });
     },
     onError(err) {

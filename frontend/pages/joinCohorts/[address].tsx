@@ -9,14 +9,18 @@ import {
   Heading,
 } from "@raidguild/design-system";
 import { useAccount, useNetwork } from "wagmi";
-import { unixToUTC } from "utils/general";
-import { COHORT_INITIATES, COHORT_METADATA } from "utils/subgraph/queries";
+import { getHasRite } from "utils/general";
+import { COHORT_METADATA } from "utils/subgraph/queries";
 import { useRouter } from "next/router";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { ReactNode } from "react";
 import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";
 import useTokenSymbol from "hooks/useTokenSymbol";
+import useRiteBalanceOf from "hooks/useRiteBalanceOf";
+import useIsMember from "hooks/useIsMember";
+import useWriteContract from "hooks/useWriteContract";
+import useClaimStake from "hooks/useClaimStake";
 
 interface CohortPageProps {
   children: ReactNode;
@@ -40,47 +44,11 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
     Boolean(cohortAddress)
   );
   const cohortData = cohortMetadata?.data?.cohort;
-  console.log(cohortData);
-
-  const cohortInitiates = useSubgraphQuery(
-    COHORT_INITIATES(cohortAddress),
-    Boolean(cohortAddress)
-  );
-  // console.log(cohortInitiates);
+  // console.log(cohortData);
 
   const tokenSymbol = useTokenSymbol(cohortData?.token);
 
-  // TODO: scrap code below. Instead check if address `hasRite` or if address is member
-  // check if msg.sender has staked to cohort or not
-  const isMsgSenderStaked = (): [Boolean, string | undefined] => {
-    const initiateList = cohortInitiates?.data?.cohort.initiates?.map(
-      (initiate: { [x: string]: string }) => {
-        if (address === initiate.address) {
-          return [initiate?.joinedAt, true];
-        } else {
-          return ["not staked", false];
-        }
-      }
-    );
-    console.log(initiateList);
-
-    let joinedAt;
-    let staked = false;
-    initiateList?.forEach((initiate: [string, Boolean]) => {
-      console.log(initiate[1]);
-      if (initiate[1]) {
-        let joinedAt = initiate[0];
-        let staked = true;
-      } else {
-        let staked = false;
-      }
-    });
-    console.log([staked, joinedAt]);
-    return [staked, joinedAt];
-  };
-  const isStaked = isMsgSenderStaked();
-  console.log(isStaked);
-
+  // TODO: refactor link into utils/general
   const blockExplorerLink = (address: string) => (
     <Link
       href={`${chain?.blockExplorers?.default.url}/address/${address}`}
@@ -90,15 +58,29 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
     </Link>
   );
 
-  const stakeButton = (
-    <Link href={`/stake/${cohortAddress}`}>
-      <Button size="xs">Stake</Button>
-    </Link>
+  function userAddress(): string {
+    if (typeof address === "string") return address;
+    else return "";
+  }
+
+  const riteBalance = useRiteBalanceOf(cohortAddress?.toString() || "", [
+    userAddress(),
+  ]);
+
+  // TODO: check getHasRite hook. After running claim stake, it still shows user as staked
+  const isStaked = getHasRite(riteBalance);
+
+  const isMember = useIsMember(cohortData?.id, [userAddress()]);
+
+  const { writeClaimStake, isLoadingClaimStake } = useClaimStake(
+    cohortData?.id
   );
 
-  // TODO: build claim stake function
   const handleClaimStake = () => {
-    console.log("claim stake function");
+    console.log("isMember? claim stake", isMember);
+    if (isMember && isStaked) {
+      writeClaimStake && writeClaimStake();
+    }
   };
 
   return (
@@ -123,7 +105,7 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
               Minimum Stake
             </Box>
             <Box justifySelf="center" textAlign="center" w="full">
-              Date Staked
+              Join Cohort
             </Box>
           </SimpleGrid>
           <SimpleGrid
@@ -147,9 +129,11 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
                 <span style={{ marginLeft: "0.25em" }}>{tokenSymbol}</span>
               </Text>
             </Box>
-            {/* show dateStaked for msg.sender */}
+
             <Box justifySelf="center" textAlign="center" w="full">
-              {isStaked[0] ? unixToUTC(isStaked[1] || "") : stakeButton}
+              <Link href={`/stake/${cohortAddress}`}>
+                <Button size="xs">Stake</Button>
+              </Link>
             </Box>
           </SimpleGrid>
           <Box p={4}>
@@ -164,18 +148,18 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
               bg="gray"
             />
           </Box>
-          {/* TODO: add logic to render button if user if a member */}
-          {/* {!!isStaked[0] && ( */}
-          <Box>
-            <Button
-              size="md"
-              onClick={handleClaimStake}
-              disabled={!isStaked[0]}
-            >
-              Claim Stake
-            </Button>
-          </Box>
-          {/* )} */}
+          {isMember && isStaked && (
+            <Box>
+              <Button
+                size="md"
+                onClick={handleClaimStake}
+                disabled={!isStaked}
+                isLoading={isLoadingClaimStake}
+              >
+                Claim Stake
+              </Button>
+            </Box>
+          )}
         </VStack>
       )}
       {isConnected && <BackButton path="/joinCohorts" />}

@@ -4,7 +4,7 @@ import CountdownTimer from "./CountdownTimer";
 import StakingFlow from "./StakingFlow";
 import { UserContext } from "context/UserContext";
 import { useForm } from "react-hook-form";
-import { formattedDeadline } from "utils/general";
+import { unixToUTC } from "utils/general";
 
 interface RiteStakedProps {
   riteBalance: string;
@@ -27,7 +27,7 @@ const RiteStaked: React.FC<RiteStakedProps> = ({
   const _localForm = useForm();
   const { handleWillSponsor, willSponsor } = useContext(UserContext);
 
-  const formatDeadline = formattedDeadline(deadline);
+  // const formatDeadline = unixToUTC(deadline);
 
   //TODO options were incorrect and localForm was missing
   //TODO might want to use a simple <input type=checkbox>

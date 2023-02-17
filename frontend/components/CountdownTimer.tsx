@@ -7,7 +7,7 @@ import {
   Heading,
   HStack,
 } from "@raidguild/design-system";
-import { formattedDeadline } from "utils/general";
+import { unixToUTC } from "utils/general";
 
 interface CountdownTimerProps {
   deadline: string;
@@ -56,7 +56,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ deadline }) => {
       <HStack justifyContent="center" py={4}>
         {hourglassImage}
         <Text color="white" fontWeight="bold" fontSize={["xl", "2xl"]} mb={2}>
-          Deadline: {formattedDeadline(deadline)}
+          Deadline: {unixToUTC(deadline)}
         </Text>
         {hourglassImage}
       </HStack>
