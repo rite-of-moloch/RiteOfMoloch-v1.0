@@ -1,4 +1,3 @@
-import Document from "components/Document";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // import { RGThemeProvider } from "@raidguild/design-system";
 import { UserProvider } from "context/UserContext";
@@ -10,6 +9,7 @@ import { WagmiConfig } from "wagmi";
 import { wagmiClient, chains } from "../utils/wagmiConfig";
 import "@rainbow-me/rainbowkit/styles.css";
 import { ChakraProvider } from "@raidguild/design-system";
+import Head from "next/head";
 
 const queryClient = new QueryClient();
 
@@ -21,7 +21,6 @@ interface AppProps {
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <>
-      <Document />
       <QueryClientProvider client={queryClient}>
         <ChakraProvider theme={theme}>
           <WagmiConfig client={wagmiClient}>
