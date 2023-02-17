@@ -1,12 +1,15 @@
 const Button = {
-  baseStyles: {},
+  baseStyles: {
+    textDecoration: "none",
+  },
+
   variants: {
     solid: () => ({
       textTransform: "uppercase",
       maxWidth: "100%",
       width: "auto",
-      height: "40px",
-      color: "white",
+      // height: "40px",
+      color: "black",
       borderRadius: "2px",
       background:
         "linear-gradient(94.89deg, #FF5A00 0%, #D62789 70.2%, #AD17AD 100%)",
@@ -53,6 +56,7 @@ const Button = {
       width: "auto",
       height: "40px",
       color: "#8B1DBA",
+      px: "0.75rem",
       bg: "whiteAlpha.100",
       _focus: {
         boxShadow: "none",
@@ -64,7 +68,21 @@ const Button = {
       width: "auto",
       height: "40px",
       color: "red",
-      border: "solid red 1px",
+      border: "solid #FF3864 1px",
+      rounded: "sm",
+      bg: "whiteAlpha.100",
+      px: "1rem",
+      _focus: {
+        boxShadow: "none",
+      },
+    }),
+    gray: () => ({
+      textTransform: "uppercase",
+      maxWidth: "100%",
+      width: "auto",
+      height: "40px",
+      color: "gray",
+      border: "solid gray 1px",
       rounded: "sm",
       bg: "whiteAlpha.100",
       _focus: {
@@ -72,10 +90,19 @@ const Button = {
       },
     }),
   },
+  sizes: {
+    default: {
+      height: "40px",
+    },
+    xxs: {
+      height: "2em",
+    },
+  },
   defaultProps: {
+    size: "default",
     variant: "solid",
     fontWeight: "400",
-    fontFamily: "texturina",
+    fontFamily: "Texturina",
   },
 };
 

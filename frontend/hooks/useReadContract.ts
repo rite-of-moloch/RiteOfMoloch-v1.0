@@ -1,46 +1,50 @@
-import { useContractRead, useNetwork } from "wagmi";
+import { useContractRead } from "wagmi";
 import useAbi from "./useAbi";
-import useContractAddress from "./useContractAddress";
 import { convertBigNumber } from "utils/general";
+import { TxHash } from "utils/types/TxHash";
+// import { TxHash } from "utils/types/TxHash";
 
 /**
  *
- * @param contractName - pass in contract name
+ * @remarks prepare wagmi hook read contract instance
+ *
+ * @param contractAddress - pass in contract name
+ * @param abi - name of abi
  * @param functionName - pass name of function
  * @param args - option array of args
+ *
+ * @returns output of contract function
  */
 
 const useReadContract = (
-  contractName: string,
+  address: `0x${string}`,
+  abi: string,
   functionName: string,
   args?: any
 ) => {
-  const { chain } = useNetwork();
-
-  let contractAddress = useContractAddress(contractName);
-  const abi = useAbi(contractName);
-  let output: string;
-
-  const { data } = useContractRead({
-    addressOrName: contractAddress,
-    contractInterface: abi,
+  const { data, error, isError, isLoading } = useContractRead({
+    address,
+    abi: useAbi(abi),
     functionName,
     args,
-    chainId: chain?.id,
-    onError(err) {
-      console.log(err);
-    },
+    watch: true,
+    enabled: Boolean(address),
   });
+  // console.log("error:", error, "isError:", isError);
+  // console.log("data:", data);
 
-  if (typeof data === "boolean") {
-    return data;
-  } else if (data) {
-    output = convertBigNumber(data);
-  } else {
-    output = "";
-  }
+  // let output;
+  // if (typeof data === "boolean") {
+  //   output = data;
+  //   return output;
+  // } else if (data) {
+  //   //TODO is forced type casting correct?
+  //   output = convertBigNumber(data as TxHash);
+  // } else if (!data) {
+  //   output = "";
+  // }
 
-  return { output };
+  return { data, error, isError, isLoading };
 };
 
 export default useReadContract;

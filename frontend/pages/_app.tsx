@@ -1,5 +1,6 @@
-// import { QueryClient, QueryClientProvider } from "react-query";
-import { RGThemeProvider } from "@raidguild/design-system";
+import Document from "components/Document";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+// import { RGThemeProvider } from "@raidguild/design-system";
 import { UserProvider } from "context/UserContext";
 import { FormProvider } from "context/FormContext";
 import { theme } from "../theme";
@@ -8,8 +9,9 @@ import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
 import { WagmiConfig } from "wagmi";
 import { wagmiClient, chains } from "../utils/wagmiConfig";
 import "@rainbow-me/rainbowkit/styles.css";
+import { ChakraProvider } from "@raidguild/design-system";
 
-// const queryClient = new QueryClient();
+const queryClient = new QueryClient();
 
 interface AppProps {
   Component: any;
@@ -18,21 +20,24 @@ interface AppProps {
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
-    <RGThemeProvider theme={theme}>
-      {/* <QueryClientProvider client={queryClient}> */}
-      <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider chains={chains} theme={darkTheme()}>
-          <FormProvider>
-            <UserProvider>
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
-            </UserProvider>
-          </FormProvider>
-        </RainbowKitProvider>
-      </WagmiConfig>
-      {/* </QueryClientProvider> */}
-    </RGThemeProvider>
+    <>
+      <Document />
+      <QueryClientProvider client={queryClient}>
+        <ChakraProvider theme={theme}>
+          <WagmiConfig client={wagmiClient}>
+            <RainbowKitProvider chains={chains} theme={darkTheme()}>
+              <UserProvider>
+                <FormProvider>
+                  <Layout>
+                    <Component {...pageProps} />
+                  </Layout>
+                </FormProvider>
+              </UserProvider>
+            </RainbowKitProvider>
+          </WagmiConfig>
+        </ChakraProvider>
+      </QueryClientProvider>
+    </>
   );
 };
 

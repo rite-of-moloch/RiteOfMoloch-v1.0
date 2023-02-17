@@ -1,5 +1,9 @@
 import { Chain, connectorsForWallets } from "@rainbow-me/rainbowkit";
-import { chain, configureChains, createClient } from "wagmi";
+import { configureChains, createClient } from "wagmi";
+import {
+  goerli,
+  // gnosis
+} from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
@@ -24,7 +28,12 @@ const gnosis: Chain = {
     symbol: "xDAI",
   },
   rpcUrls: {
-    default: "https://rpc.gnosischain.com",
+    public: {
+      http: ["https://rpc.gnosischain.com"],
+    },
+    default: {
+      http: ["https://rpc.gnosischain.com"],
+    },
   },
   blockExplorers: {
     blockscount: {
@@ -37,10 +46,10 @@ const gnosis: Chain = {
 };
 
 export const { chains, provider } = configureChains(
-  [gnosis, chain.goerli],
+  [gnosis, goerli],
   [
-    alchemyProvider({ apiKey: process.env.REACT_APP_ALCHEMY_ID }),
-    infuraProvider({ apiKey: process.env.REACT_APP_INFURA_ID }),
+    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || "" }),
+    infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_ID || "" }),
     publicProvider(),
   ],
   { stallTimeout: 5000 }

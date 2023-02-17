@@ -1,4 +1,4 @@
-import React, { createContext, useState, Dispatch, useContext } from "react";
+import React, { createContext, useState, useContext } from "react";
 
 export const FormContext = createContext<{
   displayPart1: boolean;
@@ -47,6 +47,8 @@ export const FormContext = createContext<{
   setSuperadmin1: any;
   superadmin2: boolean;
   setSuperadmin2: any;
+  shamanOn: boolean;
+  setShamanOn: any;
 }>({
   displayPart1: true,
   setDisplayPart1: null,
@@ -94,7 +96,11 @@ export const FormContext = createContext<{
   setSuperadmin1: null,
   superadmin2: false,
   setSuperadmin2: null,
+  shamanOn: false,
+  setShamanOn: null,
 });
+
+// console.log("FORMCONTEXT: ", FormContext);
 
 interface FormProviderProps {
   children: React.ReactNode;
@@ -124,7 +130,9 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   const [admin2, setAdmin2] = useState("");
   const [superadmin1, setSuperadmin1] = useState(false);
   const [superadmin2, setSuperadmin2] = useState(false);
+  const [shamanOn, setShamanOn] = useState(false);
 
+  // console.log("LOADING FORM PROVIDER");
   const value = {
     displayPart1,
     setDisplayPart1,
@@ -172,7 +180,12 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
     setSuperadmin1,
     superadmin2,
     setSuperadmin2,
+    shamanOn,
+    setShamanOn,
   };
+
+  // console.log("FORMPROVIDER value: ", value);
+  // console.log("RETURNING FROM PROVIDER");
 
   return <FormContext.Provider value={value}>{children}</FormContext.Provider>;
 };
@@ -225,6 +238,8 @@ export const useFormContext = () => {
     setSuperadmin1,
     superadmin2,
     setSuperadmin2,
+    shamanOn,
+    setShamanOn,
   } = useContext(FormContext);
   return {
     displayPart1,
@@ -273,5 +288,7 @@ export const useFormContext = () => {
     setSuperadmin1,
     superadmin2,
     setSuperadmin2,
+    shamanOn,
+    setShamanOn,
   };
 };

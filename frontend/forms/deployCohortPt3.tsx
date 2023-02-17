@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import {
   Box,
@@ -7,7 +7,6 @@ import {
   Flex,
   FormControl,
   HStack,
-  Heading,
   Input,
   Link,
   SimpleGrid,
@@ -23,14 +22,15 @@ interface DeployCohortFormProps {
   children?: ReactNode;
 }
 
-type FormValues = {
-  hasTophat: boolean;
-  topHatWearer: string;
-  tophatID: number | null;
-  addAdmin: boolean;
-  admin1: string;
-  admin2: string;
-};
+// type FormValues = {
+//   hasTophat: boolean;
+//   topHatWearer: string;
+//   tophatID: number | null;
+//   addAdmin: boolean;
+//   admin1: string;
+//   admin2: string;
+//   shamanOn: boolean;
+// };
 
 const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
   const {
@@ -42,17 +42,10 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
     setDisplayPart2,
     setDisplayPart3,
     setDisplayPreviewNewCohort,
+    setShamanOn,
   } = useFormContext();
 
-  const localForm = useForm<FormValues>({
-    defaultValues: {
-      hasTophat: false,
-      topHatWearer: "",
-      addAdmin: false,
-      admin1: "",
-      admin2: "",
-    },
-  });
+  const localForm = useForm<FieldValues>();
 
   const {
     register,
@@ -67,6 +60,9 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
   const values = getValues();
   const hasTophat = values.hasTophat;
   const addAdmin = values.addAdmin;
+  const shamanOn = values.shamanOn;
+
+  console.log("shamanOn", shamanOn);
 
   watch();
 
@@ -88,6 +84,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
         setAdmin2(values.admin2);
         setDisplayPart3(false);
         setDisplayPreviewNewCohort(true);
+        setShamanOn(shamanOn);
       } else console.log("validations fail");
     } else if (!hasTophat && addAdmin) {
       console.log("doesn't have tophat, wants to add admin");
@@ -99,6 +96,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
         setAdmin2(values.admin2);
         setDisplayPart3(false);
         setDisplayPreviewNewCohort(true);
+        setShamanOn(shamanOn);
       } else console.log("validations fail");
     } else if (hasTophat && addAdmin) {
       console.log("Has tophat and wants to add admin");
@@ -110,6 +108,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
         setAdmin2(values.admin2);
         setDisplayPart3(false);
         setDisplayPreviewNewCohort(true);
+        setShamanOn(shamanOn);
       } else console.log("validations fail");
     } else if (!hasTophat && !addAdmin) {
       setTopHatWearer(values.topHatWearer);
@@ -118,12 +117,19 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
       setAdmin2(values.admin2);
       setDisplayPart3(false);
       setDisplayPreviewNewCohort(true);
+      setShamanOn(shamanOn);
     }
   };
 
-  const addAdminExplanation = (
+  const addAdminTooltip = (
     <Text>
       The deployer of this cohort will receive super-admin priviledges
+    </Text>
+  );
+
+  const shamanTooltip = (
+    <Text>
+      give this ROM contract shaman manager privileges to mint minimum shares
     </Text>
   );
 
@@ -155,10 +161,9 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
           </Flex>
           <Box>
             <Switch
-              isDisabled
+              // isDisabled
               label=""
               id="hasTopHat"
-              // @ts-ignore
               localForm={localForm}
               {...register("hasTophat", {
                 onChange: () => {
@@ -179,7 +184,6 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               id="topHatWearer"
               placeholder="Input address of TOP HAT owner"
               autoComplete="off"
-              // @ts-ignore
               localForm={localForm}
               {...register("topHatWearer", {
                 validate: () =>
@@ -189,7 +193,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="topHatWearer"
-              render={({ message }) => <Text color="#FF3864">{message}</Text>}
+              render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box>
           <Box display={hasTophat ? "flex" : "none"} flexDir="column">
@@ -199,7 +203,6 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               placeholder="TOP HAT ID"
               type="number"
               autoComplete="off"
-              // @ts-ignore
               localForm={localForm}
               {...register("tophatID", {
                 required: {
@@ -211,7 +214,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="tophatID"
-              render={({ message }) => <Text color="#FF3864">{message}</Text>}
+              render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box>
         </SimpleGrid>
@@ -219,7 +222,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
           <Box>
             <Flex alignItems="center">
               <Text>Want to add additional administrators?</Text>
-              <Tooltip label={addAdminExplanation} placement="top" hasArrow>
+              <Tooltip label={addAdminTooltip} placement="top" hasArrow>
                 <Box ml="0.5rem" border="1px" rounded="full">
                   <BsQuestion />
                 </Box>
@@ -228,10 +231,9 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
           </Box>
           <Box>
             <Switch
-              isDisabled
+              // isDisabled
               my={4}
               label=""
-              // @ts-ignore
               localForm={localForm}
               {...(register("addAdmin"),
               {
@@ -253,7 +255,6 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               id="admin1"
               placeholder="Input address 1"
               autoComplete="off"
-              // @ts-ignore
               localForm={localForm}
               {...register("admin1", {
                 required: {
@@ -267,7 +268,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="admin1"
-              render={({ message }) => <Text color="#FF3864">{message}</Text>}
+              render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box>
 
@@ -277,7 +278,6 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               id="admin2"
               placeholder="Input address 2"
               autoComplete="off"
-              // @ts-ignore
               localForm={localForm}
               {...register("admin2", {
                 required: false,
@@ -293,15 +293,43 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="admin2"
-              render={({ message }) => <Text color="#FF3864">{message}</Text>}
+              render={({ message }) => <Text color="red">{message}</Text>}
             />
           </Box>
-          {/* start buttons */}
+        </SimpleGrid>
+        {/* start shaman switch */}
+        <HStack justifyContent="space-between" mb={2}>
+          <Box>
+            <Flex alignItems="center">
+              <Text>Make contract a Shaman?</Text>
+              <Tooltip label={shamanTooltip} placement="top" hasArrow>
+                <Box ml="0.5rem" border="1px" rounded="full">
+                  <BsQuestion />
+                </Box>
+              </Tooltip>
+            </Flex>
+          </Box>
+          <Box>
+            <Switch
+              my={4}
+              label=""
+              localForm={localForm}
+              {...(register("shamanOn"),
+              {
+                onChange: () => {
+                  setValue("shamanOn", !shamanOn ? true : false);
+                },
+              })}
+            />
+          </Box>
+        </HStack>
+        {/* start buttons */}
+        <SimpleGrid columns={2} spacingX={4} spacingY={3}>
           <Box>
             <Button
               variant="ghost"
               w="full"
-              color="#FF3864"
+              color="red"
               border="1px"
               mt={10}
               rounded="sm"

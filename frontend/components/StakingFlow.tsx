@@ -1,5 +1,5 @@
-import React, { useContext, ReactNode } from "react";
-import { useForm } from "react-hook-form";
+import React, { useContext, useEffect } from "react";
+import { FieldValues, useForm } from "react-hook-form";
 import {
   Flex,
   Box,
@@ -12,39 +12,43 @@ import {
   Stack,
   VStack,
 } from "@raidguild/design-system";
-
-import { useAccount, useNetwork } from "wagmi";
-import { utils } from "ethers";
-import { TOKEN_TICKER } from "../utils/constants";
+import { useAccount } from "wagmi";
+import { BigNumber, utils } from "ethers";
 import { UserContext } from "context/UserContext";
 import { approveTooltip, canStake, stakeTooltip } from "utils/general";
-import useMinimumStake from "hooks/useMinimumStake";
 import useBalanceOf from "hooks/useBalanceOf";
-import useApproveRaid from "hooks/useApproveRaid";
-import useContractAddress from "hooks/useContractAddress";
+import useApprove from "hooks/useApprove";
 import useJoinInitiation from "hooks/useJoinInitiation";
 import useGetAllowance from "hooks/useGetAllowance";
-
 import { FiAlertTriangle } from "react-icons/fi";
+import { useSubgraphQuery } from "hooks/useSubgraphQuery";
+import { COHORT_METADATA } from "utils/subgraph/queries";
+import { CohortMetadata } from "utils/types/subgraphQueries";
+import useTokenSymbol from "hooks/useTokenSymbol";
 
 interface StakingFlowProps {
-  children?: ReactNode;
+  contractAddress: string | string[];
 }
 
-type FormValues = {
-  initiateAddress: string;
-};
-
-const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
+/**
+ * @remarks if invalid address passed into url query string, redirect user to /joinCohort page
+ *
+ * @param contractAddress is cohortAddress inherited from [address].tsx component. This address should be passed into smart contract functions.
+ * @returns data about active cohort
+ */
+const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   const { address } = useAccount();
-  const { chain } = useNetwork();
   const { willSponsor, handleWillSponsor } = useContext(UserContext);
 
-  const localForm = useForm<FormValues>({
-    defaultValues: {
-      initiateAddress: "",
-    },
-  });
+  const metadata = useSubgraphQuery(
+    COHORT_METADATA(contractAddress),
+    Boolean(contractAddress)
+  );
+
+  const cohort: CohortMetadata | null = metadata?.data?.cohort;
+  // console.log("cohort", cohort);
+
+  const localForm = useForm<FieldValues>();
 
   const {
     register,
@@ -55,88 +59,116 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
   } = localForm;
 
   const values = getValues();
-  const initiateAddress: string = values?.initiateAddress || "";
+  const initiateAddress: string = values?.initiateAddress;
 
-  const chainId = (): number => {
-    if (chain?.id) return chain?.id;
-    else return 100;
-  };
-
-  function userAddress(): string {
+  const userAddress = (): string => {
     if (typeof address === "string") return address;
     else return "";
-  }
+  };
 
-  const minimumStake: string = useMinimumStake() || "0";
+  const minimumStake = cohort?.tokenAmount || "0";
 
-  const balanceOf: string = useBalanceOf([userAddress()]);
-
-  const { approveRaid, isLoadingApprove, isSuccessApprove, isErrorApprove } =
-    useApproveRaid([useContractAddress("riteOfMolochAddress"), minimumStake]);
-
-  const allowance = useGetAllowance([
+  let balanceOf = useBalanceOf((cohort?.token as `0x${string}`) || "0x", [
     userAddress(),
-    useContractAddress("erc20TokenAddress"),
   ]);
 
-  const { writeJoinInitiation, isLoadingStake, isSuccessStake, isErrorStake } =
-    useJoinInitiation(!willSponsor ? [userAddress()] : [initiateAddress]);
+  //TODO better handling of balanceOf === null
+  if (!balanceOf) {
+    balanceOf = BigNumber.from("0") || "0";
+  }
 
-  const canUserStake: boolean = canStake(
-    allowance || "",
+  const { approve, isLoadingApprove } = useApprove(cohort?.token || "0x", [
+    cohort?.id || "",
+    minimumStake,
+  ]);
+
+  let allowance = useGetAllowance((cohort?.token as `0x${string}`) || "0x", [
+    userAddress(),
+    cohort?.id || "0x",
+  ]);
+
+  let tokenSymbol = useTokenSymbol(cohort?.token);
+  if (!tokenSymbol) {
+    tokenSymbol = "N/A";
+  }
+
+  //TODO better handling of allowance === null
+
+  if (!allowance) {
+    allowance = BigNumber.from("0") || "0";
+  }
+
+  const { writeJoinInitiation, isLoadingStake, isSuccessStake, isErrorStake } =
+    useJoinInitiation(
+      cohort?.id || "",
+      !willSponsor ? [userAddress()] : [initiateAddress]
+    );
+
+  //TODO methods can accept BigNumbers instead of Strings
+  const canUserStake = canStake(
+    allowance.toString(),
     minimumStake || "",
-    balanceOf || "",
+    balanceOf.toString(),
     initiateAddress,
     willSponsor
   );
 
   const approveTooltiplabel = approveTooltip(
-    allowance,
+    allowance.toString(),
     minimumStake,
-    balanceOf
+    balanceOf.toString(),
+    tokenSymbol
   );
 
-  const stakeToolTipLabel: string | null = stakeTooltip(
+  const stakeToolTipLabel = stakeTooltip(
     willSponsor,
     initiateAddress,
-    balanceOf,
-    allowance,
+    balanceOf.toString(),
+    allowance.toString(),
     minimumStake
   );
 
+  // useEffect re-renders component when user creates an allowance, which lets writeJoinInitiation to become defined
+  useEffect(() => {}, [allowance]);
+
   return (
     <>
-      <Flex w="100%" direction="column" alignItems="flex-start" p="15px">
-        <HStack mb="1rem">
+      <Flex w="100%" direction="column" alignItems="flex-start" py={5}>
+        <HStack mb="1rem" justifyContent="space-between" w="full">
           <Text color="red">Required Stake</Text>
           <Text color="white">
-            {utils.formatEther(minimumStake)} {TOKEN_TICKER[chainId()]}
+            {minimumStake} {tokenSymbol}
           </Text>
         </HStack>
-        <HStack>
+        <HStack justifyContent="space-between" w="full">
           <Text color="red" fontFamily="jetbrains" fontSize=".8rem">
-            Your {TOKEN_TICKER[chainId()]} balance
+            Your {tokenSymbol} balance
           </Text>
           <Text color="white" fontSize=".8rem">
-            {utils.formatUnits(balanceOf, "ether")} {TOKEN_TICKER[chainId()]}
+            {+utils.formatUnits(balanceOf, "ether")} {tokenSymbol}
           </Text>
         </HStack>
-        <HStack>
+        <HStack justifyContent="space-between" w="full">
           <Text color="red" fontFamily="jetbrains" fontSize=".8rem">
-            Your {TOKEN_TICKER[chainId()]} allowance
+            Your {tokenSymbol} allowance
           </Text>
           <Text color="white" fontSize=".8rem">
-            {utils.formatEther(allowance)} {TOKEN_TICKER[chainId()]}
+            {/* TODO: double check that allowance unit formats are correct */}
+            {/* TODO:  */}
+            <span style={{ marginRight: "0.5em" }}>{allowance.toString()}</span>
+            {/* {utils.formatEther(allowance)} */}
+            <span>{tokenSymbol}</span>
           </Text>
         </HStack>
         <Stack mt={8} w="full">
           <VStack alignItems={"start"}>
             <Checkbox
+              localForm={localForm}
               size="md"
               color="red"
               defaultValue={["false"]}
               value="Sponsor an Initiate"
-              options={[{ label: "Sponsor an Initiate", value: "false" }]}
+              options={["Sponsor an Initiate"]}
               isChecked={willSponsor}
               onChange={handleWillSponsor}
             />
@@ -147,7 +179,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
                 placeholder="enter wallet address"
                 type="text"
                 autoComplete="off"
-                // @ts-ignore
                 localForm={localForm}
                 {...register("initiateAddress", {
                   validate: (initiate: string) =>
@@ -164,7 +195,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
                   },
                 })}
               />
-
               {!isValid && initiateAddress && (
                 <Box w="full" color="red" mt={3}>
                   <HStack justifyContent="center">
@@ -181,25 +211,19 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
 
         <HStack spacing="1.5rem" mt="2rem" w="100%">
           <Box w="50%">
-            <Tooltip
-              isDisabled={canUserStake}
-              label={approveTooltiplabel}
-              placement="top-start"
-            >
+            <Tooltip label={approveTooltiplabel} placement="bottom">
               <Button
                 variant="solid"
                 w="full"
-                isLoading={
-                  isLoadingApprove
-                    ? isLoadingApprove
-                    : isSuccessApprove || isErrorApprove
-                }
+                isLoading={isLoadingApprove}
                 loadingText="Approving..."
-                disabled={
-                  utils.formatUnits(allowance, "ether") <
-                  utils.formatUnits(minimumStake, "ether")
+                isDisabled={
+                  // TODO: double check number formatting
+                  // utils.formatUnits(allowance, "ether") <
+                  // utils.formatUnits(minimumStake, "ether")
+                  +balanceOf.toString() < +minimumStake.toString()
                 }
-                onClick={() => approveRaid && approveRaid()}
+                onClick={() => approve && approve()}
               >
                 Approve
               </Button>
@@ -207,20 +231,16 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
           </Box>
           <Box w="50%">
             <Tooltip
-              isDisabled={canUserStake}
+              isDisabled={!canUserStake}
               label={stakeToolTipLabel}
               placement="top-start"
             >
               <Button
                 w="full"
                 variant="solid"
-                isLoading={
-                  isLoadingStake
-                    ? isLoadingStake
-                    : isSuccessStake || isErrorStake
-                }
+                isLoading={isLoadingStake}
                 loadingText="Staking..."
-                disabled={!canUserStake}
+                isDisabled={!canUserStake}
                 onClick={() => writeJoinInitiation && writeJoinInitiation()}
               >
                 Stake
@@ -229,7 +249,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ children }) => {
           </Box>
         </HStack>
       </Flex>
-      {children}
     </>
   );
 };

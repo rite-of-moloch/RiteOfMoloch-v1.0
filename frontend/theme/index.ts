@@ -7,7 +7,16 @@ import Switch from "./components/Switch";
 import Tooltip from "./components/Tooltip";
 import Heading from "./components/Heading";
 import Input from "./components/Input";
-import NumberInput from "./components/Input";
+import NumberInput from "./components/NumberInput";
+import SimpleGrid from "./components/SimpleGrid";
+import Link from "./components/Link";
+import {
+  Texturina,
+  JetBrains_Mono,
+  Rubik_Mono_One,
+  Uncial_Antiqua,
+  Space_Mono,
+} from "@next/font/google";
 
 export const theme = extendTheme({
   components: {
@@ -20,6 +29,8 @@ export const theme = extendTheme({
     Heading,
     Input,
     NumberInput,
+    SimpleGrid,
+    Link,
   },
   colors: {
     transparent: "transparent",
@@ -74,7 +85,7 @@ export const theme = extendTheme({
         display: "none",
       },
       "&::-webkit-scrollbar-thumb": {
-        background: "#ff3864",
+        background: "red",
         borderRadius: "5px",
       },
       "&::-webkit-scrollbar-thumb:hover": {

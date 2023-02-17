@@ -1,7 +1,9 @@
 import { createMultiStyleConfigHelpers } from "@chakra-ui/styled-system";
 
 const helpers = createMultiStyleConfigHelpers([
+  "overlay",
   "dialogContainer",
+  "header",
   "dialog",
   "closeButton",
   "body",
@@ -11,35 +13,60 @@ const helpers = createMultiStyleConfigHelpers([
 const Modal = helpers.defineMultiStyleConfig({
   baseStyle: {
     dialogContainer: {
-      border: "1px",
-      borderColor: "red",
-      fontFamily: "spaceMono",
-      w: ["90%", "50%", "45%", "30%"],
+      position: "fixed",
+      border: "1px solid #FF3864",
+      fontFamily: "Texturina",
       h: "fit",
-      minH: "20%",
-      maxH: "50%",
       bg: "gradientSBTPrev",
       rounded: "2xl",
-      position: "absolute",
-      left: "50%",
       top: "50%",
-      marginLeft: "-25%",
-      marginTop: "-125px",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+    },
+    header: {
+      textAlign: "center",
+      mt: "-2rem",
+      fontSize: "28px",
+      color: "white",
     },
     dialog: {
-      bg: "gradientSBTPrev",
+      bg: "transparent",
       pt: "3em",
       mt: "0",
+      w: "100%",
     },
-    closeButton: {
-      color: "red",
-    },
-
     footer: {
       marginX: "auto",
       fontSize: "2xl",
       mb: "-3rem",
+      bg: "transparent",
     },
+  },
+  variants: {
+    sbt: {
+      dialogContainer: {
+        w: ["90%", "50%", "45%", "35%"],
+      },
+      closeButton: {
+        color: "red",
+      },
+    },
+    member: {
+      dialogContainer: {
+        w: ["90%", "80%", "75%", "65%"],
+      },
+      closeButton: {
+        color: "white",
+      },
+      footer: {
+        textAlign: "right",
+        w: "full",
+        mt: "0.5rem",
+      },
+    },
+  },
+  defaultProps: {
+    variant: "sbt",
   },
 });
 

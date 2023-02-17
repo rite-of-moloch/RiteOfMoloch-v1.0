@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import {
   Box,
   Button,
@@ -13,13 +13,13 @@ import { useFormContext } from "context/FormContext";
 import useCreateCohort from "../hooks/useCreateCohort";
 import { useNetwork } from "wagmi";
 import { initDataDeployCohort } from "utils/types/initDataDeployCohort";
-import { create } from "domain";
+import CohortConfirmation from "components/CohortConfirmationModal";
 
-interface PreviewNewCohortProps {
-  children?: ReactNode;
-}
-
-const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
+/**
+ * @remarks this component renders a preview of all 3 parts of form data. It also builds function handleDeployCohort, which submits data to riteOfMolochFactory contract and creates a new cohort
+ * @returns form data for user to review before creating a new instance of ROM contract
+ */
+const PreviewNewCohort = () => {
   const { chain } = useNetwork();
   const {
     setDisplayPart3,
@@ -28,29 +28,49 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     membershipCriteria,
     stakingAsset,
     treasury,
-    topHatWearer,
     admin1,
     admin2,
     cohortSize,
     stakeDuration,
+    topHatWearer,
     tophatID,
     nameCohort,
     nameSBT,
     symbolSBT,
     uriSBT,
-    // sbtImage,
     assetAmount,
     shareThreshold,
     onboardingPeriod,
+    shamanOn,
   } = useFormContext();
 
+  console.log(shamanOn, "shamanOn");
+
   const blockExplorerLink = (address: string) => (
-    <Link
-      href={`${chain?.blockExplorers?.default.url}/address/${address}`}
-      isExternal
-    >
-      {address}
-    </Link>
+    <Text>
+      <Link
+        href={`${chain?.blockExplorers?.default.url}/address/${address}`}
+        isExternal
+      >
+        {address}
+      </Link>
+    </Text>
+  );
+
+  const responseText = (question: string, response: any, days?: any) => (
+    <Box>
+      <Text>
+        <span style={{ color: "gray", marginRight: "0.25em" }}>
+          {question}:
+        </span>
+        <span style={{ fontSize: "small" }}>{response}</span>
+        {days && (
+          <span style={{ fontSize: "small", marginLeft: "0.25em" }}>
+            {days && days > 1 ? "days" : "day"}
+          </span>
+        )}
+      </Text>
+    </Box>
   );
 
   const handleBack = (): void => {
@@ -64,168 +84,133 @@ const PreviewNewCohort: React.FC<PreviewNewCohortProps> = ({ children }) => {
     membershipCriteria,
     stakingAsset,
     treasury,
-    topHatWearer !== "" ? topHatWearer : zeroAddress,
     admin1 !== "" ? admin1 : zeroAddress,
     admin2 !== "" ? admin2 : zeroAddress,
     Number(cohortSize),
-    Number(onboardingPeriod),
+    Number(onboardingPeriod) * 60 * 60 * 24,
     Number(shareThreshold),
     Number(assetAmount),
-    Number(stakeDuration),
+    Number(stakeDuration) * 60 * 60 * 24,
     tophatID ? tophatID : Number(0),
     nameCohort,
     nameSBT,
     symbolSBT,
     uriSBT,
+    Boolean(shamanOn),
   ];
 
-  // console.log(initData);
+  // console.log("initData", initData);
   const { createCohort, isLoadingApprove, isSuccessApprove } = useCreateCohort([
     initData,
     1,
   ]);
 
-  // console.log(createCohort);
-
   const handleDeployCohort = (): void => {
+    console.log("deploying");
+    console.log(createCohort);
     createCohort && createCohort();
   };
 
   return (
-    <Box display={displayPreviewNewCohort ? "inline" : "none"}>
-      <SimpleGrid
-        columns={2}
-        spacingX={6}
-        rounded="xl"
-        border="1px"
-        borderColor="red"
-        bg="black"
-        px={"5%"}
-        py={6}
-        m="auto"
-        w="full"
-      >
-        <Box>
-          <Stack>
-            <Text fontSize="lg" color="red" fontWeight="semibold">
-              {nameCohort.toUpperCase()}
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Name SBT:</span>
-              {nameSBT}
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Symbol SBT:</span> {symbolSBT}
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Stake per member:</span>
-              {assetAmount} {assetAmount && assetAmount > 1 && "days"}
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Staking duration:</span>
-              {stakeDuration} {stakeDuration && stakeDuration > 1 && "days"}
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Cohort size:</span> {cohortSize}
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Shares per member:</span>{" "}
-              {shareThreshold}
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Onboarding period:</span>{" "}
-              {onboardingPeriod}{" "}
-              {onboardingPeriod && onboardingPeriod > 1 && "days"}
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Staking asset address:</span>
-              <Text fontSize="xx-small">{blockExplorerLink(stakingAsset)}</Text>
-            </Text>
-            <Text>
-              <span style={{ color: "gray" }}>Moloch DAO address:</span>
-
-              <Text fontSize="xx-small">
-                {blockExplorerLink(membershipCriteria)}
+    <>
+      <Box display={displayPreviewNewCohort ? "inline" : "none"}>
+        <SimpleGrid
+          columns={2}
+          spacingX={6}
+          rounded="xl"
+          fontFamily="texturina"
+          border="1px solid #FF3864"
+          bg="black"
+          px={"5%"}
+          py={6}
+          m="auto"
+          w="full"
+        >
+          <Box>
+            <Stack>
+              <Text fontSize="lg" color="red" fontWeight="semibold">
+                {nameCohort.toUpperCase()}
               </Text>
-            </Text>
-
-            <Text>
-              <span style={{ color: "gray" }}>Treasury address:</span>
-
-              <Text fontSize="xx-small">{blockExplorerLink(treasury)}</Text>
-            </Text>
-            {topHatWearer !== "" && (
+              {responseText("Name SBT", nameSBT)}
+              {responseText("Symbol SBT", symbolSBT)}
+              {responseText("Stake per member", assetAmount, assetAmount)}
+              {responseText("Staking duration", stakeDuration, stakeDuration)}
+              {responseText("Cohort size", cohortSize)}
+              {responseText("Shares per member", shareThreshold)}
+              {responseText(
+                "Onboarding period",
+                onboardingPeriod,
+                onboardingPeriod
+              )}
+              {responseText("Asset address", stakingAsset)}
+              {responseText(
+                "Moloch DAO address",
+                blockExplorerLink(membershipCriteria)
+              )}
+              {responseText("Treasury address", blockExplorerLink(treasury))}
+              {topHatWearer !== "" &&
+                responseText(
+                  "TOP HAT address",
+                  blockExplorerLink(topHatWearer)
+                )}
+              {tophatID && responseText("TOP HAT ID", tophatID)}
+              {admin1 !== "" &&
+                responseText("Admin address 1", blockExplorerLink(admin1))}
+              {admin2 !== "" &&
+                responseText("Admin address 2", blockExplorerLink(admin2))}
               <Text>
-                <span style={{ color: "gray" }}>TOP HAT address:</span>
-
-                <span>
-                  {
-                    <Text fontSize="xx-small">
-                      {blockExplorerLink(topHatWearer)}
-                    </Text>
-                  }
+                <span style={{ color: "gray" }}>
+                  Make contract address a shaman:
+                </span>
+                <span style={{ fontSize: "small", marginLeft: "0.25em" }}>
+                  {shamanOn ? "yes" : "no"}
                 </span>
               </Text>
-            )}
-            {tophatID && (
-              <Text>
-                <span style={{ color: "gray" }}>TOP HAT ID:</span> {tophatID}
-              </Text>
-            )}
-            {admin1 !== "" && (
-              <Text>
-                <span style={{ color: "gray" }}>Admin address 1:</span>
-
-                {<Text fontSize="xx-small">{blockExplorerLink(admin1)}</Text>}
-              </Text>
-            )}
-            {admin2 !== "" && (
-              <Text>
-                <span style={{ color: "gray" }}>Admin address 2:</span>
-
-                {<Text fontSize="xx-small">{blockExplorerLink(admin2)}</Text>}
-              </Text>
-            )}
-          </Stack>
-        </Box>
-        <Box pt={8}>
-          <Image
-            src={uriSBT}
-            alt={`${nameSBT} SBT image preview`}
-            rounded="xl"
-            m="auto"
-          />
-        </Box>
-      </SimpleGrid>
-      <HStack my={10} mx="auto" spacing={6} w={"full"}>
-        <Box w="50%">
-          <Button
-            variant="ghost"
-            w="full"
-            color="red"
-            border="1px"
-            rounded="sm"
-            onClick={handleBack}
-            disabled={isSuccessApprove || isLoadingApprove}
-          >
-            Back
-          </Button>
-        </Box>
-        <Box w="50%">
-          <Button
-            variant="solid"
-            w="full"
-            color="black"
-            onClick={() => handleDeployCohort && handleDeployCohort()}
-            isLoading={isLoadingApprove}
-            loadingText="creating cohort..."
-            disabled={isSuccessApprove}
-          >
-            {!isSuccessApprove ? "Deploy cohort" : "Cohort deployed!"}
-          </Button>
-        </Box>
-      </HStack>
-    </Box>
+            </Stack>
+          </Box>
+          <Box pt={8}>
+            <Image
+              src={uriSBT}
+              alt={`${nameSBT} SBT image preview`}
+              m="auto"
+              boxShadow="dark-lg"
+              p="2"
+              rounded="md"
+              bg="gray"
+            />
+          </Box>
+        </SimpleGrid>
+        <HStack my={10} mx="auto" spacing={6} w={"full"}>
+          <Box w="50%">
+            <Button
+              variant="ghost"
+              w="full"
+              color="red"
+              border="1px"
+              rounded="sm"
+              onClick={handleBack}
+              isDisabled={isSuccessApprove || isLoadingApprove}
+            >
+              Back
+            </Button>
+          </Box>
+          <Box w="50%">
+            <Button
+              variant="solid"
+              w="full"
+              color="black"
+              onClick={() => handleDeployCohort && handleDeployCohort()}
+              isLoading={isLoadingApprove}
+              loadingText="creating cohort..."
+              isDisabled={isSuccessApprove}
+            >
+              {!isSuccessApprove ? "Deploy cohort" : "Cohort deployed!"}
+            </Button>
+          </Box>
+        </HStack>
+      </Box>
+      <CohortConfirmation openLogic={isSuccessApprove} />
+    </>
   );
 };
 

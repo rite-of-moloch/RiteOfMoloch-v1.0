@@ -2,7 +2,6 @@ export type initDataDeployCohort = [
   membershipCriteria: string,
   stakingAsset: string,
   treasury: string,
-  topHatWearer: string | null,
   admin1: string | null,
   admin2: string | null,
   cohortSize: number | null,
@@ -14,5 +13,6 @@ export type initDataDeployCohort = [
   cohortName: string,
   sbtName: string,
   sbtSymbol: string,
-  baseUri: string
+  baseUri: string,
+  shamanOn: boolean
 ];

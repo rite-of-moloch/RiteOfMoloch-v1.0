@@ -1,24 +1,25 @@
-import React, { FC, ReactNode } from "react";
-import { useForm } from "react-hook-form";
+import React from "react";
+import { Controller, FieldValues, useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import {
   Box,
   Button,
   FormControl,
   Input,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
   NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   SimpleGrid,
   Text,
   Tooltip,
 } from "@raidguild/design-system";
 import { useFormContext } from "context/FormContext";
 import { utils } from "ethers";
+import FormErrorText from "components/FormErrorText";
 
-interface DeployCohortPt2Props {
-  children?: ReactNode;
-}
-
-const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
+const DeployCohortPt2 = () => {
   const {
     setAssetAmount,
     setCohortSize,
@@ -33,9 +34,10 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
     setDisplayPart3,
   } = useFormContext();
 
-  const localForm = useForm();
+  const localForm = useForm<FieldValues>();
 
   const {
+    control,
     register,
     watch,
     getValues,
@@ -46,7 +48,18 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
 
   watch();
   const values = getValues();
-  // console.log(values);
+
+  const numberInputRules = {
+    validate: (val: number) => val > 0,
+    required: {
+      value: true,
+      message: "Input cannot be blank",
+    },
+    min: {
+      value: 0.01,
+      message: "Value must be greater than 0",
+    },
+  };
 
   const handleBack = (): void => {
     setDisplayPart1(true);
@@ -72,57 +85,53 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
     <FormControl onSubmit={handleSubmit(handleBack)}>
       <Box display={displayPart2 ? "inline" : "none"}>
         <SimpleGrid columns={2} spacingX={4} spacingY={3}>
-          <Box>
-            <NumberInput
-              label="Stake per member"
-              id="assetAmount"
-              placeholder="Stake per member"
-              autoComplete="off"
-              // @ts-ignore
-              localForm={localForm}
-              {...register("assetAmount", {
-                validate: (val) => val > 0,
-                required: {
-                  value: true,
-                  message: "Input cannot be blank",
-                },
-                min: {
-                  value: 1,
-                  message: "Minimum of 1 required",
-                },
-              })}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="assetAmount"
-              render={({ message }) => <Text color="#FF3864">{message}</Text>}
-            />
-          </Box>
+          <Controller
+            control={control}
+            name="assetAmount"
+            rules={numberInputRules}
+            render={({ field: { ref, ...restField } }) => (
+              <NumberInput
+                label="Required stake"
+                variant="none"
+                placeholder="Required stake"
+                localForm={localForm}
+                step={1}
+                min={0}
+                max={Infinity}
+                {...restField}
+              >
+                <NumberInputField ref={ref} name={restField.name} />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            )}
+          />
 
           <Box>
-            <NumberInput
-              label="Cohort size"
-              id="cohortSize"
-              placeholder="Cohort size"
-              autoComplete="off"
-              // @ts-ignore
-              localForm={localForm}
-              {...register("cohortSize", {
-                validate: (val) => val > 0,
-                required: {
-                  value: true,
-                  message: "Input cannot be blank",
-                },
-                min: {
-                  value: 1,
-                  message: "Minimum of 1 required",
-                },
-              })}
-            />
-            <ErrorMessage
-              errors={errors}
+            <Controller
+              control={control}
               name="cohortSize"
-              render={({ message }) => <Text color="#FF3864">{message}</Text>}
+              rules={numberInputRules}
+              render={({ field: { ref, ...restField } }) => (
+                <NumberInput
+                  label="Cohort size"
+                  placeholder="cohort size..."
+                  localForm={localForm}
+                  step={1}
+                  variant="none"
+                  min={0}
+                  max={Infinity}
+                  {...restField}
+                >
+                  <NumberInputField ref={ref} name={restField.name} />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              )}
             />
           </Box>
           <Tooltip
@@ -131,66 +140,61 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
             hasArrow
           >
             <Box>
-              <NumberInput
-                label="Shares per member"
-                id="shareThreshold"
-                placeholder="shares per member"
-                autoComplete="off"
-                // @ts-ignore
-                localForm={localForm}
-                {...register("shareThreshold", {
-                  validate: (val) => val > 0,
-                  required: {
-                    value: true,
-                    message: "Input cannot be blank",
-                  },
-                  min: {
-                    value: 1,
-                    message: "Minimum of 1 required",
-                  },
-                })}
-              />
-              <ErrorMessage
-                errors={errors}
+              <Controller
+                control={control}
                 name="shareThreshold"
-                render={({ message }) => <Text color="#FF3864">{message}</Text>}
+                rules={numberInputRules}
+                render={({ field: { ref, ...restField } }) => (
+                  <NumberInput
+                    label="Minimum shares"
+                    variant="none"
+                    placeholder="shares required for membership..."
+                    localForm={localForm}
+                    step={1}
+                    min={0}
+                    max={Infinity}
+                    {...restField}
+                  >
+                    <NumberInputField ref={ref} name={restField.name} />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
+                    </NumberInputStepper>
+                  </NumberInput>
+                )}
               />
             </Box>
           </Tooltip>
           <Box>
-            <NumberInput
-              label="Onboarding period in days"
-              id="onboardindPeriod"
-              placeholder="enter time in days..."
-              autoComplete="off"
-              // @ts-ignore
-              localForm={localForm}
-              {...register("onboardingPeriod", {
-                validate: (val) => val > 0,
-                required: {
-                  value: true,
-                  message: "Input cannot be blank",
-                },
-                min: {
-                  value: 1,
-                  message: "Minimum of 1 required",
-                },
-              })}
-            />
-            <ErrorMessage
-              errors={errors}
+            <Controller
+              control={control}
               name="onboardingPeriod"
-              render={({ message }) => <Text color="#FF3864">{message}</Text>}
+              rules={numberInputRules}
+              render={({ field: { ref, ...restField } }) => (
+                <NumberInput
+                  label="Onboarding period"
+                  variant="none"
+                  placeholder="time in days..."
+                  localForm={localForm}
+                  step={1}
+                  min={0}
+                  max={Infinity}
+                  {...restField}
+                >
+                  <NumberInputField ref={ref} name={restField.name} />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              )}
             />
           </Box>
-
           <Box>
             <Input
               label="Staking asset address"
-              id="stakingAsset"
               placeholder="enter token address"
               autoComplete="off"
-              // @ts-ignore
               localForm={localForm}
               {...register("stakingAsset", {
                 required: {
@@ -201,38 +205,35 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
                   utils.isAddress(values.stakingAsset) || "invalid address",
               })}
             />
-
             <ErrorMessage
               errors={errors}
               name="stakingAsset"
-              render={({ message }) => <Text color="#FF3864">{message}</Text>}
+              render={({ message }) => <FormErrorText message={message} />}
             />
           </Box>
-
           <Box>
-            <NumberInput
-              label="Staking duration in days"
-              id="stakeDuration"
-              placeholder="amount in days..."
-              autoComplete="off"
-              // @ts-ignore
-              localForm={localForm}
-              {...register("stakeDuration", {
-                validate: (val) => val > 0,
-                required: {
-                  value: true,
-                  message: "Input cannot be blank",
-                },
-                min: {
-                  value: 1,
-                  message: "Minimum of 1 required",
-                },
-              })}
-            />
-            <ErrorMessage
-              errors={errors}
+            <Controller
+              control={control}
               name="stakeDuration"
-              render={({ message }) => <Text color="#FF3864">{message}</Text>}
+              rules={numberInputRules}
+              render={({ field: { ref, ...restField } }) => (
+                <NumberInput
+                  label="Stake duration"
+                  variant="none"
+                  placeholder="amount in days..."
+                  localForm={localForm}
+                  step={1}
+                  min={0}
+                  max={Infinity}
+                  {...restField}
+                >
+                  <NumberInputField ref={ref} name={restField.name} />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              )}
             />
           </Box>
         </SimpleGrid>
@@ -240,10 +241,8 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
           <Box>
             <Input
               label="Treasury address"
-              id="treasury"
               placeholder="Slashed stake will be sent here..."
               autoComplete="off"
-              // @ts-ignore
               localForm={localForm}
               {...register("treasury", {
                 required: {
@@ -258,7 +257,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
             <ErrorMessage
               errors={errors}
               name="treasury"
-              render={({ message }) => <Text color="#FF3864">{message}</Text>}
+              render={({ message }) => <FormErrorText message={message} />}
             />
           </Box>
         </SimpleGrid>
@@ -268,7 +267,7 @@ const DeployCohortPt2: FC<DeployCohortPt2Props> = ({ children }) => {
               mt={10}
               variant="ghost"
               w="full"
-              color="#FF3864"
+              color="red"
               border="1px"
               rounded="sm"
               onClick={handleBack}

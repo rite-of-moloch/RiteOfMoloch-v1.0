@@ -4,6 +4,7 @@ import { Button, Grid, GridItem } from "@raidguild/design-system";
 import { useAccount } from "wagmi";
 import Link from "next/link";
 import NotConnected from "components/NotConnected";
+import BackButton from "components/BackButton";
 
 interface AdminProps {
   children: ReactNode;
@@ -16,37 +17,40 @@ const Admin: React.FC<AdminProps> = ({ children }): any => {
     <>
       {!isConnected && <NotConnected />}
       {isConnected && (
-        <Grid templateColumns={"repeat(1)"} w={["50%", "40%", "20%"]}>
-          <GridItem w="100%" textAlign="center" my="1rem">
-            <Link href="/deployCohort">
-              <Button variant="red" w="full" p="1.5rem">
-                Deploy Cohort
-              </Button>
-            </Link>
-          </GridItem>
+        <>
+          <Grid templateColumns={"repeat(1)"} w={["50%", "40%", "20%"]}>
+            <GridItem w="100%" textAlign="center" my="1rem">
+              <Link href="/deployCohort">
+                <Button variant="red" w="full" p="1.5rem">
+                  Deploy Cohort
+                </Button>
+              </Link>
+            </GridItem>
+            <GridItem w="100%" textAlign="center" my="1rem">
+              <Link href="/cohorts">
+                <Button variant="red" w="full" p="1.5rem">
+                  Manage Cohorts
+                </Button>
+              </Link>
+            </GridItem>
 
-          <GridItem w="100%" textAlign="center" my="1rem">
-            <Link href="#">
-              <Button variant="red" w="full" p="1.5rem">
-                Cohort Administration
-              </Button>
-            </Link>
-          </GridItem>
-          <GridItem w="100%" textAlign="center" my="1rem">
-            <Link href="#">
-              <Button variant="red" w="full" p="1.5rem">
-                Manage Staked Members
-              </Button>
-            </Link>
-          </GridItem>
-          <GridItem w="100%" textAlign="center" my="1rem">
-            <Link href="/reviewOngoingCohort">
-              <Button variant="red" w="full" p="1.5rem">
-                Review Ongoing Cohort
-              </Button>
-            </Link>
-          </GridItem>
-        </Grid>
+            <GridItem w="100%" textAlign="center" my="1rem">
+              <Link href="#">
+                <Button variant="red" w="full" p="1.5rem">
+                  Manage Staked Members
+                </Button>
+              </Link>
+            </GridItem>
+            <GridItem w="100%" textAlign="center" my="1rem">
+              <Link href="#">
+                <Button variant="red" w="full" p="1.5rem">
+                  Metrics
+                </Button>
+              </Link>
+            </GridItem>
+          </Grid>
+          <BackButton path="/" />
+        </>
       )}
     </>
   );

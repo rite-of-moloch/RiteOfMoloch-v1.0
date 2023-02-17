@@ -1,19 +1,29 @@
+import { BigNumber } from "ethers";
 import useReadContract from "./useReadContract";
 /**
+ * @remarks calls `allowance` function on token contract
  *
- * @param args _owner: address
- * @param args _spender: address
+ * @param contractAddress Should be dynamic address from subgraphQuery from /stake/[address].tsx component
+ * @param args [_owner: address, _spender: address]
  * @outputs uint256 (string)
  */
-const useGetAllowance = (args: [string, string]): string => {
-  const { output: allowance } = useReadContract(
+const useGetAllowance = (
+  contractAddress: `0x${string}`,
+  args: [string, string]
+) => {
+  const { data, error, isError, isLoading } = useReadContract(
+    contractAddress,
     "erc20TokenAddress",
     "allowance",
     args
   );
 
-  if (allowance) return allowance;
-  else return "0";
+  if (isError) {
+    console.log("Error: ", error);
+    return null;
+  }
+
+  return data as BigNumber;
 };
 
 export default useGetAllowance;

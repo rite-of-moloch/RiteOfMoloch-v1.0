@@ -11,24 +11,25 @@
   },
   "dependencies": {
     "@hookform/error-message": "^2.0.1",
-    "@raidguild/design-system": "^0.4.18",
-    "@rainbow-me/rainbowkit": "^0.7.3",
-    "ethers": "^5.7.2",
-    "framer-motion": "^8.0.2",
+    "@next/font": "^13.1.6",
+    "@raidguild/design-system": "^0.4.43",
+    "@rainbow-me/rainbowkit": "^0.8.1",
+    "@tanstack/react-query": "^4.23.0",
+    "@tanstack/react-query-devtools": "^4.23.0",
+    "ethers": "<6",
     "next": "12.2.5",
     "next-transpile-modules": "^9.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.41.1",
     "react-icons": "^4.7.1",
-    "react-query": "^3.39.2",
-    "wagmi": "^0.6.8"
+    "wagmi": "^0.11.05"
   },
   "devDependencies": {
     "@types/node": "^18.11.12",
     "@types/react": "^18.0.26",
     "eslint": "8.22.0",
     "eslint-config-next": "12.2.5",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.5"
   }
 }

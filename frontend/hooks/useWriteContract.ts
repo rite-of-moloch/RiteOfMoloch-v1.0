@@ -1,58 +1,51 @@
 import {
-  useNetwork,
   usePrepareContractWrite,
   useContractWrite,
   useWaitForTransaction,
   useTransaction,
 } from "wagmi";
-import useContractAddress from "./useContractAddress";
-import abiERC20 from "../contracts/erc20TokenAddress.json";
 import useAbi from "./useAbi";
-import { useCustomToast } from "@raidguild/design-system";
+import { useChakraToast } from "@raidguild/design-system";
 
 /**
+ * @remarks hook to prepare wagmi hook contract instances
  *
- * @param contractName - pass in contract name
+ * @param contractAddress - pass in contract name. If contract name is 'riteOfMolochAddress', value should be passed in dynaically from URL query in stake/[address].tsx component. If this address is not a valid cohort, contractAddress will be `riteOfMolochAddress`, which then gets passed into useContractAddress hook and gets RaidGuild default values
  * @param functionName - pass name of function
- * @param args - option array of args
+ * @param args - array of arguments to be passed into smart contract function
  * @returns
  */
 
 const useWriteContract = (
-  contractName: string,
+  contractAddress: string,
+  abiName: string,
   functionName: string,
   args?: any
 ) => {
-  const { chain } = useNetwork();
-  const toast = useCustomToast();
-  const contractAddress = useContractAddress(contractName);
-  const abi = useAbi(contractName);
+  const abi = useAbi(abiName);
+  const toast = useChakraToast();
 
   const { config } = usePrepareContractWrite({
-    addressOrName: contractAddress,
-    contractInterface: abi || abiERC20,
+    address: (contractAddress as `0x${string}`) || "",
+    abi,
     functionName,
-    chainId: chain?.id,
     args,
     cacheTime: 2_000,
+    enabled: Boolean(contractAddress),
   });
+  // console.log("error", error);
+  // console.log("config:", config);
 
   const { data, write } = useContractWrite({
     ...config,
     request: config.request,
     onSuccess(data) {
-      console.log(data);
+      console.log("data", data);
     },
     onError(err) {
-      console.log(err);
-      toast.error({
-        status: "error",
-        title: `Transaction Error... ${err.message}`,
-      });
+      console.log("err:", err);
     },
   });
-
-  // console.log(data);
 
   const {
     data: txData,
@@ -60,6 +53,7 @@ const useWriteContract = (
     isSuccess,
     isError,
   } = useWaitForTransaction({
+    enabled: Boolean(data),
     hash: data?.hash,
     onError(error) {
       console.log("Error", error);
@@ -70,21 +64,22 @@ const useWriteContract = (
   });
 
   const { data: txResponse } = useTransaction({
-    hash: (txData?.transactionHash as `0x${string}`) || "",
+    enabled: Boolean(txData),
+    hash: (txData?.transactionHash as `0x${string}`) || "0x",
     onSettled(data, error) {
       console.log("Settled", { data, error });
     },
     onSuccess(data) {
       console.log("success", data);
-      toast.success({
+      toast({
         status: "success",
         title: `Transaction success! ${data?.hash}`,
-        size: "base",
+        size: "xs",
       });
     },
     onError(err) {
       console.log(err);
-      toast.success({
+      toast({
         status: "error",
         title: `Transaction Error... ${err.message}`,
       });

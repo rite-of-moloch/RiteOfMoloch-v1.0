@@ -36,7 +36,14 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
         <ModalContent>
           <ModalCloseButton />
           <ModalBody>
-            <Image src={sbtImageURL} alt="SBT image preview" />
+            <Image
+              src={sbtImageURL}
+              alt="SBT image preview"
+              boxShadow="dark-lg"
+              p="2"
+              rounded="md"
+              bg="gray"
+            />
           </ModalBody>
 
           <ModalFooter>

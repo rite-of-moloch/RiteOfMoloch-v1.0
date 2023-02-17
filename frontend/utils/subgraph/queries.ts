@@ -7,43 +7,42 @@ query {
     deployer
     dao
     token
+    sbtUrl
   }
 }
 `;
 
-export const cohorts: QueryBuilder = (skip: number, first: number) => `
+// skip = starting index
+export const COHORTS: QueryBuilder = () => `
     query {
-        cohorts(skip: ${skip}, first: ${first}) {
+        cohorts {
             id
             time
             token
             tokenAmount
             dao
             createdAt
+            sbtUrl
         }
     }
 `;
 
 /// @notice joinedAt is a unix timestamp
-export const cohortInitiates: QueryBuilder = (
-  cohortId: string,
-  skip: number,
-  first: number
-) => `
-    query {
-        cohort(id: "${cohortId}") {
-                initiates (skip: ${skip}, first: ${first}){
-                    id
-                    address
-                    joinedAt
-                    stake
-            }
-        }
-    }
-`;
+export const COHORT_INITIATES: QueryBuilder = (cohortId: string) => `
+      query {
+          cohort(id: "${cohortId}") {
+                  initiates {
+                      id
+                      address
+                      joinedAt
+                      stake
+              }
+          }
+      }
+  `;
 
 /// @notice createdAt is a unix timestamp. time is how far in seconds the deadline is from createdAt
-export const cohortMetadata: QueryBuilder = (id: string) => `
+export const COHORT_METADATA: QueryBuilder = (id: string) => `
     query {
         cohort(id: "${id}") {
             id
@@ -52,6 +51,7 @@ export const cohortMetadata: QueryBuilder = (id: string) => `
             tokenAmount
             dao
             createdAt
+            sbtUrl
         }
     }
 `;

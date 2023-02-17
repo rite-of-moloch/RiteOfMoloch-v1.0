@@ -1,33 +1,15 @@
-export const IPFS_ENDPOINT: string = "https://ipfs.infura.io";
-
-export const BOX_ENDPOINT: string = "https://ipfs.3box.io";
-
-export const SIGNATURE_MESSAGE: string =
-  "This signature is only required for authentication.";
-
 export const CONTRACT_ADDRESSES: { [key: string]: { [key: string]: string } } =
   {
     5: {
       erc20TokenAddress: "0x1Cfb862056ecF2677615F9eB3420B04fb4911C01",
-      riteOfMolochAddress: "0x898262D785eeB789601b0BF8580a05426D6bfa58",
-      riteOfMolochFactoryAddress: "0xbFB48FF8727a4A140f4c1fA012A6AE1d47E8A6B5",
+      riteOfMolochFactoryAddress: "0xf8edb679b7d994fc8bf93502d69d31c23d94181f",
     },
     100: {
       erc20TokenAddress: "0x18E9262e68Cc6c6004dB93105cc7c001BB103e49",
-      riteOfMolochAddress: "0x67f22aa92dc5bc8840073f0b9251af679a99ab57",
+      // TODO update Gnosis factory address
       riteOfMolochFactoryAddress: "0xBb7353efB505D63408D1C762A5C3A1636E9Ca003",
     },
   };
-
-export const TOKEN_TICKER: { [k: number]: string } = {
-  5: "mRAID",
-  100: "RAID",
-};
-
-export const EXPLORER_URLS: { [k: number]: string } = {
-  5: "https://goerli.etherscan.io",
-  100: "https://blockscout.com/xdai/mainnet",
-};
 
 const secondsInADay: number = 60 * 60 * 24;
 export const msInADay = secondsInADay * 1000;
