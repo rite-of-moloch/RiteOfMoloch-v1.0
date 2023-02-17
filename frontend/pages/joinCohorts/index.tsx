@@ -1,5 +1,6 @@
 import {
   Box,
+  Flex,
   Heading,
   HStack,
   SimpleGrid,
@@ -53,6 +54,7 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
   };
 
   // TODO: build filter for renderCohorts that takes filters `searchResult`. If cohort.id includes searchResult || if cohort.token includes searchResult, render. (or if cohort includes anything from the result render it)
+  // TODO: add results from `cohortSelection` into filter search
   const renderCohorts = cohort?.map((cohort: Cohort) => {
     /*
       * Add following filter logic into function:
@@ -106,16 +108,16 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
           )}
           {isLoading && (
             <>
-              <HStack border="1px">
-                <Box w="50%">
+              <Flex>
+                <Box mr={2} w="50%" pt={2}>
                   <SelectCohortOptions
                     handleCohortSelection={handleCohortSelection}
                   />
                 </Box>
-                <Box w="50%">
+                <Box ml={2} w="50%" alignItems="center">
                   <SearchCohorts handleSearchResults={handleSearchResults} />
                 </Box>
-              </HStack>
+              </Flex>
               <Box w="full" textAlign="center" p={2} fontFamily="texturina">
                 <Spinner size="xl" my="50" color="red" emptyColor="purple" />
                 <Text>Loading cohorts...</Text>

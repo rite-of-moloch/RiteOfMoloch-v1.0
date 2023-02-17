@@ -1,12 +1,5 @@
-import { Input, Select } from "@raidguild/design-system";
-import { useEffect } from "react";
-import {
-  Controller,
-  FieldValues,
-  useForm,
-  UseFormReturn,
-} from "react-hook-form";
-import { BsSearch } from "react-icons/bs";
+import { Select } from "@raidguild/design-system";
+import { Controller, FieldValues, useForm } from "react-hook-form";
 
 interface SelectCohortOptionsProps {
   handleCohortSelection: Function;
