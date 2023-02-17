@@ -12,7 +12,6 @@ import {
   NumberInputField,
   NumberInputStepper,
   SimpleGrid,
-  Text,
   Tooltip,
 } from "@raidguild/design-system";
 import { useFormContext } from "context/FormContext";

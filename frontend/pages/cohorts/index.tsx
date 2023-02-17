@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from "react";
+import React, { FC, ReactNode, useState } from "react";
 import {
   Box,
   Heading,
@@ -15,6 +15,7 @@ import { getDeadline, unixToUTC } from "utils/general";
 import BackButton from "components/BackButton";
 import { useAccount } from "wagmi";
 import NotConnected from "components/NotConnected";
+import SearchCohorts from "components/SearchCohorts";
 
 interface ReviewOngoingCohortProps {
   children?: ReactNode;
@@ -25,6 +26,7 @@ interface ReviewOngoingCohortProps {
  *
  */
 const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
+  const [searchResult, getSearchResults] = useState<string | null>();
   const { isConnected } = useAccount();
   const cohortList = useSubgraphQuery(COHORTS(), true);
 
@@ -36,7 +38,19 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
 
   const cohort: Cohort[] | undefined = cohortList?.data?.cohorts;
 
+  const handleSearchResults = (result: string) => {
+    getSearchResults(result);
+    console.log(searchResult);
+  };
+
+  // TODO: build filter for renderCohorts that takes filters `searchResult`. If cohort.id includes searchResult || if cohort.token includes searchResult, render. (or if cohort includes anything from the result render it)
   const renderCohorts = cohort?.map((cohort: Cohort) => {
+    /*
+      * Add following filter logic into function:
+      .filter({
+        cohort.id.includes(searchResult) || cohort.stakingAsset.includes(searchResult) || cohort.stake.includes(searchResult)
+      })
+    */
     return (
       <CohortDetail
         address={cohort.id}
@@ -58,22 +72,27 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
             Cohorts
           </Heading>
           {!isLoading && (
-            <SimpleGrid
-              columns={4}
-              fontFamily="texturina"
-              justifyContent="center"
-              alignItems="center"
-              spacingX={2}
-              mb={-3}
-              w="full"
-            >
-              <Box justifySelf="start" pl={4}>
-                Address
+            <>
+              <Box>
+                <SearchCohorts handleSearchResults={handleSearchResults} />
               </Box>
-              <Box justifySelf="center">Stake</Box>
-              <Box justifySelf="center">Staking Date</Box>
-              <Box />
-            </SimpleGrid>
+              <SimpleGrid
+                columns={4}
+                fontFamily="texturina"
+                justifyContent="center"
+                alignItems="center"
+                spacingX={2}
+                mb={-3}
+                w="full"
+              >
+                <Box justifySelf="start" pl={4}>
+                  Address
+                </Box>
+                <Box justifySelf="center">Stake</Box>
+                <Box justifySelf="center">Staking Date</Box>
+                <Box />
+              </SimpleGrid>
+            </>
           )}
           {isLoading && (
             <Box w="full" textAlign="center" p={2} fontFamily="texturina">
