@@ -10,13 +10,7 @@ import Input from "./components/Input";
 import NumberInput from "./components/NumberInput";
 import SimpleGrid from "./components/SimpleGrid";
 import Link from "./components/Link";
-import {
-  Texturina,
-  JetBrains_Mono,
-  Rubik_Mono_One,
-  Uncial_Antiqua,
-  Space_Mono,
-} from "@next/font/google";
+// import { Texturina, JetBrains_Mono, Rubik_Mono_One, Uncial_Antiqua, Space_Mono } from "@next/font/google";
 
 export const theme = extendTheme({
   components: {

@@ -9,14 +9,31 @@ const Input = helpers.defineMultiStyleConfig({
       border: "solid red 1px",
       fontFamily: "Texturina",
       color: "#FFFFFF",
+      pb: 2,
+      pt: 1,
       _placeholder: {
-        fontFamily: "Space_Mono",
-        color: "#323232",
+        font: "Space_Mono",
+      },
+    },
+  },
+  variants: {
+    whitePlaceholder: {
+      field: {
+        _placeholder: {
+          color: "#323232",
+        },
+      },
+    },
+    redPlaceholder: {
+      field: {
+        _placeholder: {
+          color: "red",
+        },
       },
     },
   },
   defaultProps: {
-    variant: "none",
+    variant: "whitePlaceholder",
   },
 });
 
