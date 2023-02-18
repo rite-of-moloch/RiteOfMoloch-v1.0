@@ -2,6 +2,7 @@ import React, { FC, ReactNode, useState } from "react";
 import {
   Box,
   Heading,
+  HStack,
   SimpleGrid,
   Spinner,
   Stack,
@@ -43,14 +44,7 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
     console.log(searchResult);
   };
 
-  // TODO: build filter for renderCohorts that takes filters `searchResult`. If cohort.id includes searchResult || if cohort.token includes searchResult, render. (or if cohort includes anything from the result render it)
   const renderCohorts = cohort?.map((cohort: Cohort) => {
-    /*
-      * Add following filter logic into function:
-      .filter({
-        cohort.id.includes(searchResult) || cohort.stakingAsset.includes(searchResult) || cohort.stake.includes(searchResult)
-      })
-    */
     return (
       <CohortDetail
         address={cohort.id}
@@ -63,6 +57,22 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
     );
   });
 
+  const filteredCohorts = renderCohorts?.filter((cohort) => {
+    if (searchResult === "" || !searchResult) {
+      return cohort;
+    } else if (
+      cohort.props.address?.includes(searchResult) ||
+      cohort.props.stakingAsset?.includes(searchResult) ||
+      cohort.props.stake?.includes(searchResult) ||
+      cohort.props.stakingAsset?.includes(searchResult) ||
+      cohort.props.stakingDate?.includes(searchResult)
+    ) {
+      return cohort;
+    }
+  });
+
+  console.log(filteredCohorts);
+
   return (
     <>
       {!isConnected && <NotConnected />}
@@ -73,9 +83,12 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
           </Heading>
           {!isLoading && (
             <>
-              <Box>
-                <SearchCohorts handleSearchResults={handleSearchResults} />
-              </Box>
+              <HStack>
+                <Box w={["50%", "50%", "60%", "70%"]} />
+                <Box w={["50%", "50%", "40%", "30%"]}>
+                  <SearchCohorts handleSearchResults={handleSearchResults} />
+                </Box>
+              </HStack>
               <SimpleGrid
                 columns={4}
                 fontFamily="texturina"
@@ -100,7 +113,7 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
               <Text>Loading cohorts...</Text>
             </Box>
           )}
-          {renderCohorts}
+          {filteredCohorts}
         </Stack>
       )}
       {isConnected && !isLoading && <BackButton path="/admin" />}

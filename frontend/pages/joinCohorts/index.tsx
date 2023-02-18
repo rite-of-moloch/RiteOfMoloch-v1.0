@@ -41,27 +41,19 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
   const isLoading = cohortList.isLoading;
 
   const cohort: Cohort[] | undefined = cohortList?.data?.cohorts;
-  console.log(cohort);
+  // console.log(cohort);
 
   const handleSearchResults = (result: string) => {
     getSearchResults(result);
-    console.log(searchResult);
+    // console.log(searchResult);
   };
 
   const handleCohortSelection = (result: string) => {
     setCohortSelection(result);
-    console.log(cohortSelection);
+    // console.log(cohortSelection);
   };
 
-  // TODO: build filter for renderCohorts that takes filters `searchResult`. If cohort.id includes searchResult || if cohort.token includes searchResult, render. (or if cohort includes anything from the result render it)
-  // TODO: add results from `cohortSelection` into filter search
   const renderCohorts = cohort?.map((cohort: Cohort) => {
-    /*
-      * Add following filter logic into function:
-      .filter({
-        cohort.id.includes(searchResult) || cohort.stakingAsset.includes(searchResult) || cohort.stake.includes(searchResult)
-      })
-    */
     return (
       <CohortDetail
         address={cohort.id}
@@ -74,6 +66,21 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
     );
   });
 
+  const filteredCohorts = renderCohorts?.filter((cohort) => {
+    if (searchResult === "" || !searchResult) {
+      return cohort;
+    } else if (
+      cohort.props.address?.includes(searchResult) ||
+      cohort.props.stakingAsset?.includes(searchResult) ||
+      cohort.props.stake?.includes(searchResult) ||
+      cohort.props.stakingAsset?.includes(searchResult) ||
+      cohort.props.stakingDate?.includes(searchResult)
+    ) {
+      return cohort;
+    }
+  });
+  // console.log(filteredCohorts);
+
   return (
     <>
       {!isConnected && <NotConnected />}
@@ -84,10 +91,12 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
           </Heading>
           {!isLoading && (
             <>
-              {/* TODO: fix search bar */}
-              <Box>
-                <SearchCohorts handleSearchResults={handleSearchResults} />
-              </Box>
+              <HStack>
+                <Box w={["50%", "50%", "60%", "70%"]} />
+                <Box w={["50%", "50%", "40%", "30%"]}>
+                  <SearchCohorts handleSearchResults={handleSearchResults} />
+                </Box>
+              </HStack>
               <SimpleGrid
                 columns={4}
                 fontFamily="texturina"
@@ -124,7 +133,7 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
               </Box>
             </>
           )}
-          {renderCohorts}
+          {filteredCohorts}
         </Stack>
       )}
       {isConnected && !isLoading && <BackButton path="/" />}

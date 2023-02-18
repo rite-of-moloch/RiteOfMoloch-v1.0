@@ -1,6 +1,5 @@
 import { Input } from "@raidguild/design-system";
 import { FieldValues, useForm } from "react-hook-form";
-import { BsSearch } from "react-icons/bs";
 
 interface SearchCohortsProps {
   handleSearchResults: Function;
@@ -19,13 +18,17 @@ const SearchCohorts: React.FC<SearchCohortsProps> = ({
   handleSearchResults(result);
 
   return (
-    <Input
-      label=""
-      placeholder={`${(<BsSearch color="red" />)}🔎 Search addresses`}
-      localForm={localForm}
-      autoComplete="off"
-      {...register("searchResult")}
-    />
+    <>
+      <Input
+        label=""
+        type="text"
+        placeholder="🔎 Search addresses"
+        localForm={localForm}
+        autoComplete="off"
+        variant="redPlaceholder"
+        {...register("searchResult")}
+      />
+    </>
   );
 };
 

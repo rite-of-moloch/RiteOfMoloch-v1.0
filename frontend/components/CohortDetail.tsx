@@ -40,8 +40,6 @@ const CohortDetail: FC<CohortDetailProps> = ({
     </Link>
   );
 
-  console.log(stakingDate);
-
   return (
     <>
       <SimpleGrid
