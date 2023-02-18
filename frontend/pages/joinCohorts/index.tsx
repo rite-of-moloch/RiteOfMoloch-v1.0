@@ -10,6 +10,7 @@ import {
 } from "@raidguild/design-system";
 import BackButton from "components/BackButton";
 import CohortDetail from "components/CohortDetail";
+import NoSearchResults from "components/NoSearchReults";
 import NotConnected from "components/NotConnected";
 import SearchCohorts from "components/SearchCohorts";
 import SelectCohortOptions from "components/SelectCohortOptions";
@@ -66,6 +67,7 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
     );
   });
 
+  // TODO: add cohortSelection to filter results
   const filteredCohorts = renderCohorts?.filter((cohort) => {
     if (searchResult === "" || !searchResult) {
       return cohort;
@@ -79,7 +81,6 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
       return cohort;
     }
   });
-  // console.log(filteredCohorts);
 
   return (
     <>
@@ -133,7 +134,9 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
               </Box>
             </>
           )}
-          {filteredCohorts}
+          {filteredCohorts && filteredCohorts?.length > 0
+            ? filteredCohorts
+            : NoSearchResults}
         </Stack>
       )}
       {isConnected && !isLoading && <BackButton path="/" />}

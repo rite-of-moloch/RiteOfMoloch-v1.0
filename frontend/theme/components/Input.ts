@@ -9,6 +9,8 @@ const Input = helpers.defineMultiStyleConfig({
       border: "solid red 1px",
       fontFamily: "Texturina",
       color: "#FFFFFF",
+      pb: 2,
+      pt: 1,
       _placeholder: {
         font: "Space_Mono",
       },

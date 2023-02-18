@@ -17,6 +17,7 @@ import BackButton from "components/BackButton";
 import { useAccount } from "wagmi";
 import NotConnected from "components/NotConnected";
 import SearchCohorts from "components/SearchCohorts";
+import NoSearchResults from "components/NoSearchReults";
 
 interface ReviewOngoingCohortProps {
   children?: ReactNode;
@@ -113,7 +114,9 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
               <Text>Loading cohorts...</Text>
             </Box>
           )}
-          {filteredCohorts}
+          {filteredCohorts && filteredCohorts?.length > 0
+            ? filteredCohorts
+            : NoSearchResults}
         </Stack>
       )}
       {isConnected && !isLoading && <BackButton path="/admin" />}
