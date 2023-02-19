@@ -8,8 +8,10 @@ interface SelectFormProps {
   placeholder: string;
   options: SelectOptions;
   localForm: UseFormReturn<any>;
+  disabledOptions?: any;
   isClearable?: boolean;
   isSearchable?: boolean;
+  isMulti?: boolean;
 }
 
 /**
@@ -20,9 +22,11 @@ const SelectForm: React.FC<SelectFormProps> = ({
   name,
   placeholder,
   options,
+  localForm,
+  disabledOptions,
   isClearable = false,
   isSearchable = false,
-  localForm,
+  isMulti = false,
 }) => {
   const { control, watch } = localForm;
 
@@ -36,7 +40,8 @@ const SelectForm: React.FC<SelectFormProps> = ({
           placeholder={placeholder.toUpperCase()}
           isSearchable={isSearchable}
           isClearable={isClearable}
-          isMulti
+          isMulti={isMulti}
+          isOptionDisabled={disabledOptions}
           {...field}
         />
       )}
