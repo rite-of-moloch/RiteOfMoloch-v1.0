@@ -1,32 +1,26 @@
 import { Input } from "@raidguild/design-system";
-import { FieldValues, useForm } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 
 interface SearchCohortsProps {
-  handleSearchResults: Function;
+  name: string;
+  localForm: UseFormReturn<any>;
 }
 
 /**
  * @remarks search bar for user to search for addresses in cohorts list.
  * @returns input where user can enter text
  */
-const SearchCohorts: React.FC<SearchCohortsProps> = ({
-  handleSearchResults,
-}) => {
-  const localForm = useForm<FieldValues>();
-  const { register, watch } = localForm;
-  const result = watch().searchResult;
-  handleSearchResults(result);
-
+const SearchCohorts: React.FC<SearchCohortsProps> = ({ name, localForm }) => {
   return (
     <>
       <Input
         label=""
+        name={name}
         type="text"
         placeholder="🔎 Search addresses"
         localForm={localForm}
         autoComplete="off"
         variant="redPlaceholder"
-        {...register("searchResult")}
       />
     </>
   );

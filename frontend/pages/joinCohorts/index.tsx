@@ -1,3 +1,4 @@
+import React, { ReactNode } from "react";
 import {
   Box,
   Flex,
@@ -13,9 +14,11 @@ import CohortDetail from "components/CohortDetail";
 import NoSearchResults from "components/NoSearchReults";
 import NotConnected from "components/NotConnected";
 import SearchCohorts from "components/SearchCohorts";
-import SelectCohortOptions from "components/SelectCohortOptions";
+import SelectForm from "components/SelectForm";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
-import React, { ReactNode, useState } from "react";
+
+import { FieldValues, useForm } from "react-hook-form";
+import { cohortOptions } from "utils/cohortOptions";
 import { getDeadline, unixToUTC } from "utils/general";
 import { COHORTS } from "utils/subgraph/queries";
 import { Cohort } from "utils/types/subgraphQueries";
@@ -29,10 +32,12 @@ interface JoinCohortsProps {
  * @remarks Non-admin page. Page for prospective and cohort members
  */
 const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
-  const [searchResult, getSearchResults] = useState<string | null>();
-  const [cohortSelection, setCohortSelection] = useState<string | null>();
-
   const { isConnected } = useAccount();
+
+  const localForm = useForm<FieldValues>();
+  const { getValues, watch } = localForm;
+  watch();
+  const searchResult = getValues().searchResult;
 
   const cohortList = useSubgraphQuery(COHORTS(), true);
 
@@ -43,16 +48,6 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
 
   const cohort: Cohort[] | undefined = cohortList?.data?.cohorts;
   // console.log(cohort);
-
-  const handleSearchResults = (result: string) => {
-    getSearchResults(result);
-    // console.log(searchResult);
-  };
-
-  const handleCohortSelection = (result: string) => {
-    setCohortSelection(result);
-    // console.log(cohortSelection);
-  };
 
   const renderCohorts = cohort?.map((cohort: Cohort) => {
     return (
@@ -67,7 +62,7 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
     );
   });
 
-  // TODO: add cohortSelection to filter results
+  // TODO: add "selectCohorts" to filter results
   const filteredCohorts = renderCohorts?.filter((cohort) => {
     if (searchResult === "" || !searchResult) {
       return cohort;
@@ -93,11 +88,23 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
           {!isLoading && (
             <>
               <HStack>
-                <Box w={["50%", "50%", "60%", "70%"]} />
-                <Box w={["50%", "50%", "40%", "30%"]}>
-                  <SearchCohorts handleSearchResults={handleSearchResults} />
+                <Box mr={2} w="50%" pt={4}>
+                  {/* TODO: unhide select form after adding "selectCohorts" to filter function. Remove wrapper box */}
+                  <Box display="">
+                    <SelectForm
+                      name="selectCohorts"
+                      placeholder="SELECT COHORTS"
+                      options={cohortOptions}
+                      isClearable={false}
+                      localForm={localForm}
+                    />
+                  </Box>
+                </Box>
+                <Box ml={2} w="50%" alignItems="center">
+                  <SearchCohorts name="searchResult" localForm={localForm} />
                 </Box>
               </HStack>
+
               <SimpleGrid
                 columns={4}
                 fontFamily="texturina"
@@ -118,16 +125,6 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
           )}
           {isLoading && (
             <>
-              <Flex>
-                <Box mr={2} w="50%" pt={2}>
-                  <SelectCohortOptions
-                    handleCohortSelection={handleCohortSelection}
-                  />
-                </Box>
-                <Box ml={2} w="50%" alignItems="center">
-                  <SearchCohorts handleSearchResults={handleSearchResults} />
-                </Box>
-              </Flex>
               <Box w="full" textAlign="center" p={2} fontFamily="texturina">
                 <Spinner size="xl" my="50" color="red" emptyColor="purple" />
                 <Text>Loading cohorts...</Text>

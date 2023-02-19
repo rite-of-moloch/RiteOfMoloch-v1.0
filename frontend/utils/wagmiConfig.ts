@@ -1,9 +1,6 @@
 import { Chain, connectorsForWallets } from "@rainbow-me/rainbowkit";
 import { configureChains, createClient } from "wagmi";
-import {
-  goerli,
-  // gnosis
-} from "wagmi/chains";
+import { goerli } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
@@ -71,7 +68,7 @@ const connectors = connectorsForWallets([
 
 // set autConnect to false in development, true in production
 export const wagmiClient = createClient({
-  autoConnect: true,
+  autoConnect: false,
   connectors,
   provider,
 });

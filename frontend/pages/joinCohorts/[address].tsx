@@ -19,7 +19,6 @@ import NotConnected from "components/NotConnected";
 import useTokenSymbol from "hooks/useTokenSymbol";
 import useRiteBalanceOf from "hooks/useRiteBalanceOf";
 import useIsMember from "hooks/useIsMember";
-import useWriteContract from "hooks/useWriteContract";
 import useClaimStake from "hooks/useClaimStake";
 
 interface CohortPageProps {

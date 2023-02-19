@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useState } from "react";
+import React, { FC, ReactNode } from "react";
 import {
   Box,
   Heading,
@@ -18,6 +18,7 @@ import { useAccount } from "wagmi";
 import NotConnected from "components/NotConnected";
 import SearchCohorts from "components/SearchCohorts";
 import NoSearchResults from "components/NoSearchReults";
+import { FieldValues, useForm } from "react-hook-form";
 
 interface ReviewOngoingCohortProps {
   children?: ReactNode;
@@ -28,8 +29,12 @@ interface ReviewOngoingCohortProps {
  *
  */
 const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
-  const [searchResult, getSearchResults] = useState<string | null>();
   const { isConnected } = useAccount();
+  const localForm = useForm<FieldValues>();
+  const { getValues, watch } = localForm;
+  watch();
+  const searchResult = getValues().searchResult;
+
   const cohortList = useSubgraphQuery(COHORTS(), true);
 
   /**
@@ -39,11 +44,6 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
   const isLoading = cohortList.isLoading;
 
   const cohort: Cohort[] | undefined = cohortList?.data?.cohorts;
-
-  const handleSearchResults = (result: string) => {
-    getSearchResults(result);
-    console.log(searchResult);
-  };
 
   const renderCohorts = cohort?.map((cohort: Cohort) => {
     return (
@@ -72,7 +72,7 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
     }
   });
 
-  console.log(filteredCohorts);
+  // console.log(filteredCohorts);
 
   return (
     <>
@@ -82,12 +82,18 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
           <Heading as="h1" textAlign="center" color="#FF3864">
             Cohorts
           </Heading>
+          {isLoading && (
+            <Box w="full" textAlign="center" p={2} fontFamily="texturina">
+              <Spinner size="xl" my="50" color="red" emptyColor="purple" />
+              <Text>Loading cohorts...</Text>
+            </Box>
+          )}
           {!isLoading && (
             <>
               <HStack>
                 <Box w={["50%", "50%", "60%", "70%"]} />
                 <Box w={["50%", "50%", "40%", "30%"]}>
-                  <SearchCohorts handleSearchResults={handleSearchResults} />
+                  <SearchCohorts name="searchResult" localForm={localForm} />
                 </Box>
               </HStack>
               <SimpleGrid
@@ -107,12 +113,6 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
                 <Box />
               </SimpleGrid>
             </>
-          )}
-          {isLoading && (
-            <Box w="full" textAlign="center" p={2} fontFamily="texturina">
-              <Spinner size="xl" my="50" color="red" emptyColor="purple" />
-              <Text>Loading cohorts...</Text>
-            </Box>
           )}
           {filteredCohorts && filteredCohorts?.length > 0
             ? filteredCohorts
