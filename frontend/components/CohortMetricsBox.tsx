@@ -14,20 +14,20 @@ import { AiOutlineClose } from "react-icons/ai";
 
 interface CohortMetricsBoxProps {
   removeOption: Dispatch<any>;
-  metrics: any;
-  metrics2?: {
-    id: string;
-    stakingToken: string;
-    symbol: string;
-    deployDate: string;
-    onboardingEnd: string;
-    cohortSize: number;
-    successPercent: number;
-    membersSlashed: number;
-    treasurySize: number;
-    lastMemberStaked: string;
-    sbtImage: string;
-  } | null;
+  id: string | undefined;
+  // metrics2?: {
+  //   id: string;
+  //   stakingToken: string;
+  //   symbol: string;
+  //   deployDate: string;
+  //   onboardingEnd: string;
+  //   cohortSize: number;
+  //   successPercent: number;
+  //   membersSlashed: number;
+  //   treasurySize: number;
+  //   lastMemberStaked: string;
+  //   sbtImage: string;
+  // } | null;
 }
 
 /**
@@ -36,14 +36,13 @@ interface CohortMetricsBoxProps {
  * @returns
  */
 const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
-  metrics,
-  metrics2,
+  id,
   removeOption,
 }) => {
   return (
-    <Box border="red solid 1px" rounded="lg" bg="black" p={6} id={metrics?.id}>
+    <Box border="red solid 1px" rounded="lg" bg="black" p={6} id={id}>
       <Stack alignItems="end" mt={-5} mr={-5} h="2rem">
-        <Box h="full" id={metrics?.id} onClick={removeOption}>
+        <Box h="full" id={id} onClick={removeOption}>
           <AiOutlineClose color="gray" size="1.5rem" />
         </Box>
       </Stack>
@@ -56,70 +55,70 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
           color="gray"
         >
           <Heading as="h3" color="red" fontSize="md">
-            {metrics?.id.slice(0, 4)}...{metrics?.id.slice(-6)}
+            {id?.slice(0, 4)}...{id?.slice(-6)}
           </Heading>
           {/* <Text>
             Staking token:
             <span style={{ color: "white", marginLeft: "0.5rem" }}>
-              {metrics?.stakingToken}
+              {stakingToken}
             </span>
           </Text>
           <Text>
             Symbol:
             <span style={{ color: "white", marginLeft: "0.5rem" }}>
-              {metrics?.symbol}
+              {symbol}
             </span>
           </Text>
           <Text>
             Deploy date:
             <span style={{ color: "white", marginLeft: "0.5rem" }}>
-              {metrics?.deployDate}
+              {deployDate}
             </span>
           </Text>
           <Text>
             Onboarding end:
             <span style={{ color: "white", marginLeft: "0.5rem" }}>
-              {metrics?.onboardingEnd}
+              {onboardingEnd}
             </span>
           </Text>
           <Text>
             Cohort size:
             <span style={{ color: "white", marginLeft: "0.5rem" }}>
-              {metrics?.cohortSize}
+              {cohortSize}
             </span>
           </Text>
           <Text>
             Success percentage:
             <span style={{ color: "white", marginLeft: "0.5rem" }}>
-              {metrics?.successPercent}
+              {successPercent}
             </span>
           </Text>
           <Text>
             Members slashed:
             <span style={{ color: "white", marginLeft: "0.5rem" }}>
-              {metrics?.membersSlashed}
+              {membersSlashed}
             </span>
           </Text>
           <Text>
             Treasury size:
             <span style={{ color: "white", marginLeft: "0.5rem" }}>
-              {metrics?.treasurySize}
+              {treasurySize}
             </span>
           </Text>
           <Text>
             Staking date of last member:
             <span style={{ color: "white", marginLeft: "0.5rem" }}>
-              {metrics?.lastMemberStaked}
+              {lastMemberStaked}
             </span> */}
           {/* </Text> */}
         </VStack>
         <HStack alignSelf="start" maxW="40%">
-          <Image src={`${metrics?.sbtImage}`} />
+          {/* <Image src={`${sbtImage}`} /> */}
         </HStack>
       </HStack>
       <VStack mt="2rem" mb="0.5rem" spacing="1rem">
         <Box w="full">
-          <Link href={`/cohorts/[${metrics.id}]`}>
+          <Link href={`/cohorts/${id}`}>
             <Button w="full" fontSize={["xs", "sm", "md"]}>
               Manage cohort
             </Button>

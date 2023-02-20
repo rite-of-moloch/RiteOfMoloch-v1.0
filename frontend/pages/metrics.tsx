@@ -115,18 +115,18 @@ const Metrics = () => {
 
   // console.log(values.chooseCohort);
   // prepare cohort ID's to pass into subgraphQuery
-  let id1 = values.chooseCohort?.[0]?.value;
-  let id2 = values.chooseCohort?.[1]?.value;
-  let id3 = values.chooseCohort?.[2]?.value;
+  let cohortId1 = values.chooseCohort?.[0]?.value;
+  let cohortId2 = values.chooseCohort?.[1]?.value;
+  let cohortId3 = values.chooseCohort?.[2]?.value;
 
   // TODO: replace subgraph query with cohort metrics data
   // TODO: replace cohortData1a... with cohortData1
-  const query1 = useSubgraphQuery(COHORT_METADATA(id1));
-  const query2 = useSubgraphQuery(COHORT_METADATA(id2));
-  const query3 = useSubgraphQuery(COHORT_METADATA(id3));
-  const cohortData1 = query1?.data?.cohort;
-  const cohortData2 = query2?.data?.cohort;
-  const cohortData3 = query3?.data?.cohort;
+  // const query1 = useSubgraphQuery(COHORT_METADATA(id1));
+  // const query2 = useSubgraphQuery(COHORT_METADATA(id2));
+  // const query3 = useSubgraphQuery(COHORT_METADATA(id3));
+  // const cohortData1 = query1?.data?.cohort;
+  // const cohortData2 = query2?.data?.cohort;
+  // const cohortData3 = query3?.data?.cohort;
 
   const arrLength = values.chooseCohort?.length;
   const gridLogic = () => {
@@ -160,27 +160,27 @@ const Metrics = () => {
             )}
             {!isLoading && (
               <SimpleGrid columns={[1, 2, gridLogic()]}>
-                {cohortData1 && (
+                {cohortId1 && (
                   <GridItem mr={[0, "0.5rem", "1rem"]} mt={["1rem"]}>
                     {
                       <CohortMetricsBox
-                        metrics={cohortData1 ? cohortData1 : null}
+                        id={cohortId1 ? cohortId1 : null}
                         removeOption={removeOption}
                       />
                     }
                   </GridItem>
                 )}
-                {cohortData2 && (
+                {cohortId2 && (
                   <GridItem mx={[0, "0.5rem"]} mt="1rem">
                     {
                       <CohortMetricsBox
-                        metrics={cohortData2 ? cohortData2 : null}
+                        id={cohortId2 ? cohortId2 : null}
                         removeOption={removeOption}
                       />
                     }
                   </GridItem>
                 )}
-                {cohortData3 && (
+                {cohortId3 && (
                   <GridItem
                     ml={[0, "0rem", "1rem"]}
                     mr={[0]}
@@ -189,7 +189,7 @@ const Metrics = () => {
                   >
                     {
                       <CohortMetricsBox
-                        metrics={cohortData3 ? cohortData3 : null}
+                        id={cohortId3 ? cohortId3 : null}
                         removeOption={removeOption}
                       />
                     }
