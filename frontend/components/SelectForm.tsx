@@ -8,7 +8,7 @@ interface SelectFormProps {
   placeholder: string;
   options: SelectOptions;
   localForm: UseFormReturn<any>;
-  // disabledOptions?: any;
+
   isClearable?: boolean;
   isSearchable?: boolean;
   isMulti?: boolean;
@@ -23,12 +23,58 @@ const SelectForm: React.FC<SelectFormProps> = ({
   placeholder,
   options,
   localForm,
-  // disabledOptions,
   isClearable = false,
   isSearchable = false,
   isMulti = false,
 }) => {
-  const { control, watch } = localForm;
+  const { control } = localForm;
+  const styles = {
+    control: (baseStyles: any) => ({
+      ...baseStyles,
+      borderColor: "black",
+      bg: "gradient1",
+      color: "black",
+      borderBottomRadius: "none",
+    }),
+    menu: (baseStyles: any) => ({
+      ...baseStyles,
+      background: "black",
+      color: "gray",
+    }),
+    placeholder: (baseStyles: any) => ({
+      ...baseStyles,
+      color: "black",
+      fontWeight: "bold",
+      fontFamily: "spaceMono",
+    }),
+    option: (baseStyles: any) => ({
+      ...baseStyles,
+      backgroundColor: "black",
+      color: "lightgray",
+      fontSize: "xs",
+    }),
+    field: (baseStyles: any) => ({
+      ...baseStyles,
+      backgroundColor: "black",
+      color: "#FFFFFF",
+    }),
+    menuList: (baseStyles: any) => ({
+      ...baseStyles,
+      backgroundColor: "black",
+      color: "#FFFFFF",
+      w: "full",
+      mt: "-0.55rem",
+      borderTopRadius: "none",
+    }),
+    multiValueLabel: (baseStyles: any) => ({
+      ...baseStyles,
+      backgroundColor: "transparent",
+      w: "full",
+      fontSize: "xs",
+      fontWeight: "bold",
+      p: 1,
+    }),
+  };
 
   return (
     <Controller
@@ -41,9 +87,10 @@ const SelectForm: React.FC<SelectFormProps> = ({
           isSearchable={isSearchable}
           isClearable={isClearable}
           isMulti={isMulti}
-          // isOptionDisabled={disabledOptions}
           selectedOptionStyle="check"
-          selectedOptionColor="purple"
+          selectedOptionColor="black"
+          colorScheme="black"
+          chakraStyles={styles}
           {...field}
         />
       )}

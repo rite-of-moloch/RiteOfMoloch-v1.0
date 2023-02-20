@@ -105,7 +105,6 @@ const Metrics = () => {
       options={cohortOptions}
       isSearchable
       isMulti
-      // isOptionDisabled={() => values.chooseCohort.length}
       localForm={localForm}
     />
   );
@@ -201,11 +200,7 @@ const Metrics = () => {
                   ml={[0, "0.5rem", "1rem"]}
                   pr={[0, "1rem", 0]}
                   mt="1rem"
-                  w={[
-                    "full",
-                    "full",
-                    arrLength === 0 || !arrLength ? "50%" : "full",
-                  ]}
+                  w={["full", arrLength === 0 || !arrLength ? "50%" : "full"]}
                   justifySelf={
                     arrLength === 0 || !arrLength ? "center" : "auto"
                   }
