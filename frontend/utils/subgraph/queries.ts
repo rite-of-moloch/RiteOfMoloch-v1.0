@@ -71,3 +71,18 @@ export const METRICS: QueryBuilder = () => `
       }
   }
 `
+
+
+export const COHORT_METRICS_CARD: QueryBuilder = (id: string) => `
+  query {
+    cohort(id: "0x09cd0f78f44f3140d560fd0538b8d4baa001c685") {
+      initiates(orderBy: joinedAt, orderDirection: asc) {
+        joinedAt
+      }
+      token
+      treasury
+      sbtUrl
+      createdAt
+    }
+  }
+`
