@@ -55,3 +55,19 @@ export const COHORT_METADATA: QueryBuilder = (id: string) => `
         }
     }
 `;
+
+
+/// @notice provides aggregate metrics on the cohorts 
+export const METRICS: QueryBuilder = () => `
+  query {
+      metric(id: "0") {
+        averageCohortSize
+        claimRate
+        claimedMembers
+        slashRate
+        slashedMembers
+        totalCohorts
+        totalMembers
+      }
+  }
+`
