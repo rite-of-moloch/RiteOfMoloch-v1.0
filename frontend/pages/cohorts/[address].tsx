@@ -1,15 +1,12 @@
 import { FC, ReactNode } from "react";
 import {
   Box,
-  Button,
   Heading,
-  Image,
   Link,
   SimpleGrid,
   Spinner,
   Stack,
   Text,
-  VStack,
 } from "@raidguild/design-system";
 import { useRouter } from "next/router";
 import { COHORT_INITIATES } from "utils/subgraph/queries";
@@ -20,23 +17,20 @@ import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";
 import NobodyStaked from "components/NobodyStaked";
-import { unixToUTC } from "utils/general";
 
 interface CohortDetailProps {
   children: ReactNode;
 }
 
 const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
-  const { chain } = useNetwork();
+  // const { chain } = useNetwork();
   const { isConnected } = useAccount();
   const router = useRouter();
   const { address: cohortAddress } = router.query;
 
   const { data: initiates, isLoading } = useSubgraphQuery(
-    COHORT_INITIATES(cohortAddress),
-    Boolean(cohortAddress) ? true : false
+    COHORT_INITIATES(cohortAddress)
   );
-  // console.log(isLoading);
 
   const initiateList: MemberData[] | null =
     initiates?.cohort && initiates?.cohort?.initiates;
@@ -57,16 +51,6 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
   });
 
   const isInitiates = renderInitiateList && renderInitiateList.length > 0;
-
-  // TODO: Refactor blockExplorerLink into utils/general
-  const blockExplorerLink = (address: string) => (
-    <Link
-      href={`${chain?.blockExplorers?.default.url}/address/${address}`}
-      isExternal
-    >
-      {address}
-    </Link>
-  );
 
   return (
     <>

@@ -20,6 +20,7 @@ import { getDeadline, unixToUTC } from "utils/general";
 import { COHORT_METADATA } from "utils/subgraph/queries";
 import { useRouter } from "next/router";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
+import BlockExplorerLink from "./BlockExplorerLink";
 
 interface CohortMemberModalProps {
   address: string;
@@ -38,26 +39,11 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
   const router = useRouter();
   const { address: cohortAddress } = router.query;
 
-  const metadata = useSubgraphQuery(
-    COHORT_METADATA(cohortAddress),
-    Boolean(cohortAddress)
-  );
+  const metadata = useSubgraphQuery(COHORT_METADATA(cohortAddress));
   const cohort: CohortMetadata | null = metadata?.data?.cohort;
   // console.log("cohort", cohort);
 
   const deadline = getDeadline(cohort?.createdAt, cohort?.time);
-
-  // TODO: refactor blockExplorerLink into utils/general
-  const blockExplorerLink = (address: string) => {
-    return (
-      <Link
-        href={`${chain?.blockExplorers?.default.url}/address/${address}`}
-        isExternal
-      >
-        {address?.slice(0, 4)}...{address?.slice(-6)}
-      </Link>
-    );
-  };
 
   // TODO: if current timestamp > deadline, allow for slashing of stake
   const handleSlashStake = () => {
@@ -99,7 +85,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
               alignItems="center"
             >
               <Box justifySelf="center" textAlign="center" w="full">
-                <Text>{address && blockExplorerLink(address)}</Text>
+                <Text>{address && BlockExplorerLink(chain, address)}</Text>
               </Box>
               <Box
                 justifyContent="center"

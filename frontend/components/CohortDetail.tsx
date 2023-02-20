@@ -3,6 +3,7 @@ import { Box, Button, SimpleGrid, Link, Text } from "@raidguild/design-system";
 import { useNetwork } from "wagmi";
 
 import useTokenSymbol from "hooks/useTokenSymbol";
+import BlockExplorerLink from "./BlockExplorerLink";
 
 interface CohortDetailProps {
   address: string;
@@ -31,15 +32,6 @@ const CohortDetail: FC<CohortDetailProps> = ({
 }) => {
   const { chain } = useNetwork();
 
-  const blockExplorerLink = (address: string) => (
-    <Link
-      href={`${chain?.blockExplorers?.default.url}/address/${address}`}
-      isExternal
-    >
-      {`${address?.slice(0, 4)}...${address?.slice(-6)}`}
-    </Link>
-  );
-
   return (
     <>
       <SimpleGrid
@@ -55,7 +47,7 @@ const CohortDetail: FC<CohortDetailProps> = ({
         rounded="md"
         spacingX={2}
       >
-        <Box justifySelf="start">{blockExplorerLink(address)}</Box>
+        <Box justifySelf="start">{BlockExplorerLink(chain, address)}</Box>
         <Box justifySelf="center">
           <Text>
             <span>{stake}</span>

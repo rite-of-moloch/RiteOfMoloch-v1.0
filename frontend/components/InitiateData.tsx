@@ -2,6 +2,7 @@ import { Box, Link, SimpleGrid } from "@raidguild/design-system";
 import React from "react";
 import { MemberData } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
+import BlockExplorerLink from "./BlockExplorerLink";
 import CohortMemberModal from "./cohortMemberModal";
 
 const InitiateData: React.FC<MemberData> = ({
@@ -11,15 +12,6 @@ const InitiateData: React.FC<MemberData> = ({
   stake,
 }) => {
   const { chain } = useNetwork();
-
-  const blockExplorerLink = (address: string) => (
-    <Link
-      href={`${chain?.blockExplorers?.default.url}/address/${address}`}
-      isExternal
-    >
-      {address.slice(0, 4)}...{address.slice(-6)}
-    </Link>
-  );
 
   return (
     <SimpleGrid
@@ -34,7 +26,7 @@ const InitiateData: React.FC<MemberData> = ({
       spacingX={2}
       w="full"
     >
-      <Box justifySelf="start">{blockExplorerLink(address)}</Box>
+      <Box justifySelf="start">{BlockExplorerLink(chain, address)}</Box>
       <Box justifySelf="center">{stake}</Box>
       <Box justifySelf="center">{joinedAt}</Box>
       <Box justifySelf="end">

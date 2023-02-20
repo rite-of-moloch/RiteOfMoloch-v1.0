@@ -55,3 +55,37 @@ export const COHORT_METADATA: QueryBuilder = (id: string) => `
         }
     }
 `;
+
+
+/// @notice provides aggregate metrics on the cohorts 
+export const METRICS: QueryBuilder = () => `
+  query {
+      metric(id: "0") {
+        averageCohortSize
+        claimRate
+        claimedMembers
+        slashRate
+        slashedMembers
+        totalCohorts
+        totalMembers
+      }
+  }
+`
+
+/// @return totalMembers: cohort size
+export const COHORT_METRICS_CARD: QueryBuilder = (id: string) => `
+  query {
+    cohort(id: "${id}") {
+      initiates(orderBy: joinedAt, orderDirection: asc) {
+        joinedAt
+      }
+      token
+      treasury
+      sbtUrl
+      createdAt
+      totalMembers
+      successPercentage
+      slashedMembers
+    }
+  }
+`

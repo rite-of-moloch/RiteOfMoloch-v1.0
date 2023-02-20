@@ -7,9 +7,10 @@ import Switch from "./components/Switch";
 import Tooltip from "./components/Tooltip";
 import Heading from "./components/Heading";
 import Input from "./components/Input";
+import Link from "./components/Link";
 import NumberInput from "./components/NumberInput";
 import SimpleGrid from "./components/SimpleGrid";
-import Link from "./components/Link";
+
 // import { Texturina, JetBrains_Mono, Rubik_Mono_One, Uncial_Antiqua, Space_Mono } from "@next/font/google";
 
 export const theme = extendTheme({
@@ -22,9 +23,9 @@ export const theme = extendTheme({
     Tooltip,
     Heading,
     Input,
+    Link,
     NumberInput,
     SimpleGrid,
-    Link,
   },
   colors: {
     transparent: "transparent",

@@ -18,7 +18,11 @@ const Admin: React.FC<AdminProps> = ({ children }): any => {
       {!isConnected && <NotConnected />}
       {isConnected && (
         <>
-          <Grid templateColumns={"repeat(1)"} w={["50%", "40%", "20%"]}>
+          <Grid
+            templateColumns={"repeat(1)"}
+            w={["50%", "40%", "20%"]}
+            justifyContent="center"
+          >
             <GridItem w="100%" textAlign="center" my="1rem">
               <Link href="/deployCohort">
                 <Button variant="red" w="full" p="1.5rem">
@@ -33,16 +37,16 @@ const Admin: React.FC<AdminProps> = ({ children }): any => {
                 </Button>
               </Link>
             </GridItem>
-
-            <GridItem w="100%" textAlign="center" my="1rem">
+            {/* TODO: build Manage Staked Members feature then uncomment button */}
+            {/* <GridItem w="100%" textAlign="center" my="1rem">
               <Link href="#">
                 <Button variant="red" w="full" p="1.5rem">
                   Manage Staked Members
                 </Button>
               </Link>
-            </GridItem>
+            </GridItem> */}
             <GridItem w="100%" textAlign="center" my="1rem">
-              <Link href="#">
+              <Link href="metrics">
                 <Button variant="red" w="full" p="1.5rem">
                   Metrics
                 </Button>
