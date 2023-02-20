@@ -72,7 +72,7 @@ export const METRICS: QueryBuilder = () => `
   }
 `
 
-
+/// @return totalMembers: cohort size
 export const COHORT_METRICS_CARD: QueryBuilder = (id: string) => `
   query {
     cohort(id: "${id}") {
@@ -83,6 +83,9 @@ export const COHORT_METRICS_CARD: QueryBuilder = (id: string) => `
       treasury
       sbtUrl
       createdAt
+      totalMembers
+      successPercentage
+      slashedMembers
     }
   }
 `
