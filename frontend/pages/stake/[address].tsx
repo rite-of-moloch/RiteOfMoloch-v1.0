@@ -20,10 +20,7 @@ const Stake: React.FC = (): any => {
 
   const { address: cohortAddress } = router.query;
 
-  const metadata = useSubgraphQuery(
-    COHORT_METADATA(cohortAddress),
-    Boolean(cohortAddress)
-  );
+  const metadata = useSubgraphQuery(COHORT_METADATA(cohortAddress));
 
   const cohort: CohortMetadata | null = metadata?.data?.cohort;
   console.log("cohort", cohort);

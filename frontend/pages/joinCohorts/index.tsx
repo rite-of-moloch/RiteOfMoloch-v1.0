@@ -116,7 +116,7 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
             <>
               <HStack>
                 <Box mr={2} w="50%" pt={4}>
-                  <Box display="">
+                  {/* <Box display="">
                     <SelectForm
                       name="selectCohorts"
                       placeholder="SELECT COHORTS"
@@ -124,7 +124,7 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
                       isClearable={false}
                       localForm={localForm}
                     />
-                  </Box>
+                  </Box> */}
                 </Box>
                 <Box ml={2} w="50%" alignItems="center">
                   <SearchCohorts name="searchResult" localForm={localForm} />
