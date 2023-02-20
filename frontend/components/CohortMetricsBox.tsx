@@ -4,6 +4,7 @@ import {
   Heading,
   HStack,
   Image,
+  Link,
   Stack,
   Text,
   VStack,
@@ -117,10 +118,20 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
         </HStack>
       </HStack>
       <VStack mt="2rem" mb="0.5rem" spacing="1rem">
-        <Button w="full">Manage cohort</Button>
-        <Button w="full" variant="outline">
-          Administrators
-        </Button>
+        <Box w="full">
+          <Link href={`/cohorts/[${metrics.id}]`}>
+            <Button w="full" fontSize={["xs", "sm", "md"]}>
+              Manage cohort
+            </Button>
+          </Link>
+        </Box>
+        <Box w="full">
+          <Link href={`/cohorts/${metrics.id}`}>
+            <Button w="full" fontSize={["xs", "sm", "md"]} variant="outline">
+              Administrators
+            </Button>
+          </Link>
+        </Box>
       </VStack>
     </Box>
   );

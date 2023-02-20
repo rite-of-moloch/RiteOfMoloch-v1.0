@@ -60,8 +60,6 @@ const fakeMetrics3 = {
   sbtImage: "assets/season-v-token.svg",
 };
 
-const metricsArray = [fakeMetrics1, fakeMetrics2, fakeMetrics3];
-
 /**
  * @remarks use can select up to 3 cohorts. Metrics about the cohort will be rendered onto this page. Data gets pulled from subgraph query
  * @returns
@@ -81,10 +79,10 @@ const Metrics = () => {
     const newSelect = values.chooseCohort?.filter((item: any) => {
       return item.value !== e.currentTarget.id;
     });
-    // console.log(newSelect);
+
     setValue("chooseCohort", newSelect);
   };
-  // watch();
+  watch();
 
   const cohorts = useSubgraphQuery(COHORTS());
   const isLoading = cohorts.isLoading;
@@ -97,6 +95,8 @@ const Metrics = () => {
       label: chort?.id,
     });
   });
+
+  // console.log(cohortOptions);
 
   const cohortSelect = (
     <SelectForm
@@ -128,7 +128,6 @@ const Metrics = () => {
   const cohortData1 = query1?.data?.cohort;
   const cohortData2 = query2?.data?.cohort;
   const cohortData3 = query3?.data?.cohort;
-  console.log(cohortData1);
 
   const arrLength = values.chooseCohort?.length;
   const gridLogic = () => {
@@ -152,7 +151,7 @@ const Metrics = () => {
       {!isConnected && <NotConnected />}
       {isConnected && (
         <>
-          <Box textAlign="center" w="full" py={2}>
+          <Box textAlign="center" w={["full", "full", "80%"]} py={2}>
             <Heading as="h2">Cohort Metrics</Heading>
             {isLoading && (
               <Box w="full" textAlign="center" p={2} fontFamily="texturina">
@@ -161,9 +160,9 @@ const Metrics = () => {
               </Box>
             )}
             {!isLoading && (
-              <SimpleGrid columns={gridLogic()}>
+              <SimpleGrid columns={[1, gridLogic()]}>
                 {cohortData1 && (
-                  <GridItem m="1rem">
+                  <GridItem mr={[0, "0.5rem", "1rem"]} mt={["1rem"]}>
                     {
                       <CohortMetricsBox
                         metrics={cohortData1 ? cohortData1 : null}
@@ -173,7 +172,7 @@ const Metrics = () => {
                   </GridItem>
                 )}
                 {cohortData2 && (
-                  <GridItem m="1rem">
+                  <GridItem mx={[0, "0.5rem"]} mt="1rem">
                     {
                       <CohortMetricsBox
                         metrics={cohortData2 ? cohortData2 : null}
@@ -183,7 +182,12 @@ const Metrics = () => {
                   </GridItem>
                 )}
                 {cohortData3 && (
-                  <GridItem m="1rem">
+                  <GridItem
+                    ml={[0, "0.5rem", "0.5rem", "1rem"]}
+                    mr={[0]}
+                    pr={[0, "1rem", 0]}
+                    mt="1rem"
+                  >
                     {
                       <CohortMetricsBox
                         metrics={cohortData3 ? cohortData3 : null}
@@ -192,17 +196,23 @@ const Metrics = () => {
                     }
                   </GridItem>
                 )}
-                {arrLength < 3 && (
-                  <GridItem
-                    m="1rem"
-                    w={arrLength === 0 || !arrLength ? "50%" : "full"}
-                    justifySelf={
-                      arrLength === 0 || !arrLength ? "center" : "auto"
-                    }
-                  >
-                    {cohortSelect}
-                  </GridItem>
-                )}
+                <GridItem
+                  display={arrLength === 3 ? "none" : ""}
+                  ml={[0, "0.5rem", "1rem"]}
+                  pr={[0, "1rem", 0]}
+                  mt="1rem"
+                  w={[
+                    "full",
+                    "full",
+                    arrLength === 0 || !arrLength ? "50%" : "full",
+                  ]}
+                  justifySelf={
+                    arrLength === 0 || !arrLength ? "center" : "auto"
+                  }
+                  alignSelf="center"
+                >
+                  {cohortSelect}
+                </GridItem>
               </SimpleGrid>
             )}
           </Box>

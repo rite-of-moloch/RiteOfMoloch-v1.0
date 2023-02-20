@@ -1,5 +1,5 @@
 // import { Select } from "@raidguild/design-system";
-import { Select, Size } from "chakra-react-select";
+import { Select } from "chakra-react-select";
 import { Controller, UseFormReturn } from "react-hook-form";
 import { SelectOptions } from "utils/types/select";
 
@@ -8,7 +8,7 @@ interface SelectFormProps {
   placeholder: string;
   options: SelectOptions;
   localForm: UseFormReturn<any>;
-  disabledOptions?: any;
+  // disabledOptions?: any;
   isClearable?: boolean;
   isSearchable?: boolean;
   isMulti?: boolean;
@@ -23,7 +23,7 @@ const SelectForm: React.FC<SelectFormProps> = ({
   placeholder,
   options,
   localForm,
-  disabledOptions,
+  // disabledOptions,
   isClearable = false,
   isSearchable = false,
   isMulti = false,
@@ -41,7 +41,9 @@ const SelectForm: React.FC<SelectFormProps> = ({
           isSearchable={isSearchable}
           isClearable={isClearable}
           isMulti={isMulti}
-          isOptionDisabled={disabledOptions}
+          // isOptionDisabled={disabledOptions}
+          selectedOptionStyle="check"
+          selectedOptionColor="purple"
           {...field}
         />
       )}
