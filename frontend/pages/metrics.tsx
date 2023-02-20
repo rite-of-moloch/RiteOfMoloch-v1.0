@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import {
   Box,
   GridItem,
@@ -10,9 +11,8 @@ import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";
 import SelectForm from "components/SelectForm";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
-import React, { useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
-import { COHORTS } from "utils/subgraph/queries";
+import { COHORTS, COHORT_METADATA } from "utils/subgraph/queries";
 import { SelectOptions } from "utils/types/select";
 import { Cohort } from "utils/types/subgraphQueries";
 import { useAccount } from "wagmi";
@@ -60,22 +60,23 @@ const fakeMetrics3 = {
   sbtImage: "assets/season-v-token.svg",
 };
 
-interface MetricsProps {
-  cohort1?: any;
-  cohort2?: any;
-  cohort3?: any;
-}
+const metricsArray = [fakeMetrics1, fakeMetrics2, fakeMetrics3];
+
 /**
  * @remarks use can select up to 3 cohorts. Metrics about the cohort will be rendered onto this page. Data gets pulled from subgraph query
  * @returns
  */
-const Metrics: React.FC<MetricsProps> = ({ cohort1, cohort2, cohort3 }) => {
+const Metrics = () => {
   const { isConnected } = useAccount();
   const localForm = useForm<FieldValues>();
   const { watch, getValues, setValue } = localForm;
   watch();
   const values = getValues();
 
+  /**
+   *
+   * @remarks if use clicks on X in CohortMetricsBox, function below checks cohort.id and removes it from values.chooseCohort array if it matches
+   */
   const removeOption = (e: any) => {
     const newSelect = values.chooseCohort?.filter((item: any) => {
       return item.value !== e.currentTarget.id;
@@ -83,10 +84,9 @@ const Metrics: React.FC<MetricsProps> = ({ cohort1, cohort2, cohort3 }) => {
     // console.log(newSelect);
     setValue("chooseCohort", newSelect);
   };
-  watch();
-  // console.log(values.chooseCohort);
+  // watch();
 
-  const cohorts = useSubgraphQuery(COHORTS(), true);
+  const cohorts = useSubgraphQuery(COHORTS());
   const isLoading = cohorts.isLoading;
   const cohort: Cohort[] | undefined = cohorts?.data?.cohorts;
 
@@ -110,14 +110,52 @@ const Metrics: React.FC<MetricsProps> = ({ cohort1, cohort2, cohort3 }) => {
     />
   );
 
-  useEffect(() => {}, []);
+  /**
+   * @remarks loop over values.chooseCohort. For each cohort.id, run a subgraph query which renders cohort meterics data and renders it into CohortMetricsBox
+   */
+
+  // console.log(values.chooseCohort);
+  // prepare cohort ID's to pass into subgraphQuery
+  let id1 = values.chooseCohort?.[0]?.value;
+  let id2 = values.chooseCohort?.[1]?.value;
+  let id3 = values.chooseCohort?.[2]?.value;
+
+  // TODO: replace subgraph query with cohort metrics data
+  // TODO: replace cohortData1a... with cohortData1
+  const query1 = useSubgraphQuery(COHORT_METADATA(id1));
+  const query2 = useSubgraphQuery(COHORT_METADATA(id2));
+  const query3 = useSubgraphQuery(COHORT_METADATA(id3));
+  const cohortData1a = query1?.data?.cohort;
+  const cohortData2a = query2?.data?.cohort;
+  const cohortData3a = query3?.data?.cohort;
+
+  let cohortData1;
+  let cohortData2;
+  let cohortData3;
+
+  const arrLength = values.chooseCohort?.length;
+  const gridLogic = () => {
+    switch (arrLength) {
+      case 0:
+        return 1;
+      case 1:
+        return 2;
+      case 2:
+        return 3;
+      case 3:
+        return 3;
+      default:
+        return 1;
+    }
+  };
+  console.log("arrLength", arrLength);
 
   return (
     <>
       {!isConnected && <NotConnected />}
       {isConnected && (
         <>
-          <Box textAlign="center" w="full" p={2}>
+          <Box textAlign="center" w="full" py={2}>
             <Heading as="h2">Cohort Metrics</Heading>
             {isLoading && (
               <Box w="full" textAlign="center" p={2} fontFamily="texturina">
@@ -126,38 +164,46 @@ const Metrics: React.FC<MetricsProps> = ({ cohort1, cohort2, cohort3 }) => {
               </Box>
             )}
             {!isLoading && (
-              <>
-                <Box mx={4} mt={2}>
+              <SimpleGrid columns={gridLogic()} border="1px">
+                {cohortData1 && (
+                  <GridItem m="1rem">
+                    {
+                      <CohortMetricsBox
+                        metrics={cohortData1 ? cohortData1 : null}
+                        removeOption={removeOption}
+                      />
+                    }
+                  </GridItem>
+                )}
+                {cohortData2 && (
+                  <GridItem m="1rem">
+                    {
+                      <CohortMetricsBox
+                        metrics={cohortData2 ? cohortData2 : null}
+                        removeOption={removeOption}
+                      />
+                    }
+                  </GridItem>
+                )}
+                {cohortData3 && (
+                  <GridItem m="1rem">
+                    {
+                      <CohortMetricsBox
+                        metrics={cohortData3 ? cohortData3 : null}
+                        removeOption={removeOption}
+                      />
+                    }
+                  </GridItem>
+                )}
+                <GridItem
+                  display={arrLength === 3 ? "none" : "block"}
+                  m="1rem"
+                  w={arrLength === 0 || !arrLength ? "50%" : "full"}
+                  justifySelf={arrLength === 0 || !arrLength ? "center" : "end"}
+                >
                   {cohortSelect}
-                </Box>
-
-                <SimpleGrid columns={[1, 1, 3]}>
-                  <GridItem m="1rem">
-                    {
-                      <CohortMetricsBox
-                        metrics={fakeMetrics1}
-                        removeOption={removeOption}
-                      />
-                    }
-                  </GridItem>
-                  <GridItem m="1rem">
-                    {
-                      <CohortMetricsBox
-                        metrics={fakeMetrics2}
-                        removeOption={removeOption}
-                      />
-                    }
-                  </GridItem>
-                  <GridItem m="1rem">
-                    {
-                      <CohortMetricsBox
-                        metrics={fakeMetrics3}
-                        removeOption={removeOption}
-                      />
-                    }
-                  </GridItem>
-                </SimpleGrid>
-              </>
+                </GridItem>
+              </SimpleGrid>
             )}
           </Box>
           <BackButton path="/admin" />
