@@ -126,7 +126,7 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
           </Link>
         </Box>
         <Box w="full">
-          <Link href={`/cohorts/${metrics.id}`}>
+          <Link href={"/admin"}>
             <Button w="full" fontSize={["xs", "sm", "md"]} variant="outline">
               Administrators
             </Button>

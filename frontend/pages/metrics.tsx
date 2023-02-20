@@ -159,7 +159,7 @@ const Metrics = () => {
               </Box>
             )}
             {!isLoading && (
-              <SimpleGrid columns={[1, gridLogic()]}>
+              <SimpleGrid columns={[1, 2, gridLogic()]}>
                 {cohortData1 && (
                   <GridItem mr={[0, "0.5rem", "1rem"]} mt={["1rem"]}>
                     {
@@ -182,9 +182,9 @@ const Metrics = () => {
                 )}
                 {cohortData3 && (
                   <GridItem
-                    ml={[0, "0.5rem", "0.5rem", "1rem"]}
+                    ml={[0, "0rem", "1rem"]}
                     mr={[0]}
-                    pr={[0, "1rem", 0]}
+                    pr={[0, "0.5rem", 0]}
                     mt="1rem"
                   >
                     {
