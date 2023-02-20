@@ -125,13 +125,10 @@ const Metrics = () => {
   const query1 = useSubgraphQuery(COHORT_METADATA(id1));
   const query2 = useSubgraphQuery(COHORT_METADATA(id2));
   const query3 = useSubgraphQuery(COHORT_METADATA(id3));
-  const cohortData1a = query1?.data?.cohort;
-  const cohortData2a = query2?.data?.cohort;
-  const cohortData3a = query3?.data?.cohort;
-
-  let cohortData1;
-  let cohortData2;
-  let cohortData3;
+  const cohortData1 = query1?.data?.cohort;
+  const cohortData2 = query2?.data?.cohort;
+  const cohortData3 = query3?.data?.cohort;
+  console.log(cohortData1);
 
   const arrLength = values.chooseCohort?.length;
   const gridLogic = () => {
@@ -164,7 +161,7 @@ const Metrics = () => {
               </Box>
             )}
             {!isLoading && (
-              <SimpleGrid columns={gridLogic()} border="1px">
+              <SimpleGrid columns={gridLogic()}>
                 {cohortData1 && (
                   <GridItem m="1rem">
                     {
@@ -195,14 +192,17 @@ const Metrics = () => {
                     }
                   </GridItem>
                 )}
-                <GridItem
-                  display={arrLength === 3 ? "none" : "block"}
-                  m="1rem"
-                  w={arrLength === 0 || !arrLength ? "50%" : "full"}
-                  justifySelf={arrLength === 0 || !arrLength ? "center" : "end"}
-                >
-                  {cohortSelect}
-                </GridItem>
+                {arrLength < 3 && (
+                  <GridItem
+                    m="1rem"
+                    w={arrLength === 0 || !arrLength ? "50%" : "full"}
+                    justifySelf={
+                      arrLength === 0 || !arrLength ? "center" : "auto"
+                    }
+                  >
+                    {cohortSelect}
+                  </GridItem>
+                )}
               </SimpleGrid>
             )}
           </Box>

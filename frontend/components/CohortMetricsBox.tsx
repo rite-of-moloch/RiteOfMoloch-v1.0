@@ -13,7 +13,8 @@ import { AiOutlineClose } from "react-icons/ai";
 
 interface CohortMetricsBoxProps {
   removeOption: Dispatch<any>;
-  metrics?: {
+  metrics: any;
+  metrics2?: {
     id: string;
     stakingToken: string;
     symbol: string;
@@ -35,6 +36,7 @@ interface CohortMetricsBoxProps {
  */
 const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
   metrics,
+  metrics2,
   removeOption,
 }) => {
   return (
@@ -55,7 +57,7 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
           <Heading as="h3" color="red" fontSize="md">
             {metrics?.id.slice(0, 4)}...{metrics?.id.slice(-6)}
           </Heading>
-          <Text>
+          {/* <Text>
             Staking token:
             <span style={{ color: "white", marginLeft: "0.5rem" }}>
               {metrics?.stakingToken}
@@ -107,8 +109,8 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
             Staking date of last member:
             <span style={{ color: "white", marginLeft: "0.5rem" }}>
               {metrics?.lastMemberStaked}
-            </span>
-          </Text>
+            </span> */}
+          {/* </Text> */}
         </VStack>
         <HStack alignSelf="start" maxW="40%">
           <Image src={`${metrics?.sbtImage}`} />
