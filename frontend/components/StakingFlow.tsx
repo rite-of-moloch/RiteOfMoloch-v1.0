@@ -40,10 +40,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   const { address } = useAccount();
   const { willSponsor, handleWillSponsor } = useContext(UserContext);
 
-  const metadata = useSubgraphQuery(
-    COHORT_METADATA(contractAddress),
-    Boolean(contractAddress)
-  );
+  const metadata = useSubgraphQuery(COHORT_METADATA(contractAddress));
 
   const cohort: CohortMetadata | null = metadata?.data?.cohort;
   // console.log("cohort", cohort);

@@ -20,9 +20,10 @@ import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { FieldValues, useForm } from "react-hook-form";
 import { cohortOptions } from "utils/cohortOptions";
 import { getDeadline, unixToUTC } from "utils/general";
-import { COHORTS } from "utils/subgraph/queries";
+import { COHORTS, COHORT_INITIATES } from "utils/subgraph/queries";
 import { Cohort } from "utils/types/subgraphQueries";
 import { useAccount } from "wagmi";
+import useRiteBalanceOf from "hooks/useRiteBalanceOf";
 
 interface JoinCohortsProps {
   children?: ReactNode;
@@ -32,22 +33,35 @@ interface JoinCohortsProps {
  * @remarks Non-admin page. Page for prospective and cohort members
  */
 const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
 
   const localForm = useForm<FieldValues>();
   const { getValues, watch } = localForm;
   watch();
   const searchResult = getValues().searchResult;
+  const selectCohorts = getValues().selectCohorts?.value;
 
-  const cohortList = useSubgraphQuery(COHORTS(), true);
+  const cohortList = useSubgraphQuery(COHORTS());
+  //  `!isLoading`: hook has fetched data. `isLoading`: hook has not yet fetched data
+  const isLoading = cohortList.isLoading;
+  const cohort: Cohort[] | undefined = cohortList?.data?.cohorts;
+  console.log(cohort);
+
+  console.log(selectCohorts);
 
   /**
-   * @remarks `!isLoading`: hook has fetched data. `isLoading`: hook has not yet fetched data
+   *
+   * @remarks if msg.sender has > 0 rites, then address is staked
    */
-  const isLoading = cohortList.isLoading;
-
-  const cohort: Cohort[] | undefined = cohortList?.data?.cohorts;
-  // console.log(cohort);
+  const isStaked = (id: string) => {
+    const balance = useRiteBalanceOf(id, [address || ""]);
+    if (!balance) {
+      return false;
+    } else if (Number(balance.toString()) > 0) {
+      return true;
+    }
+  };
+  // console.log(isStaked("0x09cd0f78f44f3140d560fd0538b8d4baa001c685"));
 
   const renderCohorts = cohort?.map((cohort: Cohort) => {
     return (
@@ -61,6 +75,19 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
       />
     );
   });
+
+  // TODO: uncomment when COHORT subgraphquery is fixed to include an array of cohort initiates, and in the next loop, filter through `selectedCohorts`
+  // const selectedCohorts = renderCohorts?.filter((cohort) => {
+  //   console.log(selectCohorts);
+  //   if (selectCohorts === "allCohorts" || !selectCohorts) {
+  //     return cohort;
+  //   } else if (selectCohorts === "onlyStakedCohorts") {
+  //     return isStaked(cohort?.props.address);
+  //   } else if (selectCohorts === "nonStakedOngoing") {
+  //     return !isStaked(cohort?.props.address);
+  //   }
+  // });
+  // console.log(selectedCohorts);
 
   // TODO: add "selectCohorts" to filter results
   const filteredCohorts = renderCohorts?.filter((cohort) => {
@@ -89,7 +116,6 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
             <>
               <HStack>
                 <Box mr={2} w="50%" pt={4}>
-                  {/* TODO: unhide select form after adding "selectCohorts" to filter function. Remove wrapper box */}
                   <Box display="">
                     <SelectForm
                       name="selectCohorts"

@@ -35,7 +35,7 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
   watch();
   const searchResult = getValues().searchResult;
 
-  const cohortList = useSubgraphQuery(COHORTS(), true);
+  const cohortList = useSubgraphQuery(COHORTS());
 
   /**
    * (!isLoading): hook has fetched data.

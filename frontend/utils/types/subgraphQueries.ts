@@ -22,3 +22,14 @@ export type MemberData = {
   joinedAt: string;
   stake: string;
 };
+
+export type CohortMetricsCard = {
+  initiates: { joinedAt: string }[];
+  token: string;
+  treasury: string;
+  sbtUrl: string;
+  createdAt: string;
+  totalMembers: number;
+  successPercentage: number;
+  slashedMembers: number;
+};

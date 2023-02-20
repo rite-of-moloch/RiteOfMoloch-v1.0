@@ -14,6 +14,7 @@ import useCreateCohort from "../hooks/useCreateCohort";
 import { useNetwork } from "wagmi";
 import { initDataDeployCohort } from "utils/types/initDataDeployCohort";
 import CohortConfirmation from "components/CohortConfirmationModal";
+import BlockExplorerLink from "components/BlockExplorerLink";
 
 /**
  * @remarks this component renders a preview of all 3 parts of form data. It also builds function handleDeployCohort, which submits data to riteOfMolochFactory contract and creates a new cohort
@@ -44,18 +45,7 @@ const PreviewNewCohort = () => {
     shamanOn,
   } = useFormContext();
 
-  console.log(shamanOn, "shamanOn");
-
-  const blockExplorerLink = (address: string) => (
-    <Text>
-      <Link
-        href={`${chain?.blockExplorers?.default.url}/address/${address}`}
-        isExternal
-      >
-        {address}
-      </Link>
-    </Text>
-  );
+  // console.log(shamanOn, "shamanOn");
 
   const responseText = (question: string, response: any, days?: any) => (
     <Box>
@@ -145,19 +135,28 @@ const PreviewNewCohort = () => {
               {responseText("Asset address", stakingAsset)}
               {responseText(
                 "Moloch DAO address",
-                blockExplorerLink(membershipCriteria)
+                BlockExplorerLink(chain, membershipCriteria)
               )}
-              {responseText("Treasury address", blockExplorerLink(treasury))}
+              {responseText(
+                "Treasury address",
+                BlockExplorerLink(chain, treasury)
+              )}
               {topHatWearer !== "" &&
                 responseText(
                   "TOP HAT address",
-                  blockExplorerLink(topHatWearer)
+                  BlockExplorerLink(chain, topHatWearer)
                 )}
               {tophatID && responseText("TOP HAT ID", tophatID)}
               {admin1 !== "" &&
-                responseText("Admin address 1", blockExplorerLink(admin1))}
+                responseText(
+                  "Admin address 1",
+                  BlockExplorerLink(chain, admin1)
+                )}
               {admin2 !== "" &&
-                responseText("Admin address 2", blockExplorerLink(admin2))}
+                responseText(
+                  "Admin address 2",
+                  BlockExplorerLink(chain, admin2)
+                )}
               <Text>
                 <span style={{ color: "gray" }}>
                   Make contract address a shaman:

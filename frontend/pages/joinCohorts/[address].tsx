@@ -20,6 +20,7 @@ import useTokenSymbol from "hooks/useTokenSymbol";
 import useRiteBalanceOf from "hooks/useRiteBalanceOf";
 import useIsMember from "hooks/useIsMember";
 import useClaimStake from "hooks/useClaimStake";
+import BlockExplorerLink from "components/BlockExplorerLink";
 
 interface CohortPageProps {
   children: ReactNode;
@@ -38,24 +39,11 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
   const router = useRouter();
   const { address: cohortAddress } = router.query;
 
-  const cohortMetadata = useSubgraphQuery(
-    COHORT_METADATA(cohortAddress),
-    Boolean(cohortAddress)
-  );
+  const cohortMetadata = useSubgraphQuery(COHORT_METADATA(cohortAddress));
   const cohortData = cohortMetadata?.data?.cohort;
   // console.log(cohortData);
 
   const tokenSymbol = useTokenSymbol(cohortData?.token);
-
-  // TODO: refactor link into utils/general
-  const blockExplorerLink = (address: string) => (
-    <Link
-      href={`${chain?.blockExplorers?.default.url}/address/${address}`}
-      isExternal
-    >
-      {address?.slice(0, 4)}...{address?.slice(-6)}
-    </Link>
-  );
 
   function userAddress(): string {
     if (typeof address === "string") return address;
@@ -120,7 +108,7 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
             alignItems="center"
           >
             <Box justifySelf="start" textAlign="center" w="full">
-              {blockExplorerLink(cohortData?.id)}
+              {BlockExplorerLink(chain, cohortData?.id)}
             </Box>
             <Box justifySelf="center" textAlign="center" w="full">
               <Text>

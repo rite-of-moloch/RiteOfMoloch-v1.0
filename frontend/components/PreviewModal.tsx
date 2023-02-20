@@ -38,7 +38,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
           <ModalBody>
             <Image
               src={sbtImageURL}
-              alt="SBT image preview"
+              alt={`${sbtName} image`}
               boxShadow="dark-lg"
               p="2"
               rounded="md"
