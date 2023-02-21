@@ -115,9 +115,7 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
               </SimpleGrid>
             </>
           )}
-          {filteredCohorts && filteredCohorts?.length > 0
-            ? filteredCohorts
-            : NoSearchResults}
+          {filteredCohorts && filteredCohorts?.length > 0 && filteredCohorts}
         </Stack>
       )}
       {isConnected && !isLoading && <BackButton path="/admin" />}
