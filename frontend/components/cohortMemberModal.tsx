@@ -11,7 +11,6 @@ import {
   Text,
   SimpleGrid,
   Box,
-  Link,
 } from "@raidguild/design-system";
 import { Modal } from "@chakra-ui/modal";
 import { CohortMetadata } from "utils/types/subgraphQueries";
@@ -21,6 +20,7 @@ import { COHORT_METADATA } from "utils/subgraph/queries";
 import { useRouter } from "next/router";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import BlockExplorerLink from "./BlockExplorerLink";
+import useSacrifice from "hooks/useSacrifice";
 
 interface CohortMemberModalProps {
   address: string;
@@ -41,15 +41,29 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
 
   const metadata = useSubgraphQuery(COHORT_METADATA(cohortAddress));
   const cohort: CohortMetadata | null = metadata?.data?.cohort;
-  // console.log("cohort", cohort);
 
   const deadline = getDeadline(cohort?.createdAt, cohort?.time);
+  const { writeSacrifice } = useSacrifice(cohortAddress?.toString() || "0x");
+  console.log(writeSacrifice);
 
-  // TODO: if current timestamp > deadline, allow for slashing of stake
-  const handleSlashStake = () => {
-    console.log("slashing...");
-    // Ethers slash function
+  const isPassedStakingDate = () => {
+    const today = new Date().getTime();
+    const stakingLogic = deadline < today.toString();
+    return stakingLogic ? true : false;
   };
+
+  // TODO: create cohort with msg.sender as admin and test writeSacrifice function
+  const handleSlashStake = () => {
+    if (!!isPassedStakingDate) {
+      writeSacrifice && writeSacrifice();
+    } else {
+      return;
+    }
+  };
+
+  // const today = new Date().getTime();
+  // console.log(deadline, today);
+  // console.log(deadline > today);
 
   return (
     <>
@@ -84,7 +98,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
               borderBottom="1px solid red"
               alignItems="center"
             >
-              <Box justifySelf="center" textAlign="center" w="full">
+              <Box textAlign="center" w="full">
                 <Text>{address && BlockExplorerLink(chain, address)}</Text>
               </Box>
               <Box
@@ -107,7 +121,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
                 variant="solid"
                 size="md"
                 onClick={handleSlashStake}
-                disabled={true}
+                isDisabled={!isPassedStakingDate()}
               >
                 Slash Stake
               </Button>
