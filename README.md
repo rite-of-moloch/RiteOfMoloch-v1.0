@@ -28,7 +28,7 @@ If the ROM contract is not given Shaman privileges, any direct, state changing c
 ## Minting Admin hats to nominated admin EOAs 
 ![diagram-1](https://user-images.githubusercontent.com/91401566/220277011-cc0b0084-384e-41a3-95ab-637de55c7a8d.jpeg)
 
-- A "Hat" is essentially a tokenised role within an Access Control schema. 
+- A "Hat" is essentially a tokenised role within an Access Control scheme. 
 
 - "Hat wearers" gain the privileges defined for the Hat that they wear. 
 
