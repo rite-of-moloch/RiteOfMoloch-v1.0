@@ -1,5 +1,5 @@
 import React, { Dispatch } from "react";
-import { Box, Heading, Text, VStack } from "@raidguild/design-system";
+import { Box, Heading, Stack, Text, VStack } from "@raidguild/design-system";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { METRICS } from "utils/subgraph/queries";
 import { CohortMetricsOverall } from "utils/types/subgraphQueries";
@@ -26,9 +26,11 @@ const CohortMetricsOverall: React.FC<CohortMetricsOverallProps> = ({
   return (
     <Box border="red solid 1px" rounded="lg" bg="gradientSBTPrev" p={6}>
       {/* TODO: SETUP OVERALL COHORT METRICS */}
-      <Box h="full" id={"overallPerformance"} onClick={removeOption}>
-        <AiOutlineClose color="gray" size="1.5rem" />
-      </Box>
+      <Stack alignItems="end" mt={-5} mr={-5} h="2rem">
+        <Box h="full" id={"overallPerformance"} onClick={removeOption}>
+          <AiOutlineClose color="gray" size="1.5rem" />
+        </Box>
+      </Stack>
       <Heading as="h3" fontSize="lg" color="red">
         Overall performance
       </Heading>

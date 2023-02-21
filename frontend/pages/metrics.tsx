@@ -170,7 +170,6 @@ const Metrics = () => {
                   justifySelf={
                     arrLength === 0 || !arrLength ? "center" : "auto"
                   }
-                  alignSelf="center"
                 >
                   {cohortSelect}
                 </GridItem>
