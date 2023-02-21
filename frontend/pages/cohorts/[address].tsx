@@ -23,7 +23,6 @@ interface CohortDetailProps {
 }
 
 const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
-  // const { chain } = useNetwork();
   const { isConnected } = useAccount();
   const router = useRouter();
   const { address: cohortAddress } = router.query;
@@ -78,7 +77,7 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
               spacingX={2}
               w="full"
             >
-              <Box justifySelf="start">Address</Box>
+              <Box justifySelf="center">Address</Box>
               <Box justifySelf="center">Shares</Box>
               <Box justifySelf="center">Date Staked</Box>
             </SimpleGrid>

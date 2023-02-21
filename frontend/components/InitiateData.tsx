@@ -26,7 +26,7 @@ const InitiateData: React.FC<MemberData> = ({
       spacingX={2}
       w="full"
     >
-      <Box justifySelf="start">{BlockExplorerLink(chain, address)}</Box>
+      <Box justifySelf="center">{BlockExplorerLink(chain, address)}</Box>
       <Box justifySelf="center">{stake}</Box>
       <Box justifySelf="center">{joinedAt}</Box>
       <Box justifySelf="end">

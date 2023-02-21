@@ -109,7 +109,7 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
                   Address
                 </Box>
                 <Box justifySelf="center">Stake</Box>
-                <Box justifySelf="center">Staking Date</Box>
+                <Box justifySelf="center">Deadline</Box>
                 <Box />
               </SimpleGrid>
             </>

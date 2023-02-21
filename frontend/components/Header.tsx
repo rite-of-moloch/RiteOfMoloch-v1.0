@@ -23,12 +23,10 @@ export const Header: React.FC<HeaderProps> = ({ children }) => {
           <Image
             src="/assets/logos/swords.webp"
             alt="logo"
-            w={{ lg: "50px", sm: "25px" }}
+            w={["25px", "50px"]}
           />
           <Box mx={"0.5rem"} color="red" fontFamily="uncial">
-            <Text fontSize={["1rem", "1rem", "1rem", "1.5rem"]}>
-              Rite Of Moloch
-            </Text>
+            <Text fontSize={["1rem", "1.5rem"]}>Rite Of Moloch</Text>
           </Box>
         </Flex>
       </Link>
