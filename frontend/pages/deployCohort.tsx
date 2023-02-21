@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { useAccount } from "wagmi";
 import { Box, Flex } from "@raidguild/design-system";
 import ProgressBar from "components/ProgressBar";
@@ -9,32 +9,28 @@ import PreviewNewCohort from "forms/previewNewCohort";
 import { useFormContext } from "context/FormContext";
 import NotConnected from "components/NotConnected";
 
-interface DeployCohortProps {
-  children?: ReactNode;
-}
-
-const DeployCohort: React.FC<DeployCohortProps> = ({ children }) => {
+const DeployCohort = () => {
   const { isConnected } = useAccount();
   const { displayPreviewNewCohort } = useFormContext();
 
   return (
     <>
       {!isConnected && <NotConnected />}
-      <Flex>
+      <Box>
         {isConnected && (
-          <Box>
-            <Box mb={8} display={displayPreviewNewCohort ? "none" : ""}>
-              <ProgressBar />
+          <>
+            <Box>
+              <Box mb={8} display={displayPreviewNewCohort ? "none" : ""}>
+                <ProgressBar />
+              </Box>
+              <DeployCohortPt1 />
+              <DeployCohortPt2 />
+              <DeployCohortPt3 />
+              <PreviewNewCohort />
             </Box>
-            <DeployCohortPt1 />
-            <DeployCohortPt2 />
-            <DeployCohortPt3 />
-            <PreviewNewCohort />
-          </Box>
+          </>
         )}
-
-        {children}
-      </Flex>
+      </Box>
     </>
   );
 };

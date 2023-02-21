@@ -15,11 +15,11 @@ import CohortDetail from "components/CohortDetail";
 import NoSearchResults from "components/NoSearchReults";
 import NotConnected from "components/NotConnected";
 import SearchCohorts from "components/SearchCohorts";
-import SelectForm from "components/SelectForm";
+// import SelectForm from "components/SelectForm";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 
 import { FieldValues, useForm } from "react-hook-form";
-import { cohortOptions } from "utils/cohortOptions";
+// import { cohortOptions } from "utils/cohortOptions";
 import { getDeadline, unixToUTC } from "utils/general";
 import { COHORTS, COHORT_INITIATES } from "utils/subgraph/queries";
 import { Cohort } from "utils/types/subgraphQueries";
@@ -62,7 +62,6 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
       return true;
     }
   };
-  // console.log(isStaked("0x09cd0f78f44f3140d560fd0538b8d4baa001c685"));
 
   const renderCohorts = cohort?.map((cohort: Cohort) => {
     return (
@@ -141,7 +140,7 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
                 mb={-3}
                 w="full"
               >
-                <GridItem margin="auto">Address</GridItem>
+                <GridItem margin="auto">Cohort</GridItem>
                 <GridItem margin="auto">Required Stake</GridItem>
                 <GridItem margin="auto">Staking Date</GridItem>
                 <GridItem />

@@ -95,11 +95,10 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     allowance = BigNumber.from("0") || "0";
   }
 
-  const { writeJoinInitiation, isLoadingStake, isSuccessStake, isErrorStake } =
-    useJoinInitiation(
-      cohort?.id || "",
-      !willSponsor ? [userAddress()] : [initiateAddress]
-    );
+  const { writeJoinInitiation, isLoadingStake } = useJoinInitiation(
+    cohort?.id || "",
+    !willSponsor ? [userAddress()] : [initiateAddress]
+  );
 
   //TODO methods can accept BigNumbers instead of Strings
   const canUserStake = canStake(

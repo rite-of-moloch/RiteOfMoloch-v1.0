@@ -1,7 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
-import { Box, HStack, Heading, Stack } from "@raidguild/design-system";
-import { useAccount } from "wagmi";
+import {
+  Box,
+  HStack,
+  Heading,
+  Stack,
+  Link,
+  Text,
+} from "@raidguild/design-system";
+import { useAccount, useNetwork } from "wagmi";
 import useRiteBalanceOf from "hooks/useRiteBalanceOf";
 import RiteStaked from "components/RiteStaked";
 import StakingFlow from "components/StakingFlow";
@@ -13,11 +20,12 @@ import { getDeadline, getHasRite } from "utils/general";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { COHORT_METADATA } from "utils/subgraph/queries";
 import { CohortMetadata } from "utils/types/subgraphQueries";
+import useCohortName from "hooks/useCohortName";
 
 const Stake: React.FC = (): any => {
   const { address, isConnected } = useAccount();
+  const { chain } = useNetwork();
   const router = useRouter();
-
   const { address: cohortAddress } = router.query;
 
   const metadata = useSubgraphQuery(COHORT_METADATA(cohortAddress));
@@ -32,15 +40,16 @@ const Stake: React.FC = (): any => {
 
   const deadline = getDeadline(cohort?.createdAt, cohort?.time);
 
-  console.log("deadline", deadline);
-
   const riteBalance = useRiteBalanceOf(cohortAddress?.toString() || "", [
     userAddress(),
   ]);
 
   const isStaked = getHasRite(riteBalance);
 
-  console.log("isStaked", isStaked);
+  // console.log("isStaked", isStaked);
+
+  const cohortName = useCohortName(cohort?.id?.toString() || "");
+  console.log(cohortName);
 
   /**
    * if dynamic cohortAddress isn't valid ETH address, redirect back to joinCohorts page
@@ -81,7 +90,12 @@ const Stake: React.FC = (): any => {
                 pb={2}
               >
                 <Heading as="h2" fontSize="md" textAlign="center">
-                  {cohortAddress}
+                  <Link
+                    href={`${chain?.blockExplorers?.default.url}/address/${cohortAddress}`}
+                    isExternal
+                  >
+                    <Text>{cohortName}</Text>
+                  </Link>
                 </Heading>
               </Box>
               <Box w={["80%", "80%", "60%"]} alignSelf="center" py="1rem">

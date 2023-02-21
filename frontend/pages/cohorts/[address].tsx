@@ -94,7 +94,7 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
               spacingX={2}
               w="full"
             >
-              <GridItem margin="auto">Address</GridItem>
+              <GridItem margin="auto">Initiate address</GridItem>
               <GridItem margin="auto">Shares</GridItem>
               <GridItem margin="auto">Date Staked</GridItem>
             </SimpleGrid>

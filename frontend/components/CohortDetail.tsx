@@ -11,6 +11,7 @@ import { useNetwork } from "wagmi";
 
 import useTokenSymbol from "hooks/useTokenSymbol";
 import BlockExplorerLink from "./BlockExplorerLink";
+import useCohortName from "hooks/useCohortName";
 
 interface CohortDetailProps {
   address: string;
@@ -38,6 +39,15 @@ const CohortDetail: FC<CohortDetailProps> = ({
   memberOrAdmin,
 }) => {
   const { chain } = useNetwork();
+  const cohortName = useCohortName(address);
+  const cohortNameLink = (
+    <Link
+      href={`${chain?.blockExplorers?.default.url}/address/${address}`}
+      isExternal
+    >
+      <Text>{cohortName}</Text>
+    </Link>
+  );
 
   return (
     <>
@@ -54,7 +64,7 @@ const CohortDetail: FC<CohortDetailProps> = ({
         rounded="md"
         spacingX={2}
       >
-        <GridItem margin="auto">{BlockExplorerLink(chain, address)}</GridItem>
+        <GridItem>{cohortNameLink}</GridItem>
         <GridItem margin="auto">
           <Text>
             <span>{stake}</span>

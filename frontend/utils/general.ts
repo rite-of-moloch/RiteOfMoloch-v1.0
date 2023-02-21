@@ -94,14 +94,13 @@ export const unixToUTC = (unix: string): string => {
 };
 
 export const getHasRite = (riteBalance: BigNumber | null): boolean => {
-  let rites = Number(riteBalance);
+  let rites = Number(riteBalance?.toString());
   if (rites > 0) {
     return true;
   } else if (rites === 0 || !rites) {
     return false;
-  } else {
-    return false;
   }
+  return false;
 };
 
 export const numberDecimals = (variable: string, decimals: number) =>
