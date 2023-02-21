@@ -4,7 +4,10 @@ export const performQuery = async (query: string) => {
 
   const res = await fetch(subgraphEndpoint, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+    },
     body: JSON.stringify({
       query: query,
     }),

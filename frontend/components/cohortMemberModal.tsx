@@ -11,6 +11,7 @@ import {
   Text,
   SimpleGrid,
   Box,
+  GridItem,
 } from "@raidguild/design-system";
 import { Modal } from "@chakra-ui/modal";
 import { CohortMetadata } from "utils/types/subgraphQueries";
@@ -61,10 +62,6 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
     }
   };
 
-  // const today = new Date().getTime();
-  // console.log(deadline, today);
-  // console.log(deadline > today);
-
   return (
     <>
       <Button onClick={onOpen} size="xs" w="full">
@@ -98,20 +95,15 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
               borderBottom="1px solid red"
               alignItems="center"
             >
-              <Box textAlign="center" w="full">
+              <GridItem margin="auto">
                 <Text>{address && BlockExplorerLink(chain, address)}</Text>
-              </Box>
-              <Box
-                justifyContent="center"
-                textAlign="center"
-                w="full"
-                // px={3}
-              >
+              </GridItem>
+              <GridItem margin="auto">
                 <Text>{stake}</Text>
-              </Box>
-              <Box justifyContent="center" textAlign="center" w="full">
+              </GridItem>
+              <GridItem margin="auto">
                 <Text>{joinedAt}</Text>
-              </Box>
+              </GridItem>
             </SimpleGrid>
           </ModalBody>
 

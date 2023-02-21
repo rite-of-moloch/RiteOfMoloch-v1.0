@@ -8,10 +8,10 @@ interface SelectFormProps {
   placeholder: string;
   options: SelectOptions;
   localForm: UseFormReturn<any>;
-
   isClearable?: boolean;
   isSearchable?: boolean;
   isMulti?: boolean;
+  styles?: any;
 }
 
 /**
@@ -26,9 +26,10 @@ const SelectForm: React.FC<SelectFormProps> = ({
   isClearable = false,
   isSearchable = false,
   isMulti = false,
+  styles,
 }) => {
   const { control } = localForm;
-  const styles = {
+  const defaultStyle = {
     control: (baseStyles: any) => ({
       ...baseStyles,
       borderColor: "black",
@@ -69,7 +70,6 @@ const SelectForm: React.FC<SelectFormProps> = ({
     multiValueLabel: (baseStyles: any) => ({
       ...baseStyles,
       backgroundColor: "transparent",
-      w: "full",
       fontSize: "xs",
       fontWeight: "bold",
       p: 1,
@@ -90,7 +90,7 @@ const SelectForm: React.FC<SelectFormProps> = ({
           selectedOptionStyle="check"
           selectedOptionColor="black"
           colorScheme="black"
-          chakraStyles={styles}
+          chakraStyles={styles ? styles : defaultStyle}
           {...field}
         />
       )}

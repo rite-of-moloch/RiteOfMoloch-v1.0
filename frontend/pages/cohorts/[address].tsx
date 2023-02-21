@@ -1,6 +1,8 @@
 import { FC, ReactNode } from "react";
 import {
   Box,
+  Flex,
+  GridItem,
   Heading,
   Link,
   SimpleGrid,
@@ -17,6 +19,9 @@ import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";
 import NobodyStaked from "components/NobodyStaked";
+import useCohortName from "hooks/useCohortName";
+import { RxOpenInNewWindow } from "react-icons/rx";
+import AdminDropdown from "components/AdminDropdown";
 
 interface CohortDetailProps {
   children: ReactNode;
@@ -24,6 +29,7 @@ interface CohortDetailProps {
 
 const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
   const { isConnected } = useAccount();
+  const { chain } = useNetwork();
   const router = useRouter();
   const { address: cohortAddress } = router.query;
 
@@ -37,7 +43,6 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
 
   const renderInitiateList = initiateList?.map((initiate: MemberData) => {
     const dateJoined = new Date(+initiate.joinedAt * 1000).toLocaleDateString();
-
     return (
       <InitiateData
         address={initiate.address}
@@ -51,6 +56,9 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
 
   const isInitiates = renderInitiateList && renderInitiateList.length > 0;
 
+  const cohortName = useCohortName(cohortAddress?.toString() || "");
+  console.log(typeof cohortName);
+
   return (
     <>
       {!isConnected && <NotConnected />}
@@ -61,12 +69,21 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
           spacing={5}
           my={!isInitiates ? 8 : 0}
         >
-          <Heading as="h1" textAlign="center" color="red">
-            Cohort Initiates
+          <Heading as="h2" textAlign="center" color="red">
+            <Text w="fit">{cohortName?.toString().toUpperCase()}</Text>
+            <Link
+              href={`${chain?.blockExplorers?.default.url}/address/${cohortAddress}`}
+              isExternal
+            >
+              <Text fontSize="sm" mt="1em" fontWeight="normal">
+                {cohortAddress}
+              </Text>
+            </Link>
           </Heading>
-          <Heading as="h4" fontSize="md" fontWeight="normal" textAlign="center">
-            {cohortAddress}
-          </Heading>
+          {/* TODO: FIX ADMIN DROPDOWN THEN UNHIDE */}
+          <Box w="25%" display="none">
+            <AdminDropdown cohortAddress={cohortAddress?.toString() || ""} />
+          </Box>
           {isInitiates && (
             <SimpleGrid
               columns={4}
@@ -77,9 +94,9 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
               spacingX={2}
               w="full"
             >
-              <Box justifySelf="center">Address</Box>
-              <Box justifySelf="center">Shares</Box>
-              <Box justifySelf="center">Date Staked</Box>
+              <GridItem margin="auto">Address</GridItem>
+              <GridItem margin="auto">Shares</GridItem>
+              <GridItem margin="auto">Date Staked</GridItem>
             </SimpleGrid>
           )}
           {isLoading && (

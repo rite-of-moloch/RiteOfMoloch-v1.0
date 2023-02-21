@@ -1,6 +1,7 @@
 import React, { FC, ReactNode } from "react";
 import {
   Box,
+  GridItem,
   Heading,
   HStack,
   SimpleGrid,
@@ -105,12 +106,12 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
                 mb={-3}
                 w="full"
               >
-                <Box justifySelf="start" pl={4}>
+                <GridItem margin="auto" pl={4}>
                   Address
-                </Box>
-                <Box justifySelf="center">Stake</Box>
-                <Box justifySelf="center">Deadline</Box>
-                <Box />
+                </GridItem>
+                <GridItem margin="auto">Stake</GridItem>
+                <GridItem margin="auto">Deadline</GridItem>
+                <GridItem />
               </SimpleGrid>
             </>
           )}
