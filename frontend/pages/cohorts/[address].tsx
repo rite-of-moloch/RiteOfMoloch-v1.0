@@ -1,6 +1,7 @@
 import { FC, ReactNode } from "react";
 import {
   Box,
+  GridItem,
   Heading,
   Link,
   SimpleGrid,
@@ -11,7 +12,7 @@ import {
 import { useRouter } from "next/router";
 import { COHORT_INITIATES } from "utils/subgraph/queries";
 import { MemberData } from "utils/types/subgraphQueries";
-import { useAccount, useNetwork } from "wagmi";
+import { useAccount } from "wagmi";
 import InitiateData from "components/InitiateData";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import BackButton from "components/BackButton";
@@ -37,7 +38,6 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
 
   const renderInitiateList = initiateList?.map((initiate: MemberData) => {
     const dateJoined = new Date(+initiate.joinedAt * 1000).toLocaleDateString();
-
     return (
       <InitiateData
         address={initiate.address}
@@ -77,9 +77,9 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
               spacingX={2}
               w="full"
             >
-              <Box justifySelf="center">Address</Box>
-              <Box justifySelf="center">Shares</Box>
-              <Box justifySelf="center">Date Staked</Box>
+              <GridItem margin="auto">Address</GridItem>
+              <GridItem margin="auto">Shares</GridItem>
+              <GridItem margin="auto">Date Staked</GridItem>
             </SimpleGrid>
           )}
           {isLoading && (

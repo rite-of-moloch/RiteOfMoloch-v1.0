@@ -1,5 +1,12 @@
 import React, { FC } from "react";
-import { Box, Button, SimpleGrid, Link, Text } from "@raidguild/design-system";
+import {
+  Box,
+  Button,
+  SimpleGrid,
+  Link,
+  Text,
+  GridItem,
+} from "@raidguild/design-system";
 import { useNetwork } from "wagmi";
 
 import useTokenSymbol from "hooks/useTokenSymbol";
@@ -47,17 +54,17 @@ const CohortDetail: FC<CohortDetailProps> = ({
         rounded="md"
         spacingX={2}
       >
-        <Box justifySelf="start">{BlockExplorerLink(chain, address)}</Box>
-        <Box justifySelf="center">
+        <GridItem margin="auto">{BlockExplorerLink(chain, address)}</GridItem>
+        <GridItem margin="auto">
           <Text>
             <span>{stake}</span>
             <span style={{ marginLeft: "0.25em" }}>
               {useTokenSymbol(stakingAsset)}
             </span>
           </Text>
-        </Box>
-        <Box justifySelf="center">{stakingDate}</Box>
-        <Box justifySelf="end">
+        </GridItem>
+        <GridItem margin="auto">{stakingDate}</GridItem>
+        <GridItem justifySelf="end">
           <Link
             href={
               memberOrAdmin === "member"
@@ -69,7 +76,7 @@ const CohortDetail: FC<CohortDetailProps> = ({
               {memberOrAdmin === "admin" ? "Manage" : "Details"}
             </Button>
           </Link>
-        </Box>
+        </GridItem>
       </SimpleGrid>
     </>
   );

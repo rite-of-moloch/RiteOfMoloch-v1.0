@@ -1,4 +1,4 @@
-import { Box, Link, SimpleGrid } from "@raidguild/design-system";
+import { Box, GridItem, Link, SimpleGrid } from "@raidguild/design-system";
 import React from "react";
 import { MemberData } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
@@ -26,9 +26,9 @@ const InitiateData: React.FC<MemberData> = ({
       spacingX={2}
       w="full"
     >
-      <Box justifySelf="center">{BlockExplorerLink(chain, address)}</Box>
-      <Box justifySelf="center">{stake}</Box>
-      <Box justifySelf="center">{joinedAt}</Box>
+      <GridItem margin="auto">{BlockExplorerLink(chain, address)}</GridItem>
+      <GridItem margin="auto">{stake}</GridItem>
+      <GridItem margin="auto">{joinedAt}</GridItem>
       <Box justifySelf="end">
         <CohortMemberModal
           address={address}
