@@ -11,22 +11,16 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ children }) => {
   const { isConnected } = useAccount();
   return (
-    <Flex
-      h="100px"
-      w="100%"
-      alignItems="center"
-      justifyContent="space-between"
-      // px="2rem"
-    >
+    <Flex h="100px" w="100%" alignItems="center" justifyContent="space-between">
       <Link href="/" passHref>
         <Flex alignItems="center" cursor="pointer">
           <Image
             src="/assets/logos/swords.webp"
             alt="logo"
-            w={["25px", "50px"]}
+            w={["1rem", "1.5rem", "2rem"]}
           />
           <Box mx={"0.5rem"} color="red" fontFamily="uncial">
-            <Text fontSize={["1rem", "1.5rem"]}>Rite Of Moloch</Text>
+            <Text fontSize={["1rem", "1rem", "1.5rem"]}>Rite Of Moloch</Text>
           </Box>
         </Flex>
       </Link>

@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 import {
   Box,
   Flex,
+  GridItem,
   Heading,
   HStack,
   SimpleGrid,
@@ -140,12 +141,10 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
                 mb={-3}
                 w="full"
               >
-                <Box justifySelf="start" pl={4}>
-                  Address
-                </Box>
-                <Box justifySelf="center">Required Stake</Box>
-                <Box justifySelf="center">Staking Date</Box>
-                <Box />
+                <GridItem margin="auto">Address</GridItem>
+                <GridItem margin="auto">Required Stake</GridItem>
+                <GridItem margin="auto">Staking Date</GridItem>
+                <GridItem />
               </SimpleGrid>
             </>
           )}

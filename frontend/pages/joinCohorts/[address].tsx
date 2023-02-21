@@ -7,6 +7,7 @@ import {
   VStack,
   Image,
   Heading,
+  GridItem,
 } from "@raidguild/design-system";
 import { useAccount, useNetwork } from "wagmi";
 import { getHasRite } from "utils/general";
@@ -21,6 +22,7 @@ import useRiteBalanceOf from "hooks/useRiteBalanceOf";
 import useIsMember from "hooks/useIsMember";
 import useClaimStake from "hooks/useClaimStake";
 import BlockExplorerLink from "components/BlockExplorerLink";
+import useCohortName from "hooks/useCohortName";
 
 interface CohortPageProps {
   children: ReactNode;
@@ -41,8 +43,9 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
 
   const cohortMetadata = useSubgraphQuery(COHORT_METADATA(cohortAddress));
   const cohortData = cohortMetadata?.data?.cohort;
-  // console.log(cohortData);
 
+  const cohortName = useCohortName(cohortAddress?.toString() || "");
+  console.log(typeof cohortName);
   const tokenSymbol = useTokenSymbol(cohortData?.token);
 
   function userAddress(): string {
@@ -80,20 +83,15 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
           bg="gradientSBTPrev"
           py={6}
           w={["full", "90%", "70%"]}
+          fontFamily="texturina"
         >
-          <Heading as="h2" fontSize="md" color="red" my={3}>
-            <Text>{cohortData?.id}</Text>
+          <Heading as="h2" fontSize="2xl" color="red" my={3}>
+            <Text>{cohortName?.toString().toUpperCase()}</Text>
           </Heading>
           <SimpleGrid columns={3} spacingX={2} w="full">
-            <Box justifySelf="start" textAlign="center" w="full">
-              Address
-            </Box>
-            <Box justifySelf="center" textAlign="center" w="full">
-              Minimum Stake
-            </Box>
-            <Box justifySelf="center" textAlign="center" w="full">
-              Join Cohort
-            </Box>
+            <GridItem margin="auto">Address</GridItem>
+            <GridItem margin="auto">Minimum Stake</GridItem>
+            <GridItem margin="auto">Join Cohort</GridItem>
           </SimpleGrid>
           <SimpleGrid
             columns={3}
@@ -107,21 +105,21 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
             borderBottom="1px solid red"
             alignItems="center"
           >
-            <Box justifySelf="start" textAlign="center" w="full">
+            <GridItem margin="auto">
               {BlockExplorerLink(chain, cohortData?.id)}
-            </Box>
-            <Box justifySelf="center" textAlign="center" w="full">
+            </GridItem>
+            <GridItem margin="auto">
               <Text>
                 <span>{cohortData?.tokenAmount}</span>
                 <span style={{ marginLeft: "0.25em" }}>{tokenSymbol}</span>
               </Text>
-            </Box>
+            </GridItem>
 
-            <Box justifySelf="center" textAlign="center" w="full">
+            <GridItem margin="auto">
               <Link href={`/stake/${cohortAddress}`}>
                 <Button size="xs">Stake</Button>
               </Link>
-            </Box>
+            </GridItem>
           </SimpleGrid>
           <Box p={4}>
             <Image

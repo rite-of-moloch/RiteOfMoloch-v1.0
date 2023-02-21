@@ -1,39 +1,87 @@
-import { Box, Button, Text, VStack } from "@raidguild/design-system";
-import React, { useState } from "react";
+import React from "react";
+import { Controller, FieldValues, useForm } from "react-hook-form";
+import { Select, Size } from "chakra-react-select";
 
 interface AdminDropdownProps {
-  adminA: string | null;
-  adminB: string | null;
+  cohortAddress: string;
 }
-const AdminDropdown: React.FC<AdminDropdownProps> = ({ adminA, adminB }) => {
-  const [displayAdmin, setDisplayAdmin] = useState(false);
-  const handleDisplayAdmin = () => {
-    setDisplayAdmin(!displayAdmin);
+const AdminDropdown: React.FC<AdminDropdownProps> = ({ cohortAddress }) => {
+  const localForm = useForm<FieldValues>();
+  const { control, getValues, watch } = localForm;
+  const values = getValues();
+  const addAdmin = values.admin.value;
+  watch();
+  console.log(addAdmin);
+
+  if (addAdmin === "addAdmin") {
+    // open add new admin module
+  }
+  const adminOptions = [
+    {
+      value: "addAdmin",
+      label: "ADD ADMIN",
+    },
+  ];
+
+  adminOptions.unshift({
+    value: "admin1",
+    label: "admin1",
+  });
+
+  const styles = {
+    control: (baseStyles: any) => ({
+      ...baseStyles,
+      borderColor: "red",
+      fontFamily: "spaceMono",
+      color: "white",
+      borderRadius: "md",
+    }),
+    placeholder: (baseStyles: any) => ({
+      ...baseStyles,
+      color: "whitesmoke",
+      fontWeight: "bold",
+    }),
+    option: (baseStyles: any) => ({
+      ...baseStyles,
+      backgroundColor: "black",
+      textAlign: "center",
+      fontSize: "sm",
+    }),
+    field: (baseStyles: any) => ({
+      ...baseStyles,
+      backgroundColor: "black",
+      borderColor: "red",
+    }),
+    menuList: (baseStyles: any) => ({
+      ...baseStyles,
+      backgroundColor: "black",
+      mt: "-1rem",
+      borderColor: "red",
+      borderTop: "none",
+      borderTopRadius: "none",
+    }),
+    valueContainer: (baseStyles: any) => ({
+      ...baseStyles,
+      background: "black",
+    }),
   };
 
-  const renderAddAmin = (cohortAddress: string) => {
-    console.log("add admin");
-  };
   return (
-    <VStack>
-      <Box onClick={handleDisplayAdmin}>
-        <Text>ADMINISTRATORS</Text>
-      </Box>
-      <Box display={displayAdmin && adminA ? "flex" : "none"}>
-        <Text>{adminA}</Text>
-      </Box>
-      <Box display={displayAdmin && adminB ? "flex" : "none"}>
-        <Text>{adminB}</Text>
-      </Box>
-      <Box display={displayAdmin ? "flex" : "none"}>
-        <Button
-          variant="solid"
-          // onClick={renderAddAmin}
-        >
-          add admin
-        </Button>
-      </Box>
-    </VStack>
+    <Controller
+      control={control}
+      name="admin"
+      render={({ field }) => (
+        <Select
+          options={adminOptions}
+          placeholder="ADMINS"
+          isClearable={false}
+          isSearchable={false}
+          size="sm"
+          chakraStyles={styles}
+          {...field}
+        />
+      )}
+    />
   );
 };
 

@@ -1,6 +1,7 @@
 import { FC, ReactNode } from "react";
 import {
   Box,
+  Flex,
   GridItem,
   Heading,
   Link,
@@ -12,13 +13,15 @@ import {
 import { useRouter } from "next/router";
 import { COHORT_INITIATES } from "utils/subgraph/queries";
 import { MemberData } from "utils/types/subgraphQueries";
-import { useAccount } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 import InitiateData from "components/InitiateData";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";
 import NobodyStaked from "components/NobodyStaked";
 import useCohortName from "hooks/useCohortName";
+import { RxOpenInNewWindow } from "react-icons/rx";
+import AdminDropdown from "components/AdminDropdown";
 
 interface CohortDetailProps {
   children: ReactNode;
@@ -26,6 +29,7 @@ interface CohortDetailProps {
 
 const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
   const { isConnected } = useAccount();
+  const { chain } = useNetwork();
   const router = useRouter();
   const { address: cohortAddress } = router.query;
 
@@ -66,11 +70,20 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
           my={!isInitiates ? 8 : 0}
         >
           <Heading as="h2" textAlign="center" color="red">
-            <Text>{cohortName}</Text>
+            <Text w="fit">{cohortName?.toString().toUpperCase()}</Text>
+            <Link
+              href={`${chain?.blockExplorers?.default.url}/address/${cohortAddress}`}
+              isExternal
+            >
+              <Text fontSize="sm" mt="1em" fontWeight="normal">
+                {cohortAddress}
+              </Text>
+            </Link>
           </Heading>
-          <Heading as="h4" fontSize="md" fontWeight="normal" textAlign="center">
-            {cohortAddress}
-          </Heading>
+          {/* TODO: FIX ADMIN DROPDOWN THEN UNHIDE */}
+          <Box w="25%" display="none">
+            <AdminDropdown cohortAddress={cohortAddress?.toString() || ""} />
+          </Box>
           {isInitiates && (
             <SimpleGrid
               columns={4}

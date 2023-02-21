@@ -12,12 +12,11 @@ import NotConnected from "components/NotConnected";
 import SelectForm from "components/SelectForm";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { FieldValues, useForm } from "react-hook-form";
-import { COHORTS, METRICS } from "utils/subgraph/queries";
+import { COHORTS } from "utils/subgraph/queries";
 import { SelectOptions } from "utils/types/select";
 import { Cohort } from "utils/types/subgraphQueries";
 import { useAccount } from "wagmi";
 import CohortMetricsBox from "components/CohortMetricsBox";
-import CohortMetricsOverall from "components/CohortMetricsOverall";
 
 /**
  * @remarks use can select up to 3 cohorts. Metrics about the cohort will be rendered onto this page. Data gets pulled from subgraph query
@@ -60,7 +59,7 @@ const Metrics = () => {
     label: "Overall performance",
   });
 
-  console.log(cohortOptions);
+  // console.log(cohortOptions);
 
   const cohortSelect = (
     <SelectForm
