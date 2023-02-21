@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Box,
   GridItem,
@@ -12,11 +12,12 @@ import NotConnected from "components/NotConnected";
 import SelectForm from "components/SelectForm";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { FieldValues, useForm } from "react-hook-form";
-import { COHORTS, COHORT_METADATA, METRICS } from "utils/subgraph/queries";
+import { COHORTS, METRICS } from "utils/subgraph/queries";
 import { SelectOptions } from "utils/types/select";
 import { Cohort } from "utils/types/subgraphQueries";
 import { useAccount } from "wagmi";
 import CohortMetricsBox from "components/CohortMetricsBox";
+import CohortMetricsOverall from "components/CohortMetricsOverall";
 
 /**
  * @remarks use can select up to 3 cohorts. Metrics about the cohort will be rendered onto this page. Data gets pulled from subgraph query
@@ -35,6 +36,7 @@ const Metrics = () => {
    */
   const removeOption = (e: any) => {
     const newSelect = values.chooseCohort?.filter((item: any) => {
+      console.log(item.value);
       return item.value !== e.currentTarget.id;
     });
     setValue("chooseCohort", newSelect);
@@ -53,7 +55,12 @@ const Metrics = () => {
     });
   });
 
-  // console.log(cohortOptions);
+  cohortOptions.unshift({
+    value: "overallPerformance",
+    label: "Overall performance",
+  });
+
+  console.log(cohortOptions);
 
   const cohortSelect = (
     <SelectForm
@@ -75,9 +82,9 @@ const Metrics = () => {
   let cohortId1 = values.chooseCohort?.[0]?.value;
   let cohortId2 = values.chooseCohort?.[1]?.value;
   let cohortId3 = values.chooseCohort?.[2]?.value;
+  console.log(cohortId1, cohortId2);
 
-  const overallMetrics = useSubgraphQuery(METRICS());
-  console.log(overallMetrics);
+  // const overallMetrics = useSubgraphQuery(METRICS());
 
   const arrLength = values.chooseCohort?.length;
   const gridLogic = () => {
@@ -110,13 +117,14 @@ const Metrics = () => {
               </Box>
             )}
             {!isLoading && (
-              <SimpleGrid columns={[1, 2, gridLogic()]}>
+              <SimpleGrid columns={[1, arrLength > 0 ? 2 : 1, gridLogic()]}>
                 {cohortId1 && (
                   <GridItem mr={[0, "0.5rem", "1rem"]} mt={["1rem"]}>
                     {
                       <CohortMetricsBox
                         id={cohortId1 ? cohortId1 : null}
                         removeOption={removeOption}
+                        overallPerformance={cohortId1 === "overallPerformance"}
                       />
                     }
                   </GridItem>
@@ -127,10 +135,12 @@ const Metrics = () => {
                       <CohortMetricsBox
                         id={cohortId2 ? cohortId2 : null}
                         removeOption={removeOption}
+                        overallPerformance={cohortId2 === "overallPerformance"}
                       />
                     }
                   </GridItem>
                 )}
+                {/* TODO: SETUP CohortMetricsOverall */}
                 {cohortId3 && (
                   <GridItem
                     ml={[0, "0rem", "1rem"]}
@@ -142,6 +152,7 @@ const Metrics = () => {
                       <CohortMetricsBox
                         id={cohortId3 ? cohortId3 : null}
                         removeOption={removeOption}
+                        overallPerformance={cohortId3 === "overallPerformance"}
                       />
                     }
                   </GridItem>
