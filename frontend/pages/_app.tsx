@@ -9,7 +9,6 @@ import { WagmiConfig } from "wagmi";
 import { wagmiClient, chains } from "../utils/wagmiConfig";
 import "@rainbow-me/rainbowkit/styles.css";
 import { ChakraProvider } from "@raidguild/design-system";
-import Head from "next/head";
 
 const queryClient = new QueryClient();
 

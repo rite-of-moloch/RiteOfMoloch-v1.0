@@ -9,7 +9,7 @@ export const performQuery = async (query: string) => {
       "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
       "Access-Control-Allow-Headers":
         "Content-Type, Authorization, X-Requested-With",
-      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": subgraphEndpoint,
     },
     body: JSON.stringify({
       query: query,
