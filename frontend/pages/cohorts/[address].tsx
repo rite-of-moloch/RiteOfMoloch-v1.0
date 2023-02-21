@@ -18,6 +18,7 @@ import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";
 import NobodyStaked from "components/NobodyStaked";
+import useCohortName from "hooks/useCohortName";
 
 interface CohortDetailProps {
   children: ReactNode;
@@ -51,6 +52,9 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
 
   const isInitiates = renderInitiateList && renderInitiateList.length > 0;
 
+  const cohortName = useCohortName(cohortAddress?.toString() || "");
+  console.log(typeof cohortName);
+
   return (
     <>
       {!isConnected && <NotConnected />}
@@ -61,8 +65,8 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
           spacing={5}
           my={!isInitiates ? 8 : 0}
         >
-          <Heading as="h1" textAlign="center" color="red">
-            Cohort Initiates
+          <Heading as="h2" textAlign="center" color="red">
+            <Text>{cohortName}</Text>
           </Heading>
           <Heading as="h4" fontSize="md" fontWeight="normal" textAlign="center">
             {cohortAddress}

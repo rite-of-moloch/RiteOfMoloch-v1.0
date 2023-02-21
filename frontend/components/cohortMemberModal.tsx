@@ -62,10 +62,6 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
     }
   };
 
-  // const today = new Date().getTime();
-  // console.log(deadline, today);
-  // console.log(deadline > today);
-
   return (
     <>
       <Button onClick={onOpen} size="xs" w="full">
