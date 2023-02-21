@@ -6,7 +6,7 @@ export const performQuery = async (query: string) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Methods": "GET",
+      "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
       "Access-Control-Allow-Headers":
         "Content-Type, Authorization, X-Requested-With",
       "Access-Control-Allow-Origin": "*",
