@@ -45,7 +45,7 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
   const cohortData = cohortMetadata?.data?.cohort;
 
   const cohortName = useCohortName(cohortAddress?.toString() || "");
-  console.log(typeof cohortName);
+
   const tokenSymbol = useTokenSymbol(cohortData?.token);
 
   function userAddress(): string {
@@ -59,9 +59,7 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
 
   // TODO: check getHasRite hook. After running claim stake, it still shows user as staked
   const isStaked = getHasRite(riteBalance);
-
   const isMember = useIsMember(cohortData?.id, [userAddress()]);
-
   const { writeClaimStake, isLoadingClaimStake } = useClaimStake(
     cohortData?.id
   );
@@ -124,7 +122,7 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
           <Box p={4}>
             <Image
               m="auto"
-              src={cohortData.sbtUrl}
+              src={cohortData?.sbtUrl}
               alt="SBT image preview"
               w="250px"
               boxShadow="dark-lg"

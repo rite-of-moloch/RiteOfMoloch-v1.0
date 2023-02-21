@@ -1,6 +1,6 @@
 import React from "react";
 import { Controller, FieldValues, useForm } from "react-hook-form";
-import { Select, Size } from "chakra-react-select";
+import { Select } from "chakra-react-select";
 
 interface AdminDropdownProps {
   cohortAddress: string;
@@ -9,7 +9,7 @@ const AdminDropdown: React.FC<AdminDropdownProps> = ({ cohortAddress }) => {
   const localForm = useForm<FieldValues>();
   const { control, getValues, watch } = localForm;
   const values = getValues();
-  const addAdmin = values.admin.value;
+  const addAdmin = values?.admin?.value;
   watch();
   console.log(addAdmin);
 
