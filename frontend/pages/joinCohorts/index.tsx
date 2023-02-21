@@ -155,9 +155,7 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
               </Box>
             </>
           )}
-          {filteredCohorts && filteredCohorts?.length > 0
-            ? filteredCohorts
-            : NoSearchResults}
+          {filteredCohorts && filteredCohorts?.length > 0 && filteredCohorts}
         </Stack>
       )}
       {isConnected && !isLoading && <BackButton path="/" />}
