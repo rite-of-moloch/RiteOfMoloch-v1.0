@@ -33,3 +33,13 @@ export type CohortMetricsCard = {
   successPercentage: number;
   slashedMembers: number;
 };
+
+export type CohortMetricsOverall = {
+  averageCohortSize: string;
+  claimRate: string;
+  claimedMembers: string;
+  slashRate: string;
+  slashedMembers: string;
+  totalCohorts: string;
+  totalMembers: string;
+};

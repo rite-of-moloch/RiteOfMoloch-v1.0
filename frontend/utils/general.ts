@@ -103,3 +103,6 @@ export const getHasRite = (riteBalance: BigNumber | null): boolean => {
     return false;
   }
 };
+
+export const numberDecimals = (variable: string, decimals: number) =>
+  Number(variable).toFixed(decimals);

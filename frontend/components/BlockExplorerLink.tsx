@@ -9,7 +9,7 @@ const BlockExplorerLink = (chain: any, address: string) => {
     >
       <Flex alignItems="center">
         {`${address?.slice(0, 4)}...${address?.slice(-4)} `}
-        <span style={{ marginLeft: "0.25em" }}>
+        <span style={{ marginLeft: "0.5em" }}>
           {<RxOpenInNewWindow color="white" />}
         </span>
       </Flex>
