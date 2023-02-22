@@ -41,7 +41,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
   const { address: cohortAddress } = router.query;
 
   const metadata = useSubgraphQuery(COHORT_METADATA(cohortAddress));
-  const cohort: CohortMetadata | null = metadata?.data?.cohort;
+  const cohort: CohortMetadata | null = metadata?.data?.data?.data?.cohort;
 
   const deadline = getDeadline(cohort?.createdAt, cohort?.time);
   const { writeSacrifice } = useSacrifice(cohortAddress?.toString() || "0x");

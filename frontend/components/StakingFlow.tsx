@@ -42,8 +42,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
 
   const metadata = useSubgraphQuery(COHORT_METADATA(contractAddress));
 
-  const cohort: CohortMetadata | null = metadata?.data?.cohort;
-  // console.log("cohort", cohort);
+  const cohort: CohortMetadata | null = metadata?.data?.data?.data?.cohort;
 
   const localForm = useForm<FieldValues>();
 

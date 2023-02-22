@@ -33,14 +33,12 @@ const useWriteContract = (
     cacheTime: 2_000,
     enabled: Boolean(contractAddress),
   });
-  // console.log("error", error);
-  // console.log("config:", config);
 
   const { data, write } = useContractWrite({
     ...config,
     request: config.request,
     onSuccess(data) {
-      console.log("data", data);
+      // console.log("data", data);
     },
     onError(err) {
       console.log("err:", err);

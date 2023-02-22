@@ -17,14 +17,13 @@ const CohortMetricsOverall: React.FC<CohortMetricsOverallProps> = ({
   removeOption,
 }) => {
   const metricsData = useSubgraphQuery(METRICS());
-  const metrics: CohortMetricsOverall = metricsData?.data?.metric;
+  const metrics: CohortMetricsOverall = metricsData?.data?.data?.data?.metric;
 
   const dataText = (text: string) => (
     <span style={{ color: "white", marginLeft: "0.25rem" }}>{text}</span>
   );
 
   const claimRate = dataText(metrics?.slashedMembers);
-  console.log(claimRate);
 
   return (
     <Box border="red solid 1px" rounded="lg" bg="gradientSBTPrev" p={6}>

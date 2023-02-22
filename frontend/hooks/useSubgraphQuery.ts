@@ -5,25 +5,26 @@ export const useSubgraphQuery = (query: string) => {
   const subgraphEndpoint =
     "https://api.studio.thegraph.com/query/40280/rom-test/v0.0.15";
 
-  const fetchSubgraphData = async () => {
-    try {
-      const resp = await axios.post(subgraphEndpoint, {
-        query,
-      });
-      // console.log(resp.data.data);
-      return resp.data.data;
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const fetchSubgraphData = async () => {
+  //   await axios
+  //     .post(subgraphEndpoint, {
+  //       query,
+  //     })
+  //     .then((res) => {
+  //       console.log(res);
+  //       return res;
+  //     });
+  // };
 
-  const { data, isLoading, error } = useQuery([query], fetchSubgraphData);
+  const { data, isLoading } = useQuery([query], () =>
+    axios.post(subgraphEndpoint, { query })
+  );
 
   if (isLoading) {
-    return console.log("query is loading...");
+    console.log("query is loading...");
   }
 
-  console.log("data", data.data);
+  // console.log("data", data);
 
   return { data, isLoading };
 };

@@ -1,7 +1,6 @@
 import { FC, ReactNode } from "react";
 import {
   Box,
-  Flex,
   GridItem,
   Heading,
   Link,
@@ -20,7 +19,6 @@ import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";
 import NobodyStaked from "components/NobodyStaked";
 import useCohortName from "hooks/useCohortName";
-// import { RxOpenInNewWindow } from "react-icons/rx";
 import AdminDropdown from "components/AdminDropdown";
 
 interface CohortDetailProps {
@@ -33,13 +31,10 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
   const router = useRouter();
   const { address: cohortAddress } = router.query;
 
-  const { data: initiates, isLoading } = useSubgraphQuery(
-    COHORT_INITIATES(cohortAddress)
-  );
+  const { data, isLoading } = useSubgraphQuery(COHORT_INITIATES(cohortAddress));
 
-  const initiateList: MemberData[] | null =
-    initiates?.cohort && initiates?.cohort?.initiates;
-  console.log("initiateList", initiateList);
+  const initiateList: MemberData[] | undefined =
+    data?.data?.data?.cohort?.initiates;
 
   const renderInitiateList = initiateList?.map((initiate: MemberData) => {
     const dateJoined = new Date(+initiate.joinedAt * 1000).toLocaleDateString();
@@ -57,7 +52,6 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
   const isInitiates = renderInitiateList && renderInitiateList.length > 0;
 
   const cohortName = useCohortName(cohortAddress?.toString() || "");
-  console.log(typeof cohortName);
 
   return (
     <>

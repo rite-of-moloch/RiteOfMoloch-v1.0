@@ -40,10 +40,11 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
 }) => {
   const { chain } = useNetwork();
   const metricsData = useSubgraphQuery(COHORT_METRICS_CARD(id));
-  const metrics: CohortMetricsCard = metricsData?.data?.cohort;
+  const metrics: CohortMetricsCard = metricsData?.data?.data?.data?.cohort;
 
   const cohortMetadataRaw = useSubgraphQuery(COHORT_METADATA(id));
-  const cohortMetadata: CohortMetadata | null = cohortMetadataRaw?.data?.cohort;
+  const cohortMetadata: CohortMetadata | null =
+    cohortMetadataRaw?.data?.data?.data?.cohort;
 
   const symbol = useTokenSymbol(metrics?.token);
   const getdeadline = getDeadline(

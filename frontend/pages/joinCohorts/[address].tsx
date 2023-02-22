@@ -42,7 +42,7 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
   const { address: cohortAddress } = router.query;
 
   const cohortMetadata = useSubgraphQuery(COHORT_METADATA(cohortAddress));
-  const cohortData = cohortMetadata?.data?.cohort;
+  const cohortData = cohortMetadata?.data?.data?.data?.cohort;
 
   const cohortName = useCohortName(cohortAddress?.toString() || "");
 

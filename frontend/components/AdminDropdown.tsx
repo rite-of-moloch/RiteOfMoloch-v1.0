@@ -11,7 +11,7 @@ const AdminDropdown: React.FC<AdminDropdownProps> = ({ cohortAddress }) => {
   const values = getValues();
   const addAdmin = values?.admin?.value;
   watch();
-  console.log(addAdmin);
+  // console.log(addAdmin);
 
   if (addAdmin === "addAdmin") {
     // open add new admin module

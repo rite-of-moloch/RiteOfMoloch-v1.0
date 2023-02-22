@@ -62,8 +62,6 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
   const addAdmin = values.addAdmin;
   const shamanOn = values.shamanOn;
 
-  console.log("shamanOn", shamanOn);
-
   watch();
 
   const handleBack = (): void => {

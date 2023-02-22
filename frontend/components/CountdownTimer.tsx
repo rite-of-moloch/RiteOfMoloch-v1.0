@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Flex,
-  Text,
-  Image,
-  Heading,
-  HStack,
-} from "@raidguild/design-system";
+import { Box, Text, Image, HStack } from "@raidguild/design-system";
 import { unixToUTC } from "utils/general";
 
 interface CountdownTimerProps {
@@ -31,8 +24,6 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ deadline }) => {
       opacity={0.13}
     />
   );
-
-  console.log(deadline);
 
   const countdownExpired = (): Boolean => {
     const now = new Date().getTime();

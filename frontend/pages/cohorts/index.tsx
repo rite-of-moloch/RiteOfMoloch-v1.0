@@ -43,7 +43,7 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
    * (isLoading): hook has not yet fetched data
    */
 
-  const cohort: Cohort[] | undefined = cohortList?.data?.cohorts;
+  const cohort: Cohort[] | undefined = cohortList?.data?.data?.data?.cohorts;
   console.log(cohort);
 
   const isLoading = cohortList?.isLoading;
@@ -74,8 +74,6 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
       return cohort;
     }
   });
-
-  // console.log(filteredCohorts);
 
   return (
     <>
