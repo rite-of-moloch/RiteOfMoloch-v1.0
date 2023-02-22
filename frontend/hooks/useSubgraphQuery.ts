@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-// import { performQuery } from "../utils/subgraph/helpers";
 import axios from "axios";
 
 export const useSubgraphQuery = (query: string) => {
@@ -11,17 +10,20 @@ export const useSubgraphQuery = (query: string) => {
       const resp = await axios.post(subgraphEndpoint, {
         query,
       });
-      console.log(resp.data);
+      // console.log(resp.data.data);
+      return resp.data.data;
     } catch (err) {
       console.log(err);
     }
   };
 
-  const { isLoading, data, error } = useQuery([query], fetchSubgraphData);
+  const { data, isLoading, error } = useQuery([query], fetchSubgraphData);
 
   if (isLoading) {
     return console.log("query is loading...");
   }
+
+  console.log("data", data.data);
 
   return { data, isLoading };
 };

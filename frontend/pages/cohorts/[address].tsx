@@ -20,7 +20,7 @@ import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";
 import NobodyStaked from "components/NobodyStaked";
 import useCohortName from "hooks/useCohortName";
-import { RxOpenInNewWindow } from "react-icons/rx";
+// import { RxOpenInNewWindow } from "react-icons/rx";
 import AdminDropdown from "components/AdminDropdown";
 
 interface CohortDetailProps {
