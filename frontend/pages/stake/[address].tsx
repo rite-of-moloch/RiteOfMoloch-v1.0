@@ -30,8 +30,7 @@ const Stake: React.FC = (): any => {
 
   const metadata = useSubgraphQuery(COHORT_METADATA(cohortAddress));
 
-  const cohort: CohortMetadata | null = metadata?.data?.cohort;
-  console.log("cohort", cohort);
+  const cohort: CohortMetadata | null = metadata?.data?.data?.data?.cohort;
 
   function userAddress(): string {
     if (typeof address === "string") return address;
@@ -46,10 +45,7 @@ const Stake: React.FC = (): any => {
 
   const isStaked = getHasRite(riteBalance);
 
-  // console.log("isStaked", isStaked);
-
   const cohortName = useCohortName(cohort?.id?.toString() || "");
-  console.log(cohortName);
 
   /**
    * if dynamic cohortAddress isn't valid ETH address, redirect back to joinCohorts page

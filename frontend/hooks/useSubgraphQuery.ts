@@ -1,16 +1,30 @@
 import { useQuery } from "@tanstack/react-query";
-import { performQuery } from "../utils/subgraph/helpers";
+import axios from "axios";
 
 export const useSubgraphQuery = (query: string) => {
-  const getData = async (): Promise<any> => {
-    const results = await performQuery(query);
-    const data = results?.data;
-    return data;
-  };
+  const subgraphEndpoint =
+    "https://api.studio.thegraph.com/query/40280/rom-test/v0.0.15";
 
-  const { data, isLoading, error } = useQuery([query], getData, {
-    enabled: true,
-  });
+  // const fetchSubgraphData = async () => {
+  //   await axios
+  //     .post(subgraphEndpoint, {
+  //       query,
+  //     })
+  //     .then((res) => {
+  //       console.log(res);
+  //       return res;
+  //     });
+  // };
 
-  return { data, isLoading, error };
+  const { data, isLoading } = useQuery([query], () =>
+    axios.post(subgraphEndpoint, { query })
+  );
+
+  if (isLoading) {
+    console.log("query is loading...");
+  }
+
+  // console.log("data", data);
+
+  return { data, isLoading };
 };

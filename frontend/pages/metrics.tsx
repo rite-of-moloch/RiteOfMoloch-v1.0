@@ -35,7 +35,7 @@ const Metrics = () => {
    */
   const removeOption = (e: any) => {
     const newSelect = values.chooseCohort?.filter((item: any) => {
-      console.log(item.value);
+      // console.log(item.value);
       return item.value !== e.currentTarget.id;
     });
     setValue("chooseCohort", newSelect);
@@ -44,7 +44,7 @@ const Metrics = () => {
 
   const cohorts = useSubgraphQuery(COHORTS());
   const isLoading = cohorts.isLoading;
-  const cohort: Cohort[] | undefined = cohorts?.data?.cohorts;
+  const cohort: Cohort[] | undefined = cohorts?.data?.data?.data?.cohorts;
 
   const cohortOptions: SelectOptions = [];
   cohort?.map((chort) => {
@@ -58,8 +58,6 @@ const Metrics = () => {
     value: "overallPerformance",
     label: "Overall performance",
   });
-
-  // console.log(cohortOptions);
 
   const cohortSelect = (
     <SelectForm
@@ -76,14 +74,11 @@ const Metrics = () => {
    * @remarks loop over values.chooseCohort. For each cohort.id, run a subgraph query which renders cohort meterics data and renders it into CohortMetricsBox
    */
 
-  // console.log(values.chooseCohort);
   // prepare cohort ID's to pass into subgraphQuery
   let cohortId1 = values.chooseCohort?.[0]?.value;
   let cohortId2 = values.chooseCohort?.[1]?.value;
   let cohortId3 = values.chooseCohort?.[2]?.value;
-  console.log(cohortId1, cohortId2);
-
-  // const overallMetrics = useSubgraphQuery(METRICS());
+  // console.log(cohortId1, cohortId2);
 
   const arrLength = values.chooseCohort?.length;
   const gridLogic = () => {
@@ -100,7 +95,6 @@ const Metrics = () => {
         return 1;
     }
   };
-  console.log("arrLength", arrLength);
 
   return (
     <>

@@ -42,13 +42,9 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
   const searchResult = getValues().searchResult;
   const selectCohorts = getValues().selectCohorts?.value;
 
-  const cohortList = useSubgraphQuery(COHORTS());
+  const { data, isLoading } = useSubgraphQuery(COHORTS());
   //  `!isLoading`: hook has fetched data. `isLoading`: hook has not yet fetched data
-  const isLoading = cohortList.isLoading;
-  const cohort: Cohort[] | undefined = cohortList?.data?.cohorts;
-  console.log(cohort);
-
-  console.log(selectCohorts);
+  const cohort: Cohort[] | undefined = data?.data?.data?.cohorts;
 
   /**
    *
@@ -75,6 +71,8 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
       />
     );
   });
+
+  console.log(renderCohorts);
 
   // TODO: uncomment when COHORT subgraphquery is fixed to include an array of cohort initiates, and in the next loop, filter through `selectedCohorts`
   // const selectedCohorts = renderCohorts?.filter((cohort) => {

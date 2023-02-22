@@ -13,7 +13,6 @@ interface UserProviderProps {
 }
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  // console.log("USERPROVIDER")
   const [willSponsor, setWillSponsor] = useState<boolean>(false);
 
   const handleWillSponsor = (): void => {

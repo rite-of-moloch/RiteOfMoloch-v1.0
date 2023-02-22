@@ -45,8 +45,6 @@ const PreviewNewCohort = () => {
     shamanOn,
   } = useFormContext();
 
-  // console.log(shamanOn, "shamanOn");
-
   const responseText = (question: string, response: any, days?: any) => (
     <Box>
       <Text>
@@ -96,8 +94,7 @@ const PreviewNewCohort = () => {
   ]);
 
   const handleDeployCohort = (): void => {
-    console.log("deploying");
-    console.log(createCohort);
+    // console.log(createCohort);
     createCohort && createCohort();
   };
 
