@@ -42,7 +42,7 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
    * (!isLoading): hook has fetched data.
    * (isLoading): hook has not yet fetched data
    */
-  const isLoading = cohortList.isLoading;
+  const isLoading = cohortList?.isLoading;
 
   const cohort: Cohort[] | undefined = cohortList?.data?.cohorts;
 
