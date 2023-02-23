@@ -31,7 +31,7 @@ export const COHORTS: QueryBuilder = () => `
 export const COHORT_INITIATES: QueryBuilder = (cohortId: string) => `
       query {
           cohort(id: "${cohortId}") {
-                  initiates {
+                  initates {
                       id
                       address
                       joinedAt
@@ -56,8 +56,7 @@ export const COHORT_METADATA: QueryBuilder = (id: string) => `
     }
 `;
 
-
-/// @notice provides aggregate metrics on the cohorts 
+/// @notice provides aggregate metrics on the cohorts
 export const METRICS: QueryBuilder = () => `
   query {
       metric(id: "0") {
@@ -70,7 +69,7 @@ export const METRICS: QueryBuilder = () => `
         totalMembers
       }
   }
-`
+`;
 
 /// @return totalMembers: cohort size
 export const COHORT_METRICS_CARD: QueryBuilder = (id: string) => `
@@ -88,4 +87,4 @@ export const COHORT_METRICS_CARD: QueryBuilder = (id: string) => `
       slashedMembers
     }
   }
-`
+`;
