@@ -1,5 +1,9 @@
-# RiteOfMoloch-v1.0
-White label ROM
+# HR for DAOs: RiteOfMoloch-v1.0
+Rite of Moloch (RoM) v.1 is an example of a solution that allows for white labelling. The deployed factory allows multiple DAOs to use the same smart contract factory, while deploying cohorts only they are able to control, manage, and track. We set out to solve the issue of contributor committment and delivery by formalising contribution structure through the introduction of a bond. In other words, if a an individual wants to become a member they can proclaim this goal, stake a set amount of funds, and work towards their goal. In the case of failure, the funds are slashed and forwarded to the treasury of the DAO.
+
+At the same time, not having a discrete number of contributors in charge of contribution management, onboarding new members fails. For this reason, RoM offers a cohort and member tracking functionality to keep on top of your DAO's health. The permissions of the administrators are managed through the HATs protocol and cohorts themselves are made reusable by the integration of DAOHaus v.3 manager shamans.
+
+Our frontend enables you a head start and provides you with all the core functionalities needed to take charge of your DAO HR. No HR person or corporate software needed. Slay moloch! ⚔️ In the following we provide technical details of the implementation and interfaces.
 
 # Deployment Info
 
