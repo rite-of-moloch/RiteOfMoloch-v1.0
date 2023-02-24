@@ -10,17 +10,26 @@ import {
   useDisclosure,
   Box,
   VStack,
+  Input,
 } from "@raidguild/design-system";
 import { Modal } from "@chakra-ui/modal";
-import { useNetwork } from "wagmi";
+import { FieldValues, useForm } from "react-hook-form";
 
 interface AddAdminModalProps {
   address: string;
 }
-
+/**
+ *
+ * @param address pass in cohort address
+ * @returns
+ */
 const AddAdminModal: React.FC<AddAdminModalProps> = ({ address }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { chain } = useNetwork();
+
+  const localForm = useForm<FieldValues>();
+  const { getValues, watch } = localForm;
+  const values = getValues();
+  console.log(values);
 
   return (
     <>
@@ -33,7 +42,26 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ address }) => {
           <ModalHeader>Add admins</ModalHeader>
           <ModalCloseButton />
           <ModalBody mx="-1.5em">
-            <VStack>(Add admin here)</VStack>
+            <VStack spacing={3}>
+              <Box>
+                <Input
+                  label="Admin1"
+                  name="admin1"
+                  placeholder="Enter address"
+                  type="text"
+                  localForm={localForm}
+                />
+              </Box>
+              <Box>
+                <Input
+                  label="Admin 2"
+                  name="admin2"
+                  placeholder="Enter address"
+                  type="text"
+                  localForm={localForm}
+                />
+              </Box>
+            </VStack>
           </ModalBody>
           <ModalFooter>
             <Box>
