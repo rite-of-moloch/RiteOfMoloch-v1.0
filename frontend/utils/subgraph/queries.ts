@@ -89,3 +89,18 @@ export const COHORT_METRICS_CARD: QueryBuilder = (id: string) => `
     }
   }
 `
+
+/// @return id is `${INITIATE_ADDRESS}-${COHORT_ADDRESS}`
+export const INITIATES: QueryBuilder = () => `
+  query {
+    initiates {
+      id
+      address
+      tokenId
+      stake
+      joinedAt
+      claimed
+      sacrificed
+    }
+  }
+`
