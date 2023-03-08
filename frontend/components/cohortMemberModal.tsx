@@ -12,6 +12,7 @@ import {
   SimpleGrid,
   Box,
   GridItem,
+  Tooltip,
 } from "@raidguild/design-system";
 import { Modal } from "@chakra-ui/modal";
 import { CohortMetadata } from "utils/types/subgraphQueries";
@@ -25,6 +26,7 @@ import useSacrifice from "hooks/useSacrifice";
 
 interface CohortMemberModalProps {
   address: string;
+  cohortAddress: string;
   id: string;
   joinedAt: string;
   stake: string;
@@ -32,20 +34,22 @@ interface CohortMemberModalProps {
 
 const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
   address,
+  cohortAddress,
   joinedAt,
   stake,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { chain } = useNetwork();
-  const router = useRouter();
-  const { address: cohortAddress } = router.query;
+  // const router = useRouter();
+  // const { address: cohortAddress } = router.query;
 
   const metadata = useSubgraphQuery(COHORT_METADATA(cohortAddress));
   const cohort: CohortMetadata | null = metadata?.data?.data?.data?.cohort;
 
   const deadline = getDeadline(cohort?.createdAt, cohort?.time);
-  const { writeSacrifice } = useSacrifice(cohortAddress?.toString() || "0x");
+  const { writeSacrifice } = useSacrifice(address?.toString() || "0x");
   console.log(writeSacrifice);
+  console.log(cohortAddress);
 
   const isPassedStakingDate = () => {
     const today = new Date().getTime();
@@ -70,18 +74,21 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
       <Modal isOpen={isOpen} onClose={onClose} variant="member">
         <ModalOverlay onClick={onClose} />
         <ModalContent minW="full">
-          <ModalHeader>Initiate</ModalHeader>
+          <ModalHeader color="red">
+            <Text>Cohort:</Text>
+            <Text fontSize="lg">{cohortAddress}</Text>
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody mx="-1.5em">
             <SimpleGrid columns={3} spacingX={2} mb={2}>
               <Box justifySelf="center" textAlign="center" w="full">
-                Address:
+                <Text>Initiate Address:</Text>
               </Box>
               <Box justifySelf="center" textAlign="center" w="full">
-                Minimum shares:
+                <Text>Minimum shares:</Text>
               </Box>
               <Box justifySelf="center" textAlign="center" w="full">
-                Date Staked:
+                <Text>Date Staked:</Text>
               </Box>
             </SimpleGrid>
             <SimpleGrid
@@ -96,7 +103,14 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
               alignItems="center"
             >
               <GridItem margin="auto">
-                <Text>{address && BlockExplorerLink(chain, address)}</Text>
+                <Tooltip
+                  label={address}
+                  shouldWrapChildren
+                  hasArrow
+                  placement="bottom"
+                >
+                  <Text>{address && BlockExplorerLink(chain, address)}</Text>
+                </Tooltip>
               </GridItem>
               <GridItem margin="auto">
                 <Text>{stake}</Text>

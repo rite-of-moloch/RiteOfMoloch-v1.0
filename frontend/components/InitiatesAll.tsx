@@ -1,4 +1,11 @@
-import { Box, GridItem, Link, SimpleGrid } from "@raidguild/design-system";
+import {
+  Box,
+  GridItem,
+  Link,
+  SimpleGrid,
+  Text,
+  Tooltip,
+} from "@raidguild/design-system";
 import React from "react";
 import { MemberData } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
@@ -24,10 +31,11 @@ const InitiatesAll: React.FC<InitiatesAllProps> = ({
   joinedAt,
 }) => {
   const { chain } = useNetwork();
+  console.log(cohortId);
 
   return (
     <SimpleGrid
-      columns={4}
+      columns={5}
       border="1px red solid"
       justifyContent="center"
       alignItems="center"
@@ -38,12 +46,31 @@ const InitiatesAll: React.FC<InitiatesAllProps> = ({
       spacingX={2}
       w="full"
     >
-      <GridItem margin="auto">{BlockExplorerLink(chain, address)}</GridItem>
-      <GridItem margin="auto">{stake}</GridItem>
-      <GridItem margin="auto">{joinedAt}</GridItem>
+      <GridItem margin="auto">
+        <Tooltip label={address} shouldWrapChildren hasArrow placement="bottom">
+          {BlockExplorerLink(chain, address)}
+        </Tooltip>
+      </GridItem>
+      <GridItem margin="auto">
+        <Tooltip
+          label={cohortId}
+          shouldWrapChildren
+          hasArrow
+          placement="bottom"
+        >
+          {BlockExplorerLink(chain, cohortId)}
+        </Tooltip>
+      </GridItem>
+      <GridItem margin="auto">
+        <Text>{stake}</Text>
+      </GridItem>
+      <GridItem margin="auto">
+        <Text>{joinedAt}</Text>
+      </GridItem>
       <Box justifySelf="end">
         <CohortMemberModal
           address={address}
+          cohortAddress={cohortId}
           id={cohortId}
           joinedAt={joinedAt}
           stake={stake}

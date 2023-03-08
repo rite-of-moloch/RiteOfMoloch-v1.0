@@ -1,6 +1,7 @@
 import React from "react";
 import {
   Box,
+  Grid,
   GridItem,
   Heading,
   HStack,
@@ -56,7 +57,10 @@ const Initiates = () => {
   const filteredInitiates = renderInitiates?.filter((initiate) => {
     if (searchResult === "" || !searchResult) {
       return initiate;
-    } else if (initiate.props.cohortId?.includes(searchResult)) {
+    } else if (
+      initiate.props.address?.includes(searchResult) ||
+      initiate.props.cohortId?.includes(searchResult)
+    ) {
       return initiate;
     }
   });
@@ -81,6 +85,20 @@ const Initiates = () => {
             <Box w={["50%", "50%", "40%", "30%"]} alignSelf="end">
               <SearchCohorts name="searchResult" localForm={localForm} />
             </Box>
+            <SimpleGrid columns={5} fontWeight="bold">
+              <GridItem margin="auto">
+                <Text>Address</Text>
+              </GridItem>
+              <GridItem margin="auto">
+                <Text>Cohort</Text>
+              </GridItem>
+              <GridItem margin="auto">
+                <Text>Stake</Text>
+              </GridItem>
+              <GridItem margin="auto">
+                <Text>Date Staked</Text>
+              </GridItem>
+            </SimpleGrid>
             {filteredInitiates}
           </Stack>
           <Box textAlign="center" w={["full", "full", "80%"]} py={2}></Box>
