@@ -56,8 +56,7 @@ export const COHORT_METADATA: QueryBuilder = (id: string) => `
     }
 `;
 
-
-/// @notice provides aggregate metrics on the cohorts 
+/// @notice provides aggregate metrics on the cohorts
 export const METRICS: QueryBuilder = () => `
   query {
       metric(id: "0") {
@@ -70,7 +69,7 @@ export const METRICS: QueryBuilder = () => `
         totalMembers
       }
   }
-`
+`;
 
 /// @return totalMembers: cohort size
 export const COHORT_METRICS_CARD: QueryBuilder = (id: string) => `
@@ -88,7 +87,8 @@ export const COHORT_METRICS_CARD: QueryBuilder = (id: string) => `
       slashedMembers
     }
   }
-`
+`;
+
 
 /// @return id is `${INITIATE_ADDRESS}-${COHORT_ADDRESS}`
 export const INITIATES: QueryBuilder = () => `
@@ -103,4 +103,4 @@ export const INITIATES: QueryBuilder = () => `
       sacrificed
     }
   }
-`
+`;

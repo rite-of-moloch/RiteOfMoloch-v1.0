@@ -18,6 +18,7 @@ export type CohortMetadata = {
 
 export type MemberData = {
   address: string;
+  cohortAddress: string;
   id: string;
   joinedAt: string;
   stake: string;
@@ -42,4 +43,14 @@ export type CohortMetricsOverall = {
   slashedMembers: string;
   totalCohorts: string;
   totalMembers: string;
+};
+
+export type Initiates = {
+  id: string;
+  address: string;
+  tokenId: string;
+  stake: string;
+  joinedAt: string;
+  claimed: boolean;
+  sacrificed: boolean;
 };

@@ -1,28 +1,19 @@
 import React from "react";
-import { Controller, FieldValues, useForm } from "react-hook-form";
+import {
+  Controller,
+  FieldValues,
+  useForm,
+  UseFormReturn,
+} from "react-hook-form";
 import { Select } from "chakra-react-select";
 
 interface AdminDropdownProps {
   cohortAddress: string;
 }
 const AdminDropdown: React.FC<AdminDropdownProps> = ({ cohortAddress }) => {
-  const localForm = useForm<FieldValues>();
-  const { control, getValues, watch } = localForm;
-  const values = getValues();
-  const addAdmin = values?.admin?.value;
-  watch();
-  // console.log(addAdmin);
+  const adminOptions = [];
 
-  if (addAdmin === "addAdmin") {
-    // open add new admin module
-  }
-  const adminOptions = [
-    {
-      value: "addAdmin",
-      label: "ADD ADMIN",
-    },
-  ];
-
+  // TODO: pull admins from a subgraph and place them into select menu
   adminOptions.unshift({
     value: "admin1",
     label: "admin1",
@@ -44,6 +35,8 @@ const AdminDropdown: React.FC<AdminDropdownProps> = ({ cohortAddress }) => {
     option: (baseStyles: any) => ({
       ...baseStyles,
       backgroundColor: "black",
+      color: "red",
+      fontWeight: "bold",
       textAlign: "center",
       fontSize: "sm",
     }),
@@ -67,20 +60,13 @@ const AdminDropdown: React.FC<AdminDropdownProps> = ({ cohortAddress }) => {
   };
 
   return (
-    <Controller
-      control={control}
-      name="admin"
-      render={({ field }) => (
-        <Select
-          options={adminOptions}
-          placeholder="ADMINS"
-          isClearable={false}
-          isSearchable={false}
-          size="sm"
-          chakraStyles={styles}
-          {...field}
-        />
-      )}
+    <Select
+      options={adminOptions}
+      placeholder="ADMINISTRATORS"
+      isClearable={false}
+      isSearchable={false}
+      size="sm"
+      chakraStyles={styles}
     />
   );
 };

@@ -1,8 +1,10 @@
 import { FC, ReactNode } from "react";
 import {
   Box,
+  Button,
   GridItem,
   Heading,
+  HStack,
   Link,
   SimpleGrid,
   Spinner,
@@ -20,6 +22,8 @@ import NotConnected from "components/NotConnected";
 import NobodyStaked from "components/NobodyStaked";
 import useCohortName from "hooks/useCohortName";
 import AdminDropdown from "components/AdminDropdown";
+import { FieldValues, useForm } from "react-hook-form";
+import AddAdminModal from "components/AddAdminModal";
 
 interface CohortDetailProps {
   children: ReactNode;
@@ -41,6 +45,7 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
     return (
       <InitiateData
         address={initiate.address}
+        cohortAddress={cohortAddress?.toString() || ""}
         id={initiate.id}
         joinedAt={dateJoined}
         stake={initiate.stake}
@@ -52,6 +57,11 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
   const isInitiates = renderInitiateList && renderInitiateList.length > 0;
 
   const cohortName = useCohortName(cohortAddress?.toString() || "");
+
+  const localForm = useForm<FieldValues>();
+  const { watch, getValues, setValue } = localForm;
+  watch();
+  const values = getValues();
 
   return (
     <>
@@ -74,10 +84,15 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
               </Text>
             </Link>
           </Heading>
-          {/* TODO: FIX ADMIN DROPDOWN THEN UNHIDE */}
-          <Box w="25%" display="none">
-            <AdminDropdown cohortAddress={cohortAddress?.toString() || ""} />
-          </Box>
+          {/* TODO: FIX ADMIN DROPDOWN  */}
+          <HStack w="50%">
+            <Box w="50%">
+              <AdminDropdown cohortAddress={cohortAddress?.toString() || ""} />
+            </Box>
+            <Box w="50%">
+              <AddAdminModal address={cohortAddress?.toString() || ""} />
+            </Box>
+          </HStack>
           {isInitiates && (
             <SimpleGrid
               columns={4}
