@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, Dispatch } from "react";
 
 export const FormContext = createContext<{
   displayPart1: boolean;

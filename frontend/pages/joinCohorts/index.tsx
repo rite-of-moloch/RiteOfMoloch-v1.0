@@ -1,7 +1,6 @@
 import React, { ReactNode } from "react";
 import {
   Box,
-  Flex,
   GridItem,
   Heading,
   HStack,
@@ -12,7 +11,6 @@ import {
 } from "@raidguild/design-system";
 import BackButton from "components/BackButton";
 import CohortDetail from "components/CohortDetail";
-import NoSearchResults from "components/NoSearchReults";
 import NotConnected from "components/NotConnected";
 import SearchCohorts from "components/SearchCohorts";
 // import SelectForm from "components/SelectForm";
@@ -21,7 +19,7 @@ import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { FieldValues, useForm } from "react-hook-form";
 // import { cohortOptions } from "utils/cohortOptions";
 import { getDeadline, unixToUTC } from "utils/general";
-import { COHORTS, COHORT_INITIATES } from "utils/subgraph/queries";
+import { COHORTS } from "utils/subgraph/queries";
 import { Cohort } from "utils/types/subgraphQueries";
 import { useAccount } from "wagmi";
 import useRiteBalanceOf from "hooks/useRiteBalanceOf";

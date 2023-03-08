@@ -43,3 +43,13 @@ export type CohortMetricsOverall = {
   totalCohorts: string;
   totalMembers: string;
 };
+
+export type Initiates = {
+  id: string;
+  address: string;
+  tokenId: string;
+  stake: string;
+  joinedAt: string;
+  claimed: boolean;
+  sacrificed: boolean;
+};

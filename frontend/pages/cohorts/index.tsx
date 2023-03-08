@@ -18,7 +18,6 @@ import BackButton from "components/BackButton";
 import { useAccount } from "wagmi";
 import NotConnected from "components/NotConnected";
 import SearchCohorts from "components/SearchCohorts";
-import NoSearchResults from "components/NoSearchReults";
 import { FieldValues, useForm } from "react-hook-form";
 
 interface ReviewOngoingCohortProps {
@@ -92,7 +91,6 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
           {!isLoading && (
             <>
               <HStack>
-                <Box w={["50%", "50%", "60%", "70%"]} />
                 <Box w={["50%", "50%", "40%", "30%"]}>
                   <SearchCohorts name="searchResult" localForm={localForm} />
                 </Box>
