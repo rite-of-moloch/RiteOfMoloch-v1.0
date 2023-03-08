@@ -90,11 +90,10 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
           )}
           {!isLoading && (
             <>
-              <HStack>
-                <Box w={["50%", "50%", "40%", "30%"]}>
-                  <SearchCohorts name="searchResult" localForm={localForm} />
-                </Box>
-              </HStack>
+              <Box w={["50%", "50%", "40%", "30%"]} alignSelf="end">
+                <SearchCohorts name="searchResult" localForm={localForm} />
+              </Box>
+
               <SimpleGrid
                 columns={4}
                 fontFamily="texturina"

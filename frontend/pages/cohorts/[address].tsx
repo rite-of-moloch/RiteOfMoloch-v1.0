@@ -45,6 +45,7 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
     return (
       <InitiateData
         address={initiate.address}
+        cohortAddress={cohortAddress?.toString() || ""}
         id={initiate.id}
         joinedAt={dateJoined}
         stake={initiate.stake}

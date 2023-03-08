@@ -7,6 +7,7 @@ import CohortMemberModal from "./cohortMemberModal";
 
 const InitiateData: React.FC<MemberData> = ({
   address,
+  cohortAddress,
   id,
   joinedAt,
   stake,
@@ -32,6 +33,7 @@ const InitiateData: React.FC<MemberData> = ({
       <Box justifySelf="end">
         <CohortMemberModal
           address={address}
+          cohortAddress={cohortAddress}
           id={id}
           joinedAt={joinedAt}
           stake={stake}

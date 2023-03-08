@@ -18,6 +18,7 @@ export type CohortMetadata = {
 
 export type MemberData = {
   address: string;
+  cohortAddress: string;
   id: string;
   joinedAt: string;
   stake: string;

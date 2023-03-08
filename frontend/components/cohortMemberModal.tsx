@@ -19,7 +19,6 @@ import { CohortMetadata } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
 import { getDeadline, unixToUTC } from "utils/general";
 import { COHORT_METADATA } from "utils/subgraph/queries";
-import { useRouter } from "next/router";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import BlockExplorerLink from "./BlockExplorerLink";
 import useSacrifice from "hooks/useSacrifice";
@@ -40,8 +39,6 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { chain } = useNetwork();
-  // const router = useRouter();
-  // const { address: cohortAddress } = router.query;
 
   const metadata = useSubgraphQuery(COHORT_METADATA(cohortAddress));
   const cohort: CohortMetadata | null = metadata?.data?.data?.data?.cohort;
