@@ -124,7 +124,9 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   );
 
   // useEffect re-renders component when user creates an allowance, which lets writeJoinInitiation to become defined
-  useEffect(() => {}, [allowance]);
+  useEffect(() => {
+    console.log(allowance);
+  }, [allowance]);
 
   return (
     <>
