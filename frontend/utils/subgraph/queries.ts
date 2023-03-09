@@ -38,7 +38,9 @@ export const COHORT_INITIATES: QueryBuilder = (cohortId: string) => `
                       address
                       joinedAt
                       stake
-              }
+              	  }
+		  admin1
+		  admin2
           }
       }
   `;
