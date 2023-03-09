@@ -23,6 +23,8 @@ export const COHORTS: QueryBuilder = () => `
             dao
             createdAt
             sbtUrl
+            admin1
+            admin2
         }
     }
 `;
@@ -52,6 +54,8 @@ export const COHORT_METADATA: QueryBuilder = (id: string) => `
             dao
             createdAt
             sbtUrl
+            admin1
+            admin2
         }
     }
 `;
@@ -104,3 +108,34 @@ export const INITIATES: QueryBuilder = () => `
     }
   }
 `;
+
+/// @return cohorts an admin oversees.
+export const COHORTS_FOR_ADMIN: QueryBuilder = (address: string) => `
+  query {
+    cohorts(
+      where: {
+        or: 
+        [
+          {admin1:"${address}"},
+          {admin2:"${address}"}
+        ]
+      }) 
+      {
+		    id
+      }
+    }
+  }
+`;
+
+
+/// @return admins of a given cohort 
+export const COHORT_ADMINS: QueryBuilder = (id: string) => `
+  query {
+    cohort(id: "${id}") {
+      id
+      admin1
+      admin2
+  }
+`
+
+
