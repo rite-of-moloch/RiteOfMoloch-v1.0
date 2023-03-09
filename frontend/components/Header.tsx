@@ -13,7 +13,7 @@ export const Header: React.FC<HeaderProps> = ({ children }) => {
   return (
     <Flex h="100px" w="100%" alignItems="center" justifyContent="space-between">
       <Link href="/" passHref>
-        <Flex alignItems="center" cursor="pointer">
+        <Flex alignItems="center">
           <Image
             src="/assets/logos/swords.webp"
             alt="logo"

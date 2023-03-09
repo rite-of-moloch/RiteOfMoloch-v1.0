@@ -8,6 +8,7 @@ import {
   Image,
   Heading,
   GridItem,
+  Tooltip,
 } from "@raidguild/design-system";
 import { useAccount, useNetwork } from "wagmi";
 import { getHasRite } from "utils/general";
@@ -86,8 +87,8 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
           <Heading as="h2" fontSize="2xl" color="red" my={3}>
             <Text>{cohortName?.toString().toUpperCase()}</Text>
           </Heading>
-          <SimpleGrid columns={3} spacingX={2} w="full">
-            <GridItem margin="auto">Address</GridItem>
+          <SimpleGrid columns={3} spacingX={2} w="full" fontWeight="bold">
+            <GridItem margin="auto">Cohort Address</GridItem>
             <GridItem margin="auto">Minimum Stake</GridItem>
             <GridItem margin="auto">Join Cohort</GridItem>
           </SimpleGrid>
@@ -104,7 +105,14 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
             alignItems="center"
           >
             <GridItem margin="auto">
-              {BlockExplorerLink(chain, cohortData?.id)}
+              <Tooltip
+                label={cohortData?.id}
+                shouldWrapChildren
+                hasArrow
+                placement="bottom"
+              >
+                {BlockExplorerLink(chain, cohortData?.id)}
+              </Tooltip>
             </GridItem>
             <GridItem margin="auto">
               <Text>

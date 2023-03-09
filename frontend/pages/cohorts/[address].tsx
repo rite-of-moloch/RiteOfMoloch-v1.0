@@ -1,15 +1,14 @@
-import { FC, ReactNode } from "react";
+import { ReactNode } from "react";
 import {
   Box,
-  Button,
   GridItem,
   Heading,
-  HStack,
   Link,
   SimpleGrid,
   Spinner,
   Stack,
   Text,
+  VStack,
 } from "@raidguild/design-system";
 import { useRouter } from "next/router";
 import { COHORT_INITIATES } from "utils/subgraph/queries";
@@ -21,15 +20,13 @@ import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";
 import NobodyStaked from "components/NobodyStaked";
 import useCohortName from "hooks/useCohortName";
-import AdminDropdown from "components/AdminDropdown";
-import { FieldValues, useForm } from "react-hook-form";
 import AddAdminModal from "components/AddAdminModal";
 
 interface CohortDetailProps {
   children: ReactNode;
 }
 
-const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
+const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
   const { isConnected } = useAccount();
   const { chain } = useNetwork();
   const router = useRouter();
@@ -58,11 +55,6 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
 
   const cohortName = useCohortName(cohortAddress?.toString() || "");
 
-  const localForm = useForm<FieldValues>();
-  const { watch, getValues, setValue } = localForm;
-  watch();
-  const values = getValues();
-
   return (
     <>
       {!isConnected && <NotConnected />}
@@ -78,21 +70,19 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
             <Link
               href={`${chain?.blockExplorers?.default.url}/address/${cohortAddress}`}
               isExternal
-            >
-              <Text fontSize="sm" mt="1em" fontWeight="normal">
-                {cohortAddress}
-              </Text>
-            </Link>
+            ></Link>
           </Heading>
-          {/* TODO: FIX ADMIN DROPDOWN  */}
-          <HStack w="50%">
-            <Box w="50%">
-              <AdminDropdown cohortAddress={cohortAddress?.toString() || ""} />
+          {/* TODO: add subgraph query for admins, and fill boxes with admin addresses */}
+
+          <VStack textAlign="center">
+            <Box fontSize="md" fontWeight="normal" mb={"1rem"}>
+              <Text>{cohortAddress}</Text>
             </Box>
-            <Box w="50%">
-              <AddAdminModal address={cohortAddress?.toString() || ""} />
+            <Box>
+              <AddAdminModal address={cohortAddress?.toString()} />
             </Box>
-          </HStack>
+          </VStack>
+
           {isInitiates && (
             <SimpleGrid
               columns={4}
@@ -103,7 +93,7 @@ const CohortDetail: FC<CohortDetailProps> = ({ children }) => {
               spacingX={2}
               w="full"
             >
-              <GridItem margin="auto">Initiate address</GridItem>
+              <GridItem margin="auto">Initiate</GridItem>
               <GridItem margin="auto">Shares</GridItem>
               <GridItem margin="auto">Date Staked</GridItem>
             </SimpleGrid>

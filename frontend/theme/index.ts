@@ -79,6 +79,11 @@ export const theme = extendTheme({
         overflowY: "overlay",
         color: "white",
       },
+      a: {
+        _hover: {
+          pointer: "cursor",
+        },
+      },
       "&::-webkit-scrollbar": {
         width: "10px",
         bg: "transparent",

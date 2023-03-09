@@ -8,6 +8,7 @@ import {
   Link,
   Stack,
   Text,
+  Tooltip,
   VStack,
 } from "@raidguild/design-system";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
@@ -31,6 +32,8 @@ interface CohortMetricsBoxProps {
 /**
  * @remarks id in Box wrapper is used for filter function in parent element `Metrics` to check if value exists in array
  * @params removeOption gets passed in a state management function from metrics component that runs a filter function. If cohort.id matches the Box id in this component, it renders
+ * @params id - cohort ID
+ * @params overallPerformance - boolean that indicates if selection is overall performance
  * @returns Box with cohort metric data of the cohort id which gets passed into id
  */
 const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
@@ -79,16 +82,32 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
           </Stack>
           <HStack>
             <VStack
-              w="80%"
+              w="full"
               alignItems="start"
               textAlign="left"
               fontFamily="texturina"
               color="gray"
             >
-              <Heading as="h3" color="red" fontSize="md">
-                {id?.slice(0, 4)}...{id?.slice(-6)}
-              </Heading>
-
+              <Box w="full" textAlign="center">
+                <Tooltip label={id} shouldWrapChildren hasArrow>
+                  <Heading as="h3" color="red" fontSize={["md", "md", "lg"]}>
+                    <HStack>
+                      <Text textAlign="center">Cohort:</Text>
+                      {BlockExplorerLink(chain, id || "")}
+                    </HStack>
+                  </Heading>
+                </Tooltip>
+              </Box>
+              <Box>
+                <Image
+                  src={`${metrics?.sbtUrl}`}
+                  alt="SBT image preview"
+                  boxShadow="dark-lg"
+                  p="1"
+                  rounded="md"
+                  bg="gray"
+                />
+              </Box>
               <Text>
                 Staking token:
                 <span style={{ color: "white", marginLeft: "0.5rem" }}>
@@ -124,7 +143,7 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
                 Staking date of last member: {dataText(lastMemberJoined())}
               </Text>
             </VStack>
-            <HStack alignSelf="start" maxW="40%">
+            {/* <HStack alignSelf="start" maxW="40%">
               <Image
                 src={`${metrics?.sbtUrl}`}
                 alt="SBT image preview"
@@ -133,7 +152,7 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
                 rounded="md"
                 bg="gray"
               />
-            </HStack>
+            </HStack> */}
           </HStack>
           <VStack mt="2rem" mb="0.5rem" spacing="1rem">
             <Box w="full">

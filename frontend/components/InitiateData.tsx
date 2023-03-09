@@ -1,4 +1,10 @@
-import { Box, GridItem, Link, SimpleGrid } from "@raidguild/design-system";
+import {
+  Box,
+  GridItem,
+  Link,
+  SimpleGrid,
+  Tooltip,
+} from "@raidguild/design-system";
 import React from "react";
 import { MemberData } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
@@ -27,7 +33,11 @@ const InitiateData: React.FC<MemberData> = ({
       spacingX={2}
       w="full"
     >
-      <GridItem margin="auto">{BlockExplorerLink(chain, address)}</GridItem>
+      <GridItem margin="auto">
+        <Tooltip label={address} shouldWrapChildren hasArrow placement="bottom">
+          {BlockExplorerLink(chain, address)}
+        </Tooltip>
+      </GridItem>
       <GridItem margin="auto">{stake}</GridItem>
       <GridItem margin="auto">{joinedAt}</GridItem>
       <Box justifySelf="end">
