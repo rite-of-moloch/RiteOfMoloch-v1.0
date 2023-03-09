@@ -86,7 +86,7 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
               {cohortAddress}
             </Link>
             <Box>
-              <AddAdminModal address={cohortAddress?.toString()} />
+              {/* <AddAdminModal address={cohortAddress?.toString()} /> */}
             </Box>
           </Stack>
 
