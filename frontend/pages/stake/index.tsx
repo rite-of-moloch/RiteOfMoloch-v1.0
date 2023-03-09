@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/router";
-import { CONTRACT_ADDRESSES } from "utils/constants";
-import { useAccount, useNetwork } from "wagmi";
+import { useAccount } from "wagmi";
 import NotConnected from "components/NotConnected";
 
 /**

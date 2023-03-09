@@ -1,6 +1,5 @@
 import React, { FC } from "react";
 import {
-  Box,
   Button,
   SimpleGrid,
   Link,
@@ -8,9 +7,7 @@ import {
   GridItem,
 } from "@raidguild/design-system";
 import { useNetwork } from "wagmi";
-
 import useTokenSymbol from "hooks/useTokenSymbol";
-import BlockExplorerLink from "./BlockExplorerLink";
 import useCohortName from "hooks/useCohortName";
 
 interface CohortDetailProps {

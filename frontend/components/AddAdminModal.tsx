@@ -39,7 +39,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ address }) => {
   const cohortMetadata = cohortAdmins?.data.data.cohort;
   const admin1 = cohortMetadata?.admin1;
   const admin2 = cohortMetadata?.admin2;
-  console.log(admin1, admin2);
+  // console.log(admin1, admin2);
 
   const zeroAddress = "0x0000000000000000000000000000000000000000";
 

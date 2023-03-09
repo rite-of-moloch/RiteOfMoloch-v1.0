@@ -1,6 +1,6 @@
 import React from "react";
 import ConnectWallet from "./ConnectWallet";
-import { Box, Flex, Heading, Stack, VStack } from "@raidguild/design-system";
+import { Box, Heading, Stack } from "@raidguild/design-system";
 
 const NotConnected = () => {
   return (

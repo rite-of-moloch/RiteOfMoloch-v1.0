@@ -4,7 +4,6 @@ import {
   Button,
   HStack,
   Image,
-  Link,
   SimpleGrid,
   Stack,
   Text,

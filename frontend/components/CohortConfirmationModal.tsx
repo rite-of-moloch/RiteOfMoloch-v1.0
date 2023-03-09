@@ -24,11 +24,8 @@ const CohortConfirmationModal: React.FC<CohortConfirmationModalProps> = ({
     defaultIsOpen: openLogic ? true : false,
   });
 
-  // console.log(isOpen);
-
   const shouldOpen = () => {
     openLogic && onOpen;
-    // console.log("isOpen", isOpen);
   };
 
   shouldOpen();

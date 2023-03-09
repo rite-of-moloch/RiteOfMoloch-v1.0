@@ -22,11 +22,11 @@ import { COHORT_METADATA } from "utils/subgraph/queries";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import BlockExplorerLink from "./BlockExplorerLink";
 import useSacrifice from "hooks/useSacrifice";
+import useCohortName from "hooks/useCohortName";
 
 interface CohortMemberModalProps {
   address: string;
   cohortAddress: string;
-  id: string;
   joinedAt: string;
   stake: string;
 }
@@ -43,9 +43,11 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
   const metadata = useSubgraphQuery(COHORT_METADATA(cohortAddress));
   const cohort: CohortMetadata | null = metadata?.data?.data?.data?.cohort;
 
+  const cohortName = useCohortName(cohortAddress);
+
   const deadline = getDeadline(cohort?.createdAt, cohort?.time);
   const { writeSacrifice } = useSacrifice(address?.toString() || "0x");
-  console.log(writeSacrifice);
+  // console.log(writeSacrifice);
 
   const isPassedStakingDate = () => {
     const today = new Date().getTime();
@@ -71,8 +73,8 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
         <ModalOverlay onClick={onClose} />
         <ModalContent minW="full">
           <ModalHeader color="red">
-            <Text>Cohort:</Text>
-            <Text fontSize="lg">{cohortAddress}</Text>
+            <Text>{cohortName}</Text>
+            <Text fontSize="md">{cohortAddress}</Text>
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody mx="-1.5em">

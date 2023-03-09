@@ -1,8 +1,5 @@
 import { useContractRead } from "wagmi";
 import useAbi from "./useAbi";
-import { convertBigNumber } from "utils/general";
-import { TxHash } from "utils/types/TxHash";
-// import { TxHash } from "utils/types/TxHash";
 
 /**
  *
@@ -30,19 +27,6 @@ const useReadContract = (
     watch: true,
     enabled: Boolean(address),
   });
-  // console.log("error:", error, "isError:", isError);
-  // console.log("data:", data);
-
-  // let output;
-  // if (typeof data === "boolean") {
-  //   output = data;
-  //   return output;
-  // } else if (data) {
-  //   //TODO is forced type casting correct?
-  //   output = convertBigNumber(data as TxHash);
-  // } else if (!data) {
-  //   output = "";
-  // }
 
   return { data, error, isError, isLoading };
 };

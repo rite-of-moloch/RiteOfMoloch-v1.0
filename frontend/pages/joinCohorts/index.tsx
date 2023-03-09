@@ -15,7 +15,6 @@ import NotConnected from "components/NotConnected";
 import SearchCohorts from "components/SearchCohorts";
 // import SelectForm from "components/SelectForm";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
-
 import { FieldValues, useForm } from "react-hook-form";
 // import { cohortOptions } from "utils/cohortOptions";
 import { getDeadline, unixToUTC } from "utils/general";

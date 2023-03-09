@@ -7,7 +7,7 @@ import {
   Tooltip,
 } from "@raidguild/design-system";
 import React from "react";
-import { MemberData } from "utils/types/subgraphQueries";
+import useCohortName from "hooks/useCohortName";
 import { useNetwork } from "wagmi";
 import BlockExplorerLink from "./BlockExplorerLink";
 import CohortMemberModal from "./cohortMemberModal";
@@ -31,7 +31,7 @@ const InitiatesAll: React.FC<InitiatesAllProps> = ({
   joinedAt,
 }) => {
   const { chain } = useNetwork();
-  console.log(cohortId);
+  const cohortName = useCohortName(cohortId);
 
   return (
     <SimpleGrid
@@ -46,7 +46,7 @@ const InitiatesAll: React.FC<InitiatesAllProps> = ({
       spacingX={2}
       w="full"
     >
-      <GridItem margin="auto">
+      <GridItem>
         <Tooltip label={address} shouldWrapChildren hasArrow placement="bottom">
           {BlockExplorerLink(chain, address)}
         </Tooltip>
@@ -58,7 +58,12 @@ const InitiatesAll: React.FC<InitiatesAllProps> = ({
           hasArrow
           placement="bottom"
         >
-          {BlockExplorerLink(chain, cohortId)}
+          <Link
+            href={`${chain?.blockExplorers?.default.url}/address/${cohortId}`}
+            isExternal
+          >
+            {cohortName?.toString()}
+          </Link>
         </Tooltip>
       </GridItem>
       <GridItem margin="auto">
@@ -71,7 +76,6 @@ const InitiatesAll: React.FC<InitiatesAllProps> = ({
         <CohortMemberModal
           address={address}
           cohortAddress={cohortId}
-          id={cohortId}
           joinedAt={joinedAt}
           stake={stake}
         />

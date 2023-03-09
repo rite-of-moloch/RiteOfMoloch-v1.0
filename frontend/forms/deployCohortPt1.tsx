@@ -48,7 +48,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
 
   const handleNext = async (): Promise<void> => {
     await trigger();
-    console.log(isValid);
+    // console.log(isValid);
     if (isValid) {
       setNameCohort(values.nameCohort);
       setNameSBT(values.nameSBT);

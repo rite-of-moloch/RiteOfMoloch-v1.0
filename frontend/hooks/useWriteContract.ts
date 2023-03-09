@@ -38,7 +38,7 @@ const useWriteContract = (
     ...config,
     request: config.request,
     onSuccess(data) {
-      // console.log("data", data);
+      console.log("data", data);
     },
     onError(err) {
       console.log("err:", err);

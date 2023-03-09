@@ -3,13 +3,11 @@ import {
   Box,
   GridItem,
   Heading,
-  HStack,
   Link,
   SimpleGrid,
   Spinner,
   Stack,
   Text,
-  VStack,
 } from "@raidguild/design-system";
 import { useRouter } from "next/router";
 import { COHORT_INITIATES } from "utils/subgraph/queries";
@@ -22,7 +20,6 @@ import NotConnected from "components/NotConnected";
 import NobodyStaked from "components/NobodyStaked";
 import useCohortName from "hooks/useCohortName";
 import AddAdminModal from "components/AddAdminModal";
-import { RxOpenInNewWindow } from "react-icons/rx";
 
 interface CohortDetailProps {
   children: ReactNode;
@@ -38,8 +35,6 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
 
   const initiateList: MemberData[] | undefined =
     data?.data?.data?.cohort?.initiates;
-
-  console.log(initiateList);
 
   const renderInitiateList = initiateList?.map((initiate: MemberData) => {
     const dateJoined = new Date(+initiate.joinedAt * 1000).toLocaleDateString();
@@ -86,7 +81,7 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
               {cohortAddress}
             </Link>
             <Box>
-              {/* <AddAdminModal address={cohortAddress?.toString()} /> */}
+              <AddAdminModal address={cohortAddress?.toString()} />
             </Box>
           </Stack>
 

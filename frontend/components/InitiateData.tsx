@@ -1,10 +1,4 @@
-import {
-  Box,
-  GridItem,
-  Link,
-  SimpleGrid,
-  Tooltip,
-} from "@raidguild/design-system";
+import { Box, GridItem, SimpleGrid, Tooltip } from "@raidguild/design-system";
 import React from "react";
 import { MemberData } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
@@ -14,7 +8,6 @@ import CohortMemberModal from "./cohortMemberModal";
 const InitiateData: React.FC<MemberData> = ({
   address,
   cohortAddress,
-  id,
   joinedAt,
   stake,
 }) => {
@@ -44,7 +37,6 @@ const InitiateData: React.FC<MemberData> = ({
         <CohortMemberModal
           address={address}
           cohortAddress={cohortAddress}
-          id={id}
           joinedAt={joinedAt}
           stake={stake}
         />

@@ -12,9 +12,8 @@ import {
 } from "@raidguild/design-system";
 import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";
-
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
-
+import useCohortName from "hooks/useCohortName";
 import { INITIATES } from "utils/subgraph/queries";
 import { useAccount } from "wagmi";
 import { Initiates } from "utils/types/subgraphQueries";
@@ -39,8 +38,6 @@ const Initiates = () => {
   const initiatesList: Initiates[] | undefined =
     initiates?.data?.data?.data?.initiates;
 
-  console.log(initiatesList);
-
   const renderInitiates = initiatesList?.map((initiate) => {
     const cohortID = initiate.id.split("-")[1];
     const joinedAt = Number(initiate.joinedAt);
@@ -64,7 +61,6 @@ const Initiates = () => {
       return initiate;
     }
   });
-  console.log();
 
   return (
     <>

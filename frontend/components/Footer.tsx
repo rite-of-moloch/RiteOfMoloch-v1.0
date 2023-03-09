@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Text, HStack, BuiltByRaidGuild } from "@raidguild/design-system";
+import { BuiltByRaidGuild } from "@raidguild/design-system";
 
 export const Footer = () => {
   return (

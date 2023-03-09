@@ -78,7 +78,6 @@ const Metrics = () => {
   let cohortId1 = values.chooseCohort?.[0]?.value;
   let cohortId2 = values.chooseCohort?.[1]?.value;
   let cohortId3 = values.chooseCohort?.[2]?.value;
-  // console.log(cohortId1, cohortId2);
 
   const arrLength = values.chooseCohort?.length;
   const gridLogic = () => {

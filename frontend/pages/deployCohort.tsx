@@ -1,6 +1,6 @@
 import React from "react";
 import { useAccount } from "wagmi";
-import { Box, Flex } from "@raidguild/design-system";
+import { Box } from "@raidguild/design-system";
 import ProgressBar from "components/ProgressBar";
 import DeployCohortPt1 from "../forms/deployCohortPt1";
 import DeployCohortPt2 from "../forms/deployCohortPt2";
