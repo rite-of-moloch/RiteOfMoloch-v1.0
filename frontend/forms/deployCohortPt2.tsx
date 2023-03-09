@@ -84,6 +84,27 @@ const DeployCohortPt2 = () => {
     <FormControl onSubmit={handleSubmit(handleBack)}>
       <Box display={displayPart2 ? "inline" : "none"}>
         <SimpleGrid columns={2} spacingX={4} spacingY={3}>
+          <Box>
+            <Input
+              label="Staking asset address"
+              placeholder="enter token address"
+              autoComplete="off"
+              localForm={localForm}
+              {...register("stakingAsset", {
+                required: {
+                  value: true,
+                  message: "Value required",
+                },
+                validate: () =>
+                  utils.isAddress(values.stakingAsset) || "invalid address",
+              })}
+            />
+            <ErrorMessage
+              errors={errors}
+              name="stakingAsset"
+              render={({ message }) => <FormErrorText message={message} />}
+            />
+          </Box>
           <Controller
             control={control}
             name="assetAmount"
@@ -189,27 +210,7 @@ const DeployCohortPt2 = () => {
               )}
             />
           </Box>
-          <Box>
-            <Input
-              label="Staking asset address"
-              placeholder="enter token address"
-              autoComplete="off"
-              localForm={localForm}
-              {...register("stakingAsset", {
-                required: {
-                  value: true,
-                  message: "Value required",
-                },
-                validate: () =>
-                  utils.isAddress(values.stakingAsset) || "invalid address",
-              })}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="stakingAsset"
-              render={({ message }) => <FormErrorText message={message} />}
-            />
-          </Box>
+
           <Box>
             <Controller
               control={control}

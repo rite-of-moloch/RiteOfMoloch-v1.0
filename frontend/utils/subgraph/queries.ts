@@ -95,7 +95,6 @@ export const COHORT_METRICS_CARD: QueryBuilder = (id: string) => `
   }
 `;
 
-
 /// @return id is `${INITIATE_ADDRESS}-${COHORT_ADDRESS}`
 export const INITIATES: QueryBuilder = () => `
   query {
@@ -111,33 +110,30 @@ export const INITIATES: QueryBuilder = () => `
   }
 `;
 
-/// @return cohorts an admin oversees.
-export const COHORTS_FOR_ADMIN: QueryBuilder = (address: string) => `
-  query {
-    cohorts(
-      where: {
-        or: 
-        [
-          {admin1:"${address}"},
-          {admin2:"${address}"}
-        ]
-      }) 
-      {
-		    id
-      }
-    }
-  }
-`;
+// /// @return cohorts an admin oversees.
+// export const COHORTS_FOR_ADMIN: QueryBuilder = (address: string) => `
+//   query {
+//     cohorts(
+//       where: {
+//         or:
+//         [
+//           {admin1:"${address}"},
+//           {admin2:"${address}"}
+//         ]
+//       })
+//       {
+// 		    id
+//       }
+//     }
+//   }
+// `;
 
-
-/// @return admins of a given cohort 
-export const COHORT_ADMINS: QueryBuilder = (id: string) => `
-  query {
-    cohort(id: "${id}") {
-      id
-      admin1
-      admin2
-  }
-`
-
-
+// /// @return admins of a given cohort
+// export const COHORT_ADMINS: QueryBuilder = (id: string) => `
+//   query {
+//     cohort(id: "${id}") {
+//       id
+//       admin1
+//       admin2
+//   }
+// `;

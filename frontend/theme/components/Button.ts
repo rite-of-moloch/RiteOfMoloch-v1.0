@@ -89,6 +89,17 @@ const Button = {
         boxShadow: "none",
       },
     }),
+    admin: () => ({
+      textTransform: "uppercase",
+      height: "1rem",
+      px: "0.5rem",
+      py: ".75rem",
+      color: "gray",
+      border: "solid gray 1px",
+      rounded: "sm",
+      bg: "whiteAlpha.100",
+      fontSize: "sm",
+    }),
   },
   sizes: {
     default: {

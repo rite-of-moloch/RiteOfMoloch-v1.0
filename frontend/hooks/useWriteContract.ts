@@ -77,10 +77,10 @@ const useWriteContract = (
     },
     onError(err) {
       console.log(err);
-      toast({
-        status: "error",
-        title: `Transaction Error... ${err.message}`,
-      });
+      // toast({
+      //   status: "error",
+      //   title: `Transaction Error... ${err.message}`,
+      // });
     },
   });
 

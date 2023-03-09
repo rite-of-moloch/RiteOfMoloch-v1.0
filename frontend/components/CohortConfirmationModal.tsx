@@ -24,7 +24,7 @@ const CohortConfirmationModal: React.FC<CohortConfirmationModalProps> = ({
     defaultIsOpen: openLogic ? true : false,
   });
 
-  console.log(isOpen);
+  // console.log(isOpen);
 
   const shouldOpen = () => {
     openLogic && onOpen;
@@ -45,6 +45,7 @@ const CohortConfirmationModal: React.FC<CohortConfirmationModalProps> = ({
             <Text textAlign="center">
               You&apos;ve successfull deployed a chohort
             </Text>
+            <Text></Text>
           </ModalBody>
           <Box maxH="150px" mx="auto" my={"1rem"}>
             <Image src="/assets/guild_sunset.png" alt="guild-sunset-logo" />

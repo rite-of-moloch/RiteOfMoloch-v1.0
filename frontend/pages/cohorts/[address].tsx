@@ -3,6 +3,7 @@ import {
   Box,
   GridItem,
   Heading,
+  HStack,
   Link,
   SimpleGrid,
   Spinner,
@@ -21,6 +22,7 @@ import NotConnected from "components/NotConnected";
 import NobodyStaked from "components/NobodyStaked";
 import useCohortName from "hooks/useCohortName";
 import AddAdminModal from "components/AddAdminModal";
+import { RxOpenInNewWindow } from "react-icons/rx";
 
 interface CohortDetailProps {
   children: ReactNode;
@@ -36,6 +38,8 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
 
   const initiateList: MemberData[] | undefined =
     data?.data?.data?.cohort?.initiates;
+
+  console.log(initiateList);
 
   const renderInitiateList = initiateList?.map((initiate: MemberData) => {
     const dateJoined = new Date(+initiate.joinedAt * 1000).toLocaleDateString();
@@ -66,22 +70,39 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
           my={!isInitiates ? 8 : 0}
         >
           <Heading as="h2" textAlign="center" color="red">
-            <Text w="fit">{cohortName?.toString().toUpperCase()}</Text>
+            {cohortName?.toString().toUpperCase()}
+          </Heading>
+          <Stack
+            direction={["column", "column", "row"]}
+            textAlign="center"
+            justifyContent="center"
+            alignItems="center"
+          >
             <Link
+              fontSize={["sm", "md"]}
               href={`${chain?.blockExplorers?.default.url}/address/${cohortAddress}`}
               isExternal
-            ></Link>
-          </Heading>
-          {/* TODO: add subgraph query for admins, and fill boxes with admin addresses */}
-
-          <VStack textAlign="center">
-            <Box fontSize="md" fontWeight="normal" mb={"1rem"}>
-              <Text>{cohortAddress}</Text>
-            </Box>
+            >
+              {cohortAddress}
+            </Link>
             <Box>
               {/* <AddAdminModal address={cohortAddress?.toString()} /> */}
             </Box>
-          </VStack>
+          </Stack>
+
+          {/* <HStack textAlign="center">
+            <Box fontSize="md" fontWeight="normal" mb={"1rem"}>
+              <Link
+                href={`${chain?.blockExplorers?.default.url}/address/${cohortAddress}`}
+                isExternal
+              >
+                {cohortAddress}
+              </Link>
+            </Box> */}
+          {/* <Box>
+            <AddAdminModal address={cohortAddress?.toString()} />
+          </Box> */}
+          {/* </HStack> */}
 
           {isInitiates && (
             <SimpleGrid
