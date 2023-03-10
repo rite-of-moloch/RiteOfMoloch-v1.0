@@ -6,13 +6,18 @@ import useWriteContract from "./useWriteContract";
  */
 
 const useSacrifice = (contractAddress: string) => {
-  const { write: writeSacrifice } = useWriteContract(
-    contractAddress,
-    "riteOfMolochAddress",
-    "sacrifice"
-  );
+  const {
+    write: writeSacrifice,
+    isError,
+    error: errorSacrifice,
+    prepareError: prepareErrorSacrifice,
+  } = useWriteContract(contractAddress, "riteOfMolochAddress", "sacrifice");
 
-  return { writeSacrifice };
+  if (isError) {
+    console.log(errorSacrifice);
+  }
+
+  return { writeSacrifice, prepareErrorSacrifice, errorSacrifice, isError };
 };
 
 export default useSacrifice;

@@ -11,7 +11,7 @@ import {
   Tooltip,
 } from "@raidguild/design-system";
 import { useAccount, useNetwork } from "wagmi";
-import { getHasRite } from "utils/general";
+// import { getHasRite } from "utils/general";
 import { COHORT_METADATA } from "utils/subgraph/queries";
 import { useRouter } from "next/router";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
@@ -19,15 +19,11 @@ import { ReactNode } from "react";
 import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";
 import useTokenSymbol from "hooks/useTokenSymbol";
-import useRiteBalanceOf from "hooks/useRiteBalanceOf";
+// import useRiteBalanceOf from "hooks/useRiteBalanceOf";
 import useIsMember from "hooks/useIsMember";
 import useClaimStake from "hooks/useClaimStake";
 import BlockExplorerLink from "components/BlockExplorerLink";
 import useCohortName from "hooks/useCohortName";
-
-interface CohortPageProps {
-  children: ReactNode;
-}
 
 /**
  * Checks if msg.sender has staked to the cohort passed in by cohortAddress. Displays data about cohortAddress. msg.sender can re-claim stake, or redirect to page and
@@ -36,7 +32,7 @@ interface CohortPageProps {
  * @returns
  */
 
-const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
+const CohortPage = () => {
   const { chain } = useNetwork();
   const { address, isConnected } = useAccount();
   const router = useRouter();
@@ -54,20 +50,31 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
     else return "";
   }
 
-  const riteBalance = useRiteBalanceOf(cohortAddress?.toString() || "", [
-    userAddress(),
-  ]);
+  // const riteBalance = useRiteBalanceOf(cohortAddress?.toString() || "", [
+  //   userAddress(),
+  // ]);
 
-  // TODO: check getHasRite hook. After running claim stake, it still shows user as staked
-  const isStaked = getHasRite(riteBalance);
+  // const isStaked = getHasRite(riteBalance);
   const isMember = useIsMember(cohortData?.id, [userAddress()]);
-  const { writeClaimStake, isLoadingClaimStake } = useClaimStake(
-    cohortData?.id
-  );
+
+  console.log(isMember);
+
+  const {
+    writeClaimStake,
+    prepareErrorClaimStake,
+    isLoadingClaimStake,
+    errorClaimStake,
+  } = useClaimStake(cohortData?.id);
+
+  console.log(writeClaimStake);
+  // checks error message to see if usere has any stake
+  const userHasNoStake =
+    prepareErrorClaimStake?.message.includes("User has no stake");
+  console.log(userHasNoStake);
 
   const handleClaimStake = () => {
-    console.log("isMember? claim stake", isMember);
-    if (isMember && isStaked) {
+    console.log("isMember", isMember);
+    if (isMember) {
       writeClaimStake && writeClaimStake();
     }
   };
@@ -139,15 +146,15 @@ const CohortPage: React.FC<CohortPageProps> = ({ children }) => {
               bg="gray"
             />
           </Box>
-          {isMember && isStaked && (
+          {isMember && (
             <Box>
               <Button
                 size="md"
                 onClick={handleClaimStake}
-                disabled={!isStaked}
+                isDisabled={userHasNoStake}
                 isLoading={isLoadingClaimStake}
               >
-                Claim Stake
+                {!userHasNoStake ? "Claim Stake" : "No stake to claim!"}
               </Button>
             </Box>
           )}

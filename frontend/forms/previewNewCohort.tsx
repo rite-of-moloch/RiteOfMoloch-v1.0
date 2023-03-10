@@ -87,10 +87,14 @@ const PreviewNewCohort = () => {
   ];
 
   // console.log("initData", initData);
-  const { createCohort, isLoadingApprove, isSuccessApprove } = useCreateCohort([
-    initData,
-    1,
-  ]);
+  const {
+    createCohort,
+    prepareErrorCreateCohort,
+    isLoadingApprove,
+    isSuccessApprove,
+  } = useCreateCohort([initData, 1]);
+
+  console.log(prepareErrorCreateCohort);
 
   const handleDeployCohort = (): void => {
     // console.log(createCohort);

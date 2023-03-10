@@ -9,6 +9,7 @@ import { useChakraToast } from "@raidguild/design-system";
 
 /**
  * @remarks hook to prepare wagmi hook contract instances
+ * @remarks prepareError returns an object containing a message for why a 'prepare transaction' fails. Can extract the error message from here and use it for error handling
  *
  * @param contractAddress - pass in contract name. If contract name is 'riteOfMolochAddress', value should be passed in dynaically from URL query in stake/[address].tsx component. If this address is not a valid cohort, contractAddress will be `riteOfMolochAddress`, which then gets passed into useContractAddress hook and gets RaidGuild default values
  * @param functionName - pass name of function
@@ -25,7 +26,7 @@ const useWriteContract = (
   const abi = useAbi(abiName);
   const toast = useChakraToast();
 
-  const { config } = usePrepareContractWrite({
+  const { config, error: prepareError } = usePrepareContractWrite({
     address: (contractAddress as `0x${string}`) || "",
     abi,
     functionName,
@@ -50,6 +51,7 @@ const useWriteContract = (
     isLoading,
     isSuccess,
     isError,
+    error,
   } = useWaitForTransaction({
     enabled: Boolean(data),
     hash: data?.hash,
@@ -86,7 +88,15 @@ const useWriteContract = (
 
   console.log(txResponse);
 
-  return { write, txResponse, isLoading, isSuccess, isError };
+  return {
+    write,
+    prepareError,
+    txResponse,
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+  };
 };
 
 export default useWriteContract;

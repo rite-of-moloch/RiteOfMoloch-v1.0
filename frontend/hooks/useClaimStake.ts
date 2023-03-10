@@ -7,15 +7,22 @@ import useWriteContract from "./useWriteContract";
 const useClaimStake = (contractAddress: string) => {
   const {
     write: writeClaimStake,
+    prepareError: prepareErrorClaimStake,
     isLoading: isLoadingClaimStake,
     isError,
+    error: errorClaimStake,
   } = useWriteContract(contractAddress, "riteOfMolochAddress", "claimStake");
 
   if (isError) {
-    console.log(isError);
+    console.log(errorClaimStake);
   }
 
-  return { writeClaimStake, isLoadingClaimStake };
+  return {
+    writeClaimStake,
+    prepareErrorClaimStake,
+    isLoadingClaimStake,
+    errorClaimStake,
+  };
 };
 
 export default useClaimStake;

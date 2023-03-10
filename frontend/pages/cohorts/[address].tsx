@@ -35,6 +35,7 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
 
   const initiateList: MemberData[] | undefined =
     data?.data?.data?.cohort?.initiates;
+  console.log(initiateList);
 
   const renderInitiateList = initiateList?.map((initiate: MemberData) => {
     const dateJoined = new Date(+initiate.joinedAt * 1000).toLocaleDateString();

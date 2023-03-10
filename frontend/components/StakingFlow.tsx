@@ -11,6 +11,8 @@ import {
   Tooltip,
   Stack,
   VStack,
+  SimpleGrid,
+  GridItem,
 } from "@raidguild/design-system";
 import { useAccount } from "wagmi";
 import { BigNumber, utils } from "ethers";
@@ -94,10 +96,19 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     allowance = BigNumber.from("0") || "0";
   }
 
-  const { writeJoinInitiation, isLoadingStake } = useJoinInitiation(
+  const {
+    writeJoinInitiation,
+    isLoadingStake,
+    isErrorStake,
+    prepareErrorJoinInitiation,
+  } = useJoinInitiation(
     cohort?.id || "",
     !willSponsor ? [userAddress()] : [initiateAddress]
   );
+
+  // @ts-ignore
+  const joinErrorMsg = prepareErrorJoinInitiation?.error.message.split(":")[1];
+  // console.log(joinErrorMsg);
 
   //TODO methods can accept BigNumbers instead of Strings
   const canUserStake = canStake(
@@ -206,27 +217,22 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
           </VStack>
         </Stack>
 
-        <HStack spacing="1.5rem" mt="2rem" w="100%">
-          <Box w="50%">
+        <SimpleGrid columns={2} spacing="1.5rem" mt="2rem" w="100%">
+          <GridItem>
             <Tooltip label={approveTooltiplabel} placement="bottom">
               <Button
                 variant="solid"
                 w="full"
                 isLoading={isLoadingApprove}
                 loadingText="Approving..."
-                isDisabled={
-                  // TODO: double check number formatting
-                  // utils.formatUnits(allowance, "ether") <
-                  // utils.formatUnits(minimumStake, "ether")
-                  +balanceOf.toString() < +minimumStake.toString()
-                }
+                isDisabled={+balanceOf.toString() < +minimumStake.toString()}
                 onClick={() => approve && approve()}
               >
                 Approve
               </Button>
             </Tooltip>
-          </Box>
-          <Box w="50%">
+          </GridItem>
+          <GridItem>
             <Tooltip
               isDisabled={!canUserStake}
               label={stakeToolTipLabel}
@@ -237,14 +243,14 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
                 variant="solid"
                 isLoading={isLoadingStake}
                 loadingText="Staking..."
-                isDisabled={!canUserStake}
+                isDisabled={!canUserStake || joinErrorMsg}
                 onClick={() => writeJoinInitiation && writeJoinInitiation()}
               >
-                Stake
+                {!joinErrorMsg ? "Stake" : "Cohort is closed"}
               </Button>
             </Tooltip>
-          </Box>
-        </HStack>
+          </GridItem>
+        </SimpleGrid>
       </Flex>
     </>
   );
