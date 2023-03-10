@@ -59,18 +59,13 @@ const CohortPage = () => {
 
   console.log(isMember);
 
-  const {
-    writeClaimStake,
-    prepareErrorClaimStake,
-    isLoadingClaimStake,
-    errorClaimStake,
-  } = useClaimStake(cohortData?.id);
+  const { writeClaimStake, prepareErrorClaimStake, isLoadingClaimStake } =
+    useClaimStake(cohortData?.id);
 
-  console.log(writeClaimStake);
   // checks error message to see if usere has any stake
-  const userHasNoStake =
-    prepareErrorClaimStake?.message.includes("User has no stake");
-  console.log(userHasNoStake);
+  // const userHasNoStake =
+  //   prepareErrorClaimStake?.message.includes("User has no stake");
+  // console.log(userHasNoStake);
 
   const handleClaimStake = () => {
     console.log("isMember", isMember);
@@ -151,10 +146,10 @@ const CohortPage = () => {
               <Button
                 size="md"
                 onClick={handleClaimStake}
-                isDisabled={userHasNoStake}
+                isDisabled={!!prepareErrorClaimStake}
                 isLoading={isLoadingClaimStake}
               >
-                {!userHasNoStake ? "Claim Stake" : "No stake to claim!"}
+                {!prepareErrorClaimStake ? "Claim Stake" : "No stake to claim!"}
               </Button>
             </Box>
           )}
