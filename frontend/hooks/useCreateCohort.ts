@@ -18,6 +18,7 @@ const useCreateCohort = (args: [initDataDeployCohort, number]) => {
 
   const {
     write: createCohort,
+    prepareError: prepareErrorCreateCohort,
     isLoading: isLoadingApprove,
     isSuccess: isSuccessApprove,
     isError: isErrorApprove,
@@ -28,7 +29,13 @@ const useCreateCohort = (args: [initDataDeployCohort, number]) => {
     args
   );
 
-  return { createCohort, isLoadingApprove, isSuccessApprove, isErrorApprove };
+  return {
+    createCohort,
+    prepareErrorCreateCohort,
+    isLoadingApprove,
+    isSuccessApprove,
+    isErrorApprove,
+  };
 };
 
 export default useCreateCohort;

@@ -46,8 +46,11 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
   const cohortName = useCohortName(cohortAddress);
 
   const deadline = getDeadline(cohort?.createdAt, cohort?.time);
-  const { writeSacrifice } = useSacrifice(address?.toString() || "0x");
-  // console.log(writeSacrifice);
+  const { writeSacrifice, isError, errorSacrifice, prepareErrorSacrifice } =
+    useSacrifice(address?.toString());
+
+  console.log(address.toString());
+  console.log(writeSacrifice, isError, prepareErrorSacrifice, errorSacrifice);
 
   const isPassedStakingDate = () => {
     const today = new Date().getTime();
@@ -56,7 +59,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
   };
 
   // TODO: create cohort with msg.sender as admin and test writeSacrifice function
-  const handleSlashStake = () => {
+  const handlSacrifice = () => {
     if (!!isPassedStakingDate) {
       writeSacrifice && writeSacrifice();
     } else {
@@ -124,8 +127,8 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
               <Button
                 variant="solid"
                 size="md"
-                onClick={handleSlashStake}
-                isDisabled={!isPassedStakingDate()}
+                onClick={handlSacrifice}
+                isDisabled={!isPassedStakingDate() || isError}
               >
                 Slash Stake
               </Button>
