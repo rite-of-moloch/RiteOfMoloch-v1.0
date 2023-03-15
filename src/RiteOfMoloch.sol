@@ -88,6 +88,10 @@ contract RiteOfMoloch is
     uint256 public topHat;
     uint256 public adminHat;
 
+    // todo: rm admin vars and replace w/ Hats Protocol subgraph query
+    address public admin1;
+    address public admin2;
+
     // Hats initializer lock
     bool private initHatTreeLock;
 
@@ -179,12 +183,10 @@ contract RiteOfMoloch is
 
             // encode hats proposals; access topHat and initialize hat tree
             topHat = initData.topHatId;
+            admin1 = initData.admin1;
+            admin2 = initData.admin2;
             accessHatData = _encodeTransferHat(topHat, treasury, address(this));
-            buildHatData = _encodeBuildHatTree(
-                caller_,
-                initData.admin1,
-                initData.admin2
-            );
+            buildHatData = _encodeBuildHatTree(caller_, admin1, admin2);
 
             // submit HATS proposal
             bytes[] memory data = new bytes[](2);
@@ -289,10 +291,9 @@ contract RiteOfMoloch is
      ACCESS CONTROL FUNCTIONS
      *************************/
 
-    function changeJoinTimeDuration(uint256 _joinDuration)
-        external
-        onlyRole(ADMIN)
-    {
+    function changeJoinTimeDuration(
+        uint256 _joinDuration
+    ) external onlyRole(ADMIN) {
         joinDuration = _joinDuration;
     }
 
@@ -316,10 +317,9 @@ contract RiteOfMoloch is
      * @dev Allows changing the DAO member share threshold
      * @param newShareThreshold the number of shares required to be considered a DAO member
      */
-    function setShareThreshold(uint256 newShareThreshold)
-        external
-        onlyRole(ADMIN)
-    {
+    function setShareThreshold(
+        uint256 newShareThreshold
+    ) external onlyRole(ADMIN) {
         _setShareThreshold(newShareThreshold);
     }
 
@@ -335,11 +335,9 @@ contract RiteOfMoloch is
      * @dev If ROM is a Shaman: Allows minting shares of Baal DAO to become member
      * @param to the list of initiate addresses who have passed their rites to become member
      */
-    function batchMintBaalShares(address[] calldata to)
-        external
-        onlyRole(ADMIN)
-        onlyShaman
-    {
+    function batchMintBaalShares(
+        address[] calldata to
+    ) external onlyRole(ADMIN) onlyShaman {
         uint256 length = to.length;
         uint256[] memory shares = new uint256[](length);
 
@@ -354,11 +352,9 @@ contract RiteOfMoloch is
     /**
      * @param _to initiate address who has passed their rite to become member
      */
-    function singleMintBaalShares(address _to)
-        external
-        onlyRole(ADMIN)
-        onlyShaman
-    {
+    function singleMintBaalShares(
+        address _to
+    ) external onlyRole(ADMIN) onlyShaman {
         uint256[] memory shares = new uint256[](1);
         address[] memory to = new address[](1);
 
@@ -539,11 +535,9 @@ contract RiteOfMoloch is
         cohortSeason++;
     }
 
-    function _bloodLetting(address _failedInitiate)
-        internal
-        virtual
-        returns (uint256)
-    {
+    function _bloodLetting(
+        address _failedInitiate
+    ) internal virtual returns (uint256) {
         // access each initiate's balance
         uint256 balance = _staked[_failedInitiate];
 
@@ -624,19 +618,16 @@ contract RiteOfMoloch is
     function _beforeTokenTransfer(
         address _from,
         address,
-        uint256, /* firstTokenId */
+        uint256 /* firstTokenId */,
         uint256
     ) internal virtual override {
         require(_from == address(0), "SBT cannot be transferred");
     }
 
     // The following functions are overrides required by Solidity.
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        override(ERC721Upgradeable)
-        returns (bool)
-    {
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view override(ERC721Upgradeable) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
 
@@ -726,11 +717,10 @@ contract RiteOfMoloch is
     /**
      * @dev Encoding function for Baal Shaman
      */
-    function _encodeShamanProposal(address shaman, uint256 permission)
-        internal
-        pure
-        returns (bytes memory)
-    {
+    function _encodeShamanProposal(
+        address shaman,
+        uint256 permission
+    ) internal pure returns (bytes memory) {
         address[] memory _shaman = new address[](1);
         _shaman[0] = shaman;
 
@@ -753,6 +743,12 @@ contract RiteOfMoloch is
         address _from,
         address _to
     ) internal pure returns (bytes memory) {
+        // todo: rm admin vars and replace w/ Hats Protocol subgraph query
+        if (admin1 == _from) {
+            admin1 = _to;
+        } else if (admin2 == _from) {
+            admin2 = _to;
+        }
         return
             abi.encodeWithSignature(
                 "transferHat(uint256,address,address)",
@@ -765,11 +761,16 @@ contract RiteOfMoloch is
     /**
      * @dev Encoding function for minting an adminHat
      */
-    function _encodeMintHat(uint256 _hat, address _to)
-        internal
-        pure
-        returns (bytes memory)
-    {
+    function _encodeMintHat(
+        uint256 _hat,
+        address _to
+    ) internal pure returns (bytes memory) {
+        // todo: rm admin vars and replace w/ Hats Protocol subgraph query
+        if (admin1 == address(0)) {
+            admin1 = _to;
+        } else if (admin1 != address(0) && admin2 == address(0)) {
+            admin2 = _to;
+        }
         return abi.encodeWithSignature("mintHat(uint256,address)", _hat, _to);
     }
 
@@ -793,11 +794,10 @@ contract RiteOfMoloch is
     /**
      * @dev Format multiSend for encoded functions
      */
-    function _encodeMultiMetaTx(bytes[] memory _data, address[] memory _targets)
-        internal
-        pure
-        returns (bytes memory)
-    {
+    function _encodeMultiMetaTx(
+        bytes[] memory _data,
+        address[] memory _targets
+    ) internal pure returns (bytes memory) {
         bytes memory metaTx;
 
         for (uint256 i = 0; i < _data.length; i++) {
@@ -816,9 +816,10 @@ contract RiteOfMoloch is
     /**
      * @dev Submit voting proposal to Baal DAO
      */
-    function _submitBaalProposal(bytes memory multiSendMetaTx, uint256 options)
-        internal
-    {
+    function _submitBaalProposal(
+        bytes memory multiSendMetaTx,
+        uint256 options
+    ) internal {
         uint256 proposalOffering = baal.proposalOffering();
         require(msg.value == proposalOffering, "Missing tribute");
 
