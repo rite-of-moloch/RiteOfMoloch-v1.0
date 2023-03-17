@@ -4,7 +4,7 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
+  // ModalFooter,
   ModalHeader,
   ModalOverlay,
   useDisclosure,
@@ -18,6 +18,8 @@ import { Modal } from "@chakra-ui/modal";
 import { FieldValues, useForm } from "react-hook-form";
 import { COHORT_METADATA } from "utils/subgraph/queries";
 import { useSubgraphQuery } from "hooks/useSubgraphQuery";
+import useMintAdminHatProposal from "hooks/useMintAdminHatProposal";
+import useTransferAdminHatProposal from "hooks/useTransferAdminHatProposal";
 
 interface AddAdminModalProps {
   address: string | undefined;
@@ -36,8 +38,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ address }) => {
   const { getValues, watch, setValue } = localForm;
   const values = getValues();
 
-  // TODO: replace adminPlaceholders with values from subgraph
-
+  // TODO: REMOVE SUBGRAPH QUERY AND USE HATS CONTRACT TO GET ADMIN
   const { data: cohortAdmins } = useSubgraphQuery(COHORT_METADATA(address));
   const cohortMetadata = cohortAdmins?.data.data.cohort;
   const admin1 = cohortMetadata?.admin1;
@@ -45,13 +46,37 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ address }) => {
 
   const zeroAddress = "0x0000000000000000000000000000000000000000";
 
-  // const adminArray = [];
-  // if (admin1 !== zeroAddress) {
-  //   adminArray.push(admin1);
-  // }
-  // if (admin2 !== zeroAddress) {
-  //   adminArray.push(admin2);
-  // }
+  // create admin proposal for admin1
+  const {
+    writeMintAdminHatProposal: writeMintAdminHatProposal1,
+    isLoadingMintAdminHatProposal: isLoadingMintAdminHatProposal1,
+    // errorMintAdminHatProposal: errorMintAdminHatProposal1,
+  } = useMintAdminHatProposal(address?.toString() || "", [values?.admin1]);
+
+  // create admin proposal for admin2
+  const {
+    writeMintAdminHatProposal: writeMintAdminHatProposal2,
+    isLoadingMintAdminHatProposal: isLoadingMintAdminHatProposal2,
+    // errorMintAdminHatProposal: errorMintAdminHatProposal2,
+  } = useMintAdminHatProposal(address?.toString() || "", [values?.admin2]);
+
+  const {
+    writeTransferAdminHatProposal: writeTransferAdminHatProposal1,
+    isLoadingTransferAdminHatProposal: isLoadingTransferAdminHatProposal1,
+    // errorTransferAdminHatProposal,
+  } = useTransferAdminHatProposal(address?.toString() || "", [
+    admin1,
+    values?.admin1,
+  ]);
+
+  const {
+    writeTransferAdminHatProposal: writeTransferAdminHatProposal2,
+    isLoadingTransferAdminHatProposal: isLoadingTransferAdminHatProposal2,
+    // errorTransferAdminHatProposal,
+  } = useTransferAdminHatProposal(address?.toString() || "", [
+    admin2,
+    values?.admin2,
+  ]);
 
   const handleEdit = () => {
     setEditAdmin(true);
@@ -94,11 +119,31 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ address }) => {
   };
 
   const handleMintAdmin1 = () => {
+    setValue("admin1", values?.admin1);
     // submit transaction to HATS contract
+    writeMintAdminHatProposal1 && writeMintAdminHatProposal1();
   };
 
   const handleMintAdmin2 = () => {
+    setValue("admin2", values?.admin2);
     // submit transaction to HATS contract
+    writeMintAdminHatProposal2 && writeMintAdminHatProposal2();
+  };
+
+  const handleTransferAdminHatProposal1 = () => {
+    setValue("admin1", values?.admin1);
+    watch();
+    setEditAdmin(false);
+    // transfer HATS admin role to new address
+    writeTransferAdminHatProposal1 && writeTransferAdminHatProposal1();
+  };
+
+  const handleTransferAdminHatProposal2 = () => {
+    setValue("admin2", values?.admin2);
+    watch();
+    setEditAdmin(false);
+    // transfer HATS admin role to new address
+    writeTransferAdminHatProposal2 && writeTransferAdminHatProposal2();
   };
 
   useEffect(() => {
@@ -145,6 +190,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ address }) => {
                         size="md"
                         w="full"
                         onClick={handleMintAdmin1}
+                        isLoading={isLoadingMintAdminHatProposal1}
                       >
                         Save
                       </Button>
@@ -169,11 +215,15 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ address }) => {
                     type="text"
                     defaultValue={admin1}
                     localForm={localForm}
-                    autoComplete="false"
                     isDisabled={!editAdmin}
                   />
                   <HStack w="full">
-                    <Button onClick={handleSaveEdit} size="md" w="50%">
+                    <Button
+                      onClick={handleTransferAdminHatProposal1}
+                      isLoading={isLoadingTransferAdminHatProposal1}
+                      size="md"
+                      w="50%"
+                    >
                       Change admin
                     </Button>
                     <Button onClick={handleSaveEdit} size="md" w="50%">
@@ -202,6 +252,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ address }) => {
                         size="md"
                         w="full"
                         onClick={handleMintAdmin2}
+                        isLoading={isLoadingMintAdminHatProposal2}
                       >
                         Save
                       </Button>
@@ -230,7 +281,12 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ address }) => {
                     isDisabled={!editAdmin}
                   />
                   <HStack w="full">
-                    <Button onClick={handleSaveEdit} size="md" w="50%">
+                    <Button
+                      onClick={handleTransferAdminHatProposal2}
+                      isLoading={isLoadingTransferAdminHatProposal2}
+                      size="md"
+                      w="50%"
+                    >
                       Change admin
                     </Button>
                     <Button onClick={handleSaveEdit} size="md" w="50%">

@@ -12,7 +12,7 @@ const useTransferAdminHatProposal = (
 ) => {
   const {
     write: writeTransferAdminHatProposal,
-    prepareError: prepareErrorTransferAdminHatProposal,
+    // prepareError: prepareErrorTransferAdminHatProposal,
     isLoading: isLoadingTransferAdminHatProposal,
     isError,
     error: errorTransferAdminHatProposal,
@@ -28,7 +28,6 @@ const useTransferAdminHatProposal = (
 
   return {
     writeTransferAdminHatProposal,
-    prepareErrorTransferAdminHatProposal,
     isLoadingTransferAdminHatProposal,
     errorTransferAdminHatProposal,
   };

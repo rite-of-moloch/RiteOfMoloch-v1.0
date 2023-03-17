@@ -8,7 +8,7 @@ import useWriteContract from "./useWriteContract";
 const useMintAdminHatProposal = (contractAddress: string, args: [string]) => {
   const {
     write: writeMintAdminHatProposal,
-    prepareError: prepareErrorMintAdminHatProposal,
+    // prepareError: prepareErrorMintAdminHatProposal,
     isLoading: isLoadingMintAdminHatProposal,
     isError,
     error: errorMintAdminHatProposal,
@@ -24,7 +24,6 @@ const useMintAdminHatProposal = (contractAddress: string, args: [string]) => {
 
   return {
     writeMintAdminHatProposal,
-    prepareErrorMintAdminHatProposal,
     isLoadingMintAdminHatProposal,
     errorMintAdminHatProposal,
   };
