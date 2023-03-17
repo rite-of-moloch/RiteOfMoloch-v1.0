@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   ModalBody,
@@ -12,6 +12,7 @@ import {
   VStack,
   Input,
   HStack,
+  Text,
 } from "@raidguild/design-system";
 import { Modal } from "@chakra-ui/modal";
 import { FieldValues, useForm } from "react-hook-form";
@@ -27,6 +28,8 @@ interface AddAdminModalProps {
  */
 const AddAdminModal: React.FC<AddAdminModalProps> = ({ address }) => {
   const [editAdmin, setEditAdmin] = useState(false);
+  const [displayAddAdmin1, setDisplayAddAdmin1] = useState(false);
+  const [displayAddAdmin2, setDisplayAddAdmin2] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const localForm = useForm<FieldValues>();
@@ -39,9 +42,16 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ address }) => {
   const cohortMetadata = cohortAdmins?.data.data.cohort;
   const admin1 = cohortMetadata?.admin1;
   const admin2 = cohortMetadata?.admin2;
-  // console.log(admin1, admin2);
 
   const zeroAddress = "0x0000000000000000000000000000000000000000";
+
+  // const adminArray = [];
+  // if (admin1 !== zeroAddress) {
+  //   adminArray.push(admin1);
+  // }
+  // if (admin2 !== zeroAddress) {
+  //   adminArray.push(admin2);
+  // }
 
   const handleEdit = () => {
     setEditAdmin(true);
@@ -75,6 +85,28 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ address }) => {
     onClose();
   };
 
+  const handleDisplayAddAdmin1 = () => {
+    setDisplayAddAdmin1(!displayAddAdmin1);
+  };
+
+  const handleDisplayAddAdmin2 = () => {
+    setDisplayAddAdmin2(!displayAddAdmin2);
+  };
+
+  const handleMintAdmin1 = () => {
+    // submit transaction to HATS contract
+  };
+
+  const handleMintAdmin2 = () => {
+    // submit transaction to HATS contract
+  };
+
+  useEffect(() => {
+    console.log("admin1", admin1, "admin2", admin2);
+    console.log("displayAddAdmin1", displayAddAdmin1);
+    console.log("displayAddAdmin2", displayAddAdmin2);
+  }, [admin1, admin2]);
+
   return (
     <>
       <Button onClick={onOpen} variant="admin">
@@ -87,54 +119,129 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ address }) => {
           <ModalCloseButton />
           <ModalBody mx="-1.5em">
             <VStack spacing={3} w={["full", "80%"]} m="auto">
-              <Input
-                label="Admin 1"
-                name="admin1"
-                placeholder="Enter address"
-                type="text"
-                defaultValue={admin1 !== zeroAddress ? admin1 : ""}
-                localForm={localForm}
-                autoComplete="false"
-                isDisabled={!editAdmin}
-              />
-              <Input
-                label="Admin 2"
-                name="admin2"
-                placeholder="Enter address"
-                type="text"
-                defaultValue={admin2 !== zeroAddress ? admin1 : ""}
-                autoComplete="false"
-                localForm={localForm}
-                isDisabled={!editAdmin}
-              />
+              {/* if no admin exist, let user mint a new admin. Calls mintAdminHatsProposal function */}
+              {admin1 === zeroAddress && admin2 === zeroAddress && (
+                <>
+                  <Box>
+                    <Text textAlign="center" color="red">
+                      No HATS admin found! You can add a maximum of (2)
+                      additional admin to a cohort
+                    </Text>
+                  </Box>
+                  <VStack w="full">
+                    <Box display={displayAddAdmin1 ? "" : "none"} w="full">
+                      <Input
+                        label=""
+                        name="admin1"
+                        placeholder="Enter address"
+                        type="text"
+                        autoComplete="false"
+                        localForm={localForm}
+                      />
+                    </Box>
+                    <HStack w="full">
+                      <Button
+                        display={!displayAddAdmin1 ? "none" : ""}
+                        size="md"
+                        w="full"
+                        onClick={handleMintAdmin1}
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        size="md"
+                        w="full"
+                        onClick={handleDisplayAddAdmin1}
+                      >
+                        {!displayAddAdmin1 ? "Add HATS admin" : "Cancel"}
+                      </Button>
+                    </HStack>
+                  </VStack>
+                </>
+              )}
+              {/* if admin1 exists, display address and let user edit */}
+              {admin1 !== zeroAddress && (
+                <>
+                  <Input
+                    label="Admin 1"
+                    name="admin1"
+                    placeholder="Enter address"
+                    type="text"
+                    defaultValue={admin1}
+                    localForm={localForm}
+                    autoComplete="false"
+                    isDisabled={!editAdmin}
+                  />
+                  <HStack w="full">
+                    <Button onClick={handleSaveEdit} size="md" w="50%">
+                      Change admin
+                    </Button>
+                    <Button onClick={handleSaveEdit} size="md" w="50%">
+                      cancel
+                    </Button>
+                  </HStack>
+                </>
+              )}
+              {/* if admin1 exist, but admin2 doesn't exist, user can mint a new admin */}
+              {admin1 !== zeroAddress && admin2 === zeroAddress && (
+                <>
+                  <VStack w="full">
+                    <Box display={displayAddAdmin2 ? "" : "none"} w="full">
+                      <Input
+                        label=""
+                        name="admin2"
+                        placeholder="Enter address"
+                        type="text"
+                        autoComplete="false"
+                        localForm={localForm}
+                      />
+                    </Box>
+                    <HStack w="full">
+                      <Button
+                        display={!displayAddAdmin2 ? "none" : ""}
+                        size="md"
+                        w="full"
+                        onClick={handleMintAdmin2}
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        size="md"
+                        w="full"
+                        onClick={handleDisplayAddAdmin2}
+                      >
+                        {!displayAddAdmin2 ? "Add HATS admin" : "Cancel"}
+                      </Button>
+                    </HStack>
+                  </VStack>
+                </>
+              )}
+              {/* if admin2 exists, display address and let user edit */}
+              {admin2 !== zeroAddress && (
+                <>
+                  <Input
+                    label="Admin 2"
+                    name="admin2"
+                    placeholder="Enter address"
+                    type="text"
+                    defaultValue={admin2}
+                    autoComplete="false"
+                    localForm={localForm}
+                    isDisabled={!editAdmin}
+                  />
+                  <HStack w="full">
+                    <Button onClick={handleSaveEdit} size="md" w="50%">
+                      Change admin
+                    </Button>
+                    <Button onClick={handleSaveEdit} size="md" w="50%">
+                      cancel
+                    </Button>
+                  </HStack>
+                </>
+              )}
             </VStack>
           </ModalBody>
-          <ModalFooter>
-            <HStack>
-              <Box>
-                {editAdmin ? (
-                  <Button onClick={handleSaveEdit} size="md">
-                    Save changes
-                  </Button>
-                ) : (
-                  <Button onClick={handleEdit} size="md">
-                    Edit
-                  </Button>
-                )}
-              </Box>
-              <Box onClick={handleCancelEdit}>
-                {editAdmin ? (
-                  <Button onClick={handleCancelEdit} size="md">
-                    Cancel
-                  </Button>
-                ) : (
-                  <Button onClick={() => onClose()} size="md">
-                    Close
-                  </Button>
-                )}
-              </Box>
-            </HStack>
-          </ModalFooter>
+          {/* <ModalFooter></ModalFooter> */}
         </ModalContent>
       </Modal>
     </>

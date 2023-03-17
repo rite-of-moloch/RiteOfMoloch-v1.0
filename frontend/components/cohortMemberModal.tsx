@@ -49,8 +49,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
   const { writeSacrifice, isError, errorSacrifice, prepareErrorSacrifice } =
     useSacrifice(address?.toString());
 
-  console.log(address.toString());
-  console.log(writeSacrifice, isError, prepareErrorSacrifice, errorSacrifice);
+  // console.log(writeSacrifice, isError, prepareErrorSacrifice, errorSacrifice);
 
   const isPassedStakingDate = () => {
     const today = new Date().getTime();
