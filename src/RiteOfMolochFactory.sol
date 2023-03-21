@@ -58,27 +58,35 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
         );
 
         // deploy cohort clone proxy with a certain implementation
-        address clone = Clones.clone(implementations[implementationSelector]);
+        address clone = address(0);
 
         // initialize the cohort clone
-        RiteOfMoloch(clone).initialize(initData, hatsProtocol, msg.sender);
-
-        emit NewRiteOfMoloch(
-            clone,
-            msg.sender,
-            implementations[implementationSelector],
-            initData.membershipCriteria,
-            initData.stakingAsset,
-            initData.treasury,
-            initData.threshold,
-            initData.assetAmount,
-            initData.stakeDuration,
-            initData.baseUri,
-            initData.admin1,
-            initData.admin2
-        );
+        {
+            clone = Clones.clone(implementations[implementationSelector]);
+            RiteOfMoloch(clone).initialize(initData, hatsProtocol, msg.sender);
+        }
+        {
+            _emitNewROM(clone, implementationSelector, initData);
+        }
 
         return clone;
+    }
+
+    function _emitNewROM(address _clone,uint256 _implSelector, InitData calldata initData) private {
+            emit NewRiteOfMoloch(
+                _clone,
+                msg.sender,
+                implementations[_implSelector],
+                initData.membershipCriteria,
+                initData.stakingAsset,
+                initData.treasury,
+                initData.threshold,
+                initData.assetAmount,
+                initData.stakeDuration,
+                initData.baseUri,
+                initData.admin1,
+                initData.admin2
+            );
     }
 
     /**
