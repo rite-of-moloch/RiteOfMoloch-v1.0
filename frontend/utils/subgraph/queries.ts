@@ -23,8 +23,6 @@ export const COHORTS: QueryBuilder = () => `
             dao
             createdAt
             sbtUrl
-            admin1
-            admin2
         }
     }
 `;
@@ -39,8 +37,6 @@ export const COHORT_INITIATES: QueryBuilder = (cohortId: string) => `
                       joinedAt
                       stake
               	  }
-		  admin1
-		  admin2
           }
       }
   `;
@@ -56,8 +52,6 @@ export const COHORT_METADATA: QueryBuilder = (id: string) => `
             dao
             createdAt
             sbtUrl
-            admin1
-            admin2
         }
     }
 `;
