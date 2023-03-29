@@ -1,13 +1,15 @@
 export const CONTRACT_ADDRESSES: { [key: string]: { [key: string]: string } } =
   {
+    // chain 5 = Goerli
     5: {
       erc20TokenAddress: "0x1Cfb862056ecF2677615F9eB3420B04fb4911C01",
-      riteOfMolochFactoryAddress: "0x006BC0299e36C91E161b85b47072Fa96d4f9F97c",
+      riteOfMolochFactoryAddress: "0xe9c1090d498da72242a0834c984493a5a7c7ca57",
     },
+    // chain 100 = Gnosis
     100: {
       erc20TokenAddress: "0x18E9262e68Cc6c6004dB93105cc7c001BB103e49",
       // TODO update Gnosis factory address
-      riteOfMolochFactoryAddress: "0xBb7353efB505D63408D1C762A5C3A1636E9Ca003",
+      riteOfMolochFactoryAddress: "0xe9c1090d498da72242a0834c984493a5a7c7ca57",
     },
   };
 

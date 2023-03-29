@@ -40,7 +40,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ address }) => {
 
   // TODO: REMOVE SUBGRAPH QUERY AND USE HATS CONTRACT TO GET ADMIN
   const { data: cohortAdmins } = useSubgraphQuery(COHORT_METADATA(address));
-  const cohortMetadata = cohortAdmins?.data.data.cohort;
+  const cohortMetadata = cohortAdmins?.data?.data?.cohort;
   const admin1 = cohortMetadata?.admin1;
   const admin2 = cohortMetadata?.admin2;
 

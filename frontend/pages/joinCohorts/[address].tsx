@@ -69,7 +69,7 @@ const CohortPage = () => {
   console.log(writeClaimStake);
   // checks error message to see if usere has any stake
   const userHasNoStake =
-    prepareErrorClaimStake?.message.includes("User has no stake");
+    prepareErrorClaimStake?.message?.includes("User has no stake");
   console.log(userHasNoStake);
 
   const handleClaimStake = () => {
