@@ -1,5 +1,5 @@
 import { useNetwork } from "wagmi";
-import { CONTRACT_ADDRESSES } from "utils/constants";
+import { CONTRACT_ADDRESSES } from "utils/contractAddresses";
 
 /**
  * @remarks hook is used to get RaidGuild address if user visits `/stake' or 'stake/[address].tsx' and doens't provide valid address
