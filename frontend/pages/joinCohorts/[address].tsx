@@ -24,6 +24,7 @@ import useIsMember from "hooks/useIsMember";
 import useClaimStake from "hooks/useClaimStake";
 import BlockExplorerLink from "components/BlockExplorerLink";
 import useCohortName from "hooks/useCohortName";
+import { getDeadline, unixToUTC } from "utils/general";
 
 /**
  * Checks if msg.sender has staked to the cohort passed in by cohortAddress. Displays data about cohortAddress. msg.sender can re-claim stake, or redirect to page and
@@ -40,10 +41,11 @@ const CohortPage = () => {
 
   const cohortMetadata = useSubgraphQuery(COHORT_METADATA(cohortAddress));
   const cohortData = cohortMetadata?.data?.data?.data?.cohort;
+  console.log(cohortData);
 
   const cohortName = useCohortName(cohortAddress?.toString() || "");
-
   const tokenSymbol = useTokenSymbol(cohortData?.token);
+  const deadline = getDeadline(cohortData?.createdAt, cohortData?.time);
 
   function userAddress(): string {
     if (typeof address === "string") return address;
@@ -94,13 +96,14 @@ const CohortPage = () => {
           <Heading as="h2" fontSize="2xl" color="red" my={3}>
             <Text>{cohortName?.toString().toUpperCase()}</Text>
           </Heading>
-          <SimpleGrid columns={3} spacingX={2} w="full" fontWeight="bold">
-            <GridItem margin="auto">Cohort Address</GridItem>
-            <GridItem margin="auto">Minimum Stake</GridItem>
-            <GridItem margin="auto">Join Cohort</GridItem>
+          <SimpleGrid columns={4} spacingX={2} w="full" fontWeight="bold">
+            <GridItem m="auto">Cohort Address</GridItem>
+            <GridItem m="auto">Minimum Stake</GridItem>
+            <GridItem m="auto">Deadline</GridItem>
+            <GridItem m="auto">Join Cohort</GridItem>
           </SimpleGrid>
           <SimpleGrid
-            columns={3}
+            columns={4}
             spacingX={2}
             px={2}
             pt={2}
@@ -111,7 +114,7 @@ const CohortPage = () => {
             borderBottom="1px solid red"
             alignItems="center"
           >
-            <GridItem margin="auto">
+            <GridItem m="auto">
               <Tooltip
                 label={cohortData?.id}
                 shouldWrapChildren
@@ -121,14 +124,16 @@ const CohortPage = () => {
                 {BlockExplorerLink(chain, cohortData?.id)}
               </Tooltip>
             </GridItem>
-            <GridItem margin="auto">
+            <GridItem m="auto">
               <Text>
                 <span>{cohortData?.tokenAmount}</span>
                 <span style={{ marginLeft: "0.25em" }}>{tokenSymbol}</span>
               </Text>
             </GridItem>
-
-            <GridItem margin="auto">
+            <GridItem m="auto">
+              <Text>{unixToUTC(deadline)}</Text>
+            </GridItem>
+            <GridItem m="auto">
               <Link href={`/stake/${cohortAddress}`}>
                 <Button size="xs">Stake</Button>
               </Link>

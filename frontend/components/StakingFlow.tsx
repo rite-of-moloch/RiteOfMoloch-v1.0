@@ -90,6 +90,8 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     tokenSymbol = "N/A";
   }
 
+  console.log(cohort?.token);
+
   //TODO better handling of allowance === null
 
   if (!allowance) {
@@ -107,11 +109,19 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   );
 
   // @ts-ignore
-  const joinErrorMsg = prepareErrorJoinInitiation?.error.message.split(":")[1];
-  // console.log(joinErrorMsg);
+  // const joinErrorMsg = prepareErrorJoinInitiation?.error.message.split(":")[1];
+  // console.log(prepareErrorJoinInitiation, joinErrorMsg);
 
   //TODO methods can accept BigNumbers instead of Strings
   const canUserStake = canStake(
+    allowance.toString(),
+    minimumStake || "",
+    balanceOf.toString(),
+    initiateAddress,
+    willSponsor
+  );
+
+  console.log(
     allowance.toString(),
     minimumStake || "",
     balanceOf.toString(),
@@ -243,10 +253,10 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
                 variant="solid"
                 isLoading={isLoadingStake}
                 loadingText="Staking..."
-                isDisabled={!canUserStake || joinErrorMsg}
+                isDisabled={!canUserStake}
                 onClick={() => writeJoinInitiation && writeJoinInitiation()}
               >
-                {!joinErrorMsg ? "Stake" : "Cohort is closed"}
+                Stake
               </Button>
             </Tooltip>
           </GridItem>

@@ -24,7 +24,7 @@ const useWriteContract = (
   args?: any
 ) => {
   const abi = useAbi(abiName);
-  // const toast = useChakraToast();
+  const toast = useChakraToast();
 
   const { config, error: prepareError } = usePrepareContractWrite({
     address: (contractAddress as `0x${string}`) || "",
@@ -79,14 +79,14 @@ const useWriteContract = (
     },
     onError(err) {
       console.log(err);
-      // toast({
-      //   status: "error",
-      //   title: `Transaction Error... ${err.message}`,
-      // });
+      toast({
+        status: "error",
+        title: `Transaction Error... ${err.message}`,
+      });
     },
   });
 
-  console.log(txResponse);
+  // console.log(txResponse);
 
   return {
     write,
