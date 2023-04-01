@@ -1,16 +1,10 @@
-import {
-  Box,
-  GridItem,
-  Link,
-  SimpleGrid,
-  Text,
-  Tooltip,
-} from "@raidguild/design-system";
+import { Box, Link, Text, Tooltip } from "@raidguild/design-system";
 import React from "react";
 import useCohortName from "hooks/useCohortName";
 import { useNetwork } from "wagmi";
 import BlockExplorerLink from "./BlockExplorerLink";
 import CohortMemberModal from "./cohortMemberModal";
+import GridTemplate from "./GridTemplate";
 
 interface InitiatesAllProps {
   address: string;
@@ -34,24 +28,13 @@ const InitiatesAll: React.FC<InitiatesAllProps> = ({
   const cohortName = useCohortName(cohortId);
 
   return (
-    <SimpleGrid
-      columns={5}
-      border="1px red solid"
-      justifyContent="center"
-      alignItems="center"
-      bg="black"
-      py={2}
-      px={4}
-      rounded="md"
-      spacingX={2}
-      w="full"
-    >
-      <GridItem>
+    <GridTemplate
+      column1={
         <Tooltip label={address} shouldWrapChildren hasArrow placement="bottom">
           {BlockExplorerLink(chain, address)}
         </Tooltip>
-      </GridItem>
-      <GridItem margin="auto">
+      }
+      column2={
         <Tooltip
           label={cohortId}
           shouldWrapChildren
@@ -65,22 +48,20 @@ const InitiatesAll: React.FC<InitiatesAllProps> = ({
             {cohortName?.toString()}
           </Link>
         </Tooltip>
-      </GridItem>
-      <GridItem margin="auto">
-        <Text>{stake}</Text>
-      </GridItem>
-      <GridItem margin="auto">
-        <Text>{joinedAt}</Text>
-      </GridItem>
-      <Box justifySelf="end">
-        <CohortMemberModal
-          address={address}
-          cohortAddress={cohortId}
-          joinedAt={joinedAt}
-          stake={stake}
-        />
-      </Box>
-    </SimpleGrid>
+      }
+      column3={<Text>{stake}</Text>}
+      column4={<Text>{joinedAt}</Text>}
+      column5={
+        <Box justifySelf="end">
+          <CohortMemberModal
+            address={address}
+            cohortAddress={cohortId}
+            joinedAt={joinedAt}
+            stake={stake}
+          />
+        </Box>
+      }
+    />
   );
 };
 

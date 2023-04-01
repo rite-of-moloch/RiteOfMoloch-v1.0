@@ -20,6 +20,7 @@ import NotConnected from "components/NotConnected";
 import NobodyStaked from "components/NobodyStaked";
 import useCohortName from "hooks/useCohortName";
 import AddAdminModal from "components/AddAdminModal";
+import GridTemplate from "components/GridTemplate";
 
 interface CohortDetailProps {
   children: ReactNode;
@@ -101,19 +102,11 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
           {/* </HStack> */}
 
           {isInitiates && (
-            <SimpleGrid
-              columns={4}
-              fontFamily="texturina"
-              justifyContent="center"
-              alignItems="center"
-              px={4}
-              spacingX={2}
-              w="full"
-            >
-              <GridItem margin="auto">Initiate</GridItem>
-              <GridItem margin="auto">Shares</GridItem>
-              <GridItem margin="auto">Date Staked</GridItem>
-            </SimpleGrid>
+            <GridTemplate
+              column1="Initiate"
+              column2="Shares"
+              column3="Date Staked"
+            />
           )}
           {isLoading && (
             <Box w="full" textAlign="center" p={2} fontFamily="texturina">

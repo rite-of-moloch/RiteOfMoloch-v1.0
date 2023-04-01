@@ -25,6 +25,7 @@ import useClaimStake from "hooks/useClaimStake";
 import BlockExplorerLink from "components/BlockExplorerLink";
 import useCohortName from "hooks/useCohortName";
 import { getDeadline, unixToUTC } from "utils/general";
+import GridTemplate from "components/GridTemplate";
 
 /**
  * Checks if msg.sender has staked to the cohort passed in by cohortAddress. Displays data about cohortAddress. msg.sender can re-claim stake, or redirect to page and
@@ -96,25 +97,17 @@ const CohortPage = () => {
           <Heading as="h2" fontSize="2xl" color="red" my={3}>
             <Text>{cohortName?.toString().toUpperCase()}</Text>
           </Heading>
-          <SimpleGrid columns={4} spacingX={2} w="full" fontWeight="bold">
-            <GridItem m="auto">Cohort Address</GridItem>
-            <GridItem m="auto">Minimum Stake</GridItem>
-            <GridItem m="auto">Deadline</GridItem>
-            <GridItem m="auto">Join Cohort</GridItem>
-          </SimpleGrid>
-          <SimpleGrid
-            columns={4}
-            spacingX={2}
-            px={2}
-            pt={2}
-            pb={2.5}
-            w="full"
-            bg="black"
-            borderTop="1px solid red"
-            borderBottom="1px solid red"
-            alignItems="center"
-          >
-            <GridItem m="auto">
+          {/* Grid for heading */}
+          <GridTemplate
+            isHeading
+            style="noSideBorders"
+            column1="Cohort Address"
+            column2="Minimum Stake"
+            column3="Deadline"
+            column4="Join Cohort"
+          />
+          <GridTemplate
+            column1={
               <Tooltip
                 label={cohortData?.id}
                 shouldWrapChildren
@@ -123,22 +116,20 @@ const CohortPage = () => {
               >
                 {BlockExplorerLink(chain, cohortData?.id)}
               </Tooltip>
-            </GridItem>
-            <GridItem m="auto">
+            }
+            column2={
               <Text>
                 <span>{cohortData?.tokenAmount}</span>
                 <span style={{ marginLeft: "0.25em" }}>{tokenSymbol}</span>
               </Text>
-            </GridItem>
-            <GridItem m="auto">
-              <Text>{unixToUTC(deadline)}</Text>
-            </GridItem>
-            <GridItem m="auto">
+            }
+            column3={unixToUTC(deadline)}
+            column4={
               <Link href={`/stake/${cohortAddress}`}>
                 <Button size="xs">Stake</Button>
               </Link>
-            </GridItem>
-          </SimpleGrid>
+            }
+          />
           <Box p={4}>
             <Image
               m="auto"
