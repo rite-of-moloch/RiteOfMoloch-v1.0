@@ -12,24 +12,24 @@ const useTransferAdminHatProposal = (
 ) => {
   const {
     write: writeTransferAdminHatProposal,
-    // prepareError: prepareErrorTransferAdminHatProposal,
-    isLoading: isLoadingTransferAdminHatProposal,
+    isLoading,
     isError,
-    error: errorTransferAdminHatProposal,
+    error,
   } = useWriteContract(
     contractAddress,
     "riteOfMolochAddress",
-    "transferAdminHatProposal"
+    "transferAdminHatProposal",
+    args
   );
 
   if (isError) {
-    console.log(errorTransferAdminHatProposal);
+    console.log(isError, error);
   }
 
   return {
     writeTransferAdminHatProposal,
-    isLoadingTransferAdminHatProposal,
-    errorTransferAdminHatProposal,
+    isLoading,
+    error,
   };
 };
 

@@ -1,103 +1,141 @@
-import { Box, Button, HStack, Input, VStack } from "@raidguild/design-system";
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  HStack,
+  Input,
+  Text,
+  VStack,
+} from "@raidguild/design-system";
 import { utils } from "ethers";
-import React, { Dispatch, useState } from "react";
-import { FieldValues, UseFormRegister, UseFormReturn } from "react-hook-form";
+import useTransferAdminHatProposal from "hooks/useTransferAdminHatProposal";
+import { FieldValues, useForm } from "react-hook-form";
 import { zeroAddress } from "utils/constants";
+import AdminModalAddresses from "./AdminModalAddresses";
 
 interface EditCohortAdminsProps {
+  address: string | undefined;
   admin1: string;
   admin2: string;
-  localForm: UseFormReturn;
-  register: UseFormRegister<FieldValues>;
-  setEditAdmins: Dispatch<boolean>;
 }
 /**
  * @remarks This component renders on CohortAdminModal when editAdmins is true. Users can remove current admins and add new admins. Contract allows maximum of 2 HATS admins.
  * if isEditing is set to true, button toggles to "done editing" and inputs become inactive
+ * @param address - cohort address
  * @param admin1 - HATS admin1 of RoM contract
  * @param admin2 - HATS admin2 of RoM contract
- * @param localForm useForm hook passed in from parent component to manage state.
- * @param register useForm hook passed in from parent component to manage state.
- * @param setEditAdmins passed in from CohortAdminModal. If true, this component will not render.
  * @returns VStack containing HStack with button to add new admin.
  */
 const EditCohortAdmins: React.FC<EditCohortAdminsProps> = ({
+  address,
   admin1,
   admin2,
-  localForm,
-  register,
-  setEditAdmins,
 }) => {
-  const [isEditing, setIsEditing] = useState(true);
-  const { setValue } = localForm;
+  const [editAdmins, setEditAdmins] = useState(false);
+  const localForm = useForm<FieldValues>();
+  const {
+    register,
+    getValues,
+    watch,
+    setValue,
+    formState: { errors },
+  } = localForm;
 
-  const handleDoneEditing = () => {
-    setIsEditing(false);
+  watch();
+  const values = getValues();
+  console.log(values);
+
+  const {
+    writeTransferAdminHatProposal: changeAdmin1,
+    isLoading: loadingAdmin1,
+    error: errorChangeAdmin1,
+  } = useTransferAdminHatProposal(address || "", [admin1, values?.admin1]);
+
+  const {
+    writeTransferAdminHatProposal: changeAdmin2,
+    isLoading: loadingAdmin2,
+    error: errorChangeAdmin2,
+  } = useTransferAdminHatProposal(address || "", [admin2, values?.admin2]);
+
+  const handleSaveAdmin1 = () => {
+    if (values.admin1 === "") {
+      setValue("admin1", zeroAddress);
+    }
+    changeAdmin1 && changeAdmin1();
   };
 
-  const handleEdit = () => {
-    setIsEditing(true);
+  const handleSaveAdmin2 = () => {
+    console.log(errors);
+    if (values.admin2 === "") {
+      setValue("admin2", zeroAddress);
+    }
+    changeAdmin2 && changeAdmin2();
   };
 
   const handleCloseModal = () => {
     setEditAdmins(false);
   };
 
-  const handleSaveAdminChange = () => {
-    null;
-  };
+  useEffect(() => {
+    console.log(admin1, admin2);
+  }, [admin1, admin2]);
 
   return (
-    <VStack>
-      <HStack alignItems="end" w="full">
-        <Button w="min">+</Button>
-        <Input
-          label="Admin 1"
-          placeholder="Enter address..."
-          isDisabled={!isEditing}
-          defaultValue={admin1 !== zeroAddress ? admin1 : ""}
-          localForm={localForm}
-          {...register("admin1", {
-            onChange: (e) => setValue("admin1", e.target.value),
-            validate: (val) => utils.isAddress(val),
-          })}
-        />
-      </HStack>
-      <HStack alignItems="end" w="full">
-        <Button w="min">+</Button>
-        <Input
-          label="Admin 2"
-          placeholder="Enter address..."
-          isDisabled={!isEditing}
-          defaultValue={admin2 !== zeroAddress ? admin2 : ""}
-          localForm={localForm}
-          {...register("admin2", {
-            onChange: (e) => setValue("admin2", e.target.value),
-            validate: (val) => utils.isAddress(val),
-          })}
-        />
-      </HStack>
-      <HStack alignItems="end" w="full" mt="2rem">
-        <Box mt="2rem">
-          <Button
-            fontFamily="spaceMono"
-            onClick={() => (isEditing ? handleDoneEditing() : handleEdit())}
-          >
-            {isEditing ? "Done Edting" : "Edit"}
+    <>
+      <AdminModalAddresses
+        admin1={admin1}
+        admin2={admin2}
+        editAdmins={editAdmins}
+        setEditAdmins={setEditAdmins}
+      />
+      <VStack display={editAdmins ? "block" : "none"}>
+        <HStack alignItems="end" w="full">
+          <Input
+            label="Admin 1"
+            placeholder="Enter address..."
+            defaultValue={admin1 !== zeroAddress ? admin1 : ""}
+            localForm={localForm}
+            {...register("admin1", {
+              onChange: (e) => setValue("admin1", e.target.value),
+              validate: (val) => utils.isAddress(val),
+            })}
+          />
+          <Button onClick={() => handleSaveAdmin1()} isLoading={loadingAdmin1}>
+            save
           </Button>
-        </Box>
+        </HStack>
+        <HStack alignItems="end" w="full">
+          <Input
+            label="Admin 2"
+            placeholder="Enter address..."
+            defaultValue={admin2 !== zeroAddress ? admin2 : ""}
+            localForm={localForm}
+            {...register("admin2", {
+              onChange: (e) => setValue("admin2", e.target.value),
+              validate: (val) => utils.isAddress(val),
+            })}
+          />
+          <Button onClick={() => handleSaveAdmin2()} isLoading={loadingAdmin2}>
+            Save
+          </Button>
+        </HStack>
         <Box>
-          <Button
-            fontFamily="spaceMono"
-            onClick={() => {
-              !isEditing ? handleSaveAdminChange() : handleCloseModal();
-            }}
-          >
-            {!isEditing ? "Save Changes" : "Cancel"}
-          </Button>
+          <Text my="1rem" textAlign="center">
+            * You may only save 1 admin at a time. Each Rite of Moloch contract
+            allows for a maximum of (2) HATS admin .
+          </Text>
         </Box>
-      </HStack>
-    </VStack>
+        <HStack alignItems="end" w="full" mt="2rem" justifyContent="center">
+          <Button
+            w="50%"
+            fontFamily="spaceMono"
+            onClick={() => handleCloseModal()}
+          >
+            Done Editing
+          </Button>
+        </HStack>
+      </VStack>
+    </>
   );
 };
 

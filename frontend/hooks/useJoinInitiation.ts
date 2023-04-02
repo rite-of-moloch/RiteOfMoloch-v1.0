@@ -9,9 +9,7 @@ import useWriteContract from "./useWriteContract";
 const useJoinInitiation = (contractAddress: string, args: [string]) => {
   const {
     write: writeJoinInitiation,
-    // prepareError: prepareErrorJoinInitiation,
     isLoading: isLoadingStake,
-    // isSuccess: isSuccessStake,
     isError: isErrorStake,
     error: errorJoinInitiation,
   } = useWriteContract(
@@ -27,11 +25,7 @@ const useJoinInitiation = (contractAddress: string, args: [string]) => {
 
   return {
     writeJoinInitiation,
-    // prepareErrorJoinInitiation,
     isLoadingStake,
-    // isSuccessStake,
-    // isErrorStake,
-    // errorJoinInitiation,
   };
 };
 
