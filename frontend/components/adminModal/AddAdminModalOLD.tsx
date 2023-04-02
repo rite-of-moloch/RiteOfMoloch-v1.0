@@ -111,57 +111,57 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ address }) => {
     values?.admin2,
   ]);
 
-  const handleEdit = () => {
-    setEditAdmin1(true);
-  };
+  // const handleEdit = () => {
+  //   setEditAdmin1(true);
+  // };
 
-  const handleSaveEdit = () => {
-    // submit transaction to HATS contract
-    setValue("admin1", values?.admin1);
-    setValue("admin2", values?.admin2);
-    watch();
-    setEditAdmin1(false);
-    onClose();
-  };
+  // const handleSaveEdit = () => {
+  //   // submit transaction to HATS contract
+  //   setValue("admin1", values?.admin1);
+  //   setValue("admin2", values?.admin2);
+  //   watch();
+  //   setEditAdmin1(false);
+  //   onClose();
+  // };
 
   // if user clicks cancel, form values will revert back to original admin values which are pulled from a subgraph query
-  const handleCancelEdit = () => {
-    if (admin1 !== zeroAddress) {
-      setValue("admin1", admin1);
-    } else {
-      setValue("admin1", "");
-    }
+  // const handleCancelEdit = () => {
+  //   if (admin1 !== zeroAddress) {
+  //     setValue("admin1", admin1);
+  //   } else {
+  //     setValue("admin1", "");
+  //   }
 
-    if (admin2 !== zeroAddress) {
-      setValue("admin2", admin2);
-    } else {
-      setValue("admin2", "");
-    }
+  //   if (admin2 !== zeroAddress) {
+  //     setValue("admin2", admin2);
+  //   } else {
+  //     setValue("admin2", "");
+  //   }
 
-    watch();
-    setEditAdmin1(false);
-    onClose();
-  };
+  //   watch();
+  //   setEditAdmin1(false);
+  //   onClose();
+  // };
 
-  const handleDisplayAddAdmin1 = () => {
-    setDisplayAddAdmin1(true);
-  };
+  // const handleDisplayAddAdmin1 = () => {
+  //   setDisplayAddAdmin1(true);
+  // };
 
-  const handleDisplayAddAdmin2 = () => {
-    setDisplayAddAdmin2(true);
-  };
+  // const handleDisplayAddAdmin2 = () => {
+  //   setDisplayAddAdmin2(true);
+  // };
 
-  const handleMintAdmin1 = () => {
-    setValue("admin1", values?.admin1);
-    // submit transaction to HATS contract
-    newAdmin1 && newAdmin1();
-  };
+  // const handleMintAdmin1 = () => {
+  //   setValue("admin1", values?.admin1);
+  //   // submit transaction to HATS contract
+  //   newAdmin1 && newAdmin1();
+  // };
 
-  const handleMintAdmin2 = () => {
-    setValue("admin2", values?.admin2);
-    // submit transaction to HATS contract
-    newAdmin2 && newAdmin2();
-  };
+  // const handleMintAdmin2 = () => {
+  //   setValue("admin2", values?.admin2);
+  //   // submit transaction to HATS contract
+  //   newAdmin2 && newAdmin2();
+  // };
 
   const handleTransferAdminHatProposal1 = () => {
     // setValue("admin1", values?.admin1);
@@ -191,8 +191,10 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ address }) => {
           <ModalHeader>Cohort Administrators</ModalHeader>
           <ModalCloseButton />
           <ModalBody mx="-1.5em">
-            <VStack spacing={3} w={["full", "80%"]} m="auto">
-              {/* if no admin exist, let user mint a new admin. Calls mintAdminHatsProposal function */}
+            <VStack spacing={3} w={["full", "80%"]} m="auto"></VStack>
+            {/* OLD CODE BELOW */}
+            {/* <VStack spacing={3} w={["full", "80%"]} m="auto">
+
               {admin1 === zeroAddress && admin2 === zeroAddress && (
                 <>
                   <Box>
@@ -233,10 +235,10 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ address }) => {
                   </VStack>
                 </>
               )}
-              {/* if admin1 exists, display address and let user edit */}
+
               {admin1 !== zeroAddress && (
                 <>
-                  {/* editAdmin is set to true when user clicks "change admin button" */}
+
                   <Input
                     display={!displayAddAdmin1 ? "none" : "block"}
                     label={`Admin 1: ${admin1}`}
@@ -273,7 +275,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ address }) => {
                   </HStack>
                 </>
               )}
-              {/* if admin1 exist, but admin2 doesn't exist, user can mint a new admin */}
+
               {admin1 !== zeroAddress && admin2 === zeroAddress && (
                 <>
                   <VStack w="full">
@@ -308,7 +310,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ address }) => {
                   </VStack>
                 </>
               )}
-              {/* if admin2 exists, display address and let user edit */}
+
               {admin2 !== zeroAddress && (
                 <>
                   <Input
@@ -345,7 +347,7 @@ const AddAdminModal: React.FC<AddAdminModalProps> = ({ address }) => {
                   </HStack>
                 </>
               )}
-            </VStack>
+            </VStack> */}
           </ModalBody>
         </ModalContent>
       </Modal>

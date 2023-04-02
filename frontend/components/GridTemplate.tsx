@@ -33,7 +33,7 @@ const GridTemplate: React.FC<GridTemplateProps> = ({
 }) => {
   return (
     <SimpleGrid
-      columns={4}
+      columns={!column5 ? 4 : 5}
       bg={!isHeading ? "black" : "none"}
       fontFamily="texturina"
       justifyContent="center"

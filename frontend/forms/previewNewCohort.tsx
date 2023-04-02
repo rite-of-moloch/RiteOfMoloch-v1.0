@@ -14,6 +14,7 @@ import { useNetwork } from "wagmi";
 import { initDataDeployCohort } from "utils/types/initDataDeployCohort";
 import CohortConfirmation from "components/CohortConfirmationModal";
 import BlockExplorerLink from "components/BlockExplorerLink";
+import { zeroAddress } from "utils/constants";
 
 /**
  * @remarks this component renders a preview of all 3 parts of form data. It also builds function handleDeployCohort, which submits data to riteOfMolochFactory contract and creates a new cohort
@@ -64,8 +65,6 @@ const PreviewNewCohort = () => {
     setDisplayPart3(true);
     setDisplayPreviewNewCohort(false);
   };
-
-  const zeroAddress = "0x0000000000000000000000000000000000000000";
 
   const initData: initDataDeployCohort = [
     membershipCriteria,

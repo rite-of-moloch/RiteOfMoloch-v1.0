@@ -19,7 +19,7 @@ import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";
 import NobodyStaked from "components/NobodyStaked";
 import useCohortName from "hooks/useCohortName";
-import AddAdminModal from "components/AddAdminModal";
+import CohortAdminModal from "components/adminModal/cohortAdminModal";
 import GridTemplate from "components/GridTemplate";
 
 interface CohortDetailProps {
@@ -36,7 +36,7 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
 
   const initiateList: MemberData[] | undefined =
     data?.data?.data?.cohort?.initiates;
-  console.log(initiateList);
+  // console.log(initiateList);
 
   const renderInitiateList = initiateList?.map((initiate: MemberData) => {
     const dateJoined = new Date(+initiate.joinedAt * 1000).toLocaleDateString();
@@ -83,26 +83,12 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
               {cohortAddress}
             </Link>
             <Box>
-              <AddAdminModal address={cohortAddress?.toString()} />
+              <CohortAdminModal address={cohortAddress?.toString()} />
             </Box>
           </Stack>
-
-          {/* <HStack textAlign="center">
-            <Box fontSize="md" fontWeight="normal" mb={"1rem"}>
-              <Link
-                href={`${chain?.blockExplorers?.default.url}/address/${cohortAddress}`}
-                isExternal
-              >
-                {cohortAddress}
-              </Link>
-            </Box> */}
-          {/* <Box>
-            <AddAdminModal address={cohortAddress?.toString()} />
-          </Box> */}
-          {/* </HStack> */}
-
           {isInitiates && (
             <GridTemplate
+              isHeading
               column1="Initiate"
               column2="Shares"
               column3="Date Staked"

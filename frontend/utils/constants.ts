@@ -11,3 +11,5 @@ export const CONTRACT_ADDRESSES: { [key: string]: { [key: string]: string } } =
       // riteOfMolochFactoryAddress: "0xe9c1090d498da72242a0834c984493a5a7c7ca57",
     },
   };
+
+export const zeroAddress = "0x0000000000000000000000000000000000000000";

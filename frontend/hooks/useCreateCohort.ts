@@ -1,6 +1,6 @@
 import { initDataDeployCohort } from "utils/types/initDataDeployCohort";
 import useWriteContract from "./useWriteContract";
-import { CONTRACT_ADDRESSES } from "utils/contractAddresses";
+import { CONTRACT_ADDRESSES } from "utils/constants";
 import { useNetwork } from "wagmi";
 
 /**
