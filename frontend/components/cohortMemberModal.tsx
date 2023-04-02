@@ -23,6 +23,7 @@ import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import BlockExplorerLink from "./BlockExplorerLink";
 import useSacrifice from "hooks/useSacrifice";
 import useCohortName from "hooks/useCohortName";
+import GridTemplate from "./GridTemplate";
 
 interface CohortMemberModalProps {
   address: string;
@@ -49,8 +50,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
   const { writeSacrifice, isError, errorSacrifice, prepareErrorSacrifice } =
     useSacrifice(address?.toString());
 
-  console.log(address.toString());
-  console.log(writeSacrifice, isError, prepareErrorSacrifice, errorSacrifice);
+  // console.log(writeSacrifice, isError, prepareErrorSacrifice, errorSacrifice);
 
   const isPassedStakingDate = () => {
     const today = new Date().getTime();
@@ -81,29 +81,14 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody mx="-1.5em">
-            <SimpleGrid columns={3} spacingX={2} mb={2}>
-              <Box justifySelf="center" textAlign="center" w="full">
-                <Text>Initiate Address:</Text>
-              </Box>
-              <Box justifySelf="center" textAlign="center" w="full">
-                <Text>Minimum shares:</Text>
-              </Box>
-              <Box justifySelf="center" textAlign="center" w="full">
-                <Text>Date Staked:</Text>
-              </Box>
-            </SimpleGrid>
-            <SimpleGrid
-              columns={3}
-              spacingX={2}
-              px={2}
-              pt={2}
-              pb={2.5}
-              bg="black"
-              borderTop="1px solid red"
-              borderBottom="1px solid red"
-              alignItems="center"
-            >
-              <GridItem margin="auto">
+            <GridTemplate
+              isHeading
+              column1="Initiate Address"
+              column2="Minimum Shares"
+              column3="Date Staked"
+            />
+            <GridTemplate
+              column1={
                 <Tooltip
                   label={address}
                   shouldWrapChildren
@@ -112,16 +97,11 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
                 >
                   <Text>{address && BlockExplorerLink(chain, address)}</Text>
                 </Tooltip>
-              </GridItem>
-              <GridItem margin="auto">
-                <Text>{stake}</Text>
-              </GridItem>
-              <GridItem margin="auto">
-                <Text>{joinedAt}</Text>
-              </GridItem>
-            </SimpleGrid>
+              }
+              column2={stake}
+              column3={joinedAt}
+            />
           </ModalBody>
-
           <ModalFooter>
             <Box>
               <Button

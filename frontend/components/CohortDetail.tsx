@@ -1,14 +1,9 @@
-import React, { FC } from "react";
-import {
-  Button,
-  SimpleGrid,
-  Link,
-  Text,
-  GridItem,
-} from "@raidguild/design-system";
+import React from "react";
+import { Button, Link, Text, HStack } from "@raidguild/design-system";
 import { useNetwork } from "wagmi";
 import useTokenSymbol from "hooks/useTokenSymbol";
 import useCohortName from "hooks/useCohortName";
+import GridTemplate from "./GridTemplate";
 
 interface CohortDetailProps {
   address: string;
@@ -28,7 +23,7 @@ interface CohortDetailProps {
  * @returns grid with cohort data. Gets rendered on ../index.tsx
  */
 
-const CohortDetail: FC<CohortDetailProps> = ({
+const CohortDetail: React.FC<CohortDetailProps> = ({
   address,
   stake,
   stakingAsset,
@@ -48,30 +43,16 @@ const CohortDetail: FC<CohortDetailProps> = ({
 
   return (
     <>
-      <SimpleGrid
-        columns={4}
-        fontFamily="texturina"
-        border="1px red solid"
-        justifyContent="center"
-        alignItems="center"
-        bg="black"
-        px={4}
-        pt={2}
-        pb={3}
-        rounded="md"
-        spacingX={2}
-      >
-        <GridItem>{cohortNameLink}</GridItem>
-        <GridItem margin="auto">
-          <Text>
-            <span>{stake}</span>
-            <span style={{ marginLeft: "0.25em" }}>
-              {useTokenSymbol(stakingAsset)}
-            </span>
-          </Text>
-        </GridItem>
-        <GridItem margin="auto">{stakingDate}</GridItem>
-        <GridItem justifySelf="end">
+      <GridTemplate
+        column1={cohortNameLink}
+        column2={
+          <HStack>
+            <Text>{stake}</Text>
+            <Text ml="0.25rem">{useTokenSymbol(stakingAsset)}</Text>
+          </HStack>
+        }
+        column3={stakingDate}
+        column4={
           <Link
             href={
               memberOrAdmin === "member"
@@ -83,8 +64,8 @@ const CohortDetail: FC<CohortDetailProps> = ({
               {memberOrAdmin === "admin" ? "Manage" : "Details"}
             </Button>
           </Link>
-        </GridItem>
-      </SimpleGrid>
+        }
+      />
     </>
   );
 };

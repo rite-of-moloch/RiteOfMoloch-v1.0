@@ -1,10 +1,8 @@
 import React, { ReactNode } from "react";
 import {
   Box,
-  GridItem,
   Heading,
   HStack,
-  SimpleGrid,
   Spinner,
   Stack,
   Text,
@@ -22,6 +20,7 @@ import { COHORTS } from "utils/subgraph/queries";
 import { Cohort } from "utils/types/subgraphQueries";
 import { useAccount } from "wagmi";
 import useRiteBalanceOf from "hooks/useRiteBalanceOf";
+import GridTemplate from "components/GridTemplate";
 
 interface JoinCohortsProps {
   children?: ReactNode;
@@ -125,21 +124,12 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
                   <SearchCohorts name="searchResult" localForm={localForm} />
                 </Box>
               </HStack>
-
-              <SimpleGrid
-                columns={4}
-                fontFamily="texturina"
-                justifyContent="center"
-                alignItems="center"
-                spacingX={2}
-                mb={-3}
-                w="full"
-              >
-                <GridItem margin="auto">Cohort</GridItem>
-                <GridItem margin="auto">Required Stake</GridItem>
-                <GridItem margin="auto">Staking Date</GridItem>
-                <GridItem />
-              </SimpleGrid>
+              <GridTemplate
+                isHeading
+                column1="Cohort"
+                column2="Required Stake"
+                column3="Staking Date"
+              />
             </>
           )}
           {isLoading && (
