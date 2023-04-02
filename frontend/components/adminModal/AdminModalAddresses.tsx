@@ -11,9 +11,11 @@ interface AdminModalAddressesProps {
 
 /**
  * @remarks - This component is used in the CohortAdminModal component to display the current admin addresses. Component will not display if editAdmins state is true in CohortAdminModal component
- * @param admin1 - address of admin 1 pulled from RoM contract
- * @param admin2 - address of admin 2 pulled from RoM contract
- * @returns div that displays admin addresses and edit button
+ * @param admin1 - address of admin 1 pulled from RoM contract.
+ * @param admin2 - address of admin 2 pulled from RoM contract.
+ * @param editAdmins - stateful logic used to determine whethere or not to display nodes. passed down from EditCohortAdmin component.
+ * @param setEditAdmins - useState setter function for editAdmins passed down from EditCohortAdmin component.
+ * @returns div that displays admin addresses and edit button.
  */
 const AdminModalAddresses: React.FC<AdminModalAddressesProps> = ({
   admin1,

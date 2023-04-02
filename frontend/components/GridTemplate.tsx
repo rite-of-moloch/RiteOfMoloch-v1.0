@@ -31,15 +31,24 @@ const GridTemplate: React.FC<GridTemplateProps> = ({
   column4,
   column5,
 }) => {
+  const columnLogic = () => {
+    if (!column4) {
+      return 3;
+    }
+    if (!column5) {
+      return 4;
+    }
+  };
+
   return (
     <SimpleGrid
-      columns={!column5 ? 4 : 5}
+      columns={columnLogic()}
       bg={!isHeading ? "black" : "none"}
       fontFamily="texturina"
       justifyContent="center"
       alignItems="center"
       spacingX={2}
-      mb={-3}
+      mb={!isHeading ? -3 : 0}
       w="full"
       border={!isHeading ? "1px red solid" : "none"}
       borderLeft={style === "noSideBorders" ? "0px" : ""}
@@ -49,7 +58,6 @@ const GridTemplate: React.FC<GridTemplateProps> = ({
       pb={3}
       rounded={style !== "noSideBorders" ? "md" : "none"}
     >
-      {/* {children} */}
       <GridItem margin="auto">{column1}</GridItem>
       <GridItem margin="auto">{column2}</GridItem>
       <GridItem margin="auto">{column3}</GridItem>
