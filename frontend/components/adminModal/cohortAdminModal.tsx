@@ -19,12 +19,17 @@ import EditCohortAdmins from "./EditCohortAdmins";
 
 interface CohortAdminModalProps {
   address: string | undefined;
+  btnVariant?: "outline" | "admin";
 }
 /**
  * @param address pass in cohort address
+ * @param btnVariant button variant
  * @returns modal that displays HATS admin. User can click edit, which toggles editAdmin to "edit". User can then change or remote an address to click "save", which will toggle editAdmin to "edit", and create a transaction that creates admins
  */
-const CohortAdminModal: React.FC<CohortAdminModalProps> = ({ address }) => {
+const CohortAdminModal: React.FC<CohortAdminModalProps> = ({
+  address,
+  btnVariant = "admin",
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   // TODO: REMOVE SUBGRAPH QUERY AND USE HATS CONTRACT TO GET ADMIN
@@ -55,7 +60,7 @@ const CohortAdminModal: React.FC<CohortAdminModalProps> = ({ address }) => {
 
   return (
     <>
-      <Button onClick={onOpen} variant="admin">
+      <Button onClick={onOpen} variant={btnVariant} w="full">
         Cohort Admins
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
