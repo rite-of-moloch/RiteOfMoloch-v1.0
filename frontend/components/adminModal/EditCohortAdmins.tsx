@@ -9,7 +9,8 @@ import {
 } from "@raidguild/design-system";
 import { utils } from "ethers";
 import useTransferAdminHatProposal from "hooks/useTransferAdminHatProposal";
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, useForm, Controller } from "react-hook-form";
+
 import { zeroAddress } from "utils/constants";
 import AdminModalAddresses from "./AdminModalAddresses";
 
@@ -18,6 +19,12 @@ interface EditCohortAdminsProps {
   admin1: string;
   admin2: string;
 }
+
+type FormValues = {
+  admin1: string;
+  admin2: string;
+};
+
 /**
  * @remarks This component renders on CohortAdminModal when editAdmins is true. Users can remove current admins and add new admins. Contract allows maximum of 2 HATS admins.
  * if isEditing is set to true, button toggles to "done editing" and inputs become inactive
@@ -32,6 +39,7 @@ const EditCohortAdmins: React.FC<EditCohortAdminsProps> = ({
   admin2,
 }) => {
   const [editAdmins, setEditAdmins] = useState(false);
+
   const localForm = useForm<FieldValues>();
   const {
     register,
@@ -40,6 +48,8 @@ const EditCohortAdmins: React.FC<EditCohortAdminsProps> = ({
     setValue,
     formState: { errors },
   } = localForm;
+
+  const { handleSubmit, control } = useForm<FormValues>();
 
   watch();
   const values = getValues();
@@ -100,11 +110,45 @@ const EditCohortAdmins: React.FC<EditCohortAdminsProps> = ({
               validate: (val) => utils.isAddress(val),
             })}
           />
+          {/* <Controller
+            control={control}
+            name="admin1"
+            render={({ field: { onChange, ref, ...restField } }) => (
+              <Input
+                label="Admin 1"
+                placeholder="Enter address..."
+                defaultValue={admin1 !== zeroAddress ? admin1 : ""}
+                localForm={localForm}
+                // {...restField}
+                {...register("admin1", {
+                  onChange: (e) => setValue("admin1", e.target.value),
+                  validate: (val) => utils.isAddress(val),
+                })}
+              />
+            )}
+          /> */}
           <Button onClick={() => handleSaveAdmin1()} isLoading={loadingAdmin1}>
             save
           </Button>
         </HStack>
         <HStack alignItems="end" w="full">
+          {/* <Controller
+            control={control}
+            name="admin2"
+            render={({ field: { onChange, ref, ...restField } }) => (
+              <Input
+                label="Admin 2"
+                placeholder="Enter address..."
+                defaultValue={admin2 !== zeroAddress ? admin2 : ""}
+                localForm={localForm}
+                // {...restField}
+                {...register("admin2", {
+                  onChange: (e) => setValue("admin2", e.target.value),
+                  validate: (val) => utils.isAddress(val),
+                })}
+              />
+            )}
+          /> */}
           <Input
             label="Admin 2"
             placeholder="Enter address..."

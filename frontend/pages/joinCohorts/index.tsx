@@ -129,6 +129,7 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
                 column1="Cohort"
                 column2="Required Stake"
                 column3="Staking Date"
+                column4="Cohort Details"
               />
             </>
           )}

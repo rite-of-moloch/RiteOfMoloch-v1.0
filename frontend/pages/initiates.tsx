@@ -21,6 +21,7 @@ import SearchCohorts from "components/SearchCohorts";
 import { FieldValues, useForm } from "react-hook-form";
 import InitiatesAll from "components/InitiatesAll";
 import { unixToUTC } from "utils/general";
+import GridTemplate from "components/GridTemplate";
 
 /**
  * @returns list of all addresses that have staked to a cohort
@@ -81,20 +82,14 @@ const Initiates = () => {
             <Box w={["50%", "50%", "40%", "30%"]} alignSelf="end">
               <SearchCohorts name="searchResult" localForm={localForm} />
             </Box>
-            <SimpleGrid columns={5} fontWeight="bold">
-              <GridItem margin="auto">
-                <Text>Address</Text>
-              </GridItem>
-              <GridItem margin="auto">
-                <Text>Cohort</Text>
-              </GridItem>
-              <GridItem margin="auto">
-                <Text>Stake</Text>
-              </GridItem>
-              <GridItem margin="auto">
-                <Text>Date Staked</Text>
-              </GridItem>
-            </SimpleGrid>
+            <GridTemplate
+              column1="Address"
+              column2="Cohort"
+              column3="Stake"
+              column4="DateStaked"
+              column5={" "}
+              isHeading
+            />
             {filteredInitiates}
           </Stack>
           <Box textAlign="center" w={["full", "full", "80%"]} py={2}></Box>

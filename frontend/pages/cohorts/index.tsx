@@ -99,7 +99,7 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
                 column1="Address"
                 column2="Stake"
                 column3="Deadline"
-                column4={null}
+                column4="Manage"
               />
             </>
           )}

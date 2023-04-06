@@ -15,8 +15,11 @@ interface InitiatesAllProps {
 
 /**
  * @remarks this is used to render initiates from the INITIATES subgraphquery. InitiatesAll (this) component gets rendered in Initiates page
- * @param param0
- * @returns
+ * @param address - initiates EOA address
+ * @param cohortId - address of cohort
+ * @param stake - amount that user has staked to ROM contract
+ * @param joinedAt - date that address staked to ROM contract
+ * @returns grid that renders data
  */
 const InitiatesAll: React.FC<InitiatesAllProps> = ({
   address,

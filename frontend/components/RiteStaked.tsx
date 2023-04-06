@@ -46,7 +46,7 @@ const RiteStaked: React.FC<RiteStakedProps> = ({
           defaultValue={["false"]}
           options={["Sponsor an Initiate"]}
           isChecked={willSponsor}
-          onChange={handleWillSponsor}
+          onChange={() => handleWillSponsor}
           hidden={willSponsor ? true : false}
         />
       </Flex>

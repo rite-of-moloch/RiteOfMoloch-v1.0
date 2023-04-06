@@ -2,17 +2,17 @@ import { SimpleGrid, GridItem } from "@raidguild/design-system";
 import React, { ReactNode } from "react";
 
 interface GridTemplateProps {
-  isHeading?: boolean;
-  style?: string | null;
   column1: string | ReactNode;
   column2: string | ReactNode;
   column3: string | ReactNode;
   column4?: string | ReactNode | null;
-  column5?: ReactNode;
+  column5?: ReactNode | null;
+  isHeading?: boolean;
+  style?: string | null;
 }
 
 /**
- * @remarks component is used to render a grid with 4 columns
+ * @remarks component is used to render a grid with an adjustable number of columns
  * @param isHeading - true if grid is a heading. isHeading: false if grid is a row
  * @param style - if style is "noSideBorders" the grid will have top and bottom border only
  * @param column1 - value of the first column
@@ -23,20 +23,21 @@ interface GridTemplateProps {
  * @returns Chakra UI SimpleGrid component
  */
 const GridTemplate: React.FC<GridTemplateProps> = ({
-  isHeading = false,
-  style = null,
   column1,
   column2,
   column3,
   column4,
   column5,
+  isHeading = false,
+  style = null,
 }) => {
   const columnLogic = () => {
     if (!column4) {
       return 3;
-    }
-    if (!column5) {
+    } else if (!column5) {
       return 4;
+    } else if (column5) {
+      return 5;
     }
   };
 
