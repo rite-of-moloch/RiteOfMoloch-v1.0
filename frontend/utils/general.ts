@@ -41,11 +41,11 @@ export const stakeTooltip = (
       label =
         "You must approve the contract to spend your balance before you can stake";
     } else if (utils.formatEther(balanceOf) < utils.formatEther(minimumStake)) {
-      label = "Your RAID balance is too low";
+      label = "Your balance is too low";
     }
   } else if (!willSponsor) {
     if (utils.formatEther(balanceOf) < utils.formatEther(minimumStake)) {
-      label = "Your RAID balance is too low";
+      label = "Your balance is too low";
     } else if (utils.formatEther(allowance) < utils.formatEther(minimumStake)) {
       label =
         "Allowance is smaller than the minimum stake amount. Please approve allowance.";
@@ -62,7 +62,7 @@ export const approveTooltip = (
 ): string | null => {
   let label: string = "";
   if (utils.formatEther(balanceOf) < utils.formatEther(minimumStake)) {
-    label = "Your RAID balance is too low";
+    label = "Your balance is too low";
   } else if (utils.formatEther(allowance) < utils.formatEther(minimumStake)) {
     label = `Approve contract to spend your ${tokenSymbol}`;
   } else {

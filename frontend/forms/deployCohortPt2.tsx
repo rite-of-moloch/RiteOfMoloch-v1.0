@@ -224,7 +224,7 @@ const DeployCohortPt2 = () => {
                   localForm={localForm}
                   step={1}
                   min={0}
-                  max={Infinity}
+                  max={1000}
                   {...restField}
                 >
                   <NumberInputField ref={ref} name={restField.name} />

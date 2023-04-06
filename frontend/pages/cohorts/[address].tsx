@@ -92,6 +92,7 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
               column1="Initiate"
               column2="Shares"
               column3="Date Staked"
+              column4="Manage"
             />
           )}
           {isLoading && (

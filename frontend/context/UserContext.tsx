@@ -1,11 +1,11 @@
-import React, { createContext, useState } from "react";
+import React, { Dispatch, createContext, useState } from "react";
 
 export const UserContext = createContext<{
   willSponsor: boolean;
-  handleWillSponsor: any;
+  handleWillSponsor: Dispatch<boolean>;
 }>({
   willSponsor: false,
-  handleWillSponsor: null,
+  handleWillSponsor: useState,
 });
 
 interface UserProviderProps {

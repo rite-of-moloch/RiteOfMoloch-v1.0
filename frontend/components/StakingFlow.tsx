@@ -179,7 +179,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
               value="Sponsor an Initiate"
               options={["Sponsor an Initiate"]}
               isChecked={willSponsor}
-              onChange={handleWillSponsor}
+              onChange={() => handleWillSponsor}
             />
             <Box w="full" hidden={!willSponsor ? true : false}>
               <Input
