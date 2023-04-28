@@ -6,12 +6,13 @@ import {RiteOfMolochFactory} from "src/RiteOfMolochFactory.sol";
 import {IHats} from "hats-protocol/Interfaces/IHats.sol";
 
 // create with verify
-// forge script script/ROMFactory.s.sol:ROMFactoryScript --rpc-url $RU --private-key $PK --broadcast --verify --etherscan-api-key $EK -vvvv
+// forge script script/ROMFactory.s.sol:ROMFactoryScript --rpc-url $RUS --private-key $PK --broadcast --verify --etherscan-api-key $EK -vvvv
+// forge script script/ROMFactory.s.sol:ROMFactoryScript --rpc-url https://rpc.gnosischain.com --private-key $PRIVATE_KEY --broadcast --verify --etherscan-api-key $GK -vvvv
 
 contract ROMFactoryScript is Script {
     // Hats interface and protocol implementation
     IHats internal HATS;
-    address constant hatsProtocol = 0x96bD657Fcc04c71B47f896a829E5728415cbcAa1;
+    address constant hatsProtocol = 0x9D2dfd6066d5935267291718E8AA16C8Ab729E9d;
 
     // Operator hat for ROM-factory deployment
     uint256 public factoryOperatorHat;
@@ -32,7 +33,11 @@ contract ROMFactoryScript is Script {
 
     function hatTreeSetup() public {
         // this Script contract will be the admin of the factory (for development only)
-        uint256 topHatFactory = HATS.mintTopHat(msg.sender, "ROM-Factory TopHat", "");
+        uint256 topHatFactory = HATS.mintTopHat(
+            msg.sender,
+            "ROM-Factory TopHat",
+            ""
+        );
 
         factoryOperatorHat = HATS.createHat(
             topHatFactory,

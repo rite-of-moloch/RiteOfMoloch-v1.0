@@ -215,7 +215,7 @@ contract RiteOfMoloch is
      */
     modifier callerIsUser() {
         // for testing in Forge: disable
-        require(tx.origin == msg.sender, "The caller is another contract!");
+        // require(tx.origin == msg.sender, "The caller is another contract!");
         _;
     }
 
@@ -742,7 +742,7 @@ contract RiteOfMoloch is
         uint256 _hat,
         address _from,
         address _to
-    ) internal pure returns (bytes memory) {
+    ) internal returns (bytes memory) {
         // todo: rm admin vars and replace w/ Hats Protocol subgraph query
         if (admin1 == _from) {
             admin1 = _to;
@@ -764,7 +764,7 @@ contract RiteOfMoloch is
     function _encodeMintHat(
         uint256 _hat,
         address _to
-    ) internal pure returns (bytes memory) {
+    ) internal returns (bytes memory) {
         // todo: rm admin vars and replace w/ Hats Protocol subgraph query
         if (admin1 == address(0)) {
             admin1 = _to;

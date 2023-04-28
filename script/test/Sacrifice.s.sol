@@ -5,10 +5,10 @@ import {TestHelperScript} from "script/test/utils/TestHelper.s.sol";
 import {RiteOfMoloch} from "src/RiteOfMoloch.sol";
 
 // create with verify and broadcast
-// forge script script/test/Sacrifice.s.sol:SacrificeScript --rpc-url $RU --broadcast --verify --etherscan-api-key $EK -vvvv
+// forge script script/test/Sacrifice.s.sol:SacrificeScript --rpc-url $RUS --broadcast --verify --etherscan-api-key $EK -vvvv
 
 // test; no broadcast
-// forge script script/test/Sacrifice.s.sol:SacrificeScript --rpc-url $RU -vvvv
+// forge script script/test/Sacrifice.s.sol:SacrificeScript --rpc-url $RUS -vvvv
 
 contract SacrificeScript is TestHelperScript {
     function run() public {

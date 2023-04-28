@@ -17,8 +17,8 @@ import {IBaal} from "src/baal/IBaal.sol";
 contract TestHelperScript is Script, IInitData {
     // test token for staking asset
     ERC20 public constant token =
-        ERC20(0xA49dF10dD5B84257dE634F4350218f615471Fc69);
-    uint256 public constant minStake = (1 * 10e18) / 2; // 0.5 erc20token
+        ERC20(0xB6Bd6e0e1A104782EB6477120C7Aaf424e0656E1);
+    uint256 public constant minStake = (10 * 1e18) / 2; // 0.5 erc20token
 
     // Baal V3 address and Gnosis Safe Avatar (treasury)
     IBaal public constant baal =
@@ -39,7 +39,7 @@ contract TestHelperScript is Script, IInitData {
     // Hats interface and current deployment release
     IHats public HATS;
     address public constant hatsProtocol =
-        0x96bD657Fcc04c71B47f896a829E5728415cbcAa1;
+        0x9D2dfd6066d5935267291718E8AA16C8Ab729E9d;
 
     // Hats topHat for testing Baal proposal with existing topHat
     uint256 public topHatMoloch;
