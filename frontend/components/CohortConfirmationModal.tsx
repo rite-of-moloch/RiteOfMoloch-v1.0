@@ -10,6 +10,7 @@ import {
   Image,
   Button,
   Link,
+  HStack,
 } from "@raidguild/design-system";
 import { Modal } from "@chakra-ui/modal";
 
@@ -48,13 +49,26 @@ const CohortConfirmationModal: React.FC<CohortConfirmationModalProps> = ({
             <Image src="/assets/guild_sunset.png" alt="guild-sunset-logo" />
           </Box>
           <ModalFooter>
-            <Box w="full" textAlign="center">
-              <Link href="/">
-                <Button variant="solid" size="md">
-                  Home
-                </Button>
-              </Link>
-            </Box>
+            <HStack
+              m="auto"
+              w={["full", "full", "70%", "50%"]}
+              spacing={"1rem"}
+            >
+              <Box w="50%">
+                <Link href="/cohorts">
+                  <Button variant="solid" size="md" w="full">
+                    View Cohorts
+                  </Button>
+                </Link>
+              </Box>
+              <Box w="50%">
+                <Link href="/">
+                  <Button variant="solid" size="md" w="full">
+                    Home
+                  </Button>
+                </Link>
+              </Box>
+            </HStack>
           </ModalFooter>
         </ModalContent>
       </Modal>

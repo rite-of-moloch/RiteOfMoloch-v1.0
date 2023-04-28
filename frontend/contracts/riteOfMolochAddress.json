@@ -394,18 +394,15 @@
   },
   {
     "inputs": [],
-    "name": "SUPER_ADMIN",
-    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "name": "admin1",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
-    "name": "_roles",
-    "outputs": [
-      { "internalType": "uint256", "name": "hat", "type": "uint256" },
-      { "internalType": "bytes32", "name": "adminRole", "type": "bytes32" }
-    ],
+    "inputs": [],
+    "name": "admin2",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -427,12 +424,30 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "baal",
+    "outputs": [
+      { "internalType": "contract IBaal", "name": "", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       { "internalType": "address", "name": "owner", "type": "address" }
     ],
     "name": "balanceOf",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address[]", "name": "to", "type": "address[]" }
+    ],
+    "name": "batchMintBaalShares",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -459,6 +474,15 @@
   },
   {
     "inputs": [
+      { "internalType": "uint256", "name": "_joinDuration", "type": "uint256" }
+    ],
+    "name": "changeJoinTimeDuration",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
       { "internalType": "bytes32", "name": "role", "type": "bytes32" },
       { "internalType": "uint256", "name": "newRoleHat", "type": "uint256" }
     ],
@@ -473,7 +497,7 @@
     ],
     "name": "checkStake",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -485,8 +509,22 @@
   },
   {
     "inputs": [],
+    "name": "cohortCounter",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "cohortName",
     "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "cohortSeason",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -504,15 +542,6 @@
     "name": "cryForHelp",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "dao",
-    "outputs": [
-      { "internalType": "contract MolochDAO", "name": "", "type": "address" }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -545,9 +574,7 @@
       { "internalType": "address", "name": "user", "type": "address" }
     ],
     "name": "getDeadline",
-    "outputs": [
-      { "internalType": "uint256", "name": "deadline", "type": "uint256" }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -602,11 +629,6 @@
             "type": "address"
           },
           { "internalType": "address", "name": "treasury", "type": "address" },
-          {
-            "internalType": "address",
-            "name": "topHatWearer",
-            "type": "address"
-          },
           { "internalType": "address", "name": "admin1", "type": "address" },
           { "internalType": "address", "name": "admin2", "type": "address" },
           {
@@ -634,9 +656,10 @@
           { "internalType": "string", "name": "cohortName", "type": "string" },
           { "internalType": "string", "name": "sbtName", "type": "string" },
           { "internalType": "string", "name": "sbtSymbol", "type": "string" },
-          { "internalType": "string", "name": "baseUri", "type": "string" }
+          { "internalType": "string", "name": "baseUri", "type": "string" },
+          { "internalType": "bool", "name": "shamanOn", "type": "bool" }
         ],
-        "internalType": "struct InitializationData.InitData",
+        "internalType": "struct IInitData.InitData",
         "name": "initData",
         "type": "tuple"
       },
@@ -644,6 +667,17 @@
       { "internalType": "address", "name": "caller_", "type": "address" }
     ],
     "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_deployer", "type": "address" },
+      { "internalType": "address", "name": "_admin1", "type": "address" },
+      { "internalType": "address", "name": "_admin2", "type": "address" }
+    ],
+    "name": "initializeHatTree",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -663,9 +697,14 @@
       { "internalType": "address", "name": "user", "type": "address" }
     ],
     "name": "isMember",
-    "outputs": [
-      { "internalType": "bool", "name": "memberStatus", "type": "bool" }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "joinDuration",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -707,6 +746,13 @@
     "type": "function"
   },
   {
+    "inputs": [{ "internalType": "address", "name": "_to", "type": "address" }],
+    "name": "mintAdminHatProposal",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "name",
     "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
@@ -733,13 +779,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address[]",
-        "name": "failedInitiates",
-        "type": "address[]"
-      }
-    ],
+    "inputs": [],
     "name": "sacrifice",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -814,10 +854,23 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "superAdminHat",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
+    "inputs": [{ "internalType": "address", "name": "_to", "type": "address" }],
+    "name": "singleMintBaalShares",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_sacrificialLamb",
+        "type": "address"
+      }
+    ],
+    "name": "slaughter",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -853,10 +906,13 @@
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "name": "totalSlash",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
+    "inputs": [
+      { "internalType": "address", "name": "_from", "type": "address" },
+      { "internalType": "address", "name": "_to", "type": "address" }
+    ],
+    "name": "transferAdminHatProposal",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

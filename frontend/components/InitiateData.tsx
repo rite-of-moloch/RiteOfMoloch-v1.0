@@ -1,9 +1,10 @@
-import { Box, GridItem, SimpleGrid, Tooltip } from "@raidguild/design-system";
+import { Box, Tooltip } from "@raidguild/design-system";
 import React from "react";
 import { MemberData } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
 import BlockExplorerLink from "./BlockExplorerLink";
 import CohortMemberModal from "./cohortMemberModal";
+import GridTemplate from "./GridTemplate";
 
 const InitiateData: React.FC<MemberData> = ({
   address,
@@ -14,34 +15,25 @@ const InitiateData: React.FC<MemberData> = ({
   const { chain } = useNetwork();
 
   return (
-    <SimpleGrid
-      columns={4}
-      border="1px red solid"
-      justifyContent="center"
-      alignItems="center"
-      bg="black"
-      py={2}
-      px={4}
-      rounded="md"
-      spacingX={2}
-      w="full"
-    >
-      <GridItem margin="auto">
+    <GridTemplate
+      column1={
         <Tooltip label={address} shouldWrapChildren hasArrow placement="bottom">
           {BlockExplorerLink(chain, address)}
         </Tooltip>
-      </GridItem>
-      <GridItem margin="auto">{stake}</GridItem>
-      <GridItem margin="auto">{joinedAt}</GridItem>
-      <Box justifySelf="end">
-        <CohortMemberModal
-          address={address}
-          cohortAddress={cohortAddress}
-          joinedAt={joinedAt}
-          stake={stake}
-        />
-      </Box>
-    </SimpleGrid>
+      }
+      column2={stake}
+      column3={joinedAt}
+      column4={
+        <Box justifySelf="end">
+          <CohortMemberModal
+            address={address}
+            cohortAddress={cohortAddress}
+            joinedAt={joinedAt}
+            stake={stake}
+          />
+        </Box>
+      }
+    />
   );
 };
 

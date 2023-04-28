@@ -19,7 +19,8 @@ import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";
 import NobodyStaked from "components/NobodyStaked";
 import useCohortName from "hooks/useCohortName";
-import AddAdminModal from "components/AddAdminModal";
+import CohortAdminModal from "components/adminModal/cohortAdminModal";
+import GridTemplate from "components/GridTemplate";
 
 interface CohortDetailProps {
   children: ReactNode;
@@ -35,7 +36,7 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
 
   const initiateList: MemberData[] | undefined =
     data?.data?.data?.cohort?.initiates;
-  console.log(initiateList);
+  // console.log(initiateList);
 
   const renderInitiateList = initiateList?.map((initiate: MemberData) => {
     const dateJoined = new Date(+initiate.joinedAt * 1000).toLocaleDateString();
@@ -82,38 +83,17 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
               {cohortAddress}
             </Link>
             <Box>
-              {/* <AddAdminModal address={cohortAddress?.toString()} /> */}
+              <CohortAdminModal address={cohortAddress?.toString()} />
             </Box>
           </Stack>
-
-          {/* <HStack textAlign="center">
-            <Box fontSize="md" fontWeight="normal" mb={"1rem"}>
-              <Link
-                href={`${chain?.blockExplorers?.default.url}/address/${cohortAddress}`}
-                isExternal
-              >
-                {cohortAddress}
-              </Link>
-            </Box> */}
-          {/* <Box>
-            <AddAdminModal address={cohortAddress?.toString()} />
-          </Box> */}
-          {/* </HStack> */}
-
           {isInitiates && (
-            <SimpleGrid
-              columns={4}
-              fontFamily="texturina"
-              justifyContent="center"
-              alignItems="center"
-              px={4}
-              spacingX={2}
-              w="full"
-            >
-              <GridItem margin="auto">Initiate</GridItem>
-              <GridItem margin="auto">Shares</GridItem>
-              <GridItem margin="auto">Date Staked</GridItem>
-            </SimpleGrid>
+            <GridTemplate
+              isHeading
+              column1="Initiate"
+              column2="Shares"
+              column3="Date Staked"
+              column4="Manage"
+            />
           )}
           {isLoading && (
             <Box w="full" textAlign="center" p={2} fontFamily="texturina">

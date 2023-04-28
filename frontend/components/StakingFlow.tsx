@@ -90,28 +90,29 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     tokenSymbol = "N/A";
   }
 
+  console.log(cohort?.token);
+
   //TODO better handling of allowance === null
 
   if (!allowance) {
     allowance = BigNumber.from("0") || "0";
   }
 
-  const {
-    writeJoinInitiation,
-    isLoadingStake,
-    isErrorStake,
-    prepareErrorJoinInitiation,
-  } = useJoinInitiation(
+  const { writeJoinInitiation, isLoadingStake } = useJoinInitiation(
     cohort?.id || "",
     !willSponsor ? [userAddress()] : [initiateAddress]
   );
 
-  // @ts-ignore
-  const joinErrorMsg = prepareErrorJoinInitiation?.error.message.split(":")[1];
-  // console.log(joinErrorMsg);
-
   //TODO methods can accept BigNumbers instead of Strings
   const canUserStake = canStake(
+    allowance.toString(),
+    minimumStake || "",
+    balanceOf.toString(),
+    initiateAddress,
+    willSponsor
+  );
+
+  console.log(
     allowance.toString(),
     minimumStake || "",
     balanceOf.toString(),
@@ -178,7 +179,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
               value="Sponsor an Initiate"
               options={["Sponsor an Initiate"]}
               isChecked={willSponsor}
-              onChange={handleWillSponsor}
+              onChange={() => handleWillSponsor}
             />
             <Box w="full" hidden={!willSponsor ? true : false}>
               <Input
@@ -243,10 +244,10 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
                 variant="solid"
                 isLoading={isLoadingStake}
                 loadingText="Staking..."
-                isDisabled={!canUserStake || joinErrorMsg}
+                isDisabled={!canUserStake}
                 onClick={() => writeJoinInitiation && writeJoinInitiation()}
               >
-                {!joinErrorMsg ? "Stake" : "Cohort is closed"}
+                Stake
               </Button>
             </Tooltip>
           </GridItem>

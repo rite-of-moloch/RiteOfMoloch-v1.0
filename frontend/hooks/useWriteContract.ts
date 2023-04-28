@@ -71,22 +71,22 @@ const useWriteContract = (
     },
     onSuccess(data) {
       console.log("success", data);
-      toast({
-        status: "success",
-        title: `Transaction success! ${data?.hash}`,
-        size: "xs",
-      });
+      // toast({
+      //   status: "success",
+      //   title: `Transaction success! ${data?.hash}`,
+      //   size: "xs",
+      // });
     },
     onError(err) {
       console.log(err);
-      // toast({
-      //   status: "error",
-      //   title: `Transaction Error... ${err.message}`,
-      // });
+      toast({
+        status: "error",
+        title: `Transaction Error... ${err.message}`,
+      });
     },
   });
 
-  console.log(txResponse);
+  // console.log(txResponse);
 
   return {
     write,

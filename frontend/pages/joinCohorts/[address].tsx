@@ -24,6 +24,8 @@ import useIsMember from "hooks/useIsMember";
 import useClaimStake from "hooks/useClaimStake";
 import BlockExplorerLink from "components/BlockExplorerLink";
 import useCohortName from "hooks/useCohortName";
+import { getDeadline, unixToUTC } from "utils/general";
+import GridTemplate from "components/GridTemplate";
 
 /**
  * Checks if msg.sender has staked to the cohort passed in by cohortAddress. Displays data about cohortAddress. msg.sender can re-claim stake, or redirect to page and
@@ -40,10 +42,11 @@ const CohortPage = () => {
 
   const cohortMetadata = useSubgraphQuery(COHORT_METADATA(cohortAddress));
   const cohortData = cohortMetadata?.data?.data?.data?.cohort;
+  console.log(cohortData);
 
   const cohortName = useCohortName(cohortAddress?.toString() || "");
-
   const tokenSymbol = useTokenSymbol(cohortData?.token);
+  const deadline = getDeadline(cohortData?.createdAt, cohortData?.time);
 
   function userAddress(): string {
     if (typeof address === "string") return address;
@@ -59,13 +62,18 @@ const CohortPage = () => {
 
   console.log(isMember);
 
-  const { writeClaimStake, prepareErrorClaimStake, isLoadingClaimStake } =
-    useClaimStake(cohortData?.id);
+  const {
+    writeClaimStake,
+    prepareErrorClaimStake,
+    isLoadingClaimStake,
+    errorClaimStake,
+  } = useClaimStake(cohortData?.id);
 
+  console.log(writeClaimStake);
   // checks error message to see if usere has any stake
-  // const userHasNoStake =
-  //   prepareErrorClaimStake?.message.includes("User has no stake");
-  // console.log(userHasNoStake);
+  const userHasNoStake =
+    prepareErrorClaimStake?.message?.includes("User has no stake");
+  console.log(userHasNoStake);
 
   const handleClaimStake = () => {
     console.log("isMember", isMember);
@@ -89,24 +97,17 @@ const CohortPage = () => {
           <Heading as="h2" fontSize="2xl" color="red" my={3}>
             <Text>{cohortName?.toString().toUpperCase()}</Text>
           </Heading>
-          <SimpleGrid columns={3} spacingX={2} w="full" fontWeight="bold">
-            <GridItem margin="auto">Cohort Address</GridItem>
-            <GridItem margin="auto">Minimum Stake</GridItem>
-            <GridItem margin="auto">Join Cohort</GridItem>
-          </SimpleGrid>
-          <SimpleGrid
-            columns={3}
-            spacingX={2}
-            px={2}
-            pt={2}
-            pb={2.5}
-            w="full"
-            bg="black"
-            borderTop="1px solid red"
-            borderBottom="1px solid red"
-            alignItems="center"
-          >
-            <GridItem margin="auto">
+          {/* Grid for heading */}
+          <GridTemplate
+            isHeading
+            style="noSideBorders"
+            column1="Cohort Address"
+            column2="Minimum Stake"
+            column3="Deadline"
+            column4="Join Cohort"
+          />
+          <GridTemplate
+            column1={
               <Tooltip
                 label={cohortData?.id}
                 shouldWrapChildren
@@ -115,20 +116,20 @@ const CohortPage = () => {
               >
                 {BlockExplorerLink(chain, cohortData?.id)}
               </Tooltip>
-            </GridItem>
-            <GridItem margin="auto">
+            }
+            column2={
               <Text>
                 <span>{cohortData?.tokenAmount}</span>
                 <span style={{ marginLeft: "0.25em" }}>{tokenSymbol}</span>
               </Text>
-            </GridItem>
-
-            <GridItem margin="auto">
+            }
+            column3={unixToUTC(deadline)}
+            column4={
               <Link href={`/stake/${cohortAddress}`}>
                 <Button size="xs">Stake</Button>
               </Link>
-            </GridItem>
-          </SimpleGrid>
+            }
+          />
           <Box p={4}>
             <Image
               m="auto"
@@ -146,10 +147,10 @@ const CohortPage = () => {
               <Button
                 size="md"
                 onClick={handleClaimStake}
-                isDisabled={!!prepareErrorClaimStake}
+                isDisabled={userHasNoStake}
                 isLoading={isLoadingClaimStake}
               >
-                {!prepareErrorClaimStake ? "Claim Stake" : "No stake to claim!"}
+                {!userHasNoStake ? "Claim Stake" : "No stake to claim!"}
               </Button>
             </Box>
           )}

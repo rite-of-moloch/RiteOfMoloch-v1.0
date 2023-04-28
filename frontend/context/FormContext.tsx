@@ -1,103 +1,103 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, Dispatch } from "react";
 
 export const FormContext = createContext<{
   displayPart1: boolean;
-  setDisplayPart1: any;
+  setDisplayPart1: Dispatch<boolean>;
   displayPart2: boolean;
-  setDisplayPart2: any;
+  setDisplayPart2: Dispatch<boolean>;
   displayPart3: boolean;
-  setDisplayPart3: any;
+  setDisplayPart3: Dispatch<boolean>;
   displayPreviewNewCohort: boolean;
-  setDisplayPreviewNewCohort: any;
+  setDisplayPreviewNewCohort: Dispatch<boolean>;
   stakingAsset: string;
-  setStakingAsset: any;
+  setStakingAsset: Dispatch<string>;
   nameCohort: string;
-  setNameCohort: any;
+  setNameCohort: Dispatch<string>;
   nameSBT: string;
-  setNameSBT: any;
+  setNameSBT: Dispatch<string>;
   sbtImage: string;
-  setSbtImage: any;
+  setSbtImage: Dispatch<string>;
   symbolSBT: string;
-  setSymbolSBT: any;
+  setSymbolSBT: Dispatch<string>;
   uriSBT: string;
-  setUriSBT: any;
+  setUriSBT: Dispatch<string>;
   treasury: string;
-  setTreasury: any;
+  setTreasury: Dispatch<string>;
   membershipCriteria: string;
-  setMembershipCriteria: any;
-  assetAmount: number | null;
-  setAssetAmount: any;
-  cohortSize: number | null;
-  setCohortSize: any;
-  shareThreshold: number | null;
-  setShareThreshold: any;
-  onboardingPeriod: number | null;
-  setOnboardingPeriod: any;
-  stakeDuration: number | null;
-  setStakeDuration: any;
+  setMembershipCriteria: Dispatch<string>;
+  assetAmount: number | undefined;
+  setAssetAmount: Dispatch<number | undefined>;
+  cohortSize: number | undefined;
+  setCohortSize: Dispatch<number | undefined>;
+  shareThreshold: number | undefined;
+  setShareThreshold: Dispatch<number | undefined>;
+  onboardingPeriod: number | undefined;
+  setOnboardingPeriod: Dispatch<number | undefined>;
+  stakeDuration: number | undefined;
+  setStakeDuration: Dispatch<number | undefined>;
   topHatWearer: string;
-  setTopHatWearer: any;
-  tophatID: number | null;
-  setTophatID: any;
+  setTopHatWearer: Dispatch<string>;
+  tophatID: number | undefined;
+  setTophatID: Dispatch<number | undefined>;
   admin1: string;
-  setAdmin1: any;
+  setAdmin1: Dispatch<string>;
   admin2: string;
-  setAdmin2: any;
+  setAdmin2: Dispatch<string>;
   superadmin1: boolean;
-  setSuperadmin1: any;
+  setSuperadmin1: Dispatch<boolean>;
   superadmin2: boolean;
-  setSuperadmin2: any;
+  setSuperadmin2: Dispatch<boolean>;
   shamanOn: boolean;
-  setShamanOn: any;
+  setShamanOn: Dispatch<boolean>;
 }>({
   displayPart1: true,
-  setDisplayPart1: null,
+  setDisplayPart1: useState,
   displayPart2: false,
-  setDisplayPart2: null,
+  setDisplayPart2: useState,
   displayPart3: false,
-  setDisplayPart3: null,
+  setDisplayPart3: useState,
   displayPreviewNewCohort: false,
-  setDisplayPreviewNewCohort: null,
+  setDisplayPreviewNewCohort: useState,
   stakingAsset: "",
-  setStakingAsset: null,
+  setStakingAsset: useState,
   nameCohort: "",
-  setNameCohort: null,
+  setNameCohort: useState,
   nameSBT: "",
-  setNameSBT: null,
+  setNameSBT: useState,
   sbtImage: "",
-  setSbtImage: null,
+  setSbtImage: useState,
   symbolSBT: "",
-  setSymbolSBT: null,
+  setSymbolSBT: useState,
   uriSBT: "",
-  setUriSBT: null,
+  setUriSBT: useState,
   treasury: "",
-  setTreasury: null,
+  setTreasury: useState,
   membershipCriteria: "",
-  setMembershipCriteria: null,
-  assetAmount: null,
-  setAssetAmount: null,
-  cohortSize: null,
-  setCohortSize: null,
-  shareThreshold: null,
-  setShareThreshold: null,
-  onboardingPeriod: null,
-  setOnboardingPeriod: null,
-  stakeDuration: null,
-  setStakeDuration: null,
+  setMembershipCriteria: useState,
+  assetAmount: undefined,
+  setAssetAmount: useState,
+  cohortSize: undefined,
+  setCohortSize: useState,
+  shareThreshold: undefined,
+  setShareThreshold: useState,
+  onboardingPeriod: undefined,
+  setOnboardingPeriod: useState,
+  stakeDuration: undefined,
+  setStakeDuration: useState,
   topHatWearer: "",
-  setTopHatWearer: null,
-  tophatID: null,
-  setTophatID: null,
+  setTopHatWearer: useState,
+  tophatID: undefined,
+  setTophatID: useState,
   admin1: "",
-  setAdmin1: null,
+  setAdmin1: useState,
   admin2: "",
-  setAdmin2: null,
+  setAdmin2: useState,
   superadmin1: false,
-  setSuperadmin1: null,
+  setSuperadmin1: useState,
   superadmin2: false,
-  setSuperadmin2: null,
+  setSuperadmin2: useState,
   shamanOn: false,
-  setShamanOn: null,
+  setShamanOn: useState,
 });
 
 interface FormProviderProps {
@@ -115,15 +115,21 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   const [sbtImage, setSbtImage] = useState("");
   const [symbolSBT, setSymbolSBT] = useState("");
   const [uriSBT, setUriSBT] = useState("");
-  const [assetAmount, setAssetAmount] = useState<number | null>(null);
-  const [cohortSize, setCohortSize] = useState<number | null>(null);
-  const [shareThreshold, setShareThreshold] = useState<number | null>(null);
-  const [onboardingPeriod, setOnboardingPeriod] = useState<number | null>(null);
+  const [assetAmount, setAssetAmount] = useState<number | undefined>(undefined);
+  const [cohortSize, setCohortSize] = useState<number | undefined>(undefined);
+  const [shareThreshold, setShareThreshold] = useState<number | undefined>(
+    undefined
+  );
+  const [onboardingPeriod, setOnboardingPeriod] = useState<number | undefined>(
+    undefined
+  );
   const [treasury, setTreasury] = useState("");
   const [membershipCriteria, setMembershipCriteria] = useState("");
-  const [stakeDuration, setStakeDuration] = useState<number | null>(null);
+  const [stakeDuration, setStakeDuration] = useState<number | undefined>(
+    undefined
+  );
   const [topHatWearer, setTopHatWearer] = useState("");
-  const [tophatID, setTophatID] = useState<number | null>(null);
+  const [tophatID, setTophatID] = useState<number | undefined>(undefined);
   const [admin1, setAdmin1] = useState("");
   const [admin2, setAdmin2] = useState("");
   const [superadmin1, setSuperadmin1] = useState(false);

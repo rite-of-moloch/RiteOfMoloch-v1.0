@@ -22,6 +22,7 @@ import { useNetwork } from "wagmi";
 
 import BlockExplorerLink from "./BlockExplorerLink";
 import CohortMetricsOverall from "./CohortMetricsOverall";
+import CohortAdminModal from "./adminModal/cohortAdminModal";
 
 interface CohortMetricsBoxProps {
   removeOption: Dispatch<any>;
@@ -163,15 +164,7 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
               </Link>
             </Box>
             <Box w="full">
-              <Link href={"/admin"}>
-                <Button
-                  w="full"
-                  fontSize={["xs", "sm", "sm", "md"]}
-                  variant="outline"
-                >
-                  Admins
-                </Button>
-              </Link>
+              <CohortAdminModal address={id} btnVariant="outline" />
             </Box>
           </VStack>
         </Box>

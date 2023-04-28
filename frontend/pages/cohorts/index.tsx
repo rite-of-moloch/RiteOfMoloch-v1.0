@@ -18,6 +18,7 @@ import { useAccount } from "wagmi";
 import NotConnected from "components/NotConnected";
 import SearchCohorts from "components/SearchCohorts";
 import { FieldValues, useForm } from "react-hook-form";
+import GridTemplate from "components/GridTemplate";
 
 interface ReviewOngoingCohortProps {
   children?: ReactNode;
@@ -93,22 +94,13 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
                 <SearchCohorts name="searchResult" localForm={localForm} />
               </Box>
 
-              <SimpleGrid
-                columns={4}
-                fontFamily="texturina"
-                justifyContent="center"
-                alignItems="center"
-                spacingX={2}
-                mb={-3}
-                w="full"
-              >
-                <GridItem margin="auto" pl={4}>
-                  Address
-                </GridItem>
-                <GridItem margin="auto">Stake</GridItem>
-                <GridItem margin="auto">Deadline</GridItem>
-                <GridItem />
-              </SimpleGrid>
+              <GridTemplate
+                isHeading
+                column1="Address"
+                column2="Stake"
+                column3="Deadline"
+                column4="Manage"
+              />
             </>
           )}
           {filteredCohorts && filteredCohorts?.length > 0 && filteredCohorts}
