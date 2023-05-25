@@ -1,23 +1,19 @@
 import { BigNumber } from "ethers";
-import useReadContract from "./useReadContract";
+import useCohort from "./useCohort";
 
 /**
  * @param contractAddress riteOfMolochAddress type. Should be dynamic address from subgraphQuery. If dynamic, should come from /stake/[address].tsx component
  * @outputs uint256
  */
 const useMinimumStake = (contractAddress: string) => {
-  const { data, error, isError } = useReadContract(
-    contractAddress as `0x${string}`,
-    "riteOfMolochAddress",
-    "minimumStake"
-  );
+  const cohort = useCohort(contractAddress);
 
-  if (isError) {
-    console.log("Error: ", error);
+  if (!cohort) {
+    console.log(`Cohort at ${contractAddress} not found`);
     return null;
   }
 
-  return data as BigNumber;
+  return cohort.tokenAmount as BigNumber;
 };
 
 export default useMinimumStake;

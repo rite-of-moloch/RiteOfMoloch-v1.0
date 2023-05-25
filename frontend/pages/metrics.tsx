@@ -10,13 +10,11 @@ import {
 import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";
 import SelectForm from "components/SelectForm";
-import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import { FieldValues, useForm } from "react-hook-form";
-import { COHORTS } from "utils/subgraph/queries";
 import { SelectOptions } from "utils/types/select";
-import { Cohort } from "utils/types/subgraphQueries";
 import { useAccount } from "wagmi";
 import CohortMetricsBox from "components/CohortMetricsBox";
+import useCohorts from "hooks/useCohorts";
 
 /**
  * @remarks use can select up to 3 cohorts. Metrics about the cohort will be rendered onto this page. Data gets pulled from subgraph query
@@ -42,12 +40,10 @@ const Metrics = () => {
   };
   watch();
 
-  const cohorts = useSubgraphQuery(COHORTS());
-  const isLoading = cohorts.isLoading;
-  const cohort: Cohort[] | undefined = cohorts?.data?.data?.data?.cohorts;
+  const cohorts = useCohorts();
 
   const cohortOptions: SelectOptions = [];
-  cohort?.map((chort) => {
+  cohorts?.map((chort) => {
     cohortOptions.push({
       value: chort?.id,
       label: chort?.id,
@@ -102,13 +98,13 @@ const Metrics = () => {
         <>
           <Box textAlign="center" w={["full", "full", "80%"]} py={2}>
             <Heading as="h2">Cohort Metrics</Heading>
-            {isLoading && (
+            {
               <Box w="full" textAlign="center" p={2} fontFamily="texturina">
                 <Spinner size="xl" my="50" color="red" emptyColor="purple" />
                 <Text>Loading cohorts...</Text>
               </Box>
-            )}
-            {!isLoading && (
+            }
+            {
               <SimpleGrid columns={[1, arrLength > 0 ? 2 : 1, gridLogic()]}>
                 {cohortId1 && (
                   <GridItem mr={[0, "0.5rem", "1rem"]} mt={["1rem"]}>
@@ -166,7 +162,7 @@ const Metrics = () => {
                   {cohortSelect}
                 </GridItem>
               </SimpleGrid>
-            )}
+            }
           </Box>
           <BackButton path="/admin" />
         </>

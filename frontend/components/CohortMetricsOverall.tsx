@@ -1,10 +1,8 @@
 import React, { Dispatch } from "react";
 import { Box, Heading, Stack, Text, VStack } from "@raidguild/design-system";
-import { useSubgraphQuery } from "hooks/useSubgraphQuery";
-import { METRICS } from "utils/subgraph/queries";
-import { CohortMetricsOverall } from "utils/types/subgraphQueries";
 import { numberDecimals } from "utils/general";
 import { AiOutlineClose } from "react-icons/ai";
+import useMetrics from "hooks/useMetrics";
 
 interface CohortMetricsOverallProps {
   removeOption: Dispatch<any>;
@@ -16,8 +14,7 @@ interface CohortMetricsOverallProps {
 const CohortMetricsOverall: React.FC<CohortMetricsOverallProps> = ({
   removeOption,
 }) => {
-  const metricsData = useSubgraphQuery(METRICS());
-  const metrics: CohortMetricsOverall = metricsData?.data?.data?.data?.metric;
+  const metrics = useMetrics();
 
   const dataText = (text: string) => (
     <span style={{ color: "white", marginLeft: "0.25rem" }}>{text}</span>

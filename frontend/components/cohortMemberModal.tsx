@@ -15,15 +15,13 @@ import {
   Tooltip,
 } from "@raidguild/design-system";
 import { Modal } from "@chakra-ui/modal";
-import { CohortMetadata } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
 import { getDeadline, unixToUTC } from "utils/general";
-import { COHORT_METADATA } from "utils/subgraph/queries";
-import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import BlockExplorerLink from "./BlockExplorerLink";
 import useSacrifice from "hooks/useSacrifice";
-import useCohortName from "hooks/useCohortName";
+import useCohortName from "hooks/useCohort";
 import GridTemplate from "./GridTemplate";
+import useCohort from "hooks/useCohort";
 
 interface CohortMemberModalProps {
   address: string;
@@ -41,8 +39,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { chain } = useNetwork();
 
-  const metadata = useSubgraphQuery(COHORT_METADATA(cohortAddress));
-  const cohort: CohortMetadata | null = metadata?.data?.data?.data?.cohort;
+  const cohort = useCohort(cohortAddress);
 
   const cohortName = useCohortName(cohortAddress);
 
@@ -50,7 +47,6 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
   const { writeSacrifice, isError, errorSacrifice, prepareErrorSacrifice } =
     useSacrifice(address?.toString());
 
-  // console.log(writeSacrifice, isError, prepareErrorSacrifice, errorSacrifice);
 
   const isPassedStakingDate = () => {
     const today = new Date().getTime();

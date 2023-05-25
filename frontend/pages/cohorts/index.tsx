@@ -1,17 +1,6 @@
 import React, { FC, ReactNode } from "react";
-import {
-  Box,
-  GridItem,
-  Heading,
-  SimpleGrid,
-  Spinner,
-  Stack,
-  Text,
-} from "@raidguild/design-system";
+import { Box, Heading, Spinner, Stack, Text } from "@raidguild/design-system";
 import CohortDetail from "components/CohortDetail";
-import { useSubgraphQuery } from "hooks/useSubgraphQuery";
-import { COHORTS } from "utils/subgraph/queries";
-import { Cohort } from "utils/types/subgraphQueries";
 import { getDeadline, unixToUTC } from "utils/general";
 import BackButton from "components/BackButton";
 import { useAccount } from "wagmi";
@@ -19,6 +8,7 @@ import NotConnected from "components/NotConnected";
 import SearchCohorts from "components/SearchCohorts";
 import { FieldValues, useForm } from "react-hook-form";
 import GridTemplate from "components/GridTemplate";
+import useCohorts from "hooks/useCohorts";
 
 interface ReviewOngoingCohortProps {
   children?: ReactNode;
@@ -30,24 +20,13 @@ interface ReviewOngoingCohortProps {
  */
 const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
   const { isConnected } = useAccount();
+  const cohorts = useCohorts();
   const localForm = useForm<FieldValues>();
   const { getValues, watch } = localForm;
   watch();
   const searchResult = getValues().searchResult;
 
-  const cohortList = useSubgraphQuery(COHORTS());
-
-  /**
-   * (!isLoading): hook has fetched data.
-   * (isLoading): hook has not yet fetched data
-   */
-
-  const cohort: Cohort[] | undefined = cohortList?.data?.data?.data?.cohorts;
-  console.log(cohort);
-
-  const isLoading = cohortList?.isLoading;
-
-  const renderCohorts = cohort?.map((cohort: Cohort) => {
+  const renderCohorts = cohorts?.map((cohort) => {
     return (
       <CohortDetail
         address={cohort.id}
@@ -82,13 +61,13 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
           <Heading as="h1" textAlign="center" color="#FF3864">
             Cohorts
           </Heading>
-          {isLoading && (
+          {
             <Box w="full" textAlign="center" p={2} fontFamily="texturina">
               <Spinner size="xl" my="50" color="red" emptyColor="purple" />
               <Text>Loading cohorts...</Text>
             </Box>
-          )}
-          {!isLoading && (
+          }
+          {
             <>
               <Box w={["50%", "50%", "40%", "30%"]} alignSelf="end">
                 <SearchCohorts name="searchResult" localForm={localForm} />
@@ -102,11 +81,11 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
                 column4="Manage"
               />
             </>
-          )}
+          }
           {filteredCohorts && filteredCohorts?.length > 0 && filteredCohorts}
         </Stack>
       )}
-      {isConnected && !isLoading && <BackButton path="/admin" />}
+      {isConnected && <BackButton path="/admin" />}
       {children}
     </>
   );

@@ -23,13 +23,11 @@ import useApprove from "hooks/useApprove";
 import useJoinInitiation from "hooks/useJoinInitiation";
 import useGetAllowance from "hooks/useGetAllowance";
 import { FiAlertTriangle } from "react-icons/fi";
-import { useSubgraphQuery } from "hooks/useSubgraphQuery";
-import { COHORT_METADATA } from "utils/subgraph/queries";
-import { CohortMetadata } from "utils/types/subgraphQueries";
 import useTokenSymbol from "hooks/useTokenSymbol";
+import useCohort from "hooks/useCohort";
 
 interface StakingFlowProps {
-  contractAddress: string | string[];
+  contractAddress: string;
 }
 
 /**
@@ -42,9 +40,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   const { address } = useAccount();
   const { willSponsor, handleWillSponsor } = useContext(UserContext);
 
-  const metadata = useSubgraphQuery(COHORT_METADATA(contractAddress));
-
-  const cohort: CohortMetadata | null = metadata?.data?.data?.data?.cohort;
+  const cohort = useCohort(contractAddress);
 
   const localForm = useForm<FieldValues>();
 

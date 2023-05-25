@@ -1,0 +1,15 @@
+query Metrics {
+  metric(id: "0") {
+    ...MetricFragment
+  }
+}
+
+fragment MetricFragment on Metric {
+  averageCohortSize
+  claimRate
+  claimedMembers
+  slashRate
+  slashedMembers
+  totalCohorts
+  totalMembers
+}

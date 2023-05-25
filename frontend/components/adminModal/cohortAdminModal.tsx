@@ -10,12 +10,9 @@ import {
   VStack,
 } from "@raidguild/design-system";
 import { Modal } from "@chakra-ui/modal";
-import { COHORT_METADATA } from "utils/subgraph/queries";
-import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import useReadContract from "hooks/useReadContract";
-// import AdminModalAddresses from "./AdminModalAddresses";
-import { zeroAddress } from "utils/constants";
 import EditCohortAdmins from "./EditCohortAdmins";
+import useCohort from "hooks/useCohort";
 
 interface CohortAdminModalProps {
   address: string | undefined;
@@ -33,18 +30,16 @@ const CohortAdminModal: React.FC<CohortAdminModalProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   // TODO: REMOVE SUBGRAPH QUERY AND USE HATS CONTRACT TO GET ADMIN
-  const { data } = useSubgraphQuery(COHORT_METADATA(address));
-  const cohortMetadata = data?.data?.data?.cohort;
-  // console.log(cohortMetadata);
+  const cohort = useCohort(address || "");
 
   const getAdmins = () => {
     const { data: data1 } = useReadContract(
-      (cohortMetadata?.id as `0x${string}`) || "",
+      (cohort?.id as `0x${string}`) || "",
       "riteOfMolochAddress",
       "admin1"
     );
     const { data: data2 } = useReadContract(
-      (cohortMetadata?.id as `0x${string}`) || "",
+      (cohort?.id as `0x${string}`) || "",
       "riteOfMolochAddress",
       "admin2"
     );
