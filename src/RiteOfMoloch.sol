@@ -149,7 +149,7 @@ contract RiteOfMoloch is
         // set the admin treasury daoAddress
         adminTreasury = initData.adminTreasury;
 
-        // set the adminFee to pay admin at sacrifice
+        // set the adminFee for blood penance
         adminFee = initData.adminFee / 100;
 
         // set the interface for accessing the required staking token
