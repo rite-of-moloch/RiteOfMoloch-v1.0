@@ -150,7 +150,7 @@ contract RiteOfMoloch is
         adminTreasury = initData.adminTreasury;
 
         // set the adminFee to pay admin at sacrifice
-        adminFee = initData.adminFee;
+        adminFee = initData.adminFee / 100;
 
         // set the interface for accessing the required staking token
         _token = IERC20(initData.stakingAsset);
@@ -451,7 +451,7 @@ contract RiteOfMoloch is
      * @dev Stakes the user's tokens
      * @param _user the address to activate for the cohort
      */
-    function _stake(address _user) internal virtual returns (bool) {
+    function _stake(address _user) internal virtual returns (bool success) {
         // enforce that the initiate hasn't previously staked
         require(balanceOf(_user) == 0, "Already joined the initiation!");
 
@@ -461,7 +461,20 @@ contract RiteOfMoloch is
         // set the initiate's deadline
         deadlines[_user] = block.timestamp + maximumTime;
 
-        return _token.transferFrom(msg.sender, address(this), minimumStake);
+        (success, ) = _token.transferFrom(
+            msg.sender,
+            address(this),
+            minimumStake
+        );
+
+        // admin blood penance if so desired
+        if (adminFee > 0) {
+            uint256 bloodcut = minimumStake * adminFee;
+            require(
+                _token.transfer(adminTreasury, bloodcut),
+                "Failed Penance!"
+            );
+        }
     }
 
     /**
@@ -515,7 +528,6 @@ contract RiteOfMoloch is
     function _darkRitual() internal virtual {
         // the total amount of blood debt
         uint256 blood;
-        uint256 bloodCut;
         uint256 newCohortCount;
         uint256 season = cohortSeason;
         uint256 nextSeason = cohortSeason + 1;
@@ -543,20 +555,8 @@ contract RiteOfMoloch is
             }
         }
 
-        // calculate blood cut and feast for admins
-        if (adminFee > 0) {
-            bloodCut = blood * (adminFee / 100);
-            require(
-                _token.transfer(adminTreasury, bloodCut),
-                "Failed Sacrifice!"
-            );
-        }
-
         // blood feast for Baal
-        require(
-            _token.transfer(daoTreasury, blood - bloodCut),
-            "Failed Sacrifice!"
-        );
+        require(_token.transfer(daoTreasury, blood), "Failed Sacrifice!");
 
         // reset cohortCount, reset joinInitiation period, increase season
         cohortCounter = newCohortCount;
