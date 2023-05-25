@@ -55,7 +55,7 @@ contract TestHelper is Test, IInitData {
     address constant molochDAO = address(1);
 
     // staking
-    uint256 minStake = 200;
+    uint256 minStake = 200 * 1e18;
 
     uint256 adminFee = 5;
 
@@ -104,7 +104,7 @@ contract TestHelper is Test, IInitData {
     // UTILS
     function mintTokens(address[4] memory eoas) public {
         for (uint256 i = 0; i < eoas.length; i++) {
-            stakingAsset.mint(eoas[i], 1000);
+            stakingAsset.mint(eoas[i], 1000 * 1e18);
         }
     }
 
