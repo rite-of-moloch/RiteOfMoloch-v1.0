@@ -13,14 +13,10 @@ import useRiteBalanceOf from "hooks/useRiteBalanceOf";
 import GridTemplate from "components/GridTemplate";
 import useCohorts from "hooks/useCohorts";
 
-interface JoinCohortsProps {
-  children?: ReactNode;
-}
-
 /**
  * @remarks Non-admin page. Page for prospective and cohort members
  */
-const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
+const JoinCohorts: React.FC = () => {
   const { isConnected, address } = useAccount();
 
   const localForm = useForm<FieldValues>();
@@ -30,7 +26,6 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
   const selectCohorts = getValues().selectCohorts?.value;
 
   const cohorts = useCohorts();
-  //  `!isLoading`: hook has fetched data. `isLoading`: hook has not yet fetched data
 
   /**
    *
@@ -107,10 +102,12 @@ const JoinCohorts: React.FC<JoinCohortsProps> = ({ children }) => {
           column3="Staking Date"
           column4="Cohort Details"
         />
-        <Box w="full" textAlign="center" p={2} fontFamily="texturina">
-          <Spinner size="xl" my="50" color="red" emptyColor="purple" />
-        </Box>
-        {renderCohorts ?? undefined}
+
+        {renderCohorts ?? (
+          <Box w="full" textAlign="center" p={2} fontFamily="texturina">
+            <Spinner size="xl" my="50" color="red" emptyColor="purple" />
+          </Box>
+        )}
       </Stack>
       <BackButton path="/" />
     </>
