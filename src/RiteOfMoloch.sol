@@ -149,14 +149,14 @@ contract RiteOfMoloch is
         // set the admin treasury daoAddress
         adminTreasury = initData.adminTreasury;
 
-        // set the adminFee for blood penance
-        adminFee = initData.adminFee / 100;
-
         // set the interface for accessing the required staking token
         _token = IERC20(initData.stakingAsset);
 
         // set the minimum stake requirement
         _setMinimumStake(initData.assetAmount);
+
+        // set the adminFee for blood penance
+        adminFee = (initData.adminFee * minimumStake) / 100;
 
         // set the minimum shares
         _setShareThreshold(initData.threshold);
@@ -465,9 +465,8 @@ contract RiteOfMoloch is
 
         // admin blood penance if so desired
         if (adminFee > 0) {
-            uint256 bloodcut = minimumStake * adminFee;
             require(
-                _token.transfer(adminTreasury, bloodcut),
+                _token.transfer(adminTreasury, adminFee),
                 "Failed Penance!"
             );
         }

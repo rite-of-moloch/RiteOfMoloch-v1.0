@@ -45,14 +45,14 @@ contract SacrificeGasEstimate is TestHelper {
         uint256 breakPoint = cohortSize / 2;
 
         for (uint256 i = 0; i < breakPoint; i++) {
-            stakingAsset.mint(initiates[i], 1000);
+            stakingAsset.mint(initiates[i], 1000 * 1e18);
             prankJoinInititation(initiates[i]);
         }
 
         vm.warp(2 days);
 
         for (uint256 i = breakPoint; i < cohortSize; i++) {
-            stakingAsset.mint(initiates[i], 1000);
+            stakingAsset.mint(initiates[i], 1000 * 1e18);
             prankJoinInititation(initiates[i]);
         }
     }

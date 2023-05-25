@@ -34,6 +34,9 @@ contract TestHelper is Test, IInitData {
     address bob = 0x70997970C51812dc3A010C7d01b50e0d17dc79C8; // user
     address charlie = 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC; // attacker
 
+    // Admin Treasury
+    address adminTreasury = address(0xcafebebe);
+
     // ROM factory and clone seed
     RiteOfMoloch public ROM;
     RiteOfMolochFactory public ROMF;
@@ -52,7 +55,9 @@ contract TestHelper is Test, IInitData {
     address constant molochDAO = address(1);
 
     // staking
-    uint256 minStake = 200;
+    uint256 minStake = 200 * 1e18;
+
+    uint256 adminFee = 5;
 
     function setUp() public virtual {
         // set and deploy ROM-Factory
@@ -81,14 +86,14 @@ contract TestHelper is Test, IInitData {
         Data.daoTreasury = dao;
         Data.admin1 = alice;
         Data.admin2 = address(0);
-        Data.adminTreasury = address(0xcafebebe);
+        Data.adminTreasury = adminTreasury;
         Data.cohortSize = 3;
         Data.joinDuration = 2 weeks;
         Data.threshold = 10;
         Data.assetAmount = minStake;
         Data.stakeDuration = 1 weeks;
         Data.topHatId = 0;
-        Data.adminFee = 5;
+        Data.adminFee = adminFee;
         Data.cohortName = "SeasonV";
         Data.sbtName = "RiteOfMolochSBT";
         Data.sbtSymbol = "SBTMoloch";
@@ -99,7 +104,7 @@ contract TestHelper is Test, IInitData {
     // UTILS
     function mintTokens(address[4] memory eoas) public {
         for (uint256 i = 0; i < eoas.length; i++) {
-            stakingAsset.mint(eoas[i], 1000);
+            stakingAsset.mint(eoas[i], 1000 * 1e18);
         }
     }
 
