@@ -24,7 +24,7 @@ import useJoinInitiation from "hooks/useJoinInitiation";
 import useGetAllowance from "hooks/useGetAllowance";
 import { FiAlertTriangle } from "react-icons/fi";
 import useTokenSymbol from "hooks/useTokenSymbol";
-import useCohort from "hooks/useCohort";
+import useCohort from "hooks/useCohortByAddress";
 
 interface StakingFlowProps {
   contractAddress: string;

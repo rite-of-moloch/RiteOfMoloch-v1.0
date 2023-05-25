@@ -1,5 +1,5 @@
 import { BigNumber } from "ethers";
-import useCohort from "./useCohort";
+import useCohort from "./useCohortByAddress";
 
 /**
  * @param contractAddress riteOfMolochAddress type. Should be dynamic address from subgraphQuery. If dynamic, should come from /stake/[address].tsx component

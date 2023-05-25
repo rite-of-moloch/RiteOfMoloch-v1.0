@@ -29,7 +29,7 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
   const renderCohorts = cohorts?.map((cohort) => {
     return (
       <CohortDetail
-        address={cohort.id}
+        address={cohort.address}
         stake={cohort.tokenAmount}
         stakingAsset={cohort.token}
         stakingDate={unixToUTC(getDeadline(cohort.createdAt, cohort.time))}
@@ -53,39 +53,41 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
     }
   });
 
+  if (!isConnected) {
+    return <NotConnected />;
+  }
+
   return (
     <>
-      {!isConnected && <NotConnected />}
-      {isConnected && (
-        <Stack spacing={6} w={["full", "full", "80%"]} mb={6}>
-          <Heading as="h1" textAlign="center" color="#FF3864">
-            Cohorts
-          </Heading>
-          {
-            <Box w="full" textAlign="center" p={2} fontFamily="texturina">
-              <Spinner size="xl" my="50" color="red" emptyColor="purple" />
-              <Text>Loading cohorts...</Text>
+      <Stack spacing={6} w={["full", "full", "80%"]} mb={6}>
+        <Heading as="h1" textAlign="center" color="#FF3864">
+          Cohorts
+        </Heading>
+        {
+          <Box w="full" textAlign="center" p={2} fontFamily="texturina">
+            <Spinner size="xl" my="50" color="red" emptyColor="purple" />
+            <Text>Loading cohorts...</Text>
+          </Box>
+        }
+        {
+          <>
+            <Box w={["50%", "50%", "40%", "30%"]} alignSelf="end">
+              <SearchCohorts name="searchResult" localForm={localForm} />
             </Box>
-          }
-          {
-            <>
-              <Box w={["50%", "50%", "40%", "30%"]} alignSelf="end">
-                <SearchCohorts name="searchResult" localForm={localForm} />
-              </Box>
 
-              <GridTemplate
-                isHeading
-                column1="Address"
-                column2="Stake"
-                column3="Deadline"
-                column4="Manage"
-              />
-            </>
-          }
-          {filteredCohorts && filteredCohorts?.length > 0 && filteredCohorts}
-        </Stack>
-      )}
-      {isConnected && <BackButton path="/admin" />}
+            <GridTemplate
+              isHeading
+              column1="Address"
+              column2="Stake"
+              column3="Deadline"
+              column4="Manage"
+            />
+          </>
+        }
+        {filteredCohorts && filteredCohorts?.length > 0 && filteredCohorts}
+      </Stack>
+
+      <BackButton path="/admin" />
       {children}
     </>
   );

@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Link, Text, HStack } from "@raidguild/design-system";
 import { useNetwork } from "wagmi";
 import useTokenSymbol from "hooks/useTokenSymbol";
-import useCohortName from "hooks/useCohort";
+import useCohortName from "hooks/useCohortByAddress";
 import GridTemplate from "./GridTemplate";
 
 interface CohortDetailProps {

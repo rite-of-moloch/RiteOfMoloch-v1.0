@@ -17,8 +17,8 @@ import { useRouter } from "next/router";
 import { utils } from "ethers";
 import BackButton from "components/BackButton";
 import { getDeadline, getHasRite } from "utils/general";
-import useCohortName from "hooks/useCohort";
-import useCohort from "hooks/useCohort";
+import useCohortName from "hooks/useCohortByAddress";
+import useCohort from "hooks/useCohortByAddress";
 
 const Stake: React.FC = (): any => {
   const { address, isConnected } = useAccount();

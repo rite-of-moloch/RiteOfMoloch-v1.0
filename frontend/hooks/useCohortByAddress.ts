@@ -7,19 +7,19 @@ import { CohortFragmentFragment } from ".graphclient";
  * @param contractAddress riteOfMolochAddress type. Should be dynamic address from subgraphQuery. If dynamic, should come from /stake/[address].tsx component
  * @outputs uint256
  */
-const useCohort = (cohortAddress: string) => {
+const useCohortByAddress = (cohortAddress: string) => {
   const graphClient = useGraphClient();
   const [cohort, setCohort] = useState<CohortFragmentFragment>();
 
   useEffect(() => {
     const getCohort = async () => {
       //todo fix address when graph synced
-      const cohort = await graphClient.CohortById({
-        id: `gnosis-${cohortAddress}`,
+      const cohort = await graphClient.CohortDataByAddress({
+        address: cohortAddress.toLowerCase(),
       });
 
-      if (cohort.cohort) {
-        setCohort(cohort.cohort);
+      if (cohort) {
+        setCohort(cohort.cohorts[0]);
       }
     };
     getCohort();
@@ -28,4 +28,4 @@ const useCohort = (cohortAddress: string) => {
   return cohort;
 };
 
-export default useCohort;
+export default useCohortByAddress;

@@ -19,9 +19,9 @@ import { useNetwork } from "wagmi";
 import { getDeadline, unixToUTC } from "utils/general";
 import BlockExplorerLink from "./BlockExplorerLink";
 import useSacrifice from "hooks/useSacrifice";
-import useCohortName from "hooks/useCohort";
+import useCohortName from "hooks/useCohortByAddress";
 import GridTemplate from "./GridTemplate";
-import useCohort from "hooks/useCohort";
+import useCohort from "hooks/useCohortByAddress";
 
 interface CohortMemberModalProps {
   address: string;

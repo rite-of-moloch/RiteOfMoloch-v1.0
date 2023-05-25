@@ -1,6 +1,6 @@
 import { Box, Link, Text, Tooltip } from "@raidguild/design-system";
 import React from "react";
-import useCohortName from "hooks/useCohort";
+import useCohortName from "hooks/useCohortByAddress";
 import { useNetwork } from "wagmi";
 import BlockExplorerLink from "./BlockExplorerLink";
 import CohortMemberModal from "./cohortMemberModal";

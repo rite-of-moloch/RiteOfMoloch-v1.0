@@ -19,7 +19,8 @@ import { useNetwork } from "wagmi";
 import BlockExplorerLink from "./BlockExplorerLink";
 import CohortMetricsOverall from "./CohortMetricsOverall";
 import CohortAdminModal from "./adminModal/cohortAdminModal";
-import useCohort from "hooks/useCohort";
+import useCohort from "hooks/useCohortByAddress";
+import useCohortByID from "hooks/useCohortByID";
 
 interface CohortMetricsBoxProps {
   removeOption: Dispatch<any>;
@@ -40,7 +41,7 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
   overallPerformance,
 }) => {
   const { chain } = useNetwork();
-  const cohort = useCohort(id);
+  const cohort = useCohortByID(id);
 
   const symbol = useTokenSymbol(cohort?.token);
   const getdeadline = getDeadline(cohort?.createdAt, cohort?.time);

@@ -18,10 +18,10 @@ import useTokenSymbol from "hooks/useTokenSymbol";
 import useIsMember from "hooks/useIsMember";
 import useClaimStake from "hooks/useClaimStake";
 import BlockExplorerLink from "components/BlockExplorerLink";
-import useCohortName from "hooks/useCohort";
+import useCohortName from "hooks/useCohortByAddress";
 import { getDeadline, unixToUTC } from "utils/general";
 import GridTemplate from "components/GridTemplate";
-import useCohort from "hooks/useCohort";
+import useCohort from "hooks/useCohortByAddress";
 
 /**
  * Checks if msg.sender has staked to the cohort passed in by cohortAddress. Displays data about cohortAddress. msg.sender can re-claim stake, or redirect to page and

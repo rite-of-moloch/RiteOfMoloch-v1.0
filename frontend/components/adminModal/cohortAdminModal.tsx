@@ -12,7 +12,7 @@ import {
 import { Modal } from "@chakra-ui/modal";
 import useReadContract from "hooks/useReadContract";
 import EditCohortAdmins from "./EditCohortAdmins";
-import useCohort from "hooks/useCohort";
+import useCohort from "hooks/useCohortByAddress";
 
 interface CohortAdminModalProps {
   address: string | undefined;
