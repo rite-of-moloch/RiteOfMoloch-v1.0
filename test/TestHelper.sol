@@ -34,6 +34,9 @@ contract TestHelper is Test, IInitData {
     address bob = 0x70997970C51812dc3A010C7d01b50e0d17dc79C8; // user
     address charlie = 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC; // attacker
 
+    // Admin Treasury
+    address adminTreasury = address(0xcafebebe);
+
     // ROM factory and clone seed
     RiteOfMoloch public ROM;
     RiteOfMolochFactory public ROMF;
@@ -53,6 +56,8 @@ contract TestHelper is Test, IInitData {
 
     // staking
     uint256 minStake = 200;
+
+    uint256 adminFee = 5;
 
     function setUp() public virtual {
         // set and deploy ROM-Factory
