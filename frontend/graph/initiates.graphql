@@ -1,0 +1,29 @@
+query Initiates {
+  initiates {
+    ...InitiateDetails
+  }
+}
+
+query InitiatesByCohortId($id: ID = "") {
+  initiates(where: { cohort_: { id: $id } }) {
+    ...InitiateDetails
+  }
+}
+
+fragment InitiateDetails on Initiate {
+  id
+  address
+  benefactor
+  claimed
+  deadline
+  joinedAt
+  sacrificed
+  stake
+  sacrifice {
+    amount
+    slasher
+  }
+  claim {
+    amount
+  }
+}

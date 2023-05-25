@@ -1,45 +1,38 @@
-import React from "react";
-import {
-  Box,
-  Grid,
-  GridItem,
-  Heading,
-  HStack,
-  SimpleGrid,
-  Spinner,
-  Stack,
-  Text,
-} from "@raidguild/design-system";
+import React, { useEffect, useState } from "react";
+import { Box, Heading, Spinner, Stack, Text } from "@raidguild/design-system";
 import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";
-import { useSubgraphQuery } from "hooks/useSubgraphQuery";
-import useCohortName from "hooks/useCohortName";
-import { INITIATES } from "utils/subgraph/queries";
 import { useAccount } from "wagmi";
-import { Initiates } from "utils/types/subgraphQueries";
 import SearchCohorts from "components/SearchCohorts";
 import { FieldValues, useForm } from "react-hook-form";
 import InitiatesAll from "components/InitiatesAll";
 import { unixToUTC } from "utils/general";
 import GridTemplate from "components/GridTemplate";
+import { useGraphClient } from "hooks/useGraphClient";
+import { InitiateDetailsFragment } from ".graphclient";
 
 /**
  * @returns list of all addresses that have staked to a cohort
  */
 const Initiates = () => {
   const { isConnected } = useAccount();
+  const graphClient = useGraphClient();
+  const [initiates, setInitiates] = useState<InitiateDetailsFragment[]>();
 
   const localForm = useForm<FieldValues>();
   const { watch, getValues } = localForm;
   watch();
   const searchResult = getValues().searchResult;
 
-  const initiates = useSubgraphQuery(INITIATES());
-  const isLoading = initiates.isLoading;
-  const initiatesList: Initiates[] | undefined =
-    initiates?.data?.data?.data?.initiates;
+  useEffect(() => {
+    const getInitiates = async () => {
+      const query = await graphClient.Initiates();
+      setInitiates(query.initiates);
+    };
+    getInitiates();
+  }, []);
 
-  const renderInitiates = initiatesList?.map((initiate) => {
+  const renderInitiates = initiates?.map((initiate) => {
     const cohortID = initiate.id.split("-")[1];
     const joinedAt = Number(initiate.joinedAt);
     return (
@@ -71,12 +64,12 @@ const Initiates = () => {
           <Heading as="h1" textAlign="center" color="#FF3864">
             Initiates
           </Heading>
-          {isLoading && (
+          {
             <Box w="full" textAlign="center" p={2} fontFamily="texturina">
               <Spinner size="xl" my="50" color="red" emptyColor="purple" />
               <Text>Loading cohorts...</Text>
             </Box>
-          )}
+          }
 
           <Stack spacing={6} w={["full", "full", "80%"]} mb={6}>
             <Box w={["50%", "50%", "40%", "30%"]} alignSelf="end">

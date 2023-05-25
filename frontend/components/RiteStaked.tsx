@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 interface RiteStakedProps {
   riteBalance: string;
   deadline: string;
-  contractAddress: string | string[];
+  contractAddress: string;
 }
 
 /**
