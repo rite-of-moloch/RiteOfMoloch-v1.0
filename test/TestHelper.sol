@@ -78,15 +78,17 @@ contract TestHelper is Test, IInitData {
     function createInitData() public virtual {
         Data.membershipCriteria = dao;
         Data.stakingAsset = address(stakingAsset);
-        Data.treasury = dao;
+        Data.daoTreasury = dao;
         Data.admin1 = alice;
         Data.admin2 = address(0);
+        Data.adminTreasury = address(0xcafebebe);
         Data.cohortSize = 3;
         Data.joinDuration = 2 weeks;
         Data.threshold = 10;
         Data.assetAmount = minStake;
         Data.stakeDuration = 1 weeks;
         Data.topHatId = 0;
+        Data.adminFee = 5;
         Data.cohortName = "SeasonV";
         Data.sbtName = "RiteOfMolochSBT";
         Data.sbtSymbol = "SBTMoloch";
@@ -162,7 +164,7 @@ contract TestHelper is Test, IInitData {
     function cloneDeployment() public {
         // contract addresses
         emit log_named_address("ROM  Contract", address(ROM));
-        emit log_named_address("ROM  Treasury", ROM.treasury());
+        emit log_named_address("ROM  Treasury", ROM.daoTreasury());
         // cohort settings
         emit log_named_uint("Min     Share", ROM.minimumShare());
         emit log_named_uint("Min     Stake", ROM.minimumStake());

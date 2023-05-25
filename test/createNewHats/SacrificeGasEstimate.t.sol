@@ -98,15 +98,17 @@ contract SacrificeGasEstimate is TestHelper {
     function createInitData() public override {
         Data.membershipCriteria = dao;
         Data.stakingAsset = address(stakingAsset);
-        Data.treasury = dao;
+        Data.daoTreasury = dao;
         Data.admin1 = alice;
         Data.admin2 = address(0);
+        Data.adminTreasury = address(0);
         Data.cohortSize = 500;
         Data.joinDuration = 2 weeks;
         Data.threshold = 10;
         Data.assetAmount = minStake;
         Data.stakeDuration = 1 weeks;
         Data.topHatId = 0;
+        Data.adminFee = 0;
         Data.cohortName = "SeasonV";
         Data.sbtName = "RiteOfMolochSBT";
         Data.sbtSymbol = "SBTMoloch";

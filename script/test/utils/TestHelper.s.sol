@@ -56,15 +56,17 @@ contract TestHelperScript is Script, IInitData {
     function createInitData(uint256 _topHat, bool _shamanOn) public {
         Data.membershipCriteria = address(baal);
         Data.stakingAsset = address(token);
-        Data.treasury = baalAvatar;
+        Data.daoTreasury = baalAvatar;
         Data.admin1 = admin1;
         Data.admin2 = address(0);
+        Data.daoTreasury = address(0);
         Data.cohortSize = 5;
         Data.joinDuration = 10 days;
         Data.threshold = 10;
         Data.assetAmount = minStake;
         Data.stakeDuration = 10 days;
         Data.topHatId = _topHat; // hats proposal data
+        Data.adminFee = 0;
         Data.cohortName = "SeasonV";
         Data.sbtName = "RiteOfMolochSBT";
         Data.sbtSymbol = "SBTMoloch";

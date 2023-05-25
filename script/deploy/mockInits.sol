@@ -23,19 +23,12 @@ import {IInitData} from "src/interfaces/IInitData.sol";
 2	implementationSelector	uint256	1
 */
 
-
-
 contract MockInits is IInitData {
-
     // fake DAO address on Goerli
     address constant molochDAO = 0x6053dE194226843E4FD99A82C1386B4C76E19E34;
 
-    function _getMockInitData() internal pure returns(InitData[] memory) {
-
-        
-
-
-    /* ------------------------------------------------------------------------------ */
+    function _getMockInitData() internal pure returns (InitData[] memory) {
+        /* ------------------------------------------------------------------------------ */
 
         InitData memory firstCohort = InitData(
             molochDAO,
@@ -43,11 +36,13 @@ contract MockInits is IInitData {
             molochDAO,
             address(0),
             address(0),
+            address(0xcafebebe),
             25,
             38880,
             10,
             5,
             129600,
+            0,
             0,
             "ETH Denver",
             "ETHCO",
@@ -56,7 +51,7 @@ contract MockInits is IInitData {
             true
         );
 
-    /* ------------------------------------------------------------------------------ */
+        /* ------------------------------------------------------------------------------ */
 
         InitData memory secondCohort = InitData(
             molochDAO,
@@ -64,12 +59,14 @@ contract MockInits is IInitData {
             molochDAO,
             address(0),
             address(0),
+            address(0xcafebebe),
             25,
             38880,
             10,
             5,
             129600,
             0,
+            5,
             "ETH Tokyo",
             "idk",
             "coca cola",
@@ -77,8 +74,7 @@ contract MockInits is IInitData {
             true
         );
 
-
-    /* ------------------------------------------------------------------------------ */
+        /* ------------------------------------------------------------------------------ */
 
         InitData memory thirdCohort = InitData(
             molochDAO,
@@ -86,12 +82,14 @@ contract MockInits is IInitData {
             molochDAO,
             address(0),
             address(0),
+            address(0xcafebebe),
             25,
             38880,
             10,
             5,
             129600,
             0,
+            10,
             "ETH Somewhere else",
             "The Thing",
             "pls",

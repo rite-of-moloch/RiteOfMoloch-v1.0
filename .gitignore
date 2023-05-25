@@ -4,6 +4,7 @@ out/*
 out/*/
 !out/RiteOfMoloch.sol/
 !out/RiteOfMolochFactory.sol/
+/out
 # Ignores development broadcast logs
 !/broadcast
 broadcast/

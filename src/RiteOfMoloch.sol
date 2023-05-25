@@ -78,8 +78,14 @@ contract RiteOfMoloch is
     // maximum length of time for initiates to succeed at joining
     uint256 public maximumTime;
 
+    // admin fee / percentage cut of sacrifice
+    uint256 public adminFee;
+
     // DAO treasury address
-    address public treasury;
+    address public daoTreasury;
+
+    // admin treasury address
+    address public adminTreasury;
 
     // Hats protocol:
     IHats public HATS;
@@ -134,11 +140,17 @@ contract RiteOfMoloch is
         baal = IBaal(initData.membershipCriteria);
 
         // reference sharesToken of Baal
-        // _sharesToken = IERC20(initData.stakingAsset); // <= for local testing only
-        _sharesToken = IERC20(baal.sharesToken()); // <= correct
+        _sharesToken = IERC20(initData.stakingAsset); // <= for local testing only
+        // _sharesToken = IERC20(baal.sharesToken()); // <= correct
 
-        // store the treasury daoAddress
-        treasury = initData.treasury;
+        // set the DAO treasury daoAddress
+        daoTreasury = initData.daoTreasury;
+
+        // set the admin treasury daoAddress
+        adminTreasury = initData.adminTreasury;
+
+        // set the adminFee to pay admin at sacrifice
+        adminFee = initData.adminFee;
 
         // set the interface for accessing the required staking token
         _token = IERC20(initData.stakingAsset);
@@ -177,7 +189,7 @@ contract RiteOfMoloch is
             _submitBaalProposal(_encodeMultiMetaTx(data, targets), 1);
         }
 
-        if (HATS.isWearerOfHat(treasury, initData.topHatId)) {
+        if (HATS.isWearerOfHat(daoTreasury, initData.topHatId)) {
             bytes memory accessHatData;
             bytes memory buildHatData;
 
@@ -185,7 +197,11 @@ contract RiteOfMoloch is
             topHat = initData.topHatId;
             admin1 = initData.admin1;
             admin2 = initData.admin2;
-            accessHatData = _encodeTransferHat(topHat, treasury, address(this));
+            accessHatData = _encodeTransferHat(
+                topHat,
+                daoTreasury,
+                address(this)
+            );
             buildHatData = _encodeBuildHatTree(caller_, admin1, admin2);
 
             // submit HATS proposal
@@ -280,7 +296,7 @@ contract RiteOfMoloch is
      */
     function cryForHelp(string calldata feedback) public {
         require(balanceOf(msg.sender) == 1, "Only cohort participants!");
-        emit Feedback(msg.sender, treasury, feedback);
+        emit Feedback(msg.sender, daoTreasury, feedback);
     }
 
     function checkStake(address user) external view returns (uint256) {
@@ -499,6 +515,7 @@ contract RiteOfMoloch is
     function _darkRitual() internal virtual {
         // the total amount of blood debt
         uint256 blood;
+        uint256 bloodCut;
         uint256 newCohortCount;
         uint256 season = cohortSeason;
         uint256 nextSeason = cohortSeason + 1;
@@ -526,8 +543,20 @@ contract RiteOfMoloch is
             }
         }
 
+        // calculate blood cut and feast for admins
+        if (adminFee > 0) {
+            bloodCut = blood * (adminFee / 100);
+            require(
+                _token.transfer(adminTreasury, bloodCut),
+                "Failed Sacrifice!"
+            );
+        }
+
         // blood feast for Baal
-        require(_token.transfer(treasury, blood), "Failed Sacrifice!");
+        require(
+            _token.transfer(daoTreasury, blood - bloodCut),
+            "Failed Sacrifice!"
+        );
 
         // reset cohortCount, reset joinInitiation period, increase season
         cohortCounter = newCohortCount;
@@ -671,7 +700,7 @@ contract RiteOfMoloch is
         }
 
         // return topHat to  Baal Avatar
-        HATS.transferHat(topHat, address(this), treasury);
+        HATS.transferHat(topHat, address(this), daoTreasury);
     }
 
     /**
