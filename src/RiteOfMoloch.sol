@@ -456,16 +456,12 @@ contract RiteOfMoloch is
         require(balanceOf(_user) == 0, "Already joined the initiation!");
 
         // change the initiate's stake total
-        _staked[_user] = minimumStake;
+        _staked[_user] = minimumStake - adminFee;
 
         // set the initiate's deadline
         deadlines[_user] = block.timestamp + maximumTime;
 
-        (success, ) = _token.transferFrom(
-            msg.sender,
-            address(this),
-            minimumStake
-        );
+        success = _token.transferFrom(msg.sender, address(this), minimumStake);
 
         // admin blood penance if so desired
         if (adminFee > 0) {
