@@ -150,7 +150,7 @@ contract RiteOfMoloch is
         adminTreasury = initData.adminTreasury;
 
         // set the adminFee to pay admin at sacrifice
-        adminFee = initData.adminFee / 100;
+        adminFee = initData.adminFee;
 
         // set the interface for accessing the required staking token
         _token = IERC20(initData.stakingAsset);
@@ -545,7 +545,7 @@ contract RiteOfMoloch is
 
         // calculate blood cut and penance for admins
         if (adminFee > 0) {
-            bloodCut = blood * adminFee;
+            bloodCut = (blood * adminFee) / 100;
             require(
                 _token.transfer(adminTreasury, bloodCut),
                 "Failed Penance!"
