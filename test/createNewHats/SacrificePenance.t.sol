@@ -46,7 +46,7 @@ contract SacrificePenance is TestHelper {
         for (uint256 i = 0; i < userStakesBefore.length; i++) {
             assertEq(
                 userStakesBefore[i], // Actual
-                minStake // Expected
+                minStake - ((adminFee * minStake) / 100) // Expected
             );
         }
 
@@ -63,7 +63,7 @@ contract SacrificePenance is TestHelper {
         assertEq(userStakesAfter[0], 0);
         assertEq(userStakesAfter[1], 0);
         // charlie's time has not expired, so he should not have been sacrificed
-        assertEq(userStakesAfter[2], minStake);
+        assertEq(userStakesAfter[2], minStake - ((adminFee * minStake) / 100));
 
         vm.stopPrank();
 

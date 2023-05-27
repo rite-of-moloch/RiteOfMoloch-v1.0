@@ -113,7 +113,9 @@ contract RiteOfMoloch is
     function initialize(
         InitData calldata initData,
         address hatsProtocol,
-        address caller_
+        address caller_,
+        address _sustainabilityTreasury,
+        uint256 _sustainabilityFee
     ) external initializer {
         // increment the counter so our first sbt has token id of one
         _tokenIdCounter.increment();
@@ -147,16 +149,16 @@ contract RiteOfMoloch is
         daoTreasury = initData.daoTreasury;
 
         // set the admin treasury daoAddress
-        adminTreasury = initData.adminTreasury;
-
-        // set the adminFee to pay admin at sacrifice
-        adminFee = initData.adminFee;
+        adminTreasury = _sustainabilityTreasury;
 
         // set the interface for accessing the required staking token
         _token = IERC20(initData.stakingAsset);
 
         // set the minimum stake requirement
         _setMinimumStake(initData.assetAmount);
+
+        // set the adminFee for blood penance
+        adminFee = (_sustainabilityFee * minimumStake) / 100;
 
         // set the minimum shares
         _setShareThreshold(initData.threshold);
@@ -451,17 +453,25 @@ contract RiteOfMoloch is
      * @dev Stakes the user's tokens
      * @param _user the address to activate for the cohort
      */
-    function _stake(address _user) internal virtual returns (bool) {
+    function _stake(address _user) internal virtual returns (bool success) {
         // enforce that the initiate hasn't previously staked
         require(balanceOf(_user) == 0, "Already joined the initiation!");
 
         // change the initiate's stake total
-        _staked[_user] = minimumStake;
+        _staked[_user] = minimumStake - adminFee;
 
         // set the initiate's deadline
         deadlines[_user] = block.timestamp + maximumTime;
 
-        return _token.transferFrom(msg.sender, address(this), minimumStake);
+        success = _token.transferFrom(msg.sender, address(this), minimumStake);
+
+        // admin blood penance if so desired
+        if (adminFee > 0) {
+            require(
+                _token.transfer(adminTreasury, adminFee),
+                "Failed Penance!"
+            );
+        }
     }
 
     /**
@@ -515,7 +525,6 @@ contract RiteOfMoloch is
     function _darkRitual() internal virtual {
         // the total amount of blood debt
         uint256 blood;
-        uint256 bloodCut;
         uint256 newCohortCount;
         uint256 season = cohortSeason;
         uint256 nextSeason = cohortSeason + 1;
@@ -543,20 +552,8 @@ contract RiteOfMoloch is
             }
         }
 
-        // calculate blood cut and penance for admins
-        if (adminFee > 0) {
-            bloodCut = (blood * adminFee) / 100;
-            require(
-                _token.transfer(adminTreasury, bloodCut),
-                "Failed Penance!"
-            );
-        }
-
         // blood feast for Baal
-        require(
-            _token.transfer(daoTreasury, blood - bloodCut),
-            "Failed Sacrifice!"
-        );
+        require(_token.transfer(daoTreasury, blood), "Failed Sacrifice!");
 
         // reset cohortCount, reset joinInitiation period, increase season
         cohortCounter = newCohortCount;

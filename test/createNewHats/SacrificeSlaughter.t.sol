@@ -55,7 +55,10 @@ contract SacrificeSlaugher is TestHelper {
 
         // assert values of stakes
         for (uint256 i = 0; i < userStakesBefore.length; i++) {
-            assertEq(userStakesBefore[i], minStake);
+            assertEq(
+                userStakesBefore[i],
+                minStake - ((minStake * adminFee) / 100)
+            );
         }
 
         // slaughter charlie before the sacrifice
@@ -70,7 +73,7 @@ contract SacrificeSlaugher is TestHelper {
         // re-assert values of stakes
         assertEq(userStakesAfter[0], 0);
         // bob's's time has not expired, so he should not have been sacrificed
-        assertEq(userStakesAfter[1], minStake);
+        assertEq(userStakesAfter[1], minStake - ((minStake * adminFee) / 100));
         // charlie's's time has not expired, but he was slaughtered before the sacrifice
         assertEq(userStakesAfter[2], 0);
 

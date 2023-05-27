@@ -13,6 +13,8 @@ contract ROMFactoryScript is Script {
     // Hats interface and protocol implementation
     IHats internal HATS;
     address constant hatsProtocol = 0x9D2dfd6066d5935267291718E8AA16C8Ab729E9d;
+    address constant susTreasury = 0x849233B1a9ca424716458297589f474B250bf1f2;
+    uint256 constant susFee = 1;
 
     // Operator hat for ROM-factory deployment
     uint256 public factoryOperatorHat;
@@ -26,7 +28,12 @@ contract ROMFactoryScript is Script {
         hatTreeSetup();
 
         // deploy ROM-factory
-        new RiteOfMolochFactory(hatsProtocol, factoryOperatorHat);
+        new RiteOfMolochFactory(
+            hatsProtocol,
+            factoryOperatorHat,
+            susTreasury,
+            susFee
+        );
 
         vm.stopBroadcast();
     }

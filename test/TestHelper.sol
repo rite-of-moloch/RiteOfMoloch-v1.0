@@ -76,7 +76,12 @@ contract TestHelper is Test, IInitData {
         // factory hats setup
         createFactoryHats();
         // deploy ROM factory
-        ROMF = new RiteOfMolochFactory(address(HATS), factoryOperatorHat);
+        ROMF = new RiteOfMolochFactory(
+            address(HATS),
+            factoryOperatorHat,
+            adminTreasury,
+            adminFee
+        );
     }
 
     // INIT CLONE DATA
@@ -86,14 +91,12 @@ contract TestHelper is Test, IInitData {
         Data.daoTreasury = dao;
         Data.admin1 = alice;
         Data.admin2 = address(0);
-        Data.adminTreasury = address(0xcafebebe);
         Data.cohortSize = 3;
         Data.joinDuration = 2 weeks;
         Data.threshold = 10;
         Data.assetAmount = minStake;
         Data.stakeDuration = 1 weeks;
         Data.topHatId = 0;
-        Data.adminFee = 5;
         Data.cohortName = "SeasonV";
         Data.sbtName = "RiteOfMolochSBT";
         Data.sbtSymbol = "SBTMoloch";
