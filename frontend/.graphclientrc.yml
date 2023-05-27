@@ -1,0 +1,12 @@
+sources:
+  - name: rom-goerli
+    handler:
+      graphql:
+        endpoint: https://api.thegraph.com/subgraphs/name/bitbeckers/rom-goerli
+
+plugins:
+  - pollingLive:
+      defaultInterval: 2000
+
+documents:
+  - ./graph/*.graphql

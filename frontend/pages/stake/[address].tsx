@@ -17,10 +17,8 @@ import { useRouter } from "next/router";
 import { utils } from "ethers";
 import BackButton from "components/BackButton";
 import { getDeadline, getHasRite } from "utils/general";
-import { useSubgraphQuery } from "hooks/useSubgraphQuery";
-import { COHORT_METADATA } from "utils/subgraph/queries";
-import { CohortMetadata } from "utils/types/subgraphQueries";
-import useCohortName from "hooks/useCohortName";
+import useCohortName from "hooks/useCohortByAddress";
+import useCohort from "hooks/useCohortByAddress";
 
 const Stake: React.FC = (): any => {
   const { address, isConnected } = useAccount();
@@ -28,9 +26,7 @@ const Stake: React.FC = (): any => {
   const router = useRouter();
   const { address: cohortAddress } = router.query;
 
-  const metadata = useSubgraphQuery(COHORT_METADATA(cohortAddress));
-
-  const cohort: CohortMetadata | null = metadata?.data?.data?.data?.cohort;
+  const cohort = useCohort((cohortAddress as string) || "");
 
   function userAddress(): string {
     if (typeof address === "string") return address;
@@ -45,14 +41,14 @@ const Stake: React.FC = (): any => {
 
   const isStaked = getHasRite(riteBalance);
 
-  const cohortName = useCohortName(cohort?.id?.toString() || "");
+  const cohortName = useCohortName(cohort?.address?.toString() || "");
 
   /**
    * if dynamic cohortAddress isn't valid ETH address, redirect back to joinCohorts page
    */
   useEffect(() => {
     if (cohortAddress) {
-      if (!utils.isAddress(cohortAddress.toString())) {
+      if (!utils.isAddress(cohort?.address)) {
         router.push("/joinCohorts");
       }
     }
@@ -95,7 +91,7 @@ const Stake: React.FC = (): any => {
                 </Heading>
               </Box>
               <Box w={["80%", "80%", "60%"]} alignSelf="center" py="1rem">
-                <StakingFlow contractAddress={cohortAddress || ""} />
+                <StakingFlow contractAddress={cohort?.address || ""} />
               </Box>
             </Stack>
           )}
@@ -103,7 +99,7 @@ const Stake: React.FC = (): any => {
             <RiteStaked
               riteBalance={riteBalance?.toString() || ""}
               deadline={deadline}
-              contractAddress={cohortAddress || ""}
+              contractAddress={cohort?.address || ""}
             />
           )}
         </HStack>
