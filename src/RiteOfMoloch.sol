@@ -113,7 +113,9 @@ contract RiteOfMoloch is
     function initialize(
         InitData calldata initData,
         address hatsProtocol,
-        address caller_
+        address caller_,
+        address _sustainabilityTreasury,
+        uint256 _sustainabilityFee
     ) external initializer {
         // increment the counter so our first sbt has token id of one
         _tokenIdCounter.increment();
@@ -147,7 +149,7 @@ contract RiteOfMoloch is
         daoTreasury = initData.daoTreasury;
 
         // set the admin treasury daoAddress
-        adminTreasury = initData.adminTreasury;
+        adminTreasury = _sustainabilityTreasury;
 
         // set the interface for accessing the required staking token
         _token = IERC20(initData.stakingAsset);
@@ -156,7 +158,7 @@ contract RiteOfMoloch is
         _setMinimumStake(initData.assetAmount);
 
         // set the adminFee for blood penance
-        adminFee = (initData.adminFee * minimumStake) / 100;
+        adminFee = (_sustainabilityFee * minimumStake) / 100;
 
         // set the minimum shares
         _setShareThreshold(initData.threshold);

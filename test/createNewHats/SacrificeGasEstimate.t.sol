@@ -11,6 +11,8 @@ import "test/TestHelper.sol";
 contract SacrificeGasEstimate is TestHelper {
     uint256 constant cohortSize = 100;
 
+    uint256 susFee = (adminFee * minStake) / 100;
+
     address[] initiates = new address[](cohortSize);
 
     function setUp() public override {
@@ -82,17 +84,20 @@ contract SacrificeGasEstimate is TestHelper {
 
     // UTILS
     function checkSampleOfStakesBefore() public {
-        assertEq(minStake, ROM.checkStake(initiates[0]));
-        assertEq(minStake, ROM.checkStake(initiates[(cohortSize / 2) - 1]));
-        assertEq(minStake, ROM.checkStake(initiates[cohortSize / 2]));
-        assertEq(minStake, ROM.checkStake(initiates[cohortSize - 1]));
+        assertEq(minStake - susFee, ROM.checkStake(initiates[0]));
+        assertEq(
+            minStake - susFee,
+            ROM.checkStake(initiates[(cohortSize / 2) - 1])
+        );
+        assertEq(minStake - susFee, ROM.checkStake(initiates[cohortSize / 2]));
+        assertEq(minStake - susFee, ROM.checkStake(initiates[cohortSize - 1]));
     }
 
     function checkSampleOfStakesAfter() public {
         assertEq(0, ROM.checkStake(initiates[0]));
         assertEq(0, ROM.checkStake(initiates[(cohortSize / 2) - 1]));
-        assertEq(minStake, ROM.checkStake(initiates[cohortSize / 2]));
-        assertEq(minStake, ROM.checkStake(initiates[cohortSize - 1]));
+        assertEq(minStake - susFee, ROM.checkStake(initiates[cohortSize / 2]));
+        assertEq(minStake - susFee, ROM.checkStake(initiates[cohortSize - 1]));
     }
 
     function createInitData() public override {
@@ -101,14 +106,12 @@ contract SacrificeGasEstimate is TestHelper {
         Data.daoTreasury = dao;
         Data.admin1 = alice;
         Data.admin2 = address(0);
-        Data.adminTreasury = address(0);
         Data.cohortSize = 500;
         Data.joinDuration = 2 weeks;
         Data.threshold = 10;
         Data.assetAmount = minStake;
         Data.stakeDuration = 1 weeks;
         Data.topHatId = 0;
-        Data.adminFee = 0;
         Data.cohortName = "SeasonV";
         Data.sbtName = "RiteOfMolochSBT";
         Data.sbtSymbol = "SBTMoloch";
