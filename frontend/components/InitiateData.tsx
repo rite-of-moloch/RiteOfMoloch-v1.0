@@ -1,10 +1,17 @@
 import { Box, Tooltip } from "@raidguild/design-system";
 import React from "react";
-import { MemberData } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
 import BlockExplorerLink from "./BlockExplorerLink";
 import CohortMemberModal from "./cohortMemberModal";
 import GridTemplate from "./GridTemplate";
+
+export type MemberData = {
+  address: string;
+  cohortAddress: string;
+  id: string;
+  joinedAt: string;
+  stake: string;
+};
 
 const InitiateData: React.FC<MemberData> = ({
   address,

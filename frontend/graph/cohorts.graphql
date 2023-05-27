@@ -1,0 +1,47 @@
+query Cohorts {
+  cohorts {
+    ...CohortFragment
+  }
+}
+
+query CohortById($id: ID = "") {
+  cohort(id: $id) {
+    ...CohortFragment
+  }
+}
+
+fragment InitiateFragment on Initiate {
+  address
+  claimed
+  deadline
+  joinedAt
+  sacrificed
+  stake
+}
+
+fragment CohortFragment on Cohort {
+  createdAt
+  dao
+  deployer
+  id
+  address
+  initiates {
+    ...InitiateFragment
+  }
+  sbtUrl
+  sharesAmount
+  slashedMembers
+  claimedMembers
+  successPercentage
+  time
+  token
+  tokenAmount
+  totalMembers
+  treasury
+}
+
+query CohortDataByAddress($address: Bytes = "") {
+  cohorts(where: { address: $address }) {
+    ...CohortFragment
+  }
+}

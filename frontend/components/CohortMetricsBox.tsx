@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Flex,
   Heading,
   HStack,
   Image,
@@ -11,22 +10,21 @@ import {
   Tooltip,
   VStack,
 } from "@raidguild/design-system";
-import { useSubgraphQuery } from "hooks/useSubgraphQuery";
 import useTokenSymbol from "hooks/useTokenSymbol";
 import React, { Dispatch } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { getDeadline, unixToUTC } from "utils/general";
-import { COHORT_METADATA, COHORT_METRICS_CARD } from "utils/subgraph/queries";
-import { CohortMetadata, CohortMetricsCard } from "utils/types/subgraphQueries";
 import { useNetwork } from "wagmi";
 
 import BlockExplorerLink from "./BlockExplorerLink";
 import CohortMetricsOverall from "./CohortMetricsOverall";
 import CohortAdminModal from "./adminModal/cohortAdminModal";
+import useCohort from "hooks/useCohortByAddress";
+import useCohortByID from "hooks/useCohortByID";
 
 interface CohortMetricsBoxProps {
   removeOption: Dispatch<any>;
-  id: string | undefined;
+  id: string;
   overallPerformance: Boolean;
 }
 
@@ -43,22 +41,17 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
   overallPerformance,
 }) => {
   const { chain } = useNetwork();
-  const metricsData = useSubgraphQuery(COHORT_METRICS_CARD(id));
-  const metrics: CohortMetricsCard = metricsData?.data?.data?.data?.cohort;
+  const cohort = useCohortByID(id);
 
-  const cohortMetadataRaw = useSubgraphQuery(COHORT_METADATA(id));
-  const cohortMetadata: CohortMetadata | null =
-    cohortMetadataRaw?.data?.data?.data?.cohort;
-
-  const symbol = useTokenSymbol(metrics?.token);
-  const getdeadline = getDeadline(
-    cohortMetadata?.createdAt,
-    cohortMetadata?.time
-  );
+  const symbol = useTokenSymbol(cohort?.token);
+  const getdeadline = getDeadline(cohort?.createdAt, cohort?.time);
 
   const lastMemberJoined = (): string => {
-    let date = metrics?.initiates[metrics?.initiates.length - 1]?.joinedAt;
+    if (!cohort?.initiates) return "N/A";
+
+    let date = cohort?.initiates[cohort?.initiates.length - 1]?.joinedAt;
     let formattedDate = unixToUTC((Number(date) * 1000).toString());
+
     if (formattedDate === "Invalid Date") {
       return "N/A";
     } else {
@@ -66,7 +59,7 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
     }
   };
 
-  const deployDate = unixToUTC((Number(metrics?.createdAt) * 1000).toString());
+  const deployDate = unixToUTC((Number(cohort?.createdAt) * 1000).toString());
 
   const dataText = (text: string) => (
     <span style={{ color: "white", marginLeft: "0.25rem" }}>{text}</span>
@@ -101,7 +94,7 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
               </Box>
               <Box>
                 <Image
-                  src={`${metrics?.sbtUrl}`}
+                  src={`${cohort?.sbtUrl}`}
                   alt="SBT image preview"
                   boxShadow="dark-lg"
                   p="1"
@@ -112,7 +105,7 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
               <Text>
                 Staking token:
                 <span style={{ color: "white", marginLeft: "0.5rem" }}>
-                  {BlockExplorerLink(chain, metrics?.token)}
+                  {BlockExplorerLink(chain, cohort?.token)}
                 </span>
               </Text>
               <Text>Symbol: {dataText(symbol || "")}</Text>
@@ -124,14 +117,14 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
                 </span>
               </Text>
               <Text>
-                Cohort size: {dataText(metrics?.totalMembers.toString())}
+                Cohort size: {dataText(cohort?.totalMembers.toString())}
               </Text>
               <Text>
                 Success percentage:{" "}
-                {dataText(metrics?.successPercentage.toString())}
+                {dataText(cohort?.successPercentage.toString())}
               </Text>
               <Text>
-                Members slashed: {dataText(metrics?.slashedMembers.toString())}
+                Members slashed: {dataText(cohort?.slashedMembers.toString())}
               </Text>
               {/* TODO: create hook that calls `totalSupply` functioin on Baal contract and gets treasury size https://goerli.etherscan.io/address/0x6053de194226843e4fd99a82c1386b4c76e19e34#readContract */}
               {/* <Text>
