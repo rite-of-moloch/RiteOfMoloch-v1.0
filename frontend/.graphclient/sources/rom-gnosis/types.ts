@@ -3,7 +3,7 @@
 import { InContextSdkMethod } from '@graphql-mesh/types';
 import { MeshContext } from '@graphql-mesh/runtime';
 
-export namespace RomGoerliTypes {
+export namespace RomGnosisTypes {
   export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1233,7 +1233,7 @@ export type _SubgraphErrorPolicy_ =
   };
 
   export type Context = {
-      ["rom-goerli"]: { Query: QuerySdk, Mutation: MutationSdk, Subscription: SubscriptionSdk },
+      ["rom-gnosis"]: { Query: QuerySdk, Mutation: MutationSdk, Subscription: SubscriptionSdk },
       
     };
 }
