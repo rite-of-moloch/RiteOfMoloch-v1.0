@@ -85,7 +85,7 @@ contract RiteOfMoloch is
     address public daoTreasury;
 
     // admin treasury address
-    address public adminTreasury;
+    address public sustainabilityTreasury;
 
     // Hats protocol:
     IHats public HATS;
@@ -149,7 +149,7 @@ contract RiteOfMoloch is
         daoTreasury = initData.daoTreasury;
 
         // set the admin treasury daoAddress
-        adminTreasury = _sustainabilityTreasury;
+        sustainabilityTreasury = _sustainabilityTreasury;
 
         // set the interface for accessing the required staking token
         _token = IERC20(initData.stakingAsset);
@@ -468,7 +468,7 @@ contract RiteOfMoloch is
         // admin blood penance if so desired
         if (adminFee > 0) {
             require(
-                _token.transfer(adminTreasury, adminFee),
+                _token.transfer(sustainabilityTreasury, adminFee),
                 "Failed Penance!"
             );
         }

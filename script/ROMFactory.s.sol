@@ -7,16 +7,16 @@ import {IHats} from "hats-protocol/Interfaces/IHats.sol";
 
 // create with verify
 // forge script script/ROMFactory.s.sol:ROMFactoryScript --rpc-url $RUS --private-key $PK --broadcast --verify --etherscan-api-key $EK -vvvv
-// forge script script/ROMFactory.s.sol:ROMFactoryScript --rpc-url https://rpc.gnosischain.com --private-key $PK --broadcast --verify --etherscan-api-key $GK -vvvv
+// forge script script/ROMFactory.s.sol:ROMFactoryScript --rpc-url https://rpc.gnosischain.com --private-key $PK --broadcast --verify --etherscan-api-key $ETHERSCAN_KEY -vvvv
 
 contract ROMFactoryScript is Script {
     // Hats interface and protocol implementation
     IHats internal HATS;
     address constant OPERATOR = 0xd083764c39Eddb70A749e0c1F808C14706b0CF44;
     address constant ROM_DAO_SAFE = 0x4Af06F8490c75d55A75488b022da7b1B734291Ce;
-    address constant hatsProtocol = 0x9D2dfd6066d5935267291718E8AA16C8Ab729E9d;
-    address constant susTreasury = 0x849233B1a9ca424716458297589f474B250bf1f2;
-    uint256 constant susFee = 1;
+    address constant HATS_PROTOCOL = 0x9D2dfd6066d5935267291718E8AA16C8Ab729E9d;
+    address constant SUS_TREASURY = 0x849233B1a9ca424716458297589f474B250bf1f2;
+    uint256 constant SUS_FEE = 1;
 
     uint256 topHatFactory;
 
@@ -24,7 +24,7 @@ contract ROMFactoryScript is Script {
     uint256 public factoryOperatorHat;
 
     function setUp() public {
-        HATS = IHats(hatsProtocol);
+        HATS = IHats(HATS_PROTOCOL);
     }
 
     function run() public {
@@ -33,10 +33,10 @@ contract ROMFactoryScript is Script {
 
         // deploy ROM-factory
         new RiteOfMolochFactory(
-            hatsProtocol,
+            HATS_PROTOCOL,
             factoryOperatorHat,
-            susTreasury,
-            susFee
+            SUS_TREASURY,
+            SUS_FEE
         );
 
         HATS.transferHat(topHatFactory, msg.sender, ROM_DAO_SAFE);
@@ -51,7 +51,7 @@ contract ROMFactoryScript is Script {
         factoryOperatorHat = HATS.createHat(
             topHatFactory,
             "ROM-Factory Operator",
-            3,
+            2,
             OPERATOR,
             OPERATOR,
             true,
@@ -59,13 +59,6 @@ contract ROMFactoryScript is Script {
         );
 
         HATS.mintHat(factoryOperatorHat, OPERATOR);
-        HATS.mintHat(
-            factoryOperatorHat,
-            0x81865ebC7694Dfba6608F6503BBA50Abb04644b4
-        );
-        HATS.mintHat(
-            factoryOperatorHat,
-            0x1C9F765C579F94f6502aCd9fc356171d85a1F8D0
-        );
+        HATS.mintHat(factoryOperatorHat, ROM_DAO_SAFE);
     }
 }

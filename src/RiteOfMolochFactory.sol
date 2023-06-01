@@ -123,7 +123,9 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
         sustainabilityFee = fee;
     }
 
-    function updateSustainabilityTreasury(address treasury) external {
-        sustainabilityTreasury = treasury;
+    function updateSustainabilityTreasury(
+        address newSustainabilityTreasury
+    ) external {
+        sustainabilityTreasury = newSustainabilityTreasury;
     }
 }
