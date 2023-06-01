@@ -1,0 +1,299 @@
+[
+  {
+    "type": "constructor",
+    "inputs": [
+      { "type": "address", "name": "_hatsProtocol", "internalType": "address" },
+      {
+        "type": "uint256",
+        "name": "_factoryOperatorHat",
+        "internalType": "uint256"
+      },
+      {
+        "type": "address",
+        "name": "_sustainabilityTreasury",
+        "internalType": "address"
+      },
+      {
+        "type": "uint256",
+        "name": "_sustainabilityFee",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "bytes32", "name": "", "internalType": "bytes32" }],
+    "name": "DEFAULT_ADMIN_ROLE",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "bytes32", "name": "", "internalType": "bytes32" }],
+    "name": "FACTORY_OPERATOR",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "addImplementation",
+    "inputs": [
+      { "type": "address", "name": "implementation", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "changeHatsContract",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "newHatsContract",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "changeHatsProtocol",
+    "inputs": [
+      { "type": "address", "name": "_hatsProtocol", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "changeRoleHat",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "internalType": "bytes32" },
+      { "type": "uint256", "name": "newRoleHat", "internalType": "uint256" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
+    "name": "createCohort",
+    "inputs": [
+      {
+        "type": "tuple",
+        "name": "initData",
+        "internalType": "struct IInitData.InitData",
+        "components": [
+          { "type": "address" },
+          { "type": "address" },
+          { "type": "address" },
+          { "type": "address" },
+          { "type": "address" },
+          { "type": "uint256" },
+          { "type": "uint256" },
+          { "type": "uint256" },
+          { "type": "uint256" },
+          { "type": "uint256" },
+          { "type": "uint256" },
+          { "type": "string" },
+          { "type": "string" },
+          { "type": "string" },
+          { "type": "string" },
+          { "type": "bool" }
+        ]
+      },
+      {
+        "type": "uint256",
+        "name": "implementationSelector",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "factoryOperatorHat",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "bytes32", "name": "", "internalType": "bytes32" }],
+    "name": "getRoleAdmin",
+    "inputs": [{ "type": "bytes32", "name": "role", "internalType": "bytes32" }]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "grantRole",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "internalType": "bytes32" },
+      { "type": "uint256", "name": "hat", "internalType": "uint256" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "bool", "name": "", "internalType": "bool" }],
+    "name": "hasRole",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "internalType": "bytes32" },
+      { "type": "address", "name": "account", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
+    "name": "hatsContract",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
+    "name": "hatsProtocol",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "iid",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
+    "name": "implementations",
+    "inputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "revokeRole",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "internalType": "bytes32" },
+      { "type": "uint256", "name": "hat", "internalType": "uint256" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "sustainabilityFee",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
+    "name": "sustainabilityTreasury",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "updateSustainabilityFee",
+    "inputs": [{ "type": "uint256", "name": "fee", "internalType": "uint256" }]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "updateSustainabilityTreasury",
+    "inputs": [
+      { "type": "address", "name": "treasury", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "HatsContractChanged",
+    "inputs": [
+      { "type": "address", "name": "previousHatsContract", "indexed": true },
+      { "type": "address", "name": "newHatsContract", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "NewRiteOfMoloch",
+    "inputs": [
+      { "type": "address", "name": "cohortContract", "indexed": false },
+      { "type": "address", "name": "deployer", "indexed": false },
+      { "type": "address", "name": "implementation", "indexed": false },
+      { "type": "address", "name": "membershipCriteria", "indexed": false },
+      { "type": "address", "name": "stakingAsset", "indexed": false },
+      { "type": "address", "name": "treasury", "indexed": false },
+      { "type": "uint256", "name": "threshold", "indexed": false },
+      { "type": "uint256", "name": "assetAmount", "indexed": false },
+      { "type": "uint256", "name": "stakeDuration", "indexed": false },
+      { "type": "string", "name": "sbtUrl", "indexed": false }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RoleAdminChanged",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "indexed": true },
+      { "type": "bytes32", "name": "previousAdminRole", "indexed": true },
+      { "type": "bytes32", "name": "newAdminRole", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RoleGranted",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "indexed": true },
+      { "type": "uint256", "name": "hat", "indexed": true },
+      { "type": "address", "name": "sender", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RoleHatChanged",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "indexed": true },
+      { "type": "uint256", "name": "previousRoleHat", "indexed": true },
+      { "type": "uint256", "name": "newRoleHat", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RoleRevoked",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "indexed": true },
+      { "type": "uint256", "name": "hat", "indexed": true },
+      { "type": "address", "name": "sender", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "NotWearingRoleHat",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "internalType": "bytes32" },
+      { "type": "uint256", "name": "hat", "internalType": "uint256" },
+      { "type": "address", "name": "account", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "RoleAlreadyAssigned",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "internalType": "bytes32" },
+      { "type": "uint256", "name": "roleHat", "internalType": "uint256" }
+    ]
+  }
+]

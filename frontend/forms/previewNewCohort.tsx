@@ -11,7 +11,7 @@ import {
 import { useFormContext } from "context/FormContext";
 import useCreateCohort from "../hooks/useCreateCohort";
 import { useNetwork } from "wagmi";
-import { initDataDeployCohort } from "utils/types/initDataDeployCohort";
+import { InitDataDeployCohort } from "utils/types/initDataDeployCohort";
 import CohortConfirmation from "components/CohortConfirmationModal";
 import BlockExplorerLink from "components/BlockExplorerLink";
 import { zeroAddress } from "utils/constants";
@@ -28,7 +28,7 @@ const PreviewNewCohort = () => {
     displayPreviewNewCohort,
     membershipCriteria,
     stakingAsset,
-    treasury,
+    daoTreasury,
     admin1,
     admin2,
     cohortSize,
@@ -66,10 +66,10 @@ const PreviewNewCohort = () => {
     setDisplayPreviewNewCohort(false);
   };
 
-  const initData: initDataDeployCohort = [
+  const initData: InitDataDeployCohort = [
     membershipCriteria,
     stakingAsset,
-    treasury,
+    daoTreasury,
     admin1 !== "" ? admin1 : zeroAddress,
     admin2 !== "" ? admin2 : zeroAddress,
     Number(cohortSize),
@@ -137,8 +137,8 @@ const PreviewNewCohort = () => {
                 BlockExplorerLink(chain, membershipCriteria)
               )}
               {responseText(
-                "Treasury address",
-                BlockExplorerLink(chain, treasury)
+                "DAO treasury address",
+                BlockExplorerLink(chain, daoTreasury)
               )}
               {topHatWearer !== "" &&
                 responseText(

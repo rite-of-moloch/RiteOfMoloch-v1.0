@@ -21,8 +21,8 @@ export const FormContext = createContext<{
   setSymbolSBT: Dispatch<string>;
   uriSBT: string;
   setUriSBT: Dispatch<string>;
-  treasury: string;
-  setTreasury: Dispatch<string>;
+  daoTreasury: string;
+  setDaoTreasury: Dispatch<string>;
   membershipCriteria: string;
   setMembershipCriteria: Dispatch<string>;
   assetAmount: number | undefined;
@@ -70,8 +70,8 @@ export const FormContext = createContext<{
   setSymbolSBT: useState,
   uriSBT: "",
   setUriSBT: useState,
-  treasury: "",
-  setTreasury: useState,
+  daoTreasury: "",
+  setDaoTreasury: useState,
   membershipCriteria: "",
   setMembershipCriteria: useState,
   assetAmount: undefined,
@@ -123,7 +123,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   const [onboardingPeriod, setOnboardingPeriod] = useState<number | undefined>(
     undefined
   );
-  const [treasury, setTreasury] = useState("");
+  const [daoTreasury, setDaoTreasury] = useState("");
   const [membershipCriteria, setMembershipCriteria] = useState("");
   const [stakeDuration, setStakeDuration] = useState<number | undefined>(
     undefined
@@ -157,8 +157,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
     setSymbolSBT,
     uriSBT,
     setUriSBT,
-    treasury,
-    setTreasury,
+    daoTreasury,
+    setDaoTreasury,
     membershipCriteria,
     setMembershipCriteria,
     assetAmount,
@@ -212,8 +212,8 @@ export const useFormContext = () => {
     setSymbolSBT,
     uriSBT,
     setUriSBT,
-    treasury,
-    setTreasury,
+    daoTreasury,
+    setDaoTreasury,
     membershipCriteria,
     setMembershipCriteria,
     assetAmount,
@@ -262,8 +262,8 @@ export const useFormContext = () => {
     setSymbolSBT,
     uriSBT,
     setUriSBT,
-    treasury,
-    setTreasury,
+    daoTreasury,
+    setDaoTreasury,
     membershipCriteria,
     setMembershipCriteria,
     assetAmount,

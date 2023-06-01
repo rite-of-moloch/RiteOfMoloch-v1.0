@@ -26,7 +26,7 @@ const DeployCohortPt2 = () => {
     setOnboardingPeriod,
     setStakingAsset,
     setStakeDuration,
-    setTreasury,
+    setDaoTreasury,
     displayPart2,
     setDisplayPart1,
     setDisplayPart2,
@@ -74,7 +74,7 @@ const DeployCohortPt2 = () => {
       setOnboardingPeriod(values.onboardingPeriod);
       setStakeDuration(values.stakeDuration);
       setStakingAsset(values.stakingAsset);
-      setTreasury(values.treasury);
+      setDaoTreasury(values.daoTreasury);
       setDisplayPart2(false);
       setDisplayPart3(true);
     }
@@ -240,23 +240,23 @@ const DeployCohortPt2 = () => {
         <SimpleGrid my={3}>
           <Box>
             <Input
-              label="Treasury address"
+              label="DAO treasury address"
               placeholder="Slashed stake will be sent here..."
               autoComplete="off"
               localForm={localForm}
-              {...register("treasury", {
+              {...register("daoTreasury", {
                 required: {
                   value: true,
                   message: "Value required",
                 },
                 validate: () =>
-                  utils.isAddress(values.treasury) || "invalid address",
+                  utils.isAddress(values.daoTreasury) || "invalid address",
               })}
             />
 
             <ErrorMessage
               errors={errors}
-              name="treasury"
+              name="daoTreasury"
               render={({ message }) => <FormErrorText message={message} />}
             />
           </Box>
