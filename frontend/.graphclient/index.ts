@@ -21,8 +21,8 @@ import { getMesh, ExecuteMeshFn, SubscribeMeshFn, MeshContext as BaseMeshContext
 import { MeshStore, FsStoreStorageAdapter } from '@graphql-mesh/store';
 import { path as pathModule } from '@graphql-mesh/cross-helpers';
 import { ImportFn } from '@graphql-mesh/types';
-import type { RomGoerliTypes } from './sources/rom-goerli/types';
-import * as importedModule$0 from "./sources/rom-goerli/introspectionSchema";
+import type { RomGnosisTypes } from './sources/rom-gnosis/types';
+import * as importedModule$0 from "./sources/rom-gnosis/introspectionSchema";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1519,7 +1519,7 @@ export type DirectiveResolvers<ContextType = MeshContext> = ResolversObject<{
   derivedFrom?: derivedFromDirectiveResolver<any, any, ContextType>;
 }>;
 
-export type MeshContext = RomGoerliTypes.Context & BaseMeshContext;
+export type MeshContext = RomGnosisTypes.Context & BaseMeshContext;
 
 
 import { fileURLToPath } from '@graphql-mesh/utils';
@@ -1528,7 +1528,7 @@ const baseDir = pathModule.join(pathModule.dirname(fileURLToPath(import.meta.url
 const importFn: ImportFn = <T>(moduleId: string) => {
   const relativeModuleId = (pathModule.isAbsolute(moduleId) ? pathModule.relative(baseDir, moduleId) : moduleId).split('\\').join('/').replace(baseDir + '/', '');
   switch(relativeModuleId) {
-    case ".graphclient/sources/rom-goerli/introspectionSchema":
+    case ".graphclient/sources/rom-gnosis/introspectionSchema":
       return Promise.resolve(importedModule$0) as T;
     
     default:
@@ -1561,22 +1561,22 @@ const cache = new (MeshCache as any)({
 const sources: MeshResolvedSource[] = [];
 const transforms: MeshTransform[] = [];
 const additionalEnvelopPlugins: MeshPlugin<any>[] = [];
-const romGoerliTransforms = [];
+const romGnosisTransforms = [];
 const additionalTypeDefs = [] as any[];
-const romGoerliHandler = new GraphqlHandler({
-              name: "rom-goerli",
-              config: {"endpoint":"https://api.thegraph.com/subgraphs/name/bitbeckers/rom-goerli"},
+const romGnosisHandler = new GraphqlHandler({
+              name: "rom-gnosis",
+              config: {"endpoint":"https://api.thegraph.com/subgraphs/name/rite-of-moloch/rom-gnosis"},
               baseDir,
               cache,
               pubsub,
-              store: sourcesStore.child("rom-goerli"),
-              logger: logger.child("rom-goerli"),
+              store: sourcesStore.child("rom-gnosis"),
+              logger: logger.child("rom-gnosis"),
               importFn,
             });
 sources[0] = {
-          name: 'rom-goerli',
-          handler: romGoerliHandler,
-          transforms: romGoerliTransforms
+          name: 'rom-gnosis',
+          handler: romGnosisHandler,
+          transforms: romGnosisTransforms
         }
 additionalEnvelopPlugins[0] = await UsePollingLive({
           ...({
