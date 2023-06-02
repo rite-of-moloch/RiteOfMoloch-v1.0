@@ -6,7 +6,6 @@ import {RiteOfMolochFactory} from "src/RiteOfMolochFactory.sol";
 import {MockInits, IInitData} from "script/deploy/mockInits.sol";
 import {IHats} from "hats-protocol/Interfaces/IHats.sol";
 
-
 contract DeployHelper is MockInits {
     // ROM factory contract
     RiteOfMolochFactory public ROMF;
@@ -19,22 +18,28 @@ contract DeployHelper is MockInits {
     uint256 public topHat;
     uint256 public factoryOperatorHat;
 
+    // sustainability
+    address adminTreasury = 0x849233B1a9ca424716458297589f474B250bf1f2;
+    uint256 adminFee = 0;
+
     function _deployFactory() internal {
         _mintFactoryTopHat();
         // change Hats Protocol for chain
-        ROMF = new RiteOfMolochFactory(hatsProtocol, factoryOperatorHat);
+        ROMF = new RiteOfMolochFactory(
+            hatsProtocol,
+            factoryOperatorHat,
+            adminTreasury,
+            adminFee
+        );
     }
 
-
-    function _deployCohorts() internal returns(address[] memory roms) {
+    function _deployCohorts() internal returns (address[] memory roms) {
         InitData[] memory mockInits = _getMockInitData();
         roms = new address[](mockInits.length);
-        for(uint i = 0; i < mockInits.length; i++) {
+        for (uint i = 0; i < mockInits.length; i++) {
             roms[i] = ROMF.createCohort(mockInits[i], 1);
         }
     }
-
-
 
     function _mintFactoryTopHat() internal {
         // point to Hats implementation
@@ -54,6 +59,4 @@ contract DeployHelper is MockInits {
         // mint factory operator
         HATS.mintHat(factoryOperatorHat, msg.sender);
     }
-
-
 }
