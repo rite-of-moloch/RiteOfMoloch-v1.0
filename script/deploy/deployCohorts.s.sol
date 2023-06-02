@@ -9,7 +9,8 @@ import {DeployHelper} from "script/deploy/helpers.sol";
 
 contract DeployMockCohorts is Script, DeployHelper {
     /// @notice replace this address with your target ROM factory
-    address public existingFactory = 0xc7e0366AC68B0e17c51fA551aC338FB19641f7DF;
+    // address public existingFactory = 0xc7e0366AC68B0e17c51fA551aC338FB19641f7DF;
+    address public existingFactory = 0x67A9929392CfA00f8D15ee5c46ca662B174B8dd0;
 
     function run() public {
         ROMF = RiteOfMolochFactory(existingFactory);
