@@ -88,7 +88,7 @@ const EditCohortAdmins: React.FC<EditCohortAdminsProps> = ({
     handleSaveAdmin1();
     handleSaveAdmin2();
     setEditAdmins(false);
-    // onClose();
+    onClose();
   };
 
   useEffect(() => {

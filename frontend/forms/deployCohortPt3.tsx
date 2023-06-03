@@ -213,7 +213,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
         <HStack justifyContent="space-between" mb={4}>
           <Box>
             <Flex alignItems="center">
-              <Text>Want to add additional administrators?</Text>
+              <Text>Add additional administrators?</Text>
               <Tooltip label={addAdminTooltip} placement="top" hasArrow>
                 <Box ml="0.5rem" border="1px" rounded="full">
                   <BsQuestion />
@@ -293,7 +293,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
         <HStack justifyContent="space-between" mb={2}>
           <Box>
             <Flex alignItems="center">
-              <Text>Make contract a Shaman?</Text>
+              <Text>Deploy RoM as a Shaman to DAO?</Text>
               <Tooltip label={shamanTooltip} placement="top" hasArrow>
                 <Box ml="0.5rem" border="1px" rounded="full">
                   <BsQuestion />
