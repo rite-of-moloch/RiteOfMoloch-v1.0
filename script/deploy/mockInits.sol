@@ -24,16 +24,17 @@ import {IInitData} from "src/interfaces/IInitData.sol";
 */
 
 contract MockInits is IInitData {
-    // fake DAO address on Goerli
     address constant molochDAO = 0x408818460de7d14E8f68e6142A49EA322C9d4AB1;
     address constant molochSafe = 0xcdBFcABc5d3F505ee1B6ec95c074d198A6f4Fb74;
+    address constant testERC = 0x8D01fB552D1aD4e341FAb2cFE09151dAE20D02bc;
+    address constant Link = 0x326C977E6efc84E512bB9C30f76E30c160eD06FB;
 
     function _getMockInitData() internal pure returns (InitData[] memory) {
         /* ------------------------------------------------------------------------------ */
 
         InitData memory firstCohort = InitData(
             molochDAO,
-            0x326C977E6efc84E512bB9C30f76E30c160eD06FB,
+            testERC,
             molochSafe,
             address(0),
             address(0),
@@ -54,7 +55,7 @@ contract MockInits is IInitData {
 
         InitData memory secondCohort = InitData(
             molochDAO,
-            0x326C977E6efc84E512bB9C30f76E30c160eD06FB,
+            testERC,
             molochSafe,
             address(0),
             address(0),
@@ -75,7 +76,7 @@ contract MockInits is IInitData {
 
         InitData memory thirdCohort = InitData(
             molochDAO,
-            0x326C977E6efc84E512bB9C30f76E30c160eD06FB,
+            testERC,
             molochSafe,
             address(0),
             address(0),
