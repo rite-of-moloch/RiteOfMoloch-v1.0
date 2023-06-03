@@ -56,6 +56,8 @@ const Initiates = () => {
     }
   });
 
+  const isInitiates = renderInitiates && renderInitiates.length > 0;
+
   return (
     <>
       {!isConnected && <NotConnected />}
@@ -64,11 +66,11 @@ const Initiates = () => {
           <Heading as="h1" textAlign="center" color="#FF3864">
             Initiates
           </Heading>
-          {
+          { !isInitiates && (
             <Box w="full" textAlign="center" p={2} fontFamily="texturina">
               <Spinner size="xl" my="50" color="red" emptyColor="purple" />
               <Text>Loading cohorts...</Text>
-            </Box>
+            </Box>)
           }
 
           <Stack spacing={6} w={["full", "full", "80%"]} mb={6}>
