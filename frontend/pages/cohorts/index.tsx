@@ -53,6 +53,8 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
     }
   });
 
+  const isCohorts = renderCohorts && renderCohorts.length > 0;
+
   if (!isConnected) {
     return <NotConnected />;
   }
@@ -63,11 +65,11 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
         <Heading as="h1" textAlign="center" color="#FF3864">
           Cohorts
         </Heading>
-        {
+        { !isCohorts && (
           <Box w="full" textAlign="center" p={2} fontFamily="texturina">
             <Spinner size="xl" my="50" color="red" emptyColor="purple" />
             <Text>Loading cohorts...</Text>
-          </Box>
+          </Box>)
         }
         {
           <>

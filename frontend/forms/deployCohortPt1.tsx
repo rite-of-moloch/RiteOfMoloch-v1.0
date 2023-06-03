@@ -67,7 +67,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
         <SimpleGrid columns={2} spacingX={4} spacingY={3}>
           <Box>
             <Input
-              label="Name cohort"
+              label="Name Cohort"
               id="nameCohort"
               placeholder="Name cohort"
               autoComplete="off"
@@ -92,7 +92,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
           >
             <Box>
               <Input
-                label="Moloch DAO address"
+                label="Moloch DAO Address"
                 id="membershipCriteria"
                 placeholder="enter address"
                 autoComplete="off"

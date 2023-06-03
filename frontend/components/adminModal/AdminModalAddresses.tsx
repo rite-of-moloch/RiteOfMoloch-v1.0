@@ -49,7 +49,7 @@ const AdminModalAddresses: React.FC<AdminModalAddressesProps> = ({
       </Box>
 
       <Box display={admin2 === zeroAddress ? "none" : "block"}>
-        <Text>Admin 1:</Text>
+        <Text>Admin 2:</Text>
         <Box
           bg="black"
           pb={2}
