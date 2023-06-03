@@ -53,9 +53,6 @@ const EditCohortAdmins: React.FC<EditCohortAdminsProps> = ({
 
   const { handleSubmit, control } = useForm<FormValues>();
 
-  // const {onClose} = useDisclosure();
-
-
   watch();
   const values = getValues();
   console.log(values);
@@ -91,7 +88,7 @@ const EditCohortAdmins: React.FC<EditCohortAdminsProps> = ({
     handleSaveAdmin1();
     handleSaveAdmin2();
     setEditAdmins(false);
-    onClose();
+    // onClose();
   };
 
   useEffect(() => {
