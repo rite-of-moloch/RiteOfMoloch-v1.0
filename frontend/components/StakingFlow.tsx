@@ -162,10 +162,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
             Your {tokenSymbol} allowance
           </Text>
           <Text color="white" fontSize=".8rem">
-            {/* TODO: double check that allowance unit formats are correct */}
-            {/* TODO:  */}
-            <span style={{ marginRight: "0.5em" }}>{allowance.toString()}</span>
-            {/* {utils.formatEther(allowance)} */}
+            <span style={{ marginRight: "0.5em" }}>{+utils.formatUnits(allowance.toString(), "ether")}</span>
             <span>{tokenSymbol}</span>
           </Text>
         </HStack>
