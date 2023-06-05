@@ -48,6 +48,10 @@ contract TestHelperScript is Script, IInitData {
     uint256 public factoryOperatorHat;
     uint256 public topHatFactory;
 
+    // sustainability
+    address adminTreasury = 0x849233B1a9ca424716458297589f474B250bf1f2;
+    uint256 adminFee = 0;
+
     /**
      * @dev initialization data for ROM-clone
      * @param _topHat = 0 || id of DAO's topHat
@@ -56,7 +60,7 @@ contract TestHelperScript is Script, IInitData {
     function createInitData(uint256 _topHat, bool _shamanOn) public {
         Data.membershipCriteria = address(baal);
         Data.stakingAsset = address(token);
-        Data.treasury = baalAvatar;
+        Data.daoTreasury = baalAvatar;
         Data.admin1 = admin1;
         Data.admin2 = address(0);
         Data.cohortSize = 5;
@@ -103,7 +107,12 @@ contract TestHelperScript is Script, IInitData {
         hatTreeSetup();
 
         // deploy ROM-factory
-        ROMF = new RiteOfMolochFactory(hatsProtocol, factoryOperatorHat);
+        ROMF = new RiteOfMolochFactory(
+            hatsProtocol,
+            factoryOperatorHat,
+            adminTreasury,
+            adminFee
+        );
     }
 
     function joinCohort(address initiate) public {

@@ -34,6 +34,9 @@ contract TestHelper is Test, IInitData {
     address bob = 0x70997970C51812dc3A010C7d01b50e0d17dc79C8; // user
     address charlie = 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC; // attacker
 
+    // Admin Treasury
+    address adminTreasury = address(0xcafebebe);
+
     // ROM factory and clone seed
     RiteOfMoloch public ROM;
     RiteOfMolochFactory public ROMF;
@@ -52,7 +55,9 @@ contract TestHelper is Test, IInitData {
     address constant molochDAO = address(1);
 
     // staking
-    uint256 minStake = 200;
+    uint256 minStake = 200 * 1e18;
+
+    uint256 adminFee = 5;
 
     function setUp() public virtual {
         // set and deploy ROM-Factory
@@ -71,14 +76,19 @@ contract TestHelper is Test, IInitData {
         // factory hats setup
         createFactoryHats();
         // deploy ROM factory
-        ROMF = new RiteOfMolochFactory(address(HATS), factoryOperatorHat);
+        ROMF = new RiteOfMolochFactory(
+            address(HATS),
+            factoryOperatorHat,
+            adminTreasury,
+            adminFee
+        );
     }
 
     // INIT CLONE DATA
     function createInitData() public virtual {
         Data.membershipCriteria = dao;
         Data.stakingAsset = address(stakingAsset);
-        Data.treasury = dao;
+        Data.daoTreasury = dao;
         Data.admin1 = alice;
         Data.admin2 = address(0);
         Data.cohortSize = 3;
@@ -97,7 +107,7 @@ contract TestHelper is Test, IInitData {
     // UTILS
     function mintTokens(address[4] memory eoas) public {
         for (uint256 i = 0; i < eoas.length; i++) {
-            stakingAsset.mint(eoas[i], 1000);
+            stakingAsset.mint(eoas[i], 1000 * 1e18);
         }
     }
 
@@ -162,7 +172,7 @@ contract TestHelper is Test, IInitData {
     function cloneDeployment() public {
         // contract addresses
         emit log_named_address("ROM  Contract", address(ROM));
-        emit log_named_address("ROM  Treasury", ROM.treasury());
+        emit log_named_address("ROM  Treasury", ROM.daoTreasury());
         // cohort settings
         emit log_named_uint("Min     Share", ROM.minimumShare());
         emit log_named_uint("Min     Stake", ROM.minimumStake());

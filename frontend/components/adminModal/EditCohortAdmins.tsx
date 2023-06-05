@@ -18,6 +18,7 @@ interface EditCohortAdminsProps {
   address: string | undefined;
   admin1: string;
   admin2: string;
+  onClose: Function;
 }
 
 type FormValues = {
@@ -37,6 +38,7 @@ const EditCohortAdmins: React.FC<EditCohortAdminsProps> = ({
   address,
   admin1,
   admin2,
+  onClose
 }) => {
   const [editAdmins, setEditAdmins] = useState(false);
 
@@ -83,7 +85,10 @@ const EditCohortAdmins: React.FC<EditCohortAdminsProps> = ({
   };
 
   const handleCloseModal = () => {
+    handleSaveAdmin1();
+    handleSaveAdmin2();
     setEditAdmins(false);
+    onClose();
   };
 
   useEffect(() => {
@@ -127,9 +132,9 @@ const EditCohortAdmins: React.FC<EditCohortAdminsProps> = ({
               />
             )}
           /> */}
-          <Button onClick={() => handleSaveAdmin1()} isLoading={loadingAdmin1}>
+          {/* <Button onClick={() => handleSaveAdmin1()} isLoading={loadingAdmin1}>
             save
-          </Button>
+          </Button> */}
         </HStack>
         <HStack alignItems="end" w="full">
           {/* <Controller
@@ -159,14 +164,13 @@ const EditCohortAdmins: React.FC<EditCohortAdminsProps> = ({
               validate: (val) => utils.isAddress(val),
             })}
           />
-          <Button onClick={() => handleSaveAdmin2()} isLoading={loadingAdmin2}>
+          {/* <Button onClick={() => handleSaveAdmin2()} isLoading={loadingAdmin2}>
             Save
-          </Button>
+          </Button> */}
         </HStack>
         <Box>
           <Text my="1rem" textAlign="center">
-            * You may only save 1 admin at a time. Each Rite of Moloch contract
-            allows for a maximum of (2) HATS admin .
+            Each Rite of Moloch allows for a maximum of two HATS admin. Fill in one or both inputs to grant admin privileges to accounts.
           </Text>
         </Box>
         <HStack alignItems="end" w="full" mt="2rem" justifyContent="center">
@@ -175,7 +179,7 @@ const EditCohortAdmins: React.FC<EditCohortAdminsProps> = ({
             fontFamily="spaceMono"
             onClick={() => handleCloseModal()}
           >
-            Done Editing
+            Save
           </Button>
         </HStack>
       </VStack>

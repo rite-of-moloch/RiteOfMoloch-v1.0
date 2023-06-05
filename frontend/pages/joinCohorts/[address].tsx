@@ -88,7 +88,6 @@ const CohortPage = () => {
         <Heading as="h2" fontSize="2xl" color="red" my={3}>
           <Text>{cohort && cohort?.name ?  cohort.name : "Unknown"}</Text>
         </Heading>
-        {/* Grid for heading */}
         <GridTemplate
           isHeading
           style="noSideBorders"

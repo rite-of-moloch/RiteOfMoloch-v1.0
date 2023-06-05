@@ -59,6 +59,8 @@ const Initiates = () => {
     }
   });
 
+  const isInitiates = renderInitiates && renderInitiates.length > 0;
+
   return (
     <>
       {!isConnected && <NotConnected />}

@@ -86,7 +86,7 @@ const DeployCohortPt2 = () => {
         <SimpleGrid columns={2} spacingX={4} spacingY={3}>
           <Box>
             <Input
-              label="Staking asset address"
+              label="Staking Asset Address"
               placeholder="enter token address"
               autoComplete="off"
               localForm={localForm}
@@ -111,7 +111,7 @@ const DeployCohortPt2 = () => {
             rules={numberInputRules}
             render={({ field: { ref, ...restField } }) => (
               <NumberInput
-                label="Required stake"
+                label="Required Stake (in Wei)"
                 variant="none"
                 placeholder="Required stake"
                 localForm={localForm}
@@ -136,7 +136,7 @@ const DeployCohortPt2 = () => {
               rules={numberInputRules}
               render={({ field: { ref, ...restField } }) => (
                 <NumberInput
-                  label="Cohort size"
+                  label="Maximum Cohort Size"
                   placeholder="cohort size..."
                   localForm={localForm}
                   step={1}
@@ -166,7 +166,7 @@ const DeployCohortPt2 = () => {
                 rules={numberInputRules}
                 render={({ field: { ref, ...restField } }) => (
                   <NumberInput
-                    label="Minimum shares"
+                    label="Minimum Shares for DAO Membership"
                     variant="none"
                     placeholder="shares required for membership..."
                     localForm={localForm}
@@ -192,7 +192,7 @@ const DeployCohortPt2 = () => {
               rules={numberInputRules}
               render={({ field: { ref, ...restField } }) => (
                 <NumberInput
-                  label="Onboarding period"
+                  label="Onboarding Period (in days)"
                   variant="none"
                   placeholder="time in days..."
                   localForm={localForm}
@@ -218,7 +218,7 @@ const DeployCohortPt2 = () => {
               rules={numberInputRules}
               render={({ field: { ref, ...restField } }) => (
                 <NumberInput
-                  label="Stake duration"
+                  label="Stake Duration (in days)"
                   variant="none"
                   placeholder="amount in days..."
                   localForm={localForm}
@@ -240,7 +240,7 @@ const DeployCohortPt2 = () => {
         <SimpleGrid my={3}>
           <Box>
             <Input
-              label="Treasury address"
+              label="Treasury Address"
               placeholder="Slashed stake will be sent here..."
               autoComplete="off"
               localForm={localForm}
