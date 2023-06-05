@@ -10,18 +10,21 @@ import { CohortFragmentFragment } from ".graphclient";
 const useCohorts = () => {
   const graphClient = useGraphClient();
   const [cohorts, setCohorts] = useState<CohortFragmentFragment[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const getCohorts = async () => {
+      setIsLoading(true);
       //todo fix address when graph synced
       const cohorts = await graphClient.Cohorts();
 
       setCohorts(cohorts.cohorts);
+      setIsLoading(false);
     };
     getCohorts();
   }, []);
 
-  return cohorts;
+  return {cohorts, isLoading};
 };
 
 export default useCohorts;

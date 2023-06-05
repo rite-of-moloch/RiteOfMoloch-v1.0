@@ -115,6 +115,7 @@ enum Claim_orderBy {
   amount
   cohort
   cohort__id
+  cohort__name
   cohort__address
   cohort__chain
   cohort__deployer
@@ -135,6 +136,7 @@ enum Claim_orderBy {
 
 type Cohort {
   id: ID!
+  name: String
   address: Bytes!
   chain: String!
   deployer: Bytes!
@@ -166,6 +168,26 @@ input Cohort_filter {
   id_lte: ID
   id_in: [ID!]
   id_not_in: [ID!]
+  name: String
+  name_not: String
+  name_gt: String
+  name_lt: String
+  name_gte: String
+  name_lte: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_contains: String
+  name_contains_nocase: String
+  name_not_contains: String
+  name_not_contains_nocase: String
+  name_starts_with: String
+  name_starts_with_nocase: String
+  name_not_starts_with: String
+  name_not_starts_with_nocase: String
+  name_ends_with: String
+  name_ends_with_nocase: String
+  name_not_ends_with: String
+  name_not_ends_with_nocase: String
   address: Bytes
   address_not: Bytes
   address_gt: Bytes
@@ -342,6 +364,7 @@ input Cohort_filter {
 
 enum Cohort_orderBy {
   id
+  name
   address
   chain
   deployer
@@ -463,6 +486,7 @@ enum CryForHelp_orderBy {
   sender__sacrificed
   cohort
   cohort__id
+  cohort__name
   cohort__address
   cohort__chain
   cohort__deployer
@@ -604,6 +628,7 @@ enum Initiate_orderBy {
   joinedAt
   cohort
   cohort__id
+  cohort__name
   cohort__address
   cohort__chain
   cohort__deployer
@@ -990,6 +1015,7 @@ enum Sacrifice_orderBy {
   slasher
   cohort
   cohort__id
+  cohort__name
   cohort__address
   cohort__chain
   cohort__deployer
