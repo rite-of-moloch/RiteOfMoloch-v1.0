@@ -1,5 +1,5 @@
 import { TxHash } from "./types/TxHash";
-import { BigNumber, utils } from "ethers";
+import { BigNumber, BigNumberish, utils } from "ethers";
 
 export const truncateAddress = (address: string): string =>
   `${address.slice(0, 4)}...${address.slice(-4)}`;
@@ -9,9 +9,9 @@ export const convertBigNumber = (data: TxHash): string => {
 };
 
 export const canStake = (
-  allowance: string,
-  minimumStake: string,
-  balanceOf: string,
+  allowance: BigNumberish,
+  minimumStake: BigNumberish,
+  balanceOf: BigNumberish,
   initiateAddress: string,
   willSponsor: boolean
 ): boolean => {
@@ -29,9 +29,9 @@ export const canStake = (
 export const stakeTooltip = (
   willSponsor: boolean,
   initiateAddress: string,
-  balanceOf: string,
-  allowance: string,
-  minimumStake: string
+  balanceOf: BigNumberish,
+  allowance: BigNumberish,
+  minimumStake: BigNumberish
 ): string | null => {
   let label: string = "";
   if (willSponsor) {
@@ -55,9 +55,9 @@ export const stakeTooltip = (
 };
 
 export const approveTooltip = (
-  allowance: string,
-  minimumStake: string,
-  balanceOf: string,
+  allowance: BigNumberish,
+  minimumStake: BigNumberish,
+  balanceOf: BigNumberish,
   tokenSymbol: string
 ): string | null => {
   let label: string = "";

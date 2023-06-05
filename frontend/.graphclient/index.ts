@@ -1666,6 +1666,12 @@ const merger = new(BareMerger as any)({
         },
         location: 'InitiatesByCohortIdDocument.graphql'
       },{
+        document: InitiatesByCohortAddressDocument,
+        get rawSDL() {
+          return printWithCache(InitiatesByCohortAddressDocument);
+        },
+        location: 'InitiatesByCohortAddressDocument.graphql'
+      },{
         document: MetricsDocument,
         get rawSDL() {
           return printWithCache(MetricsDocument);
@@ -1758,6 +1764,16 @@ export type InitiatesByCohortIdQueryVariables = Exact<{
 
 
 export type InitiatesByCohortIdQuery = { initiates: Array<(
+    Pick<Initiate, 'id' | 'address' | 'benefactor' | 'claimed' | 'deadline' | 'joinedAt' | 'sacrificed' | 'stake'>
+    & { sacrifice?: Maybe<Pick<Sacrifice, 'amount' | 'slasher'>>, claim?: Maybe<Pick<Claim, 'amount'>> }
+  )> };
+
+export type InitiatesByCohortAddressQueryVariables = Exact<{
+  address?: InputMaybe<Scalars['Bytes']>;
+}>;
+
+
+export type InitiatesByCohortAddressQuery = { initiates: Array<(
     Pick<Initiate, 'id' | 'address' | 'benefactor' | 'claimed' | 'deadline' | 'joinedAt' | 'sacrificed' | 'stake'>
     & { sacrifice?: Maybe<Pick<Sacrifice, 'amount' | 'slasher'>>, claim?: Maybe<Pick<Claim, 'amount'>> }
   )> };
@@ -1872,6 +1888,13 @@ export const InitiatesByCohortIdDocument = gql`
   }
 }
     ${InitiateDetailsFragmentDoc}` as unknown as DocumentNode<InitiatesByCohortIdQuery, InitiatesByCohortIdQueryVariables>;
+export const InitiatesByCohortAddressDocument = gql`
+    query InitiatesByCohortAddress($address: Bytes = "") {
+  initiates(where: {cohort_: {address: $address}}) {
+    ...InitiateDetails
+  }
+}
+    ${InitiateDetailsFragmentDoc}` as unknown as DocumentNode<InitiatesByCohortAddressQuery, InitiatesByCohortAddressQueryVariables>;
 export const MetricsDocument = gql`
     query Metrics {
   metric(id: "0") {
@@ -1879,6 +1902,7 @@ export const MetricsDocument = gql`
   }
 }
     ${MetricFragmentFragmentDoc}` as unknown as DocumentNode<MetricsQuery, MetricsQueryVariables>;
+
 
 
 
@@ -1903,6 +1927,9 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
     },
     InitiatesByCohortId(variables?: InitiatesByCohortIdQueryVariables, options?: C): Promise<InitiatesByCohortIdQuery> {
       return requester<InitiatesByCohortIdQuery, InitiatesByCohortIdQueryVariables>(InitiatesByCohortIdDocument, variables, options) as Promise<InitiatesByCohortIdQuery>;
+    },
+    InitiatesByCohortAddress(variables?: InitiatesByCohortAddressQueryVariables, options?: C): Promise<InitiatesByCohortAddressQuery> {
+      return requester<InitiatesByCohortAddressQuery, InitiatesByCohortAddressQueryVariables>(InitiatesByCohortAddressDocument, variables, options) as Promise<InitiatesByCohortAddressQuery>;
     },
     Metrics(variables?: MetricsQueryVariables, options?: C): Promise<MetricsQuery> {
       return requester<MetricsQuery, MetricsQueryVariables>(MetricsDocument, variables, options) as Promise<MetricsQuery>;
