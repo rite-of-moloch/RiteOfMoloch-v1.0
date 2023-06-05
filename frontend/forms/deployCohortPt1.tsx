@@ -24,7 +24,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
     setNameSBT,
     setSymbolSBT,
     setUriSBT,
-    setTreasury,
+    setDaoTreasury,
     setMembershipCriteria,
     displayPart1,
     setDisplayPart1,
@@ -54,7 +54,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
       setNameSBT(values.nameSBT);
       setSymbolSBT(values.symbolSBT);
       setUriSBT(values.uriSBT);
-      setTreasury(values.treasury);
+      setDaoTreasury(values.daoTreasury);
       setMembershipCriteria(values.membershipCriteria);
       setDisplayPart1(false);
       setDisplayPart2(true);

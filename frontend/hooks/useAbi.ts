@@ -1,6 +1,6 @@
-import abiERC20 from "../contracts/erc20TokenAddress.json";
-import abiROM from "../contracts/riteOfMolochAddress.json";
-import abiROMFac from "../contracts/riteOfMolochFactoryAddress.json";
+import abiERC20 from "../contracts/erc20.json";
+import abiROM from "../contracts/riteOfMoloch.json";
+import abiROMFac from "../contracts/riteOfMolochFactory.json";
 
 type ABI = {}[];
 
