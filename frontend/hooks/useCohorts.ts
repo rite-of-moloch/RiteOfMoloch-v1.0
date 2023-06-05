@@ -23,7 +23,7 @@ const useCohorts = () => {
     getCohorts();
   }, []);
 
-  return { isLoading, cohorts };
+  return {cohorts, isLoading};
 };
 
 export default useCohorts;

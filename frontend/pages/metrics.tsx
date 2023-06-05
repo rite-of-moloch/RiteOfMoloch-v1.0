@@ -46,7 +46,7 @@ const Metrics = () => {
   cohorts?.map((chort) => {
     cohortOptions.push({
       value: chort?.id,
-      label: chort?.id,
+      label: `${chort?.name}   ...${chort.id.substr(-5)}` || chort?.id,
     });
   });
 
