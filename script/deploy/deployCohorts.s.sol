@@ -5,14 +5,13 @@ import "forge-std/Script.sol";
 import {RiteOfMolochFactory} from "src/RiteOfMolochFactory.sol";
 import {DeployHelper} from "script/deploy/helpers.sol";
 
+// forge script script/deploy/deployCohorts.s.sol:DeployMockCohorts --fork-url https://rpc.gnosischain.com --broadcast
 
-// forge script script/deploy/deployCohorts.s.sol:DeployMockCohorts --fork-url <URL> --broadcast
-
-/// @notice deploys mock cohorts to Goerli for an existing factory
 contract DeployMockCohorts is Script, DeployHelper {
-
     /// @notice replace this address with your target ROM factory
-    address public existingFactory = 0x65e34A4962f81F59465c95fEC096644A937D4AaB;
+    address public existingFactory = 0xc7e0366AC68B0e17c51fA551aC338FB19641f7DF;
+
+    // address public existingFactory = 0x67A9929392CfA00f8D15ee5c46ca662B174B8dd0;
 
     function run() public {
         ROMF = RiteOfMolochFactory(existingFactory);
@@ -25,6 +24,4 @@ contract DeployMockCohorts is Script, DeployHelper {
 
         vm.stopBroadcast();
     }
-
-
 }

@@ -24,7 +24,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
     setNameSBT,
     setSymbolSBT,
     setUriSBT,
-    setTreasury,
+    setDaoTreasury,
     setMembershipCriteria,
     displayPart1,
     setDisplayPart1,
@@ -54,7 +54,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
       setNameSBT(values.nameSBT);
       setSymbolSBT(values.symbolSBT);
       setUriSBT(values.uriSBT);
-      setTreasury(values.treasury);
+      setDaoTreasury(values.daoTreasury);
       setMembershipCriteria(values.membershipCriteria);
       setDisplayPart1(false);
       setDisplayPart2(true);
@@ -67,7 +67,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
         <SimpleGrid columns={2} spacingX={4} spacingY={3}>
           <Box>
             <Input
-              label="Name cohort"
+              label="Name Cohort"
               id="nameCohort"
               placeholder="Name cohort"
               autoComplete="off"
@@ -92,7 +92,7 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
           >
             <Box>
               <Input
-                label="Moloch DAO address"
+                label="Moloch DAO Address"
                 id="membershipCriteria"
                 placeholder="enter address"
                 autoComplete="off"

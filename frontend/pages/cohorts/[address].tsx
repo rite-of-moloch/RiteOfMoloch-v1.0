@@ -28,7 +28,9 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
   const router = useRouter();
   const { address: cohortAddress } = router.query;
 
-  const initiates = useInitiates(cohortAddress?.toString() || "");
+  const { initiates, isLoading } = useInitiates(
+    cohortAddress?.toString() || ""
+  );
 
   const renderInitiateList = initiates?.map(
     (initiate: InitiateDetailsFragment) => {
@@ -92,7 +94,7 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
           column4="Manage"
         />
       )}
-      {initiates?.length === 0 && (
+      {initiates?.length === 0 && isLoading && (
         <Box w="full" textAlign="center" p={2} fontFamily="texturina">
           <Spinner size="xl" my="50" color="red" emptyColor="purple" />
           <Text>Loading initiates...</Text>

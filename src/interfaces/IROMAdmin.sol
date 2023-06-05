@@ -9,7 +9,9 @@ interface IRiteOfMolochAdmin is IInitData {
     function initialize(
         InitData calldata initData,
         address hatsProtocol,
-        address caller_
+        address caller_,
+        address _sustainabilityTreasury,
+        uint256 _sustainabilityFee
     ) external;
 
     function changeJoinTimeDuration(uint256 _joinDuration) external;

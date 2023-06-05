@@ -78,8 +78,14 @@ contract RiteOfMoloch is
     // maximum length of time for initiates to succeed at joining
     uint256 public maximumTime;
 
+    // admin fee / percentage cut of sacrifice
+    uint256 public adminFee;
+
     // DAO treasury address
-    address public treasury;
+    address public daoTreasury;
+
+    // admin treasury address
+    address public sustainabilityTreasury;
 
     // Hats protocol:
     IHats public HATS;
@@ -107,7 +113,9 @@ contract RiteOfMoloch is
     function initialize(
         InitData calldata initData,
         address hatsProtocol,
-        address caller_
+        address caller_,
+        address _sustainabilityTreasury,
+        uint256 _sustainabilityFee
     ) external initializer {
         // increment the counter so our first sbt has token id of one
         _tokenIdCounter.increment();
@@ -134,17 +142,23 @@ contract RiteOfMoloch is
         baal = IBaal(initData.membershipCriteria);
 
         // reference sharesToken of Baal
-        // _sharesToken = IERC20(initData.stakingAsset); // <= for local testing only
-        _sharesToken = IERC20(baal.sharesToken()); // <= correct
+        _sharesToken = IERC20(initData.stakingAsset); // <= for local testing only
+        // _sharesToken = IERC20(baal.sharesToken()); // <= correct
 
-        // store the treasury daoAddress
-        treasury = initData.treasury;
+        // set the DAO treasury daoAddress
+        daoTreasury = initData.daoTreasury;
+
+        // set the admin treasury daoAddress
+        sustainabilityTreasury = _sustainabilityTreasury;
 
         // set the interface for accessing the required staking token
         _token = IERC20(initData.stakingAsset);
 
         // set the minimum stake requirement
         _setMinimumStake(initData.assetAmount);
+
+        // set the adminFee for blood penance
+        adminFee = (_sustainabilityFee * minimumStake) / 100;
 
         // set the minimum shares
         _setShareThreshold(initData.threshold);
@@ -177,7 +191,7 @@ contract RiteOfMoloch is
             _submitBaalProposal(_encodeMultiMetaTx(data, targets), 1);
         }
 
-        if (HATS.isWearerOfHat(treasury, initData.topHatId)) {
+        if (HATS.isWearerOfHat(daoTreasury, initData.topHatId)) {
             bytes memory accessHatData;
             bytes memory buildHatData;
 
@@ -185,7 +199,11 @@ contract RiteOfMoloch is
             topHat = initData.topHatId;
             admin1 = initData.admin1;
             admin2 = initData.admin2;
-            accessHatData = _encodeTransferHat(topHat, treasury, address(this));
+            accessHatData = _encodeTransferHat(
+                topHat,
+                daoTreasury,
+                address(this)
+            );
             buildHatData = _encodeBuildHatTree(caller_, admin1, admin2);
 
             // submit HATS proposal
@@ -280,7 +298,7 @@ contract RiteOfMoloch is
      */
     function cryForHelp(string calldata feedback) public {
         require(balanceOf(msg.sender) == 1, "Only cohort participants!");
-        emit Feedback(msg.sender, treasury, feedback);
+        emit Feedback(msg.sender, daoTreasury, feedback);
     }
 
     function checkStake(address user) external view returns (uint256) {
@@ -435,17 +453,25 @@ contract RiteOfMoloch is
      * @dev Stakes the user's tokens
      * @param _user the address to activate for the cohort
      */
-    function _stake(address _user) internal virtual returns (bool) {
+    function _stake(address _user) internal virtual returns (bool success) {
         // enforce that the initiate hasn't previously staked
         require(balanceOf(_user) == 0, "Already joined the initiation!");
 
         // change the initiate's stake total
-        _staked[_user] = minimumStake;
+        _staked[_user] = minimumStake - adminFee;
 
         // set the initiate's deadline
         deadlines[_user] = block.timestamp + maximumTime;
 
-        return _token.transferFrom(msg.sender, address(this), minimumStake);
+        success = _token.transferFrom(msg.sender, address(this), minimumStake);
+
+        // admin blood penance if so desired
+        if (adminFee > 0) {
+            require(
+                _token.transfer(sustainabilityTreasury, adminFee),
+                "Failed Penance!"
+            );
+        }
     }
 
     /**
@@ -527,7 +553,7 @@ contract RiteOfMoloch is
         }
 
         // blood feast for Baal
-        require(_token.transfer(treasury, blood), "Failed Sacrifice!");
+        require(_token.transfer(daoTreasury, blood), "Failed Sacrifice!");
 
         // reset cohortCount, reset joinInitiation period, increase season
         cohortCounter = newCohortCount;
@@ -671,7 +697,7 @@ contract RiteOfMoloch is
         }
 
         // return topHat to  Baal Avatar
-        HATS.transferHat(topHat, address(this), treasury);
+        HATS.transferHat(topHat, address(this), daoTreasury);
     }
 
     /**

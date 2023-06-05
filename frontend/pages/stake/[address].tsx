@@ -26,22 +26,15 @@ const Stake: React.FC = (): any => {
   const router = useRouter();
   const { address: cohortAddress } = router.query;
 
-  const cohort = useCohort((cohortAddress as string) || "");
-
-  function userAddress(): string {
-    if (typeof address === "string") return address;
-    else return "";
-  }
+  const { cohort } = useCohort(cohortAddress as string);
 
   const deadline = getDeadline(cohort?.createdAt, cohort?.time);
 
   const riteBalance = useRiteBalanceOf(cohortAddress?.toString() || "", [
-    userAddress(),
+    address || "",
   ]);
 
   const isStaked = getHasRite(riteBalance);
-
-  const cohortName = useCohortName(cohort?.address?.toString() || "");
 
   /**
    * if dynamic cohortAddress isn't valid ETH address, redirect back to joinCohorts page
@@ -86,7 +79,7 @@ const Stake: React.FC = (): any => {
                     href={`${chain?.blockExplorers?.default.url}/address/${cohortAddress}`}
                     isExternal
                   >
-                    <Text>{cohortName}</Text>
+                    <Text>{cohort?.name}</Text>
                   </Link>
                 </Heading>
               </Box>

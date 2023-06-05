@@ -2,8 +2,8 @@ import React from "react";
 import { Button, Link, Text, HStack } from "@raidguild/design-system";
 import { useNetwork } from "wagmi";
 import useTokenSymbol from "hooks/useTokenSymbol";
-import useCohortName from "hooks/useCohortName";
 import GridTemplate from "./GridTemplate";
+import useCohortByAddress from "hooks/useCohortByAddress";
 
 interface CohortDetailProps {
   address: string;
@@ -31,13 +31,13 @@ const CohortDetail: React.FC<CohortDetailProps> = ({
   memberOrAdmin,
 }) => {
   const { chain } = useNetwork();
-  const cohortName = useCohortName(address);
+  const { cohort } = useCohortByAddress(address);
   const cohortNameLink = (
     <Link
       href={`${chain?.blockExplorers?.default.url}/address/${address}`}
       isExternal
     >
-      <Text>{cohortName}</Text>
+      <Text>{cohort?.name}</Text>
     </Link>
   );
 

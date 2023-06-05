@@ -1,5 +1,5 @@
 sources:
-  - name: rom-goerli
+  - name: rom-gnosis
     handler:
       graphql:
         endpoint: https://api.thegraph.com/subgraphs/name/rite-of-moloch/rom-gnosis

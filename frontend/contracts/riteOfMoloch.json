@@ -1,0 +1,718 @@
+[
+  { "type": "constructor", "inputs": [] },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "bytes32", "name": "", "internalType": "bytes32" }],
+    "name": "ADMIN",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "bytes32", "name": "", "internalType": "bytes32" }],
+    "name": "DEFAULT_ADMIN_ROLE",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      { "type": "address", "name": "", "internalType": "contract IHats" }
+    ],
+    "name": "HATS",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
+    "name": "admin1",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
+    "name": "admin2",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "adminFee",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "adminHat",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
+    "name": "adminTreasury",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "approve",
+    "inputs": [
+      { "type": "address", "name": "to", "internalType": "address" },
+      { "type": "uint256", "name": "tokenId", "internalType": "uint256" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      { "type": "address", "name": "", "internalType": "contract IBaal" }
+    ],
+    "name": "baal",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "balanceOf",
+    "inputs": [
+      { "type": "address", "name": "owner", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "batchMintBaalShares",
+    "inputs": [
+      { "type": "address[]", "name": "to", "internalType": "address[]" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "changeHatsContract",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "newHatsContract",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "changeJoinSizeLimit",
+    "inputs": [
+      { "type": "uint256", "name": "_cohortSize", "internalType": "uint256" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "changeJoinTimeDuration",
+    "inputs": [
+      { "type": "uint256", "name": "_joinDuration", "internalType": "uint256" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "changeRoleHat",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "internalType": "bytes32" },
+      { "type": "uint256", "name": "newRoleHat", "internalType": "uint256" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "checkStake",
+    "inputs": [{ "type": "address", "name": "user", "internalType": "address" }]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "claimStake",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "cohortCounter",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "string", "name": "", "internalType": "string" }],
+    "name": "cohortName",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "cohortSeason",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "cohortSize",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "cryForHelp",
+    "inputs": [
+      { "type": "string", "name": "feedback", "internalType": "string" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
+    "name": "daoTreasury",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "deadlines",
+    "inputs": [{ "type": "address", "name": "", "internalType": "address" }]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "extendJoinTimeLimit",
+    "inputs": [
+      { "type": "uint256", "name": "_extension", "internalType": "uint256" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
+    "name": "getApproved",
+    "inputs": [
+      { "type": "uint256", "name": "tokenId", "internalType": "uint256" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "getDeadline",
+    "inputs": [{ "type": "address", "name": "user", "internalType": "address" }]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "bytes32", "name": "", "internalType": "bytes32" }],
+    "name": "getRoleAdmin",
+    "inputs": [{ "type": "bytes32", "name": "role", "internalType": "bytes32" }]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "grantRole",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "internalType": "bytes32" },
+      { "type": "uint256", "name": "hat", "internalType": "uint256" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "bool", "name": "", "internalType": "bool" }],
+    "name": "hasRole",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "internalType": "bytes32" },
+      { "type": "address", "name": "account", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
+    "name": "hatsContract",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "initialize",
+    "inputs": [
+      {
+        "type": "tuple",
+        "name": "initData",
+        "internalType": "struct IInitData.InitData",
+        "components": [
+          { "type": "address" },
+          { "type": "address" },
+          { "type": "address" },
+          { "type": "address" },
+          { "type": "address" },
+          { "type": "uint256" },
+          { "type": "uint256" },
+          { "type": "uint256" },
+          { "type": "uint256" },
+          { "type": "uint256" },
+          { "type": "uint256" },
+          { "type": "string" },
+          { "type": "string" },
+          { "type": "string" },
+          { "type": "string" },
+          { "type": "bool" }
+        ]
+      },
+      { "type": "address", "name": "hatsProtocol", "internalType": "address" },
+      { "type": "address", "name": "caller_", "internalType": "address" },
+      {
+        "type": "address",
+        "name": "_sustainabilityTreasury",
+        "internalType": "address"
+      },
+      {
+        "type": "uint256",
+        "name": "_sustainabilityFee",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "initializeHatTree",
+    "inputs": [
+      { "type": "address", "name": "_deployer", "internalType": "address" },
+      { "type": "address", "name": "_admin1", "internalType": "address" },
+      { "type": "address", "name": "_admin2", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "bool", "name": "", "internalType": "bool" }],
+    "name": "isApprovedForAll",
+    "inputs": [
+      { "type": "address", "name": "owner", "internalType": "address" },
+      { "type": "address", "name": "operator", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "bool", "name": "", "internalType": "bool" }],
+    "name": "isMember",
+    "inputs": [{ "type": "address", "name": "user", "internalType": "address" }]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "joinDuration",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "joinEndTime",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "joinInitiation",
+    "inputs": [{ "type": "address", "name": "user", "internalType": "address" }]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "maximumTime",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "minimumShare",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "minimumStake",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "mintAdminHatProposal",
+    "inputs": [{ "type": "address", "name": "_to", "internalType": "address" }]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "string", "name": "", "internalType": "string" }],
+    "name": "name",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
+    "name": "ownerOf",
+    "inputs": [
+      { "type": "uint256", "name": "tokenId", "internalType": "uint256" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "revokeRole",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "internalType": "bytes32" },
+      { "type": "uint256", "name": "hat", "internalType": "uint256" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "sacrifice",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "safeTransferFrom",
+    "inputs": [
+      { "type": "address", "name": "from", "internalType": "address" },
+      { "type": "address", "name": "to", "internalType": "address" },
+      { "type": "uint256", "name": "tokenId", "internalType": "uint256" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "safeTransferFrom",
+    "inputs": [
+      { "type": "address", "name": "from", "internalType": "address" },
+      { "type": "address", "name": "to", "internalType": "address" },
+      { "type": "uint256", "name": "tokenId", "internalType": "uint256" },
+      { "type": "bytes", "name": "data", "internalType": "bytes" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "setApprovalForAll",
+    "inputs": [
+      { "type": "address", "name": "operator", "internalType": "address" },
+      { "type": "bool", "name": "approved", "internalType": "bool" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "setMaxDuration",
+    "inputs": [
+      { "type": "uint256", "name": "newMaxTime", "internalType": "uint256" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "setMinimumStake",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "newMinimumStake",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "setShareThreshold",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "newShareThreshold",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "singleMintBaalShares",
+    "inputs": [{ "type": "address", "name": "_to", "internalType": "address" }]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "slaughter",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_sacrificialLamb",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "bool", "name": "", "internalType": "bool" }],
+    "name": "supportsInterface",
+    "inputs": [
+      { "type": "bytes4", "name": "interfaceId", "internalType": "bytes4" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "string", "name": "", "internalType": "string" }],
+    "name": "symbol",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "string", "name": "", "internalType": "string" }],
+    "name": "tokenURI",
+    "inputs": [
+      { "type": "uint256", "name": "tokenId", "internalType": "uint256" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "", "internalType": "uint256" }],
+    "name": "topHat",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "transferAdminHatProposal",
+    "inputs": [
+      { "type": "address", "name": "_from", "internalType": "address" },
+      { "type": "address", "name": "_to", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "transferFrom",
+    "inputs": [
+      { "type": "address", "name": "from", "internalType": "address" },
+      { "type": "address", "name": "to", "internalType": "address" },
+      { "type": "uint256", "name": "tokenId", "internalType": "uint256" }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "Approval",
+    "inputs": [
+      { "type": "address", "name": "owner", "indexed": true },
+      { "type": "address", "name": "approved", "indexed": true },
+      { "type": "uint256", "name": "tokenId", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "ApprovalForAll",
+    "inputs": [
+      { "type": "address", "name": "owner", "indexed": true },
+      { "type": "address", "name": "operator", "indexed": true },
+      { "type": "bool", "name": "approved", "indexed": false }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "ChangedShares",
+    "inputs": [{ "type": "uint256", "name": "newShare", "indexed": false }],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "ChangedStake",
+    "inputs": [{ "type": "uint256", "name": "newStake", "indexed": false }],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "ChangedTime",
+    "inputs": [{ "type": "uint256", "name": "newTime", "indexed": false }],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "Claim",
+    "inputs": [
+      { "type": "address", "name": "newMember", "indexed": false },
+      { "type": "uint256", "name": "claimAmount", "indexed": false }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "Feedback",
+    "inputs": [
+      { "type": "address", "name": "user", "indexed": false },
+      { "type": "address", "name": "treasury", "indexed": false },
+      { "type": "string", "name": "feedback", "indexed": false }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "HatsContractChanged",
+    "inputs": [
+      { "type": "address", "name": "previousHatsContract", "indexed": true },
+      { "type": "address", "name": "newHatsContract", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "Initialized",
+    "inputs": [{ "type": "uint8", "name": "version", "indexed": false }],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "Initiation",
+    "inputs": [
+      { "type": "address", "name": "newInitiate", "indexed": false },
+      { "type": "address", "name": "benefactor", "indexed": false },
+      { "type": "uint256", "name": "tokenId", "indexed": false },
+      { "type": "uint256", "name": "stake", "indexed": false },
+      { "type": "uint256", "name": "deadline", "indexed": false }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RoleAdminChanged",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "indexed": true },
+      { "type": "bytes32", "name": "previousAdminRole", "indexed": true },
+      { "type": "bytes32", "name": "newAdminRole", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RoleGranted",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "indexed": true },
+      { "type": "uint256", "name": "hat", "indexed": true },
+      { "type": "address", "name": "sender", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RoleHatChanged",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "indexed": true },
+      { "type": "uint256", "name": "previousRoleHat", "indexed": true },
+      { "type": "uint256", "name": "newRoleHat", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RoleRevoked",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "indexed": true },
+      { "type": "uint256", "name": "hat", "indexed": true },
+      { "type": "address", "name": "sender", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "Sacrifice",
+    "inputs": [
+      { "type": "address", "name": "sacrifice", "indexed": false },
+      { "type": "uint256", "name": "slashedAmount", "indexed": false },
+      { "type": "address", "name": "slasher", "indexed": false }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "Transfer",
+    "inputs": [
+      { "type": "address", "name": "from", "indexed": true },
+      { "type": "address", "name": "to", "indexed": true },
+      { "type": "uint256", "name": "tokenId", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "NotWearingRoleHat",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "internalType": "bytes32" },
+      { "type": "uint256", "name": "hat", "internalType": "uint256" },
+      { "type": "address", "name": "account", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "RoleAlreadyAssigned",
+    "inputs": [
+      { "type": "bytes32", "name": "role", "internalType": "bytes32" },
+      { "type": "uint256", "name": "roleHat", "internalType": "uint256" }
+    ]
+  }
+]

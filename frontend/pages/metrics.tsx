@@ -96,7 +96,7 @@ const Metrics = () => {
     <>
       <Box textAlign="center" w={["full", "full", "80%"]} py={2}>
         <Heading as="h2">Cohort Metrics</Heading>
-        {cohorts === undefined && (
+        {cohorts === undefined && isLoading && (
           <Box w="full" textAlign="center" p={2} fontFamily="texturina">
             <Spinner size="xl" my="50" color="red" emptyColor="purple" />
             <Text>Loading cohorts...</Text>

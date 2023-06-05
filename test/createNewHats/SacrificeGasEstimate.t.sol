@@ -11,6 +11,8 @@ import "test/TestHelper.sol";
 contract SacrificeGasEstimate is TestHelper {
     uint256 constant cohortSize = 100;
 
+    uint256 susFee = (adminFee * minStake) / 100;
+
     address[] initiates = new address[](cohortSize);
 
     function setUp() public override {
@@ -45,14 +47,14 @@ contract SacrificeGasEstimate is TestHelper {
         uint256 breakPoint = cohortSize / 2;
 
         for (uint256 i = 0; i < breakPoint; i++) {
-            stakingAsset.mint(initiates[i], 1000);
+            stakingAsset.mint(initiates[i], 1000 * 1e18);
             prankJoinInititation(initiates[i]);
         }
 
         vm.warp(2 days);
 
         for (uint256 i = breakPoint; i < cohortSize; i++) {
-            stakingAsset.mint(initiates[i], 1000);
+            stakingAsset.mint(initiates[i], 1000 * 1e18);
             prankJoinInititation(initiates[i]);
         }
     }
@@ -82,23 +84,26 @@ contract SacrificeGasEstimate is TestHelper {
 
     // UTILS
     function checkSampleOfStakesBefore() public {
-        assertEq(minStake, ROM.checkStake(initiates[0]));
-        assertEq(minStake, ROM.checkStake(initiates[(cohortSize / 2) - 1]));
-        assertEq(minStake, ROM.checkStake(initiates[cohortSize / 2]));
-        assertEq(minStake, ROM.checkStake(initiates[cohortSize - 1]));
+        assertEq(minStake - susFee, ROM.checkStake(initiates[0]));
+        assertEq(
+            minStake - susFee,
+            ROM.checkStake(initiates[(cohortSize / 2) - 1])
+        );
+        assertEq(minStake - susFee, ROM.checkStake(initiates[cohortSize / 2]));
+        assertEq(minStake - susFee, ROM.checkStake(initiates[cohortSize - 1]));
     }
 
     function checkSampleOfStakesAfter() public {
         assertEq(0, ROM.checkStake(initiates[0]));
         assertEq(0, ROM.checkStake(initiates[(cohortSize / 2) - 1]));
-        assertEq(minStake, ROM.checkStake(initiates[cohortSize / 2]));
-        assertEq(minStake, ROM.checkStake(initiates[cohortSize - 1]));
+        assertEq(minStake - susFee, ROM.checkStake(initiates[cohortSize / 2]));
+        assertEq(minStake - susFee, ROM.checkStake(initiates[cohortSize - 1]));
     }
 
     function createInitData() public override {
         Data.membershipCriteria = dao;
         Data.stakingAsset = address(stakingAsset);
-        Data.treasury = dao;
+        Data.daoTreasury = dao;
         Data.admin1 = alice;
         Data.admin2 = address(0);
         Data.cohortSize = 500;

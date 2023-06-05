@@ -22,10 +22,21 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
     // Hats factory operator
     uint256 public factoryOperatorHat;
 
+    // address that receives `adminFee` when initiates are slashed
+    address public sustainabilityTreasury;
+
+    // percentage fee of sacrifice stake that goes to admin
+    uint256 public sustainabilityFee;
+
     /**
      * @param _hatsProtocol current release: 0x96bD657Fcc04c71B47f896a829E5728415cbcAa1
      */
-    constructor(address _hatsProtocol, uint256 _factoryOperatorHat) {
+    constructor(
+        address _hatsProtocol,
+        uint256 _factoryOperatorHat,
+        address _sustainabilityTreasury,
+        uint256 _sustainabilityFee
+    ) {
         // point to Hats implementation
         hatsProtocol = _hatsProtocol;
 
@@ -34,6 +45,10 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
 
         // increment the implementation id
         iid = 1;
+
+        sustainabilityTreasury = _sustainabilityTreasury;
+
+        sustainabilityFee = _sustainabilityFee;
 
         // deploy the initial rite of moloch implementation and set it in implementations mapping
         implementations[iid] = address(new RiteOfMoloch());
@@ -61,7 +76,13 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
         address clone = Clones.clone(implementations[implementationSelector]);
 
         // initialize the cohort clone
-        RiteOfMoloch(clone).initialize(initData, hatsProtocol, msg.sender);
+        RiteOfMoloch(clone).initialize(
+            initData,
+            hatsProtocol,
+            msg.sender,
+            sustainabilityTreasury,
+            sustainabilityFee
+        );
 
         emit NewRiteOfMoloch(
             clone,
@@ -69,7 +90,7 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
             implementations[implementationSelector],
             initData.membershipCriteria,
             initData.stakingAsset,
-            initData.treasury,
+            initData.daoTreasury,
             initData.threshold,
             initData.assetAmount,
             initData.stakeDuration,
@@ -83,20 +104,28 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
      * @dev marks a deployed contract as a suitable implementation for additional cohort formats
      * @param implementation the contract address for new cohort format logic
      */
-    function addImplementation(address implementation)
-        external
-        onlyRole(FACTORY_OPERATOR)
-    {
+    function addImplementation(
+        address implementation
+    ) external onlyRole(FACTORY_OPERATOR) {
         iid++;
         implementations[iid] = implementation;
     }
 
     // point to new Hats protocol implementation
-    function changeHatsProtocol(address _hatsProtocol)
-        public
-        onlyRole(FACTORY_OPERATOR)
-    {
+    function changeHatsProtocol(
+        address _hatsProtocol
+    ) public onlyRole(FACTORY_OPERATOR) {
         hatsProtocol = _hatsProtocol;
         _changeHatsContract(_hatsProtocol);
+    }
+
+    function updateSustainabilityFee(uint256 fee) external {
+        sustainabilityFee = fee;
+    }
+
+    function updateSustainabilityTreasury(
+        address newSustainabilityTreasury
+    ) external {
+        sustainabilityTreasury = newSustainabilityTreasury;
     }
 }
