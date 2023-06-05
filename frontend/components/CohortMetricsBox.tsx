@@ -16,7 +16,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { getDeadline, unixToUTC } from "utils/general";
 import { useNetwork } from "wagmi";
 
-import BlockExplorerLink from "./BlockExplorerLink";
+import BlockExplorerMetricLink from "./BlockExplorerMetricLink";
 import CohortMetricsOverall from "./CohortMetricsOverall";
 import CohortAdminModal from "./adminModal/cohortAdminModal";
 import useCohort from "hooks/useCohortByAddress";
@@ -42,6 +42,20 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
 }) => {
   const { chain } = useNetwork();
   const cohort = useCohortByID(id);
+
+  const splitAddr = (str: string): string => {
+    const names = str.split('-');
+    return names[1];
+  }
+
+  const formatAddr = (str: string): string => {
+    return `${str.slice(0,6)}...${str.slice(-4)}` 
+  }
+
+  const splitFormatAddr = (str: string): string => {
+    const addr = splitAddr(str);
+    return formatAddr(addr); 
+  }
 
   const symbol = useTokenSymbol(cohort?.token);
   const getdeadline = getDeadline(cohort?.createdAt, cohort?.time);
@@ -87,7 +101,7 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
                   <Heading as="h3" color="red" fontSize={["md", "md", "lg"]}>
                     <HStack>
                       <Text textAlign="center">Cohort:</Text>
-                      {BlockExplorerLink(chain, id || "")}
+                      {BlockExplorerMetricLink(chain, splitFormatAddr(id), splitAddr(id))}
                     </HStack>
                   </Heading>
                 </Tooltip>
@@ -105,7 +119,7 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
               <Text>
                 Staking token:
                 <span style={{ color: "white", marginLeft: "0.5rem" }}>
-                  {BlockExplorerLink(chain, cohort?.token)}
+                  {BlockExplorerMetricLink(chain, cohort ? formatAddr(cohort?.token) : "", cohort?.token)}
                 </span>
               </Text>
               <Text>Symbol: {dataText(symbol || "")}</Text>
