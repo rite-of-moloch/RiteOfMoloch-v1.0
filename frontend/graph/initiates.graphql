@@ -10,6 +10,12 @@ query InitiatesByCohortId($id: ID = "") {
   }
 }
 
+query InitiatesByCohortAddress($address: String = "") {
+  initiates(where: { cohort_: { address: $address } }) {
+    ...InitiateDetails
+  }
+}
+
 fragment InitiateDetails on Initiate {
   id
   address

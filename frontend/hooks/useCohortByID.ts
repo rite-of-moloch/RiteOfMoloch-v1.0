@@ -13,7 +13,6 @@ const useCohortByID = (id: string) => {
 
   useEffect(() => {
     const getCohort = async () => {
-      //todo fix address when graph synced
       const cohort = await graphClient.CohortById({
         id,
       });

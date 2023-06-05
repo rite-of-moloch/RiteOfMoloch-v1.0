@@ -40,7 +40,7 @@ const Metrics = () => {
   };
   watch();
 
-  const cohorts = useCohorts();
+  const { cohorts, isLoading } = useCohorts();
 
   const cohortOptions: SelectOptions = [];
   cohorts?.map((chort) => {
@@ -94,75 +94,73 @@ const Metrics = () => {
   if (!isConnected) return <NotConnected />;
   return (
     <>
-      <>
-        <Box textAlign="center" w={["full", "full", "80%"]} py={2}>
-          <Heading as="h2">Cohort Metrics</Heading>
-          {cohorts === undefined && (
-            <Box w="full" textAlign="center" p={2} fontFamily="texturina">
-              <Spinner size="xl" my="50" color="red" emptyColor="purple" />
-              <Text>Loading cohorts...</Text>
-            </Box>
-          )}
-          {
-            <SimpleGrid columns={[1, arrLength > 0 ? 2 : 1, gridLogic()]}>
-              {cohortId1 && (
-                <GridItem mr={[0, "0.5rem", "1rem"]} mt={["1rem"]}>
-                  {
-                    <CohortMetricsBox
-                      id={cohortId1 ? cohortId1 : null}
-                      removeOption={removeOption}
-                      overallPerformance={cohortId1 === "overallPerformance"}
-                    />
-                  }
-                </GridItem>
-              )}
-              {cohortId2 && (
-                <GridItem mx={[0, "0.5rem"]} mt="1rem">
-                  {
-                    <CohortMetricsBox
-                      id={cohortId2 ? cohortId2 : null}
-                      removeOption={removeOption}
-                      overallPerformance={cohortId2 === "overallPerformance"}
-                    />
-                  }
-                </GridItem>
-              )}
-              {/* TODO: SETUP CohortMetricsOverall */}
-              {cohortId3 && (
-                <GridItem
-                  ml={[0, "0rem", "1rem"]}
-                  mr={[0]}
-                  pr={[0, "0.5rem", 0]}
-                  mt="1rem"
-                >
-                  {
-                    <CohortMetricsBox
-                      id={cohortId3 ? cohortId3 : null}
-                      removeOption={removeOption}
-                      overallPerformance={cohortId3 === "overallPerformance"}
-                    />
-                  }
-                </GridItem>
-              )}
-              <GridItem
-                display={arrLength === 3 ? "none" : ""}
-                ml={[0, "0.5rem", "1rem"]}
-                pr={[0, "1rem", 0]}
-                mt="1rem"
-                w={[
-                  "full",
-                  "full",
-                  arrLength === 0 || !arrLength ? "50%" : "full",
-                ]}
-                justifySelf={arrLength === 0 || !arrLength ? "center" : "auto"}
-              >
-                {cohortSelect}
+      <Box textAlign="center" w={["full", "full", "80%"]} py={2}>
+        <Heading as="h2">Cohort Metrics</Heading>
+        {cohorts === undefined && isLoading && (
+          <Box w="full" textAlign="center" p={2} fontFamily="texturina">
+            <Spinner size="xl" my="50" color="red" emptyColor="purple" />
+            <Text>Loading cohorts...</Text>
+          </Box>
+        )}
+        {
+          <SimpleGrid columns={[1, arrLength > 0 ? 2 : 1, gridLogic()]}>
+            {cohortId1 && (
+              <GridItem mr={[0, "0.5rem", "1rem"]} mt={["1rem"]}>
+                {
+                  <CohortMetricsBox
+                    id={cohortId1 ? cohortId1 : null}
+                    removeOption={removeOption}
+                    overallPerformance={cohortId1 === "overallPerformance"}
+                  />
+                }
               </GridItem>
-            </SimpleGrid>
-          }
-        </Box>
-        <BackButton path="/admin" />
-      </>
+            )}
+            {cohortId2 && (
+              <GridItem mx={[0, "0.5rem"]} mt="1rem">
+                {
+                  <CohortMetricsBox
+                    id={cohortId2 ? cohortId2 : null}
+                    removeOption={removeOption}
+                    overallPerformance={cohortId2 === "overallPerformance"}
+                  />
+                }
+              </GridItem>
+            )}
+            {/* TODO: SETUP CohortMetricsOverall */}
+            {cohortId3 && (
+              <GridItem
+                ml={[0, "0rem", "1rem"]}
+                mr={[0]}
+                pr={[0, "0.5rem", 0]}
+                mt="1rem"
+              >
+                {
+                  <CohortMetricsBox
+                    id={cohortId3 ? cohortId3 : null}
+                    removeOption={removeOption}
+                    overallPerformance={cohortId3 === "overallPerformance"}
+                  />
+                }
+              </GridItem>
+            )}
+            <GridItem
+              display={arrLength === 3 ? "none" : ""}
+              ml={[0, "0.5rem", "1rem"]}
+              pr={[0, "1rem", 0]}
+              mt="1rem"
+              w={[
+                "full",
+                "full",
+                arrLength === 0 || !arrLength ? "50%" : "full",
+              ]}
+              justifySelf={arrLength === 0 || !arrLength ? "center" : "auto"}
+            >
+              {cohortSelect}
+            </GridItem>
+          </SimpleGrid>
+        }
+      </Box>
+      <BackButton path="/admin" />
     </>
   );
 };

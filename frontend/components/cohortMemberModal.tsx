@@ -39,14 +39,11 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { chain } = useNetwork();
 
-  const cohort = useCohort(cohortAddress);
-
-  const cohortName = useCohortName(cohortAddress);
+  const { cohort } = useCohort(cohortAddress);
 
   const deadline = getDeadline(cohort?.createdAt, cohort?.time);
   const { writeSacrifice, isError, errorSacrifice, prepareErrorSacrifice } =
     useSacrifice(address?.toString());
-
 
   const isPassedStakingDate = () => {
     const today = new Date().getTime();
@@ -72,7 +69,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
         <ModalOverlay onClick={onClose} />
         <ModalContent minW="full">
           <ModalHeader color="red">
-            <Text>{cohortName}</Text>
+            <Text>{cohort?.name}</Text>
             <Text fontSize="md">{cohortAddress}</Text>
           </ModalHeader>
           <ModalCloseButton />
