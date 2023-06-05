@@ -10,7 +10,7 @@ query InitiatesByCohortId($id: ID = "") {
   }
 }
 
-query InitiatesByCohortAddress($address: String = "") {
+query InitiatesByCohortAddress($address: Bytes = "") {
   initiates(where: { cohort_: { address: $address } }) {
     ...InitiateDetails
   }
