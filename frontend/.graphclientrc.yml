@@ -1,8 +1,8 @@
 sources:
-  - name: rom-goerli
+  - name: rom-gnosis
     handler:
       graphql:
-        endpoint: https://api.thegraph.com/subgraphs/name/bitbeckers/rom-goerli
+        endpoint: https://api.thegraph.com/subgraphs/name/rite-of-moloch/rom-gnosis
 
 plugins:
   - pollingLive:

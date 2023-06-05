@@ -4,9 +4,7 @@ import BackButton from "components/BackButton";
 import CohortDetail from "components/CohortDetail";
 import NotConnected from "components/NotConnected";
 import SearchCohorts from "components/SearchCohorts";
-// import SelectForm from "components/SelectForm";
 import { FieldValues, useForm } from "react-hook-form";
-// import { cohortOptions } from "utils/cohortOptions";
 import { getDeadline, unixToUTC } from "utils/general";
 import { useAccount } from "wagmi";
 import useRiteBalanceOf from "hooks/useRiteBalanceOf";
@@ -18,6 +16,7 @@ import useCohorts from "hooks/useCohorts";
  */
 const JoinCohorts: React.FC = () => {
   const { isConnected, address } = useAccount();
+  const { cohorts, isLoading } = useCohorts();
 
   const localForm = useForm<FieldValues>();
   const { getValues, watch } = localForm;
@@ -25,7 +24,6 @@ const JoinCohorts: React.FC = () => {
   const searchResult = getValues().searchResult;
   const selectCohorts = getValues().selectCohorts?.value;
 
-  const cohorts = useCohorts();
 
   /**
    *
@@ -40,18 +38,16 @@ const JoinCohorts: React.FC = () => {
     }
   };
 
-  const renderCohorts = cohorts?.map((cohort) => {
-    return (
-      <CohortDetail
-        address={cohort.address}
-        stake={cohort.tokenAmount}
-        stakingAsset={cohort.token}
-        stakingDate={unixToUTC(getDeadline(cohort.createdAt, cohort.time))}
-        key={cohort.id}
-        memberOrAdmin={"member"}
-      />
-    );
-  });
+  const renderCohorts = cohorts?.map((cohort) => (
+    <CohortDetail
+      address={cohort.address}
+      stake={cohort.tokenAmount}
+      stakingAsset={cohort.token}
+      stakingDate={unixToUTC(getDeadline(cohort.createdAt, cohort.time))}
+      key={cohort.address}
+      memberOrAdmin={"member"}
+    />
+  ));
 
   // TODO: uncomment when COHORT subgraphquery is fixed to include an array of cohort initiates, and in the next loop, filter through `selectedCohorts`
   // const selectedCohorts = renderCohorts?.filter((cohort) => {
@@ -102,12 +98,22 @@ const JoinCohorts: React.FC = () => {
           column3="Staking Date"
           column4="Cohort Details"
         />
+        {!renderCohorts ||
+          (renderCohorts.length === 0 && (
+            <Box w="full" textAlign="center" p={2} fontFamily="texturina">
+              <Heading as="h3" fontSize="xl">
+                No cohorts found
+              </Heading>
+            </Box>
+          ))}
 
-        {renderCohorts ?? (
+        {isLoading && (
           <Box w="full" textAlign="center" p={2} fontFamily="texturina">
             <Spinner size="xl" my="50" color="red" emptyColor="purple" />
           </Box>
         )}
+
+        {renderCohorts}
       </Stack>
       <BackButton path="/" />
     </>

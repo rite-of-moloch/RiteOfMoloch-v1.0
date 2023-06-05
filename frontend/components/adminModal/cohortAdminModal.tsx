@@ -29,8 +29,7 @@ const CohortAdminModal: React.FC<CohortAdminModalProps> = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  // TODO: REMOVE SUBGRAPH QUERY AND USE HATS CONTRACT TO GET ADMIN
-  const cohort = useCohort(address || "");
+  const { cohort } = useCohort(address || "");
 
   const getAdmins = () => {
     const { data: data1 } = useReadContract(

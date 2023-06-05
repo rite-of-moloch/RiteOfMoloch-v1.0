@@ -36,9 +36,8 @@ const CohortPage = () => {
   const router = useRouter();
   const { address: cohortAddress } = router.query;
 
-  const cohort = useCohort((cohortAddress as string) || "");
+  const {cohort, isLoading} = useCohort((cohortAddress as string) || "");
 
-  const cohortName = useCohortName(cohortAddress?.toString() || "");
   const tokenSymbol = useTokenSymbol(cohort?.token);
   const deadline = getDeadline(cohort?.createdAt, cohort?.time);
 
@@ -78,7 +77,6 @@ const CohortPage = () => {
 
   return (
     <>
-      (
       <VStack
         border="1px solid red"
         rounded="xl"
@@ -88,7 +86,7 @@ const CohortPage = () => {
         fontFamily="texturina"
       >
         <Heading as="h2" fontSize="2xl" color="red" my={3}>
-          <Text>{cohortName?.toString().toUpperCase()}</Text>
+          <Text>{cohort && cohort?.name ?  cohort.name : "Unknown"}</Text>
         </Heading>
         {/* Grid for heading */}
         <GridTemplate
@@ -148,7 +146,7 @@ const CohortPage = () => {
           </Box>
         )}
       </VStack>
-      ){isConnected && <BackButton path="/joinCohorts" />}
+      {isConnected && <BackButton path="/joinCohorts" />}
     </>
   );
 };

@@ -21,6 +21,7 @@ fragment InitiateFragment on Initiate {
 
 fragment CohortFragment on Cohort {
   createdAt
+  name
   dao
   deployer
   id

@@ -18,6 +18,7 @@ const Initiates = () => {
   const { isConnected } = useAccount();
   const graphClient = useGraphClient();
   const [initiates, setInitiates] = useState<InitiateDetailsFragment[]>();
+  const [isLoading, setIsLoading] = useState(true);
 
   const localForm = useForm<FieldValues>();
   const { watch, getValues } = localForm;
@@ -26,8 +27,10 @@ const Initiates = () => {
 
   useEffect(() => {
     const getInitiates = async () => {
+      setIsLoading(true);
       const query = await graphClient.Initiates();
       setInitiates(query.initiates);
+      setIsLoading(false);
     };
     getInitiates();
   }, []);
@@ -64,29 +67,32 @@ const Initiates = () => {
           <Heading as="h1" textAlign="center" color="#FF3864">
             Initiates
           </Heading>
-          {
+
+          {isLoading ? (
             <Box w="full" textAlign="center" p={2} fontFamily="texturina">
               <Spinner size="xl" my="50" color="red" emptyColor="purple" />
               <Text>Loading cohorts...</Text>
             </Box>
-          }
-
-          <Stack spacing={6} w={["full", "full", "80%"]} mb={6}>
-            <Box w={["50%", "50%", "40%", "30%"]} alignSelf="end">
-              <SearchCohorts name="searchResult" localForm={localForm} />
-            </Box>
-            <GridTemplate
-              column1="Address"
-              column2="Cohort"
-              column3="Stake"
-              column4="DateStaked"
-              column5={" "}
-              isHeading
-            />
-            {filteredInitiates}
-          </Stack>
-          <Box textAlign="center" w={["full", "full", "80%"]} py={2}></Box>
-          <BackButton path="/admin" />
+          ) : (
+            <>
+              <Stack spacing={6} w={["full", "full", "80%"]} mb={6}>
+                <Box w={["50%", "50%", "40%", "30%"]} alignSelf="end">
+                  <SearchCohorts name="searchResult" localForm={localForm} />
+                </Box>
+                <GridTemplate
+                  column1="Address"
+                  column2="Cohort"
+                  column3="Stake"
+                  column4="DateStaked"
+                  column5={" "}
+                  isHeading
+                />
+                {filteredInitiates}
+              </Stack>
+              <Box textAlign="center" w={["full", "full", "80%"]} py={2}></Box>
+              <BackButton path="/admin" />
+            </>
+          )}
         </>
       )}
     </>

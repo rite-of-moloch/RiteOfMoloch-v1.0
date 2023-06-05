@@ -21,8 +21,8 @@ import { getMesh, ExecuteMeshFn, SubscribeMeshFn, MeshContext as BaseMeshContext
 import { MeshStore, FsStoreStorageAdapter } from '@graphql-mesh/store';
 import { path as pathModule } from '@graphql-mesh/cross-helpers';
 import { ImportFn } from '@graphql-mesh/types';
-import type { RomGoerliTypes } from './sources/rom-goerli/types';
-import * as importedModule$0 from "./sources/rom-goerli/introspectionSchema";
+import type { RomGnosisTypes } from './sources/rom-gnosis/types';
+import * as importedModule$0 from "./sources/rom-gnosis/introspectionSchema";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -141,6 +141,7 @@ export type Claim_orderBy =
   | 'amount'
   | 'cohort'
   | 'cohort__id'
+  | 'cohort__name'
   | 'cohort__address'
   | 'cohort__chain'
   | 'cohort__deployer'
@@ -160,6 +161,7 @@ export type Claim_orderBy =
 
 export type Cohort = {
   id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
   address: Scalars['Bytes'];
   chain: Scalars['String'];
   deployer: Scalars['Bytes'];
@@ -227,6 +229,26 @@ export type Cohort_filter = {
   id_lte?: InputMaybe<Scalars['ID']>;
   id_in?: InputMaybe<Array<Scalars['ID']>>;
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  name?: InputMaybe<Scalars['String']>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_gt?: InputMaybe<Scalars['String']>;
+  name_lt?: InputMaybe<Scalars['String']>;
+  name_gte?: InputMaybe<Scalars['String']>;
+  name_lte?: InputMaybe<Scalars['String']>;
+  name_in?: InputMaybe<Array<Scalars['String']>>;
+  name_not_in?: InputMaybe<Array<Scalars['String']>>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_contains_nocase?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  name_starts_with?: InputMaybe<Scalars['String']>;
+  name_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  name_not_starts_with?: InputMaybe<Scalars['String']>;
+  name_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  name_ends_with?: InputMaybe<Scalars['String']>;
+  name_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  name_not_ends_with?: InputMaybe<Scalars['String']>;
+  name_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   address?: InputMaybe<Scalars['Bytes']>;
   address_not?: InputMaybe<Scalars['Bytes']>;
   address_gt?: InputMaybe<Scalars['Bytes']>;
@@ -403,6 +425,7 @@ export type Cohort_filter = {
 
 export type Cohort_orderBy =
   | 'id'
+  | 'name'
   | 'address'
   | 'chain'
   | 'deployer'
@@ -523,6 +546,7 @@ export type CryForHelp_orderBy =
   | 'sender__sacrificed'
   | 'cohort'
   | 'cohort__id'
+  | 'cohort__name'
   | 'cohort__address'
   | 'cohort__chain'
   | 'cohort__deployer'
@@ -663,6 +687,7 @@ export type Initiate_orderBy =
   | 'joinedAt'
   | 'cohort'
   | 'cohort__id'
+  | 'cohort__name'
   | 'cohort__address'
   | 'cohort__chain'
   | 'cohort__deployer'
@@ -1015,6 +1040,7 @@ export type Sacrifice_orderBy =
   | 'slasher'
   | 'cohort'
   | 'cohort__id'
+  | 'cohort__name'
   | 'cohort__address'
   | 'cohort__chain'
   | 'cohort__deployer'
@@ -1383,6 +1409,7 @@ export type ClaimResolvers<ContextType = MeshContext, ParentType extends Resolve
 
 export type CohortResolvers<ContextType = MeshContext, ParentType extends ResolversParentTypes['Cohort'] = ResolversParentTypes['Cohort']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   address?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
   chain?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   deployer?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
@@ -1519,7 +1546,7 @@ export type DirectiveResolvers<ContextType = MeshContext> = ResolversObject<{
   derivedFrom?: derivedFromDirectiveResolver<any, any, ContextType>;
 }>;
 
-export type MeshContext = RomGoerliTypes.Context & BaseMeshContext;
+export type MeshContext = RomGnosisTypes.Context & BaseMeshContext;
 
 
 import { fileURLToPath } from '@graphql-mesh/utils';
@@ -1528,7 +1555,7 @@ const baseDir = pathModule.join(pathModule.dirname(fileURLToPath(import.meta.url
 const importFn: ImportFn = <T>(moduleId: string) => {
   const relativeModuleId = (pathModule.isAbsolute(moduleId) ? pathModule.relative(baseDir, moduleId) : moduleId).split('\\').join('/').replace(baseDir + '/', '');
   switch(relativeModuleId) {
-    case ".graphclient/sources/rom-goerli/introspectionSchema":
+    case ".graphclient/sources/rom-gnosis/introspectionSchema":
       return Promise.resolve(importedModule$0) as T;
     
     default:
@@ -1561,22 +1588,22 @@ const cache = new (MeshCache as any)({
 const sources: MeshResolvedSource[] = [];
 const transforms: MeshTransform[] = [];
 const additionalEnvelopPlugins: MeshPlugin<any>[] = [];
-const romGoerliTransforms = [];
+const romGnosisTransforms = [];
 const additionalTypeDefs = [] as any[];
-const romGoerliHandler = new GraphqlHandler({
-              name: "rom-goerli",
-              config: {"endpoint":"https://api.thegraph.com/subgraphs/name/bitbeckers/rom-goerli"},
+const romGnosisHandler = new GraphqlHandler({
+              name: "rom-gnosis",
+              config: {"endpoint":"https://api.thegraph.com/subgraphs/name/rite-of-moloch/rom-gnosis"},
               baseDir,
               cache,
               pubsub,
-              store: sourcesStore.child("rom-goerli"),
-              logger: logger.child("rom-goerli"),
+              store: sourcesStore.child("rom-gnosis"),
+              logger: logger.child("rom-gnosis"),
               importFn,
             });
 sources[0] = {
-          name: 'rom-goerli',
-          handler: romGoerliHandler,
-          transforms: romGoerliTransforms
+          name: 'rom-gnosis',
+          handler: romGnosisHandler,
+          transforms: romGnosisTransforms
         }
 additionalEnvelopPlugins[0] = await UsePollingLive({
           ...({
@@ -1686,7 +1713,7 @@ export type CohortsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type CohortsQuery = { cohorts: Array<(
-    Pick<Cohort, 'createdAt' | 'dao' | 'deployer' | 'id' | 'address' | 'sbtUrl' | 'sharesAmount' | 'slashedMembers' | 'claimedMembers' | 'successPercentage' | 'time' | 'token' | 'tokenAmount' | 'totalMembers' | 'treasury'>
+    Pick<Cohort, 'createdAt' | 'name' | 'dao' | 'deployer' | 'id' | 'address' | 'sbtUrl' | 'sharesAmount' | 'slashedMembers' | 'claimedMembers' | 'successPercentage' | 'time' | 'token' | 'tokenAmount' | 'totalMembers' | 'treasury'>
     & { initiates?: Maybe<Array<Pick<Initiate, 'address' | 'claimed' | 'deadline' | 'joinedAt' | 'sacrificed' | 'stake'>>> }
   )> };
 
@@ -1696,14 +1723,14 @@ export type CohortByIdQueryVariables = Exact<{
 
 
 export type CohortByIdQuery = { cohort?: Maybe<(
-    Pick<Cohort, 'createdAt' | 'dao' | 'deployer' | 'id' | 'address' | 'sbtUrl' | 'sharesAmount' | 'slashedMembers' | 'claimedMembers' | 'successPercentage' | 'time' | 'token' | 'tokenAmount' | 'totalMembers' | 'treasury'>
+    Pick<Cohort, 'createdAt' | 'name' | 'dao' | 'deployer' | 'id' | 'address' | 'sbtUrl' | 'sharesAmount' | 'slashedMembers' | 'claimedMembers' | 'successPercentage' | 'time' | 'token' | 'tokenAmount' | 'totalMembers' | 'treasury'>
     & { initiates?: Maybe<Array<Pick<Initiate, 'address' | 'claimed' | 'deadline' | 'joinedAt' | 'sacrificed' | 'stake'>>> }
   )> };
 
 export type InitiateFragmentFragment = Pick<Initiate, 'address' | 'claimed' | 'deadline' | 'joinedAt' | 'sacrificed' | 'stake'>;
 
 export type CohortFragmentFragment = (
-  Pick<Cohort, 'createdAt' | 'dao' | 'deployer' | 'id' | 'address' | 'sbtUrl' | 'sharesAmount' | 'slashedMembers' | 'claimedMembers' | 'successPercentage' | 'time' | 'token' | 'tokenAmount' | 'totalMembers' | 'treasury'>
+  Pick<Cohort, 'createdAt' | 'name' | 'dao' | 'deployer' | 'id' | 'address' | 'sbtUrl' | 'sharesAmount' | 'slashedMembers' | 'claimedMembers' | 'successPercentage' | 'time' | 'token' | 'tokenAmount' | 'totalMembers' | 'treasury'>
   & { initiates?: Maybe<Array<Pick<Initiate, 'address' | 'claimed' | 'deadline' | 'joinedAt' | 'sacrificed' | 'stake'>>> }
 );
 
@@ -1713,7 +1740,7 @@ export type CohortDataByAddressQueryVariables = Exact<{
 
 
 export type CohortDataByAddressQuery = { cohorts: Array<(
-    Pick<Cohort, 'createdAt' | 'dao' | 'deployer' | 'id' | 'address' | 'sbtUrl' | 'sharesAmount' | 'slashedMembers' | 'claimedMembers' | 'successPercentage' | 'time' | 'token' | 'tokenAmount' | 'totalMembers' | 'treasury'>
+    Pick<Cohort, 'createdAt' | 'name' | 'dao' | 'deployer' | 'id' | 'address' | 'sbtUrl' | 'sharesAmount' | 'slashedMembers' | 'claimedMembers' | 'successPercentage' | 'time' | 'token' | 'tokenAmount' | 'totalMembers' | 'treasury'>
     & { initiates?: Maybe<Array<Pick<Initiate, 'address' | 'claimed' | 'deadline' | 'joinedAt' | 'sacrificed' | 'stake'>>> }
   )> };
 
@@ -1760,6 +1787,7 @@ export const InitiateFragmentFragmentDoc = gql`
 export const CohortFragmentFragmentDoc = gql`
     fragment CohortFragment on Cohort {
   createdAt
+  name
   dao
   deployer
   id

@@ -20,7 +20,7 @@ interface ReviewOngoingCohortProps {
  */
 const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
   const { isConnected } = useAccount();
-  const cohorts = useCohorts();
+  const { cohorts, isLoading } = useCohorts();
   const localForm = useForm<FieldValues>();
   const { getValues, watch } = localForm;
   watch();
@@ -63,28 +63,30 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
         <Heading as="h1" textAlign="center" color="#FF3864">
           Cohorts
         </Heading>
-        {
+        {isLoading ? (
           <Box w="full" textAlign="center" p={2} fontFamily="texturina">
             <Spinner size="xl" my="50" color="red" emptyColor="purple" />
             <Text>Loading cohorts...</Text>
           </Box>
-        }
-        {
+        ) : (
           <>
-            <Box w={["50%", "50%", "40%", "30%"]} alignSelf="end">
-              <SearchCohorts name="searchResult" localForm={localForm} />
-            </Box>
+            <>
+              <Box w={["50%", "50%", "40%", "30%"]} alignSelf="end">
+                <SearchCohorts name="searchResult" localForm={localForm} />
+              </Box>
 
-            <GridTemplate
-              isHeading
-              column1="Address"
-              column2="Stake"
-              column3="Deadline"
-              column4="Manage"
-            />
+              <GridTemplate
+                isHeading
+                column1="Address"
+                column2="Stake"
+                column3="Deadline"
+                column4="Manage"
+              />
+            </>
+
+            {filteredCohorts && filteredCohorts?.length > 0 && filteredCohorts}
           </>
-        }
-        {filteredCohorts && filteredCohorts?.length > 0 && filteredCohorts}
+        )}
       </Stack>
 
       <BackButton path="/admin" />

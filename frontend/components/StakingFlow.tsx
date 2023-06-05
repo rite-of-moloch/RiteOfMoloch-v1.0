@@ -40,7 +40,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   const { address } = useAccount();
   const { willSponsor, handleWillSponsor } = useContext(UserContext);
 
-  const cohort = useCohort(contractAddress);
+  const { cohort } = useCohort(contractAddress);
 
   const localForm = useForm<FieldValues>();
 

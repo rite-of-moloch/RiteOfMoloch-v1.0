@@ -6,7 +6,7 @@ import useCohort from "./useCohortByAddress";
  * @outputs uint256
  */
 const useMinimumStake = (contractAddress: string) => {
-  const cohort = useCohort(contractAddress);
+  const { cohort } = useCohort(contractAddress);
 
   if (!cohort) {
     console.log(`Cohort at ${contractAddress} not found`);

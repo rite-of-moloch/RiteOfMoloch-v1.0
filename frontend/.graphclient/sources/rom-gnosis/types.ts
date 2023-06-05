@@ -3,7 +3,7 @@
 import { InContextSdkMethod } from '@graphql-mesh/types';
 import { MeshContext } from '@graphql-mesh/runtime';
 
-export namespace RomGoerliTypes {
+export namespace RomGnosisTypes {
   export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -118,6 +118,7 @@ export type Claim_orderBy =
   | 'amount'
   | 'cohort'
   | 'cohort__id'
+  | 'cohort__name'
   | 'cohort__address'
   | 'cohort__chain'
   | 'cohort__deployer'
@@ -137,6 +138,7 @@ export type Claim_orderBy =
 
 export type Cohort = {
   id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
   address: Scalars['Bytes'];
   chain: Scalars['String'];
   deployer: Scalars['Bytes'];
@@ -204,6 +206,26 @@ export type Cohort_filter = {
   id_lte?: InputMaybe<Scalars['ID']>;
   id_in?: InputMaybe<Array<Scalars['ID']>>;
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  name?: InputMaybe<Scalars['String']>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_gt?: InputMaybe<Scalars['String']>;
+  name_lt?: InputMaybe<Scalars['String']>;
+  name_gte?: InputMaybe<Scalars['String']>;
+  name_lte?: InputMaybe<Scalars['String']>;
+  name_in?: InputMaybe<Array<Scalars['String']>>;
+  name_not_in?: InputMaybe<Array<Scalars['String']>>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_contains_nocase?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  name_starts_with?: InputMaybe<Scalars['String']>;
+  name_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  name_not_starts_with?: InputMaybe<Scalars['String']>;
+  name_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  name_ends_with?: InputMaybe<Scalars['String']>;
+  name_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  name_not_ends_with?: InputMaybe<Scalars['String']>;
+  name_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   address?: InputMaybe<Scalars['Bytes']>;
   address_not?: InputMaybe<Scalars['Bytes']>;
   address_gt?: InputMaybe<Scalars['Bytes']>;
@@ -380,6 +402,7 @@ export type Cohort_filter = {
 
 export type Cohort_orderBy =
   | 'id'
+  | 'name'
   | 'address'
   | 'chain'
   | 'deployer'
@@ -500,6 +523,7 @@ export type CryForHelp_orderBy =
   | 'sender__sacrificed'
   | 'cohort'
   | 'cohort__id'
+  | 'cohort__name'
   | 'cohort__address'
   | 'cohort__chain'
   | 'cohort__deployer'
@@ -640,6 +664,7 @@ export type Initiate_orderBy =
   | 'joinedAt'
   | 'cohort'
   | 'cohort__id'
+  | 'cohort__name'
   | 'cohort__address'
   | 'cohort__chain'
   | 'cohort__deployer'
@@ -992,6 +1017,7 @@ export type Sacrifice_orderBy =
   | 'slasher'
   | 'cohort'
   | 'cohort__id'
+  | 'cohort__name'
   | 'cohort__address'
   | 'cohort__chain'
   | 'cohort__deployer'
@@ -1233,7 +1259,7 @@ export type _SubgraphErrorPolicy_ =
   };
 
   export type Context = {
-      ["rom-goerli"]: { Query: QuerySdk, Mutation: MutationSdk, Subscription: SubscriptionSdk },
+      ["rom-gnosis"]: { Query: QuerySdk, Mutation: MutationSdk, Subscription: SubscriptionSdk },
       
     };
 }
