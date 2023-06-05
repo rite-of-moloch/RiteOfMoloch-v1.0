@@ -42,8 +42,20 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
 }) => {
   const { chain } = useNetwork();
   const cohort = useCohortByID(id);
-  const cohortId = id.split('-');
-  const cohortName = cohortId[1].slice(2,6)+'...'+cohortId[1].slice(-4);
+
+  const splitAddr = (str: string): string => {
+    const names = str.split('-');
+    return names[1];
+  }
+
+  const formatAddr = (str: string): string => {
+    return `${str.slice(0,6)}...${str.slice(-4)}` 
+  }
+
+  const splitFormatAddr = (str: string): string => {
+    const addr = splitAddr(str);
+    return formatAddr(addr); 
+  }
 
   const symbol = useTokenSymbol(cohort?.token);
   const getdeadline = getDeadline(cohort?.createdAt, cohort?.time);
@@ -89,7 +101,7 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
                   <Heading as="h3" color="red" fontSize={["md", "md", "lg"]}>
                     <HStack>
                       <Text textAlign="center">Cohort:</Text>
-                      {BlockExplorerLink(chain, cohortName, cohortId[1])}
+                      {BlockExplorerLink(chain, splitFormatAddr(id), splitAddr(id))}
                     </HStack>
                   </Heading>
                 </Tooltip>
@@ -107,7 +119,7 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
               <Text>
                 Staking token:
                 <span style={{ color: "white", marginLeft: "0.5rem" }}>
-                  {BlockExplorerLink(chain, cohort?.token)}
+                  {BlockExplorerLink(chain, cohort ? formatAddr(cohort?.token) : "", cohort?.token)}
                 </span>
               </Text>
               <Text>Symbol: {dataText(symbol || "")}</Text>
