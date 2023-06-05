@@ -1,5 +1,5 @@
 import { Chain, connectorsForWallets } from "@rainbow-me/rainbowkit";
-import { configureChains, createClient } from "wagmi";
+import { configureChains, createClient, mainnet } from "wagmi";
 import { goerli, sepolia } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { infuraProvider } from "wagmi/providers/infura";
@@ -43,7 +43,7 @@ const gnosis: Chain = {
 };
 
 export const { chains, provider } = configureChains(
-  [gnosis, sepolia, goerli],
+  [mainnet, gnosis, sepolia, goerli],
   [
     alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || "" }),
     infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_ID || "" }),
