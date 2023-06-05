@@ -69,6 +69,7 @@ const CohortAdminModal: React.FC<CohortAdminModalProps> = ({
                 address={address}
                 admin1={admin1}
                 admin2={admin2}
+                onClose={onClose}
               />
             </VStack>
           </ModalBody>

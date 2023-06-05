@@ -78,7 +78,6 @@ const CohortPage = () => {
 
   return (
     <>
-      (
       <VStack
         border="1px solid red"
         rounded="xl"
@@ -90,7 +89,6 @@ const CohortPage = () => {
         <Heading as="h2" fontSize="2xl" color="red" my={3}>
           <Text>{cohortName?.toString().toUpperCase()}</Text>
         </Heading>
-        {/* Grid for heading */}
         <GridTemplate
           isHeading
           style="noSideBorders"
@@ -148,7 +146,7 @@ const CohortPage = () => {
           </Box>
         )}
       </VStack>
-      ){isConnected && <BackButton path="/joinCohorts" />}
+      {isConnected && <BackButton path="/joinCohorts" />}
     </>
   );
 };

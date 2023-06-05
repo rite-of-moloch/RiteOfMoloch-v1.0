@@ -92,7 +92,7 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
           column4="Manage"
         />
       )}
-      {initiates?.length === 0 && (
+      {isInitiates === undefined && (
         <Box w="full" textAlign="center" p={2} fontFamily="texturina">
           <Spinner size="xl" my="50" color="red" emptyColor="purple" />
           <Text>Loading initiates...</Text>

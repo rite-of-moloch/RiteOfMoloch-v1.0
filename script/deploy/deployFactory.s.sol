@@ -5,13 +5,10 @@ import "forge-std/Script.sol";
 import {RiteOfMolochFactory} from "src/RiteOfMolochFactory.sol";
 import {DeployHelper} from "script/deploy/helpers.sol";
 
-
-// forge script script/deploy/deployFactory.s.sol:DeployMockFactory --fork-url <URL> --broadcast
+// forge script script/deploy/deployFactory.s.sol:DeployMockFactory --fork-url https://rpc.gnosischain.com --broadcast
 
 /// @notice deploys a mock ROMFactory on it's own to Goerli
 contract DeployMockFactory is Script, DeployHelper {
-
-
     function run() public {
         vm.startBroadcast(vm.envUint("PK"));
 
@@ -19,7 +16,4 @@ contract DeployMockFactory is Script, DeployHelper {
 
         vm.stopBroadcast();
     }
-
-
-
 }
