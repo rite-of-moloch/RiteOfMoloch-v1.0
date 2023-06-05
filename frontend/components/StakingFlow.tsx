@@ -56,7 +56,10 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   const initiateAddress: string = values?.initiateAddress;
 
   const userAddress = (): string => {
-    if (typeof address === "string") return address;
+
+    if (typeof address === "string") {
+      return address;
+    }
     else return "";
   };
 
@@ -72,21 +75,19 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   }
 
   const { approve, isLoadingApprove } = useApprove(cohort?.token || "0x", [
-    cohort?.id || "",
+    cohort?.address || "",
     minimumStake,
   ]);
 
   let allowance = useGetAllowance((cohort?.token as `0x${string}`) || "0x", [
     userAddress(),
-    cohort?.id || "0x",
+    cohort?.address || "0x",
   ]);
 
   let tokenSymbol = useTokenSymbol(cohort?.token);
   if (!tokenSymbol) {
     tokenSymbol = "N/A";
   }
-
-  console.log(cohort?.token);
 
   //TODO better handling of allowance === null
 
@@ -95,7 +96,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   }
 
   const { writeJoinInitiation, isLoadingStake } = useJoinInitiation(
-    cohort?.id || "",
+    cohort?.address || "",
     !willSponsor ? [userAddress()] : [initiateAddress]
   );
 

@@ -44,6 +44,7 @@ const gnosis: Chain = {
 
 export const { chains, provider } = configureChains(
   [mainnet, gnosis, sepolia, goerli],
+
   [
     alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || "" }),
     infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_ID || "" }),
