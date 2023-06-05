@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import {
   Flex,
@@ -16,7 +16,6 @@ import {
 } from "@raidguild/design-system";
 import { useAccount } from "wagmi";
 import { BigNumber, utils } from "ethers";
-import { UserContext } from "context/UserContext";
 import { approveTooltip, canStake, stakeTooltip } from "utils/general";
 import useBalanceOf from "hooks/useBalanceOf";
 import useApprove from "hooks/useApprove";
@@ -38,7 +37,11 @@ interface StakingFlowProps {
  */
 const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   const { address } = useAccount();
-  const { willSponsor, handleWillSponsor } = useContext(UserContext);
+  const [willSponsor, setWillSponsor] = useState<boolean>(false);
+
+  const handleWillSponsor = () => {
+    setWillSponsor(!willSponsor);
+  };
 
   const { cohort } = useCohort(contractAddress);
 
@@ -176,7 +179,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
               value="Sponsor an Initiate"
               options={["Sponsor an Initiate"]}
               isChecked={willSponsor}
-              onChange={() => handleWillSponsor}
+              onChange={() => handleWillSponsor()}
             />
             <Box w="full" hidden={!willSponsor ? true : false}>
               <Input
