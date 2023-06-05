@@ -4,7 +4,10 @@ import { ErrorMessage } from "@hookform/error-message";
 import {
   Box,
   Button,
+  Center,
+  Flex,
   FormControl,
+  FormLabel,
   Input,
   NumberDecrementStepper,
   NumberIncrementStepper,
@@ -12,6 +15,8 @@ import {
   NumberInputField,
   NumberInputStepper,
   SimpleGrid,
+  Spacer,
+  Switch,
   Tooltip,
 } from "@raidguild/design-system";
 import { useFormContext } from "context/FormContext";
@@ -32,6 +37,7 @@ const DeployCohortPt2 = () => {
     setDisplayPart2,
     setDisplayPart3,
   } = useFormContext();
+  const [weiToggle, setWeiToggle] = React.useState(true);
 
   const localForm = useForm<FieldValues>();
 
@@ -80,55 +86,29 @@ const DeployCohortPt2 = () => {
     }
   };
 
+  const handleWeiToggle = () => {
+    setWeiToggle(!weiToggle);
+  };
+
+  const handleAmountInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const amount = e.target.value;
+    if (amount === "") {
+      return e;
+    }
+    if (weiToggle) {
+      return e;
+    }
+
+    if (!weiToggle) {
+      const amountInWei = utils.parseEther(amount);
+      return (e.target.value = amountInWei.toString());
+    }
+  };
+
   return (
     <FormControl onSubmit={handleSubmit(handleBack)}>
       <Box display={displayPart2 ? "inline" : "none"}>
         <SimpleGrid columns={2} spacingX={4} spacingY={3}>
-          <Box>
-            <Input
-              label="Staking Asset Address"
-              placeholder="enter token address"
-              autoComplete="off"
-              localForm={localForm}
-              {...register("stakingAsset", {
-                required: {
-                  value: true,
-                  message: "Value required",
-                },
-                validate: () =>
-                  utils.isAddress(values.stakingAsset) || "invalid address",
-              })}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="stakingAsset"
-              render={({ message }) => <FormErrorText message={message} />}
-            />
-          </Box>
-          <Controller
-            control={control}
-            name="assetAmount"
-            rules={numberInputRules}
-            render={({ field: { ref, ...restField } }) => (
-              <NumberInput
-                label="Required Stake (in Wei)"
-                variant="none"
-                placeholder="Required stake"
-                localForm={localForm}
-                step={1}
-                min={0}
-                max={Infinity}
-                {...restField}
-              >
-                <NumberInputField ref={ref} name={restField.name} />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            )}
-          />
-
           <Box>
             <Controller
               control={control}
@@ -190,7 +170,7 @@ const DeployCohortPt2 = () => {
               control={control}
               name="onboardingPeriod"
               rules={numberInputRules}
-              render={({ field: { ref, ...restField } }) => (
+              render={({ field: { onChange, ref, ...restField } }) => (
                 <NumberInput
                   label="Onboarding Period (in days)"
                   variant="none"
@@ -199,6 +179,7 @@ const DeployCohortPt2 = () => {
                   step={1}
                   min={0}
                   max={Infinity}
+                  onChange={(e) => onChange(handleAmountInput)}
                   {...restField}
                 >
                   <NumberInputField ref={ref} name={restField.name} />
@@ -237,7 +218,69 @@ const DeployCohortPt2 = () => {
             />
           </Box>
         </SimpleGrid>
-        <SimpleGrid my={3}>
+        <SimpleGrid columns={2} spacing={2}>
+          <Controller
+            control={control}
+            name="assetAmount"
+            rules={numberInputRules}
+            render={({ field: { ref, ...restField } }) => (
+              <NumberInput
+                maxWidth={"50%"}
+                label={`Required Stake (in ${weiToggle ? "wei" : "ASSET"})`}
+                variant="none"
+                placeholder="Required stake"
+                localForm={localForm}
+                step={1}
+                min={0}
+                max={Infinity}
+                {...restField}
+              >
+                <NumberInputField ref={ref} name={restField.name} />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            )}
+          />
+          <Center margin={"auto"}>
+            <FormControl
+              display="flex"
+              alignItems="center"
+              justifyContent={"center"}
+            >
+              <Switch
+                id="toggle-wei"
+                localForm={localForm}
+                label={"Wei or human readable?"}
+                onChange={handleWeiToggle}
+                defaultChecked={weiToggle}
+              />
+            </FormControl>
+          </Center>
+        </SimpleGrid>
+        <Flex direction={"column"} gap={2}>
+          <Box>
+            <Input
+              label="Staking Asset Address"
+              placeholder="enter token address"
+              autoComplete="off"
+              localForm={localForm}
+              {...register("stakingAsset", {
+                required: {
+                  value: true,
+                  message: "Value required",
+                },
+                validate: () =>
+                  utils.isAddress(values.stakingAsset) || "invalid address",
+              })}
+            />
+            <ErrorMessage
+              errors={errors}
+              name="stakingAsset"
+              render={({ message }) => <FormErrorText message={message} />}
+            />
+          </Box>
           <Box>
             <Input
               label="DAO treasury address"
@@ -260,7 +303,7 @@ const DeployCohortPt2 = () => {
               render={({ message }) => <FormErrorText message={message} />}
             />
           </Box>
-        </SimpleGrid>
+        </Flex>
         <SimpleGrid columns={2} spacingX={4} spacingY={3} my={10}>
           <Box>
             <Button

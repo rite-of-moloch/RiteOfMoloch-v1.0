@@ -101,33 +101,33 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
 
   //TODO methods can accept BigNumbers instead of Strings
   const canUserStake = canStake(
-    allowance.toString(),
+    allowance,
     minimumStake || "",
-    balanceOf.toString(),
+    balanceOf,
     initiateAddress,
     willSponsor
   );
 
   console.log(
-    allowance.toString(),
+    allowance,
     minimumStake || "",
-    balanceOf.toString(),
+    balanceOf,
     initiateAddress,
     willSponsor
   );
 
   const approveTooltiplabel = approveTooltip(
-    allowance.toString(),
+    allowance,
     minimumStake,
-    balanceOf.toString(),
+    balanceOf,
     tokenSymbol
   );
 
   const stakeToolTipLabel = stakeTooltip(
     willSponsor,
     initiateAddress,
-    balanceOf.toString(),
-    allowance.toString(),
+    balanceOf,
+    allowance,
     minimumStake
   );
 
@@ -222,7 +222,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
                 w="full"
                 isLoading={isLoadingApprove}
                 loadingText="Approving..."
-                isDisabled={+balanceOf.toString() < +minimumStake.toString()}
+                isDisabled={balanceOf.lt(BigNumber.from(minimumStake))}
                 onClick={() => approve && approve()}
               >
                 Approve
