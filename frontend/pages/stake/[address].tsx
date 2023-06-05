@@ -40,7 +40,7 @@ const Stake: React.FC = (): any => {
    * if dynamic cohortAddress isn't valid ETH address, redirect back to joinCohorts page
    */
   useEffect(() => {
-    if (cohortAddress) {
+    if (cohort?.address) {
       if (!utils.isAddress(cohort?.address)) {
         router.push("/joinCohorts");
       }
