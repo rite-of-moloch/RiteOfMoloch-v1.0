@@ -42,6 +42,8 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
 }) => {
   const { chain } = useNetwork();
   const cohort = useCohortByID(id);
+  const cohortId = id.split('-');
+  const cohortName = cohortId[1].slice(2,6)+'...'+cohortId[1].slice(-4);
 
   const symbol = useTokenSymbol(cohort?.token);
   const getdeadline = getDeadline(cohort?.createdAt, cohort?.time);
@@ -87,7 +89,7 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
                   <Heading as="h3" color="red" fontSize={["md", "md", "lg"]}>
                     <HStack>
                       <Text textAlign="center">Cohort:</Text>
-                      {BlockExplorerLink(chain, id || "")}
+                      {BlockExplorerLink(chain, cohortName, cohortId[1])}
                     </HStack>
                   </Heading>
                 </Tooltip>

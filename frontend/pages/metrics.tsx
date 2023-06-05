@@ -28,12 +28,10 @@ const Metrics = () => {
   const values = getValues();
 
   /**
-   *
    * @remarks if use clicks on X in CohortMetricsBox, function below checks cohort.id and removes it from values.chooseCohort array if it matches
    */
   const removeOption = (e: any) => {
     const newSelect = values.chooseCohort?.filter((item: any) => {
-      // console.log(item.value);
       return item.value !== e.currentTarget.id;
     });
     setValue("chooseCohort", newSelect);
