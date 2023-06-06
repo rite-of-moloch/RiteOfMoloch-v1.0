@@ -1,13 +1,13 @@
 import React from "react";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
+import { BigNumber, utils } from "ethers";
 import {
   Box,
   Button,
   Center,
   Flex,
   FormControl,
-  FormLabel,
   Input,
   NumberDecrementStepper,
   NumberIncrementStepper,
@@ -15,13 +15,12 @@ import {
   NumberInputField,
   NumberInputStepper,
   SimpleGrid,
-  Spacer,
   Switch,
   Tooltip,
 } from "@raidguild/design-system";
 import { useFormContext } from "context/FormContext";
-import { utils } from "ethers";
 import FormErrorText from "components/FormErrorText";
+import { useDecimalOf, useSymbol } from "hooks/useERC20";
 
 const DeployCohortPt2 = () => {
   const {
@@ -86,7 +85,20 @@ const DeployCohortPt2 = () => {
     }
   };
 
+  let decimalOf = useDecimalOf((values?.stakingAsset as `0x${string}`) || "0x");
+
+  if (!decimalOf) {
+    decimalOf = BigNumber.from("0") || "0";
+  }
+
+  let symbol = useSymbol((values?.stakingAsset as `0x${string}`) || "0x");
+
+  if (!symbol) {
+    symbol = "symbol";
+  }
+
   const handleWeiToggle = () => {
+    setStakingAsset(values.stakingAsset);
     setWeiToggle(!weiToggle);
   };
 
@@ -218,7 +230,29 @@ const DeployCohortPt2 = () => {
             />
           </Box>
         </SimpleGrid>
-        <SimpleGrid columns={2} spacing={2}>
+        <Flex direction={"column"} gap={2}>
+          <Box>
+            <Input
+              label="Staking Asset Address"
+              placeholder="enter token address"
+              autoComplete="off"
+              localForm={localForm}
+              {...register("stakingAsset", {
+                required: {
+                  value: true,
+                  message: "Value required",
+                },
+                validate: () =>
+                  utils.isAddress(values.stakingAsset) || "invalid address",
+              })}
+            />
+            <ErrorMessage
+              errors={errors}
+              name="stakingAsset"
+              render={({ message }) => <FormErrorText message={message} />}
+            />
+          </Box>
+          <SimpleGrid columns={2} spacing={2}>
           <Controller
             control={control}
             name="assetAmount"
@@ -226,7 +260,7 @@ const DeployCohortPt2 = () => {
             render={({ field: { ref, ...restField } }) => (
               <NumberInput
                 maxWidth={"50%"}
-                label={`Required Stake (in ${weiToggle ? "wei" : "ASSET"})`}
+                label={`Required Stake (in ${weiToggle ? "wei" : symbol})`}
                 variant="none"
                 placeholder="Required stake"
                 localForm={localForm}
@@ -259,28 +293,6 @@ const DeployCohortPt2 = () => {
             </FormControl>
           </Center>
         </SimpleGrid>
-        <Flex direction={"column"} gap={2}>
-          <Box>
-            <Input
-              label="Staking Asset Address"
-              placeholder="enter token address"
-              autoComplete="off"
-              localForm={localForm}
-              {...register("stakingAsset", {
-                required: {
-                  value: true,
-                  message: "Value required",
-                },
-                validate: () =>
-                  utils.isAddress(values.stakingAsset) || "invalid address",
-              })}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="stakingAsset"
-              render={({ message }) => <FormErrorText message={message} />}
-            />
-          </Box>
           <Box>
             <Input
               label="DAO treasury address"
