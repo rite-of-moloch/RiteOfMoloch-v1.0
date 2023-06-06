@@ -64,10 +64,6 @@ const JoinCohorts: React.FC = () => {
 
   // TODO: add "selectCohorts" to filter results
 
-  if (!isConnected) {
-    return <NotConnected />;
-  }
-
   return (
     <>
       <Stack spacing={6} w={["full", "full", "80%"]} mb={6}>

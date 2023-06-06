@@ -17,7 +17,7 @@ import {
 import { useAccount } from "wagmi";
 import { BigNumber, utils } from "ethers";
 import { approveTooltip, canStake, stakeTooltip } from "utils/general";
-import useBalanceOf from "hooks/useBalanceOf";
+import {useBalanceOf, useDecimalOf} from "hooks/useERC20";
 import useApprove from "hooks/useApprove";
 import useJoinInitiation from "hooks/useJoinInitiation";
 import useGetAllowance from "hooks/useGetAllowance";
@@ -67,6 +67,12 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   };
 
   const minimumStake = cohort?.tokenAmount || "0";
+
+  let decimalOf = useDecimalOf((cohort?.token as `0x${string}`) || "0x");
+
+  if (!decimalOf) {
+    decimalOf = BigNumber.from("0") || "0";
+  }
 
   let balanceOf = useBalanceOf((cohort?.token as `0x${string}`) || "0x", [
     userAddress(),
@@ -152,7 +158,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
             Your {tokenSymbol} balance
           </Text>
           <Text color="white" fontSize=".8rem">
-            {+utils.formatUnits(balanceOf, "ether")} {tokenSymbol}
+            {+utils.formatUnits(balanceOf, decimalOf)} {tokenSymbol}
           </Text>
         </HStack>
         <HStack justifyContent="space-between" w="full">

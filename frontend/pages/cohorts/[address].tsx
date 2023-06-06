@@ -54,10 +54,6 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
 
   const cohortName = "Testing";
 
-  if (!isConnected) {
-    return <NotConnected />;
-  }
-
   return (
     <Stack
       w={["full", "full", "80%"]}

@@ -55,10 +55,6 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
 
   const isCohorts = renderCohorts && renderCohorts.length > 0;
 
-  if (!isConnected) {
-    return <NotConnected />;
-  }
-
   return (
     <>
       <Stack spacing={6} w={["full", "full", "80%"]} mb={6}>
