@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import {
   Flex,
@@ -93,7 +93,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   }
 
   //TODO better handling of allowance === null
-
   if (!allowance) {
     allowance = BigNumber.from("0") || "0";
   }
@@ -135,9 +134,8 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     minimumStake
   );
 
-  // useEffect re-renders component when user creates an allowance, which lets writeJoinInitiation to become defined
+  // useEffect re-renders component when user creates an allowance, defined writeJoinInitiation
   useEffect(() => {
-    // console.log(allowance);
   }, [allowance]);
 
   return (
