@@ -8,8 +8,8 @@ import {
   VStack,
 } from "@raidguild/design-system";
 import { utils } from "ethers";
-import useTransferAdminHatProposal from "hooks/useTransferAdminHatProposal";
-import { FieldValues, useForm, Controller } from "react-hook-form";
+import {useMintHatProp, useTransferHatProp} from "hooks/useHats";
+import { FieldValues, useForm } from "react-hook-form";
 
 import { zeroAddress } from "utils/constants";
 import AdminModalAddresses from "./AdminModalAddresses";
@@ -51,42 +51,32 @@ const EditCohortAdmins: React.FC<EditCohortAdminsProps> = ({
     formState: { errors },
   } = localForm;
 
-  const { handleSubmit, control } = useForm<FormValues>();
-
   watch();
   const values = getValues();
-  console.log(values);
 
-  const {
-    writeTransferAdminHatProposal: changeAdmin1,
-    isLoading: loadingAdmin1,
-    error: errorChangeAdmin1,
-  } = useTransferAdminHatProposal(address || "", [admin1, values?.admin1]);
+  const { writeMintHatProp: mintAdmin1, isLoadingMint: loadMint1 } = useMintHatProp(address || "0x", 
+    values?.admin1
+  );
 
-  const {
-    writeTransferAdminHatProposal: changeAdmin2,
-    isLoading: loadingAdmin2,
-    error: errorChangeAdmin2,
-  } = useTransferAdminHatProposal(address || "", [admin2, values?.admin2]);
+  const { writeMintHatProp: mintAdmin2, isLoadingMint: loadMint2 } = useMintHatProp(address || "0x", 
+    values?.admin2
+  );
 
-  const handleSaveAdmin1 = () => {
-    if (values.admin1 === "") {
-      setValue("admin1", zeroAddress);
+  const { writeTransferHatProp: transAdmin1, isLoadingTransfer: loadTrans1 } = useTransferHatProp(address || "0x", 
+    [values?.admin1, zeroAddress]
+  );
+
+  const { writeTransferHatProp: transAdmin2, isLoadingTransfer: loadTrans2 } = useTransferHatProp(address || "0x", 
+      [values?.admin2, zeroAddress]
+  );
+
+  const handleHatsProp = () => {
+    if (values?.admin1) {
+      mintAdmin1 && mintAdmin1();
     }
-    changeAdmin1 && changeAdmin1();
-  };
-
-  const handleSaveAdmin2 = () => {
-    console.log(errors);
-    if (values.admin2 === "") {
-      setValue("admin2", zeroAddress);
+    if (values?.admin2) {
+      mintAdmin2 && mintAdmin2();
     }
-    changeAdmin2 && changeAdmin2();
-  };
-
-  const handleCloseModal = () => {
-    handleSaveAdmin1();
-    handleSaveAdmin2();
     setEditAdmins(false);
     onClose();
   };
@@ -115,45 +105,8 @@ const EditCohortAdmins: React.FC<EditCohortAdminsProps> = ({
               validate: (val) => utils.isAddress(val),
             })}
           />
-          {/* <Controller
-            control={control}
-            name="admin1"
-            render={({ field: { onChange, ref, ...restField } }) => (
-              <Input
-                label="Admin 1"
-                placeholder="Enter address..."
-                defaultValue={admin1 !== zeroAddress ? admin1 : ""}
-                localForm={localForm}
-                // {...restField}
-                {...register("admin1", {
-                  onChange: (e) => setValue("admin1", e.target.value),
-                  validate: (val) => utils.isAddress(val),
-                })}
-              />
-            )}
-          /> */}
-          {/* <Button onClick={() => handleSaveAdmin1()} isLoading={loadingAdmin1}>
-            save
-          </Button> */}
         </HStack>
         <HStack alignItems="end" w="full">
-          {/* <Controller
-            control={control}
-            name="admin2"
-            render={({ field: { onChange, ref, ...restField } }) => (
-              <Input
-                label="Admin 2"
-                placeholder="Enter address..."
-                defaultValue={admin2 !== zeroAddress ? admin2 : ""}
-                localForm={localForm}
-                // {...restField}
-                {...register("admin2", {
-                  onChange: (e) => setValue("admin2", e.target.value),
-                  validate: (val) => utils.isAddress(val),
-                })}
-              />
-            )}
-          /> */}
           <Input
             label="Admin 2"
             placeholder="Enter address..."
@@ -164,9 +117,6 @@ const EditCohortAdmins: React.FC<EditCohortAdminsProps> = ({
               validate: (val) => utils.isAddress(val),
             })}
           />
-          {/* <Button onClick={() => handleSaveAdmin2()} isLoading={loadingAdmin2}>
-            Save
-          </Button> */}
         </HStack>
         <Box>
           <Text my="1rem" textAlign="center">
@@ -177,7 +127,8 @@ const EditCohortAdmins: React.FC<EditCohortAdminsProps> = ({
           <Button
             w="50%"
             fontFamily="spaceMono"
-            onClick={() => handleCloseModal()}
+            isLoading={loadMint1 || loadMint2}
+            onClick={() => handleHatsProp()}
           >
             Save
           </Button>

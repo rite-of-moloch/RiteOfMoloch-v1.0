@@ -20,7 +20,7 @@ export const Header: React.FC<HeaderProps> = ({ children }) => {
             w={["1rem", "1.5rem", "2rem"]}
           />
           <Box mx={"0.5rem"} color="red" fontFamily="uncial">
-            <Text fontSize={["1rem", "1rem", "1.5rem"]}>Rite Of Moloch</Text>
+            <Text cursor={"pointer"} fontSize={["1rem", "1rem", "1.5rem"]}>Rite Of Moloch</Text>
           </Box>
         </Flex>
       </Link>
