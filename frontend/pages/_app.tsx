@@ -1,6 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // import { RGThemeProvider } from "@raidguild/design-system";
-// import { UserProvider } from "context/UserContext";
 import { FormProvider } from "context/FormContext";
 import { theme } from "../theme";
 import { Layout } from "../components/Layout";
@@ -24,13 +23,11 @@ const App = ({ Component, pageProps }: AppProps) => {
         <ChakraProvider theme={theme}>
           <WagmiConfig client={wagmiClient}>
             <RainbowKitProvider chains={chains} theme={darkTheme()}>
-              {/* <UserProvider> */}
                 <FormProvider>
                   <Layout>
                     <Component {...pageProps} />
                   </Layout>
                 </FormProvider>
-              {/* </UserProvider> */}
             </RainbowKitProvider>
           </WagmiConfig>
         </ChakraProvider>
