@@ -1,5 +1,4 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// import { RGThemeProvider } from "@raidguild/design-system";
 import { FormProvider } from "context/FormContext";
 import { theme } from "../theme";
 import { Layout } from "../components/Layout";

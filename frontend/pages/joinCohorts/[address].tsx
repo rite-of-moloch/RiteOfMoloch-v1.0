@@ -71,10 +71,6 @@ const CohortPage = () => {
     }
   };
 
-  if (!isConnected) {
-    return <NotConnected />;
-  }
-
   return (
     <>
       <VStack
