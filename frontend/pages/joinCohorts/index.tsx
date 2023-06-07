@@ -22,21 +22,6 @@ const JoinCohorts: React.FC = () => {
   const localForm = useForm<FieldValues>();
   const { getValues, watch } = localForm;
   watch();
-  const searchResult = getValues().searchResult;
-  const selectCohorts = getValues().selectCohorts?.value;
-
-  /**
-   *
-   * @remarks if msg.sender has > 0 rites, then address is staked
-   */
-  const isStaked = (id: string) => {
-    const balance = useRiteBalanceOf(id, [address || ""]);
-    if (!balance) {
-      return false;
-    } else if (Number(balance.toString()) > 0) {
-      return true;
-    }
-  };
 
   const renderCohorts = cohorts?.map((cohort) => {
     const deadline = DateTime.fromSeconds(+cohort?.createdAt).plus({
@@ -54,22 +39,7 @@ const JoinCohorts: React.FC = () => {
       />
     );
   });
-
-  // TODO: uncomment when COHORT subgraphquery is fixed to include an array of cohort initiates, and in the next loop, filter through `selectedCohorts`
-  // const selectedCohorts = renderCohorts?.filter((cohort) => {
-  //   console.log(selectCohorts);
-  //   if (selectCohorts === "allCohorts" || !selectCohorts) {
-  //     return cohort;
-  //   } else if (selectCohorts === "onlyStakedCohorts") {
-  //     return isStaked(cohort?.props.address);
-  //   } else if (selectCohorts === "nonStakedOngoing") {
-  //     return !isStaked(cohort?.props.address);
-  //   }
-  // });
-  // console.log(selectedCohorts);
-
-  // TODO: add "selectCohorts" to filter results
-
+  
   return (
     <>
       <Stack spacing={6} w={["full", "full", "80%"]} mb={6}>

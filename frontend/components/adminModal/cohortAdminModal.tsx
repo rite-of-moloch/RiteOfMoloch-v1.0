@@ -31,7 +31,7 @@ const CohortAdminModal: React.FC<CohortAdminModalProps> = ({
 
   const { cohort } = useCohort(address || "");
 
-  const getAdmins = () => {
+  const useAdmins = () => {
     const { data: data1 } = useReadContract(
       (cohort?.id as `0x${string}`) || "",
       "riteOfMolochAddress",
@@ -49,8 +49,7 @@ const CohortAdminModal: React.FC<CohortAdminModalProps> = ({
     return { admin1, admin2 };
   };
 
-  const { admin1, admin2 } = getAdmins();
-  // console.log(admin1, admin2);
+  const { admin1, admin2 } = useAdmins();
 
   return (
     <>
