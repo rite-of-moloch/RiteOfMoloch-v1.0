@@ -34,7 +34,7 @@ const useDecimalOf = (contractAddress: `0x${string}`) => {
     return null;
   }
 
-  return data as BigNumber;
+  return data as string;
 };
 
 const useSymbol = (contractAddress: `0x${string}`) => {

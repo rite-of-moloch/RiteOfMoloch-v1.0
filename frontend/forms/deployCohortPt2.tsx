@@ -1,7 +1,7 @@
 import React from "react";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
-import { BigNumber, utils } from "ethers";
+import { BigNumberish, BigNumber, utils } from "ethers";
 import {
   Box,
   Button,
@@ -86,13 +86,11 @@ const DeployCohortPt2 = () => {
   };
 
   let decimalOf = useDecimalOf((values?.stakingAsset as `0x${string}`) || "0x");
-
   if (!decimalOf) {
-    decimalOf = BigNumber.from("0") || "0";
+    decimalOf = "0";
   }
 
   let symbol = useSymbol((values?.stakingAsset as `0x${string}`) || "0x");
-
   if (!symbol) {
     symbol = "symbol";
   }
@@ -102,7 +100,7 @@ const DeployCohortPt2 = () => {
     setWeiToggle(!weiToggle);
   };
 
-  const handleAmountInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const parseInputToWei = (e: React.ChangeEvent<HTMLInputElement>) => {
     const amount = e.target.value;
     if (amount === "") {
       return e;
@@ -112,10 +110,18 @@ const DeployCohortPt2 = () => {
     }
 
     if (!weiToggle) {
-      const amountInWei = utils.parseEther(amount);
+      const amountInWei = utils.formatUnits(values?.assetAmount.toString(), BigNumber.from(decimalOf));
+      console.log(amountInWei)
       return (e.target.value = amountInWei.toString());
     }
   };
+
+  const parseValueToDisplay = (v: string) => {
+    if (weiToggle) {
+      return v;
+    }
+    return utils.formatUnits(v || "0", "ether");
+  } 
 
   return (
     <FormControl onSubmit={handleSubmit(handleBack)}>
@@ -182,7 +188,7 @@ const DeployCohortPt2 = () => {
               control={control}
               name="onboardingPeriod"
               rules={numberInputRules}
-              render={({ field: { onChange, ref, ...restField } }) => (
+              render={({ field: { onChange, ref, value, ...restField } }) => (
                 <NumberInput
                   label="Onboarding Period (in days)"
                   variant="none"
@@ -191,7 +197,8 @@ const DeployCohortPt2 = () => {
                   step={1}
                   min={0}
                   max={Infinity}
-                  onChange={(e) => onChange(handleAmountInput)}
+                  onChange={(e) => onChange(parseInputToWei)}
+                  value={parseValueToDisplay(value)}
                   {...restField}
                 >
                   <NumberInputField ref={ref} name={restField.name} />
