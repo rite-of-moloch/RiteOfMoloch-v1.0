@@ -22,6 +22,7 @@ import BlockExplorerLink from "components/BlockExplorerLink";
 import { getDeadline, unixToUTC } from "utils/general";
 import GridTemplate from "components/GridTemplate";
 import useCohort from "hooks/useCohortByAddress";
+import { DateTime } from "luxon";
 
 /**
  * Checks if msg.sender has staked to the cohort passed in by cohortAddress. Displays data about cohortAddress. msg.sender can re-claim stake, or redirect to page and
@@ -36,10 +37,12 @@ const CohortPage = () => {
   const router = useRouter();
   const { address: cohortAddress } = router.query;
 
-  const {cohort, isLoading} = useCohort((cohortAddress as string) || "");
+  const { cohort, isLoading } = useCohort((cohortAddress as string) || "");
 
   const tokenSymbol = useTokenSymbol(cohort?.token);
-  const deadline = getDeadline(cohort?.createdAt, cohort?.time);
+  const deadline = DateTime.fromSeconds(+cohort?.createdAt).plus({
+    seconds: cohort?.time,
+  });
 
   function userAddress(): string {
     if (typeof address === "string") return address;
@@ -82,7 +85,7 @@ const CohortPage = () => {
         fontFamily="texturina"
       >
         <Heading as="h2" fontSize="2xl" color="red" my={3}>
-          <Text>{cohort && cohort?.name ?  cohort.name : "Unknown"}</Text>
+          <Text>{cohort && cohort?.name ? cohort.name : "Unknown"}</Text>
         </Heading>
         <GridTemplate
           isHeading
@@ -109,7 +112,7 @@ const CohortPage = () => {
               <span style={{ marginLeft: "0.25em" }}>{tokenSymbol}</span>
             </Text>
           }
-          column3={unixToUTC(deadline)}
+          column3={deadline.toLocaleString()}
           column4={
             <Link href={`/stake/${cohortAddress}`}>
               <Button size="xs">Stake</Button>

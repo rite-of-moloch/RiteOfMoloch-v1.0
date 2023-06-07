@@ -7,6 +7,7 @@ import SearchCohorts from "components/SearchCohorts";
 import { FieldValues, useForm } from "react-hook-form";
 import GridTemplate from "components/GridTemplate";
 import useCohorts from "hooks/useCohorts";
+import { DateTime } from "luxon";
 
 interface ReviewOngoingCohortProps {
   children?: ReactNode;
@@ -24,12 +25,15 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
   const searchResult = getValues().searchResult;
 
   const renderCohorts = cohorts?.map((cohort) => {
+    const deadline = DateTime.fromSeconds(+cohort?.createdAt).plus({
+      seconds: cohort?.time,
+    });
     return (
       <CohortDetail
         address={cohort.address}
         stake={cohort.tokenAmount}
         stakingAsset={cohort.token}
-        stakingDate={unixToUTC(getDeadline(cohort.createdAt, cohort.time))}
+        stakingDate={deadline.toLocaleString()}
         key={cohort.id}
         memberOrAdmin={"admin"}
       />
@@ -49,7 +53,6 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
       return cohort;
     }
   });
-
 
   return (
     <>

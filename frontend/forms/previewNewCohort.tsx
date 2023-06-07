@@ -15,6 +15,8 @@ import { InitDataDeployCohort } from "utils/types/initDataDeployCohort";
 import CohortConfirmation from "components/CohortConfirmationModal";
 import BlockExplorerLink from "components/BlockExplorerLink";
 import { zeroAddress } from "utils/constants";
+import { useDecimalOf, useSymbol } from "hooks/useERC20";
+import { ethers } from "ethers";
 
 /**
  * @remarks this component renders a preview of all 3 parts of form data. It also builds function handleDeployCohort, which submits data to riteOfMolochFactory contract and creates a new cohort
@@ -66,6 +68,9 @@ const PreviewNewCohort = () => {
     setDisplayPreviewNewCohort(false);
   };
 
+  let decimalOf = useDecimalOf(stakingAsset as `0x${string}`);
+  let symbol = useSymbol(stakingAsset as `0x${string}`);
+
   const initData: InitDataDeployCohort = [
     membershipCriteria,
     stakingAsset,
@@ -100,6 +105,11 @@ const PreviewNewCohort = () => {
     createCohort && createCohort();
   };
 
+  const amountString =
+    assetAmount && decimalOf
+      ? `${ethers.utils.formatUnits(assetAmount || "0", decimalOf)} ${symbol}`
+      : "0 ???";
+
   return (
     <>
       <Box display={displayPreviewNewCohort ? "inline" : "none"}>
@@ -122,7 +132,7 @@ const PreviewNewCohort = () => {
               </Text>
               {responseText("Name SBT", nameSBT)}
               {responseText("Symbol SBT", symbolSBT)}
-              {responseText("Stake per member", assetAmount, assetAmount)}
+              {responseText("Stake per member", amountString)}
               {responseText("Staking duration", stakeDuration, stakeDuration)}
               {responseText("Cohort size", cohortSize)}
               {responseText("Shares per member", shareThreshold)}

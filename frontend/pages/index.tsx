@@ -3,12 +3,10 @@ import React from "react";
 import { Box, Button, HStack } from "@raidguild/design-system";
 import { useAccount } from "wagmi";
 import Link from "next/link";
-import NotConnected from "components/NotConnected";
 
 const Home = () => {
   return (
     <>
-      (
       <HStack justifyContent="space-around">
         <Box mr={["1rem", "2rem", "4rem"]}>
           <Link href="/joinCohorts">

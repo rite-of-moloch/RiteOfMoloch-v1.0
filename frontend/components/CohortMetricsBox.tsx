@@ -20,6 +20,7 @@ import BlockExplorerMetricLink from "./BlockExplorerMetricLink";
 import CohortMetricsOverall from "./CohortMetricsOverall";
 import CohortAdminModal from "./adminModal/cohortAdminModal";
 import useCohortByID from "hooks/useCohortByID";
+import { DateTime } from "luxon";
 
 interface CohortMetricsBoxProps {
   removeOption: Dispatch<any>;
@@ -43,33 +44,34 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
   const cohort = useCohortByID(id);
 
   const splitAddr = (str: string): string => {
-    const names = str.split('-');
+    const names = str.split("-");
     return names[1];
-  }
+  };
 
   const formatAddr = (str: string): string => {
-    return `${str.slice(0,6)}...${str.slice(-4)}` 
-  }
+    return `${str.slice(0, 6)}...${str.slice(-4)}`;
+  };
 
   const splitFormatAddr = (str: string): string => {
     const addr = splitAddr(str);
-    return formatAddr(addr); 
-  }
+    return formatAddr(addr);
+  };
 
   const symbol = useTokenSymbol(cohort?.token);
-  const getdeadline = getDeadline(cohort?.createdAt, cohort?.time);
+  const deadline = DateTime.fromSeconds(+cohort?.createdAt).plus({
+    seconds: cohort?.time,
+  });
 
   const lastMemberJoined = (): string => {
     if (!cohort?.initiates) return "N/A";
 
     let date = cohort?.initiates[cohort?.initiates.length - 1]?.joinedAt;
-    let formattedDate = unixToUTC((Number(date) * 1000).toString());
+    let formattedDate = DateTime.fromSeconds(+date).toLocaleString();
 
-    if (formattedDate === "Invalid Date") {
+    if (!formattedDate || formattedDate === "Invalid Date") {
       return "N/A";
-    } else {
-      return formattedDate || "N/A";
     }
+    return formattedDate;
   };
 
   const deployDate = unixToUTC((Number(cohort?.createdAt) * 1000).toString());
@@ -100,7 +102,11 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
                   <Heading as="h3" color="red" fontSize={["md", "md", "lg"]}>
                     <HStack>
                       <Text textAlign="center">Cohort:</Text>
-                      {BlockExplorerMetricLink(chain, splitFormatAddr(id), splitAddr(id))}
+                      {BlockExplorerMetricLink(
+                        chain,
+                        splitFormatAddr(id),
+                        splitAddr(id)
+                      )}
                     </HStack>
                   </Heading>
                 </Tooltip>
@@ -118,7 +124,11 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
               <Text>
                 Staking token:
                 <span style={{ color: "white", marginLeft: "0.5rem" }}>
-                  {BlockExplorerMetricLink(chain, cohort ? formatAddr(cohort?.token) : "", cohort?.token)}
+                  {BlockExplorerMetricLink(
+                    chain,
+                    cohort ? formatAddr(cohort?.token) : "",
+                    cohort?.token
+                  )}
                 </span>
               </Text>
               <Text>Symbol: {dataText(symbol || "")}</Text>
@@ -126,7 +136,7 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
               <Text>
                 Onboarding end:
                 <span style={{ color: "white", marginLeft: "0.5rem" }}>
-                  {unixToUTC(getdeadline)}
+                  {deadline.toLocaleString()}
                 </span>
               </Text>
               <Text>

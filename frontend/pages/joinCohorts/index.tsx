@@ -10,6 +10,7 @@ import { useAccount } from "wagmi";
 import useRiteBalanceOf from "hooks/useRiteBalanceOf";
 import GridTemplate from "components/GridTemplate";
 import useCohorts from "hooks/useCohorts";
+import { DateTime } from "luxon";
 
 /**
  * @remarks Non-admin page. Page for prospective and cohort members
@@ -24,7 +25,6 @@ const JoinCohorts: React.FC = () => {
   const searchResult = getValues().searchResult;
   const selectCohorts = getValues().selectCohorts?.value;
 
-
   /**
    *
    * @remarks if msg.sender has > 0 rites, then address is staked
@@ -38,16 +38,22 @@ const JoinCohorts: React.FC = () => {
     }
   };
 
-  const renderCohorts = cohorts?.map((cohort) => (
-    <CohortDetail
-      address={cohort.address}
-      stake={cohort.tokenAmount}
-      stakingAsset={cohort.token}
-      stakingDate={unixToUTC(getDeadline(cohort.createdAt, cohort.time))}
-      key={cohort.address}
-      memberOrAdmin={"member"}
-    />
-  ));
+  const renderCohorts = cohorts?.map((cohort) => {
+    const deadline = DateTime.fromSeconds(+cohort?.createdAt).plus({
+      seconds: cohort?.time,
+    });
+
+    return (
+      <CohortDetail
+        address={cohort.address}
+        stake={cohort.tokenAmount}
+        stakingAsset={cohort.token}
+        stakingDate={deadline.toLocaleString()}
+        key={cohort.address}
+        memberOrAdmin={"member"}
+      />
+    );
+  });
 
   // TODO: uncomment when COHORT subgraphquery is fixed to include an array of cohort initiates, and in the next loop, filter through `selectedCohorts`
   // const selectedCohorts = renderCohorts?.filter((cohort) => {
