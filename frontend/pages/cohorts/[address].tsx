@@ -17,6 +17,7 @@ import CohortAdminModal from "components/adminModal/cohortAdminModal";
 import GridTemplate from "components/GridTemplate";
 import useInitiates from "hooks/useInitiates";
 import { InitiateDetailsFragment } from ".graphclient";
+import useCohortByAddress from "hooks/useCohortByAddress";
 
 interface CohortDetailProps {
   children: ReactNode;
@@ -28,7 +29,11 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
   const router = useRouter();
   const { address: cohortAddress } = router.query;
 
-  const { initiates, isLoading } = useInitiates(
+  const { cohort, isLoading: isLoadingCohort } = useCohortByAddress(
+    cohortAddress?.toString() || ""
+  );
+
+  const { initiates, isLoading: isLoadingInitiates } = useInitiates(
     cohortAddress?.toString() || ""
   );
 
@@ -52,7 +57,7 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
 
   const isInitiates = renderInitiateList && renderInitiateList.length > 0;
 
-  const cohortName = "Testing";
+  const cohortName = cohort?.name;
 
   return (
     <Stack
