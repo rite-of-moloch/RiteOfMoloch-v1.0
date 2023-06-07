@@ -17,18 +17,22 @@ import CohortAdminModal from "components/adminModal/cohortAdminModal";
 import GridTemplate from "components/GridTemplate";
 import useInitiates from "hooks/useInitiates";
 import { InitiateDetailsFragment } from ".graphclient";
+import useCohortByAddress from "hooks/useCohortByAddress";
 
 interface CohortDetailProps {
   children: ReactNode;
 }
 
 const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
-  const { isConnected } = useAccount();
   const { chain } = useNetwork();
   const router = useRouter();
   const { address: cohortAddress } = router.query;
 
-  const { initiates, isLoading } = useInitiates(
+  const { cohort, isLoading: isLoadingCohort } = useCohortByAddress(
+    cohortAddress?.toString() || ""
+  );
+
+  const { initiates, isLoading: isLoadingInitiates } = useInitiates(
     cohortAddress?.toString() || ""
   );
 
@@ -52,7 +56,7 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
 
   const isInitiates = renderInitiateList && renderInitiateList.length > 0;
 
-  const cohortName = "Testing";
+  const cohortName = cohort?.name;
 
   return (
     <Stack
@@ -61,6 +65,12 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
       spacing={5}
       my={!isInitiates ? 8 : 0}
     >
+      (isLoadingCohort ? (
+      <Box w="full" textAlign="center" p={2} fontFamily="texturina">
+        <Spinner size="xl" my="50" color="red" emptyColor="purple" />
+        <Text>Loading cohorts...</Text>
+      </Box>
+      ) : (
       <Heading as="h2" textAlign="center" color="red">
         {cohortName?.toString().toUpperCase()}
       </Heading>
@@ -90,13 +100,14 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
           column4="Manage"
         />
       )}
-      {initiates?.length === 0 && isLoading && (
+      {initiates?.length === 0 && isLoadingInitiates && (
         <Box w="full" textAlign="center" p={2} fontFamily="texturina">
           <Spinner size="xl" my="50" color="red" emptyColor="purple" />
           <Text>Loading initiates...</Text>
         </Box>
       )}
       {isInitiates ? renderInitiateList : <NobodyStaked />}
+      )
       <BackButton path="/cohorts" />
     </Stack>
   );

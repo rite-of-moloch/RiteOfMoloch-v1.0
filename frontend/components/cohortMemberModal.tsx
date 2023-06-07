@@ -9,9 +9,7 @@ import {
   ModalOverlay,
   useDisclosure,
   Text,
-  SimpleGrid,
   Box,
-  GridItem,
   Tooltip,
 } from "@raidguild/design-system";
 import { Modal } from "@chakra-ui/modal";
@@ -19,9 +17,9 @@ import { useNetwork } from "wagmi";
 import { getDeadline, unixToUTC } from "utils/general";
 import BlockExplorerLink from "./BlockExplorerLink";
 import useSacrifice from "hooks/useSacrifice";
-import useCohortName from "hooks/useCohortByAddress";
 import GridTemplate from "./GridTemplate";
 import useCohort from "hooks/useCohortByAddress";
+import { DateTime } from "luxon";
 
 interface CohortMemberModalProps {
   address: string;
@@ -41,14 +39,13 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
 
   const { cohort } = useCohort(cohortAddress);
 
-  const deadline = getDeadline(cohort?.createdAt, cohort?.time);
-  const { writeSacrifice, isError, errorSacrifice, prepareErrorSacrifice } =
-    useSacrifice(address?.toString());
+  const deadline = DateTime.fromSeconds(+cohort?.createdAt).plus({
+    seconds: cohort?.time,
+  });
+  const { writeSacrifice, isError } = useSacrifice(address?.toString());
 
   const isPassedStakingDate = () => {
-    const today = new Date().getTime();
-    const stakingLogic = deadline < today.toString();
-    return stakingLogic ? true : false;
+    return +deadline < +new Date() ? true : false;
   };
 
   // TODO: create cohort with msg.sender as admin and test writeSacrifice function
@@ -106,7 +103,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
                 Slash Stake
               </Button>
               <Text mt={1} fontSize="xx-small" color="red" textAlign="center">
-                Slashing is available on {unixToUTC(deadline)}
+                Slashing is available on {deadline.toLocaleString()}
               </Text>
             </Box>
           </ModalFooter>

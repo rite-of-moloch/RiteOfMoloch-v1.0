@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Box, Heading, Spinner, Stack, Text } from "@raidguild/design-system";
 import BackButton from "components/BackButton";
 import NotConnected from "components/NotConnected";
@@ -9,7 +9,7 @@ import InitiatesAll from "components/InitiatesAll";
 import { unixToUTC } from "utils/general";
 import GridTemplate from "components/GridTemplate";
 import { useGraphClient } from "hooks/useGraphClient";
-import { InitiateDetailsFragment } from ".graphclient";
+import { useQuery } from "@tanstack/react-query";
 
 /**
  * @returns list of all addresses that have staked to a cohort
@@ -17,33 +17,29 @@ import { InitiateDetailsFragment } from ".graphclient";
 const Initiates = () => {
   const { isConnected } = useAccount();
   const graphClient = useGraphClient();
-  const [initiates, setInitiates] = useState<InitiateDetailsFragment[]>();
-  const [isLoading, setIsLoading] = useState(true);
 
   const localForm = useForm<FieldValues>();
   const { watch, getValues } = localForm;
   watch();
   const searchResult = getValues().searchResult;
 
-  useEffect(() => {
-    const getInitiates = async () => {
-      setIsLoading(true);
-      const query = await graphClient.Initiates();
-      setInitiates(query.initiates);
-      setIsLoading(false);
-    };
-    getInitiates();
-  }, []);
+  const { data: initiates, isLoading } = useQuery({
+    queryKey: ["initiates"],
+    queryFn: async () => graphClient.Initiates(),
+    enabled: isConnected,
+  });
 
-  const renderInitiates = initiates?.map((initiate) => {
-    const cohortID = initiate.id.split("-")[1];
+  const renderInitiates = initiates?.initiates.map((initiate) => {
     const joinedAt = Number(initiate.joinedAt);
+    console.log(initiate);
     return (
       <InitiatesAll
         address={initiate.address}
-        cohortId={cohortID}
+        cohortName={initiate.cohort?.name || "N/A"}
+        cohortAddress={initiate.cohort?.address || "0x0"}
         stake={initiate.stake}
         joinedAt={unixToUTC((joinedAt * 1000).toString())}
+        key={initiate.id}
       />
     );
   });
@@ -59,42 +55,35 @@ const Initiates = () => {
     }
   });
 
-  const isInitiates = renderInitiates && renderInitiates.length > 0;
-
   return (
     <>
-      {!isConnected && <NotConnected />}
-      {isConnected && (
-        <>
-          <Heading as="h1" textAlign="center" color="#FF3864">
-            Initiates
-          </Heading>
+      <Heading as="h1" textAlign="center" color="#FF3864">
+        Initiates
+      </Heading>
 
-          {isLoading ? (
-            <Box w="full" textAlign="center" p={2} fontFamily="texturina">
-              <Spinner size="xl" my="50" color="red" emptyColor="purple" />
-              <Text>Loading cohorts...</Text>
+      {isLoading ? (
+        <Box w="full" textAlign="center" p={2} fontFamily="texturina">
+          <Spinner size="xl" my="50" color="red" emptyColor="purple" />
+          <Text>Loading cohorts...</Text>
+        </Box>
+      ) : (
+        <>
+          <Stack spacing={6} w={["full", "full", "80%"]} mb={6}>
+            <Box w={["50%", "50%", "40%", "30%"]} alignSelf="end">
+              <SearchCohorts name="searchResult" localForm={localForm} />
             </Box>
-          ) : (
-            <>
-              <Stack spacing={6} w={["full", "full", "80%"]} mb={6}>
-                <Box w={["50%", "50%", "40%", "30%"]} alignSelf="end">
-                  <SearchCohorts name="searchResult" localForm={localForm} />
-                </Box>
-                <GridTemplate
-                  column1="Address"
-                  column2="Cohort"
-                  column3="Stake"
-                  column4="DateStaked"
-                  column5={" "}
-                  isHeading
-                />
-                {filteredInitiates}
-              </Stack>
-              <Box textAlign="center" w={["full", "full", "80%"]} py={2}></Box>
-              <BackButton path="/admin" />
-            </>
-          )}
+            <GridTemplate
+              column1="Address"
+              column2="Cohort"
+              column3="Stake"
+              column4="DateStaked"
+              column5={" "}
+              isHeading
+            />
+            {filteredInitiates}
+          </Stack>
+          <Box textAlign="center" w={["full", "full", "80%"]} py={2}></Box>
+          <BackButton path="/admin" />
         </>
       )}
     </>

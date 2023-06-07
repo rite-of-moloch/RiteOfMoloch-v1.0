@@ -16,7 +16,7 @@ const useCohortByAddress = (cohortAddress: string) => {
     const getCohort = async () => {
       setIsLoading(true);
       const cohort = await graphClient.CohortDataByAddress({
-        address: cohortAddress.toLowerCase(),
+        address: cohortAddress?.toLowerCase(),
       });
 
       if (cohort) {

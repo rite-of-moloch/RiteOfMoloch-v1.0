@@ -89,7 +89,6 @@ const Metrics = () => {
     }
   };
 
-  if (!isConnected) return <NotConnected />;
   return (
     <>
       <Box textAlign="center" w={["full", "full", "80%"]} py={2}>

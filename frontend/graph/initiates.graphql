@@ -25,6 +25,11 @@ fragment InitiateDetails on Initiate {
   joinedAt
   sacrificed
   stake
+  cohort {
+    id
+    name
+    address
+  }
   sacrifice {
     amount
     slasher

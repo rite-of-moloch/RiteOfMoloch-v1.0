@@ -1,3 +1,4 @@
+import { BigNumberish } from "ethers";
 import React, { createContext, useState, useContext, Dispatch } from "react";
 
 export const FormContext = createContext<{
@@ -25,8 +26,8 @@ export const FormContext = createContext<{
   setDaoTreasury: Dispatch<string>;
   membershipCriteria: string;
   setMembershipCriteria: Dispatch<string>;
-  assetAmount: number | undefined;
-  setAssetAmount: Dispatch<number | undefined>;
+  assetAmount: BigNumberish | undefined;
+  setAssetAmount: Dispatch<BigNumberish | undefined>;
   cohortSize: number | undefined;
   setCohortSize: Dispatch<number | undefined>;
   shareThreshold: number | undefined;
@@ -115,7 +116,9 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   const [sbtImage, setSbtImage] = useState("");
   const [symbolSBT, setSymbolSBT] = useState("");
   const [uriSBT, setUriSBT] = useState("");
-  const [assetAmount, setAssetAmount] = useState<number | undefined>(undefined);
+  const [assetAmount, setAssetAmount] = useState<BigNumberish | undefined>(
+    undefined
+  );
   const [cohortSize, setCohortSize] = useState<number | undefined>(undefined);
   const [shareThreshold, setShareThreshold] = useState<number | undefined>(
     undefined

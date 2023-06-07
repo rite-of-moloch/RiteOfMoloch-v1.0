@@ -91,7 +91,7 @@ const Stake: React.FC = (): any => {
           {isConnected && isStaked && (
             <RiteStaked
               riteBalance={riteBalance?.toString() || ""}
-              deadline={deadline}
+              deadline={deadline.toLocaleString()}
               contractAddress={cohort?.address || ""}
             />
           )}

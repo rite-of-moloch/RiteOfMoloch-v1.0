@@ -3,12 +3,11 @@ import { Box, Heading, Spinner, Stack, Text } from "@raidguild/design-system";
 import CohortDetail from "components/CohortDetail";
 import { getDeadline, unixToUTC } from "utils/general";
 import BackButton from "components/BackButton";
-import { useAccount } from "wagmi";
-import NotConnected from "components/NotConnected";
 import SearchCohorts from "components/SearchCohorts";
 import { FieldValues, useForm } from "react-hook-form";
 import GridTemplate from "components/GridTemplate";
 import useCohorts from "hooks/useCohorts";
+import { DateTime } from "luxon";
 
 interface ReviewOngoingCohortProps {
   children?: ReactNode;
@@ -19,7 +18,6 @@ interface ReviewOngoingCohortProps {
  *
  */
 const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
-  const { isConnected } = useAccount();
   const { cohorts, isLoading } = useCohorts();
   const localForm = useForm<FieldValues>();
   const { getValues, watch } = localForm;
@@ -27,12 +25,15 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
   const searchResult = getValues().searchResult;
 
   const renderCohorts = cohorts?.map((cohort) => {
+    const deadline = DateTime.fromSeconds(+cohort?.createdAt).plus({
+      seconds: cohort?.time,
+    });
     return (
       <CohortDetail
         address={cohort.address}
         stake={cohort.tokenAmount}
         stakingAsset={cohort.token}
-        stakingDate={unixToUTC(getDeadline(cohort.createdAt, cohort.time))}
+        stakingDate={deadline.toLocaleString()}
         key={cohort.id}
         memberOrAdmin={"admin"}
       />
@@ -52,8 +53,6 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
       return cohort;
     }
   });
-
-  const isCohorts = renderCohorts && renderCohorts.length > 0;
 
   return (
     <>

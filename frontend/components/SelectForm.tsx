@@ -1,4 +1,3 @@
-// import { Select } from "@raidguild/design-system";
 import { Select } from "chakra-react-select";
 import { Controller, UseFormReturn } from "react-hook-form";
 import { SelectOptions } from "utils/types/select";

@@ -71,7 +71,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   let decimalOf = useDecimalOf((cohort?.token as `0x${string}`) || "0x");
 
   if (!decimalOf) {
-    decimalOf = BigNumber.from("0") || "0";
+    decimalOf = "0";
   }
 
   let balanceOf = useBalanceOf((cohort?.token as `0x${string}`) || "0x", [
@@ -166,7 +166,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
             Your {tokenSymbol} allowance
           </Text>
           <Text color="white" fontSize=".8rem">
-            <span style={{ marginRight: "0.5em" }}>{+utils.formatUnits(allowance.toString(), "ether")}</span>
+            <span style={{ marginRight: "0.5em" }}>{+utils.formatUnits(allowance.toString(), decimalOf)}</span>
             <span>{tokenSymbol}</span>
           </Text>
         </HStack>

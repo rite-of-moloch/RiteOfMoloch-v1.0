@@ -54,6 +54,8 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
 
   watch();
 
+  console.log(values);
+
   const handleBack = (): void => {
     setDisplayPart2(true);
     setDisplayPart3(false);
