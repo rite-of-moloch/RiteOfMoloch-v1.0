@@ -1755,7 +1755,7 @@ export type InitiatesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type InitiatesQuery = { initiates: Array<(
     Pick<Initiate, 'id' | 'address' | 'benefactor' | 'claimed' | 'deadline' | 'joinedAt' | 'sacrificed' | 'stake'>
-    & { sacrifice?: Maybe<Pick<Sacrifice, 'amount' | 'slasher'>>, claim?: Maybe<Pick<Claim, 'amount'>> }
+    & { cohort: Pick<Cohort, 'id' | 'name' | 'address'>, sacrifice?: Maybe<Pick<Sacrifice, 'amount' | 'slasher'>>, claim?: Maybe<Pick<Claim, 'amount'>> }
   )> };
 
 export type InitiatesByCohortIdQueryVariables = Exact<{
@@ -1765,7 +1765,7 @@ export type InitiatesByCohortIdQueryVariables = Exact<{
 
 export type InitiatesByCohortIdQuery = { initiates: Array<(
     Pick<Initiate, 'id' | 'address' | 'benefactor' | 'claimed' | 'deadline' | 'joinedAt' | 'sacrificed' | 'stake'>
-    & { sacrifice?: Maybe<Pick<Sacrifice, 'amount' | 'slasher'>>, claim?: Maybe<Pick<Claim, 'amount'>> }
+    & { cohort: Pick<Cohort, 'id' | 'name' | 'address'>, sacrifice?: Maybe<Pick<Sacrifice, 'amount' | 'slasher'>>, claim?: Maybe<Pick<Claim, 'amount'>> }
   )> };
 
 export type InitiatesByCohortAddressQueryVariables = Exact<{
@@ -1775,12 +1775,12 @@ export type InitiatesByCohortAddressQueryVariables = Exact<{
 
 export type InitiatesByCohortAddressQuery = { initiates: Array<(
     Pick<Initiate, 'id' | 'address' | 'benefactor' | 'claimed' | 'deadline' | 'joinedAt' | 'sacrificed' | 'stake'>
-    & { sacrifice?: Maybe<Pick<Sacrifice, 'amount' | 'slasher'>>, claim?: Maybe<Pick<Claim, 'amount'>> }
+    & { cohort: Pick<Cohort, 'id' | 'name' | 'address'>, sacrifice?: Maybe<Pick<Sacrifice, 'amount' | 'slasher'>>, claim?: Maybe<Pick<Claim, 'amount'>> }
   )> };
 
 export type InitiateDetailsFragment = (
   Pick<Initiate, 'id' | 'address' | 'benefactor' | 'claimed' | 'deadline' | 'joinedAt' | 'sacrificed' | 'stake'>
-  & { sacrifice?: Maybe<Pick<Sacrifice, 'amount' | 'slasher'>>, claim?: Maybe<Pick<Claim, 'amount'>> }
+  & { cohort: Pick<Cohort, 'id' | 'name' | 'address'>, sacrifice?: Maybe<Pick<Sacrifice, 'amount' | 'slasher'>>, claim?: Maybe<Pick<Claim, 'amount'>> }
 );
 
 export type MetricsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1833,6 +1833,11 @@ export const InitiateDetailsFragmentDoc = gql`
   joinedAt
   sacrificed
   stake
+  cohort {
+    id
+    name
+    address
+  }
   sacrifice {
     amount
     slasher

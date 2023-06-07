@@ -20,8 +20,6 @@ const CohortMetricsOverall: React.FC<CohortMetricsOverallProps> = ({
     <span style={{ color: "white", marginLeft: "0.25rem" }}>{text}</span>
   );
 
-  const claimRate = dataText(metrics?.slashedMembers);
-
   return (
     <Box border="red solid 1px" rounded="lg" bg="gradientSBTPrev" p={6}>
       {/* TODO: SETUP OVERALL COHORT METRICS */}

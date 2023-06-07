@@ -79,10 +79,10 @@ export const approveTooltip = (
  * @returns unix strring
  */
 export const getDeadline = (
-  createdAt: string | undefined,
-  time: string | undefined
-): string => {
-  let deadline = (Number(createdAt) * 1000 + Number(time) * 1000).toString();
+  createdAt: string,
+  time: string
+): number => {
+  let deadline = (Number(createdAt) * 1000 + Number(time) * 1000);
 
   return deadline;
 };

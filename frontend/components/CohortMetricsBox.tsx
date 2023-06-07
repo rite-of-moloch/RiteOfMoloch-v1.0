@@ -19,7 +19,6 @@ import { useNetwork } from "wagmi";
 import BlockExplorerMetricLink from "./BlockExplorerMetricLink";
 import CohortMetricsOverall from "./CohortMetricsOverall";
 import CohortAdminModal from "./adminModal/cohortAdminModal";
-import useCohort from "hooks/useCohortByAddress";
 import useCohortByID from "hooks/useCohortByID";
 
 interface CohortMetricsBoxProps {
