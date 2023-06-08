@@ -16,10 +16,10 @@ import { AiOutlineClose } from "react-icons/ai";
 import { getDeadline, unixToUTC } from "utils/general";
 import { useNetwork } from "wagmi";
 
-import BlockExplorerMetricLink from "./BlockExplorerMetricLink";
+import BlockExplorerMetricLink from "../blockExplorer/BlockExplorerMetricLink";
 import CohortMetricsOverall from "./CohortMetricsOverall";
-import CohortAdminModal from "./adminModal/cohortAdminModal";
-import useCohortByID from "hooks/useCohortByID";
+import CohortAdminModal from "../adminModal/cohortAdminModal";
+import {useCohortByID} from "hooks/useCohort";
 import { DateTime } from "luxon";
 
 interface CohortMetricsBoxProps {

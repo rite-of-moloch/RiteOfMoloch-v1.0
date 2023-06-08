@@ -1,26 +1,23 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { Box, Heading, HStack, Spinner, Stack } from "@raidguild/design-system";
 import BackButton from "components/BackButton";
-import CohortDetail from "components/CohortDetail";
-import NotConnected from "components/NotConnected";
-import SearchCohorts from "components/SearchCohorts";
+import CohortDetail from "components/cohort/CohortDetail";
+import SearchCohorts from "components/cohort/SearchCohorts";
 import { FieldValues, useForm } from "react-hook-form";
-import { getDeadline, unixToUTC } from "utils/general";
+// import { getDeadline, unixToUTC } from "utils/general";
 import { useAccount } from "wagmi";
-import useRiteBalanceOf from "hooks/useRiteBalanceOf";
 import GridTemplate from "components/GridTemplate";
-import useCohorts from "hooks/useCohorts";
+import { useCohorts } from "hooks/useCohort";
 import { DateTime } from "luxon";
 
 /**
  * @remarks Non-admin page. Page for prospective and cohort members
  */
 const JoinCohorts: React.FC = () => {
-  const { isConnected, address } = useAccount();
   const { cohorts, isLoading } = useCohorts();
 
   const localForm = useForm<FieldValues>();
-  const { getValues, watch } = localForm;
+  const { watch } = localForm;
   watch();
 
   const renderCohorts = cohorts?.map((cohort) => {
@@ -46,7 +43,6 @@ const JoinCohorts: React.FC = () => {
         <Heading as="h1" textAlign="center" color="#FF3864">
           Active Cohorts
         </Heading>
-
         <HStack>
           <Box mr={2} w="50%" pt={4}>
             {/* <Box display="">
@@ -78,13 +74,11 @@ const JoinCohorts: React.FC = () => {
               </Heading>
             </Box>
           ))}
-
         {isLoading && (
           <Box w="full" textAlign="center" p={2} fontFamily="texturina">
             <Spinner size="xl" my="50" color="red" emptyColor="purple" />
           </Box>
         )}
-
         {renderCohorts}
       </Stack>
       <BackButton path="/" />

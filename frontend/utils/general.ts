@@ -66,7 +66,6 @@ export const approveTooltip = (
   } else if (utils.formatEther(allowance) < utils.formatEther(minimumStake)) {
     label = `Approve contract to spend your ${tokenSymbol}`;
   } else {
-    // label = `Approve contract to use ${tokenSymbol}`;
     return null;
   }
   return label;

@@ -12,7 +12,7 @@ import {
 import { Modal } from "@chakra-ui/modal";
 import useReadContract from "hooks/useReadContract";
 import EditCohortAdmins from "./EditCohortAdmins";
-import useCohort from "hooks/useCohortByAddress";
+import {useCohortByAddress} from "hooks/useCohort";
 
 interface CohortAdminModalProps {
   address: string | undefined;
@@ -29,7 +29,7 @@ const CohortAdminModal: React.FC<CohortAdminModalProps> = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { cohort } = useCohort(address || "");
+  const { cohort } = useCohortByAddress(address || "");
 
   const useAdmins = () => {
     const { data: data1 } = useReadContract(

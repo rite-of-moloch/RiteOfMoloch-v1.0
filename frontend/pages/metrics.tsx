@@ -8,20 +8,18 @@ import {
   Text,
 } from "@raidguild/design-system";
 import BackButton from "components/BackButton";
-import NotConnected from "components/NotConnected";
 import SelectForm from "components/SelectForm";
 import { FieldValues, useForm } from "react-hook-form";
 import { SelectOptions } from "utils/types/select";
 import { useAccount } from "wagmi";
-import CohortMetricsBox from "components/CohortMetricsBox";
-import useCohorts from "hooks/useCohorts";
+import CohortMetricsBox from "components/cohort/CohortMetricsBox";
+import { useCohorts } from "hooks/useCohort";
 
 /**
  * @remarks use can select up to 3 cohorts. Metrics about the cohort will be rendered onto this page. Data gets pulled from subgraph query
  * @returns
  */
 const Metrics = () => {
-  const { isConnected } = useAccount();
   const localForm = useForm<FieldValues>();
   const { watch, getValues, setValue } = localForm;
   watch();
@@ -123,7 +121,6 @@ const Metrics = () => {
                 }
               </GridItem>
             )}
-            {/* TODO: SETUP CohortMetricsOverall */}
             {cohortId3 && (
               <GridItem
                 ml={[0, "0rem", "1rem"]}

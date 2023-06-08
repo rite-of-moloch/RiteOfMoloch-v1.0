@@ -1,25 +1,21 @@
 import React from "react";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
-import { BigNumber, utils, ethers, BigNumberish } from "ethers";
+import { utils, ethers } from "ethers";
 import {
   Box,
   Button,
-  Flex,
   FormControl,
   Grid,
   GridItem,
   Heading,
   Input,
-  InputGroup,
-  InputRightAddon,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
   SimpleGrid,
-  Switch,
   Tooltip,
 } from "@raidguild/design-system";
 import { useFormContext } from "context/FormContext";

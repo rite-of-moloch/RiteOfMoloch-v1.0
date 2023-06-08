@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import { Flex, Image, Text, Box } from "@raidguild/design-system";
 import Link from "next/link";
-import ConnectBtn from "./ConnectWallet";
+import ConnectBtn from "../wallet/ConnectWallet";
 import { useAccount } from "wagmi";
 
 interface HeaderProps {
