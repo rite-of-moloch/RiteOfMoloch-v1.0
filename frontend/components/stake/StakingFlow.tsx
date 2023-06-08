@@ -148,7 +148,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
         <HStack mb="1rem" justifyContent="space-between" w="full">
           <Text color="red">Required Stake</Text>
           <Text color="white">
-            {minimumStake} {tokenSymbol}
+            {+utils.formatUnits(minimumStake.toString(), decimalOf)} {tokenSymbol}
           </Text>
         </HStack>
         <HStack justifyContent="space-between" w="full">

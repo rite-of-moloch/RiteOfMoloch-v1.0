@@ -14,12 +14,10 @@ import {
 } from "@raidguild/design-system";
 import { Modal } from "@chakra-ui/modal";
 import { useNetwork } from "wagmi";
-import { getDeadline, unixToUTC } from "utils/general";
 import BlockExplorerLink from "../blockExplorer/BlockExplorerLink";
 import useSacrifice from "hooks/useSacrifice";
 import GridTemplate from "../GridTemplate";
 import {useCohortByAddress} from "hooks/useCohort";
-import { DateTime } from "luxon";
 
 interface CohortMemberModalProps {
   address: string;
@@ -39,13 +37,16 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
 
   const { cohort } = useCohortByAddress(cohortAddress);
 
-  const deadline = DateTime.fromSeconds(+cohort?.createdAt).plus({
-    seconds: cohort?.time,
-  });
   const { writeSacrifice, isError } = useSacrifice(address?.toString());
 
+  const deadline = Number(cohort?.createdAt) + Number(cohort?.time);
+
+  console.log(cohort);
+
   const isPassedStakingDate = () => {
-    return +deadline < +new Date() ? true : false;
+    const nowUnix = Math.round(new Date().getTime() / 1000);
+    console.log(`${nowUnix}\n${deadline}`)
+    return deadline < nowUnix ? true : false;
   };
 
   // TODO: create cohort with msg.sender as admin and test writeSacrifice function
