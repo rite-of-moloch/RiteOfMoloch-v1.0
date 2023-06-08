@@ -26,6 +26,36 @@ const useHasRole = (contractAddress: string, args: string) => {
   return data as Boolean;
 };
 
+const useAdmin1 = (contractAddress: string) => {
+    const { data, error, isError } = useReadContract(
+    contractAddress as `0x${string}`,
+    "riteOfMolochAddress",
+    "admin1",
+  );
+
+    if (isError) {
+    console.log("Error: ", error);
+    return null;
+  }
+
+  return data as string;
+}
+
+const useAdmin2 = (contractAddress: string) => {
+    const { data, error, isError } = useReadContract(
+    contractAddress as `0x${string}`,
+    "riteOfMolochAddress",
+    "admin2",
+  );
+
+    if (isError) {
+    console.log("Error: ", error);
+    return null;
+  }
+
+  return data as string;
+}
+
 const useMintHatProp = (contractAddress: string, args: string) => {
   const {
     write: writeMintHatProp,
@@ -80,4 +110,4 @@ const useTransferHatProp = (contractAddress: string, args: [string, string]) => 
   };
 };
 
-export {useHasRole, useMintHatProp, useTransferHatProp};
+export {useHasRole, useMintHatProp, useTransferHatProp, useAdmin1, useAdmin2};

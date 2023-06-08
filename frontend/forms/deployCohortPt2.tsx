@@ -1,26 +1,22 @@
 import React from "react";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
-import { BigNumber, utils, ethers, BigNumberish } from "ethers";
+import { utils } from "ethers";
 import {
   Box,
   Button,
-  Flex,
   FormControl,
   Grid,
   GridItem,
-  Heading,
   Input,
-  InputGroup,
-  InputRightAddon,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
   SimpleGrid,
-  Switch,
   Tooltip,
+  Text,
 } from "@raidguild/design-system";
 import { useFormContext } from "context/FormContext";
 import FormErrorText from "components/FormErrorText";
@@ -76,24 +72,26 @@ const DeployCohortPt2 = () => {
   };
 
   let decimalOf = useDecimalOf(values.stakingAsset as `0x${string}`);
+    if (!decimalOf) {
+    decimalOf = "0";
+  }
+
   let symbol = useSymbol((values.stakingAsset as `0x${string}`) || "0x0");
 
   const handleNext = async (): Promise<void> => {
     await trigger();
 
     if (isValid) {
-      if (!decimalOf) {
+      if (decimalOf == "0") {
         console.log("Error: decimalOf is undefined");
         return;
       }
-      setAssetAmount(
-        ethers.utils.parseUnits(values.assetAmount, decimalOf).toString()
-      );
       setCohortSize(values.cohortSize);
       setShareThreshold(values.shareThreshold);
       setOnboardingPeriod(values.onboardingPeriod);
       setStakeDuration(values.stakeDuration);
       setStakingAsset(values.stakingAsset);
+      setAssetAmount(values.assetAmount);
       setDaoTreasury(values.daoTreasury);
       setDisplayPart2(false);
       setDisplayPart3(true);
@@ -219,7 +217,7 @@ const DeployCohortPt2 = () => {
                           "amount symbol empty"
                   `}
         >
-          <GridItem gridArea={"address"}>
+          <GridItem gridArea={"address"} pt={"1rem"}>
             <Input
               label="Staking Asset Address"
               placeholder="enter token address"
@@ -243,46 +241,46 @@ const DeployCohortPt2 = () => {
               render={({ message }) => <FormErrorText message={message} />}
             />
           </GridItem>
-
-          <GridItem gridArea="amount">
-            <Controller
-              name={`assetAmount`}
-              control={control}
-              render={({ field: { ref, value, onChange, ...restField } }) => (
-                <NumberInput
-                  maxWidth={"50%"}
-                  localForm={localForm}
-                  step={0.05}
-                  min={0}
-                  max={Infinity}
-                  variant={"none"}
-                  placeholder="Required stake"
-                  onChange={(e) => {
-                    console.log("LOGGING E: ", e);
-                    onChange(e);
-                  }}
-                  value={value}
-                  {...restField}
-                >
-                  <NumberInputField
-                    ref={ref}
-                    name={restField.name}
-                    borderRightRadius={0}
-                  />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>
-              )}
+        </Grid>
+        
+        <SimpleGrid columns={2} spacingX={4} spacingY={3}>
+          <Box>
+          <GridItem gridArea={"amount"} pt={"1rem"}>
+            <Input
+              label="Staking Amount"
+              placeholder="enter staking amount in wei"
+              autoComplete="off"
+              localForm={localForm}
+              {...register("assetAmount", {
+                required: {
+                  value: true,
+                  message: "Value required",
+                }
+              })}
             />
           </GridItem>
-          <GridItem gridArea="symbol">
-            <Heading>{symbol}</Heading>
-          </GridItem>
-        </Grid>
+          </Box>
+          <Box>
 
-        <Box>
+          <GridItem gridArea="symbol" pt={"1rem"}>
+            {symbol && decimalOf && (
+            <div>
+              <Text>{`${symbol} has ${decimalOf} decimal places`}</Text>
+              <Text>---</Text>
+              <Text fontWeight={900}>{`${+utils.formatUnits(values?.assetAmount || "0", decimalOf)} ${symbol}`}</Text>
+            </div>
+            ) || (
+              <div>
+                <Text>{`${symbol} token address`}</Text>
+                <Text>---</Text>
+                <Text>Please enter valid ERC20 address</Text>
+              </div>
+            )}
+          </GridItem>
+          </Box>
+        </SimpleGrid>
+
+        <Box pt={"1rem"}>
           <Input
             label="DAO treasury address"
             placeholder="Slashed stake will be sent here..."

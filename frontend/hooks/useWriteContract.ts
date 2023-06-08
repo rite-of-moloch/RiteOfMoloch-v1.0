@@ -71,11 +71,6 @@ const useWriteContract = (
     },
     onSuccess(data) {
       console.log("success", data);
-      // toast({
-      //   status: "success",
-      //   title: `Transaction success! ${data?.hash}`,
-      //   size: "xs",
-      // });
     },
     onError(err) {
       console.log(err);
@@ -85,8 +80,6 @@ const useWriteContract = (
       });
     },
   });
-
-  // console.log(txResponse);
 
   return {
     write,

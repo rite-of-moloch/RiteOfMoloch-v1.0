@@ -656,6 +656,12 @@ enum Initiate_orderBy {
   sacrifice__slasher
 }
 
+"""
+8 bytes signed integer
+
+"""
+scalar Int8
+
 type Metric {
   id: ID!
   totalCohorts: BigInt!

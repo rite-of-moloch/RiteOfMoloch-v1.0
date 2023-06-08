@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { FormProvider } from "context/FormContext";
 import { theme } from "../theme";
-import { Layout } from "../components/Layout";
+import { Layout } from "../components/layout/Layout";
 import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
 import { WagmiConfig } from "wagmi";
 import { wagmiClient, chains } from "../utils/wagmiConfig";

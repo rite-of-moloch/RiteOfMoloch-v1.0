@@ -7,7 +7,7 @@ import DeployCohortPt2 from "../forms/deployCohortPt2";
 import DeployCohortPt3 from "../forms/deployCohortPt3";
 import PreviewNewCohort from "forms/previewNewCohort";
 import { useFormContext } from "context/FormContext";
-import NotConnected from "components/NotConnected";
+import NotConnected from "components/wallet/NotConnected";
 
 const DeployCohort = () => {
   const { isConnected } = useAccount();

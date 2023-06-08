@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import { Box, Button, HStack } from "@raidguild/design-system";
-import { useAccount } from "wagmi";
 import Link from "next/link";
 
 const Home = () => {

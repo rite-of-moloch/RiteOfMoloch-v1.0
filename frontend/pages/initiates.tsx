@@ -1,9 +1,8 @@
 import React from "react";
 import { Box, Heading, Spinner, Stack, Text } from "@raidguild/design-system";
 import BackButton from "components/BackButton";
-import NotConnected from "components/NotConnected";
 import { useAccount } from "wagmi";
-import SearchCohorts from "components/SearchCohorts";
+import SearchCohorts from "components/cohort/SearchCohorts";
 import { FieldValues, useForm } from "react-hook-form";
 import InitiatesAll from "components/InitiatesAll";
 import { unixToUTC } from "utils/general";

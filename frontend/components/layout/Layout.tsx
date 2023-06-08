@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { Flex, Box } from "@chakra-ui/react";
-import { Meta } from "./Meta";
+import { Meta } from "../Meta";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 

@@ -1,12 +1,12 @@
 import React, { FC, ReactNode } from "react";
 import { Box, Heading, Spinner, Stack, Text } from "@raidguild/design-system";
-import CohortDetail from "components/CohortDetail";
-import { getDeadline, unixToUTC } from "utils/general";
+import CohortDetail from "components/cohort/CohortDetail";
+// import { getDeadline, unixToUTC } from "utils/general";
 import BackButton from "components/BackButton";
-import SearchCohorts from "components/SearchCohorts";
+import SearchCohorts from "components/cohort/SearchCohorts";
 import { FieldValues, useForm } from "react-hook-form";
 import GridTemplate from "components/GridTemplate";
-import useCohorts from "hooks/useCohorts";
+import { useCohorts } from "hooks/useCohort";
 import { DateTime } from "luxon";
 
 interface ReviewOngoingCohortProps {

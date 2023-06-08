@@ -17,13 +17,11 @@ import {
 import { useAccount } from "wagmi";
 import { BigNumber, utils } from "ethers";
 import { approveTooltip, canStake, stakeTooltip } from "utils/general";
-import {useBalanceOf, useDecimalOf} from "hooks/useERC20";
-import useApprove from "hooks/useApprove";
+import { useApprove, useBalanceOf, useDecimalOf, useGetAllowance } from "hooks/useERC20";
 import useJoinInitiation from "hooks/useJoinInitiation";
-import useGetAllowance from "hooks/useGetAllowance";
 import { FiAlertTriangle } from "react-icons/fi";
 import useTokenSymbol from "hooks/useTokenSymbol";
-import useCohort from "hooks/useCohortByAddress";
+import { useCohortByAddress } from "hooks/useCohort";
 
 interface StakingFlowProps {
   contractAddress: string;
@@ -43,7 +41,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     setWillSponsor(!willSponsor);
   };
 
-  const { cohort } = useCohort(contractAddress);
+  const { cohort } = useCohortByAddress(contractAddress);
 
   const localForm = useForm<FieldValues>();
 

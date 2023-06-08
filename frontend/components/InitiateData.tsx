@@ -1,8 +1,8 @@
 import { Box, Tooltip } from "@raidguild/design-system";
 import React from "react";
 import { useNetwork } from "wagmi";
-import BlockExplorerLink from "./BlockExplorerLink";
-import CohortMemberModal from "./cohortMemberModal";
+import BlockExplorerLink from "./blockExplorer/BlockExplorerLink";
+import CohortMemberModal from "./cohort/CohortMemberModal";
 import GridTemplate from "./GridTemplate";
 
 export type MemberData = {

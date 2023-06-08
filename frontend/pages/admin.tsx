@@ -1,9 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { ReactNode } from "react";
 import { Button, Grid, GridItem } from "@raidguild/design-system";
-import { useAccount } from "wagmi";
 import Link from "next/link";
-import NotConnected from "components/NotConnected";
 import BackButton from "components/BackButton";
 
 interface AdminProps {

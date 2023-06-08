@@ -8,16 +8,15 @@ import {
   Text,
 } from "@raidguild/design-system";
 import { useRouter } from "next/router";
-import { useAccount, useNetwork } from "wagmi";
+import { useNetwork } from "wagmi";
 import InitiateData from "components/InitiateData";
 import BackButton from "components/BackButton";
-import NotConnected from "components/NotConnected";
-import NobodyStaked from "components/NobodyStaked";
+import NobodyStaked from "components/stake/NobodyStaked";
 import CohortAdminModal from "components/adminModal/cohortAdminModal";
 import GridTemplate from "components/GridTemplate";
 import useInitiates from "hooks/useInitiates";
 import { InitiateDetailsFragment } from ".graphclient";
-import useCohortByAddress from "hooks/useCohortByAddress";
+import { useCohortByAddress } from "hooks/useCohort";
 
 interface CohortDetailProps {
   children: ReactNode;
@@ -65,32 +64,36 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
       spacing={5}
       my={!isInitiates ? 8 : 0}
     >
-      (isLoadingCohort ? (
+      {isLoadingCohort ? (
       <Box w="full" textAlign="center" p={2} fontFamily="texturina">
         <Spinner size="xl" my="50" color="red" emptyColor="purple" />
         <Text>Loading cohorts...</Text>
       </Box>
       ) : (
-      <Heading as="h2" textAlign="center" color="red">
-        {cohortName?.toString().toUpperCase()}
-      </Heading>
-      <Stack
-        direction={["column", "column", "row"]}
-        textAlign="center"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Link
-          fontSize={["sm", "md"]}
-          href={`${chain?.blockExplorers?.default.url}/address/${cohortAddress}`}
-          isExternal
+      <div>
+        <Heading as="h2" textAlign="center" color="red">
+          {cohortName?.toString().toUpperCase()}
+        </Heading>
+        <Stack
+          direction={["column", "column", "row"]}
+          textAlign="center"
+          justifyContent="center"
+          alignItems="center"
         >
-          {cohortAddress}
-        </Link>
-        <Box>
-          <CohortAdminModal address={cohortAddress?.toString()} />
-        </Box>
-      </Stack>
+          <Link
+            fontSize={["sm", "md"]}
+            href={`${chain?.blockExplorers?.default.url}/address/${cohortAddress}`}
+            isExternal
+          >
+            {cohortAddress}
+          </Link>
+          <Box>
+            <CohortAdminModal address={cohortAddress?.toString()} />
+          </Box>
+        </Stack>
+      </div>
+      )}
+
       {isInitiates && (
         <GridTemplate
           isHeading
@@ -100,14 +103,16 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
           column4="Manage"
         />
       )}
+
       {initiates?.length === 0 && isLoadingInitiates && (
         <Box w="full" textAlign="center" p={2} fontFamily="texturina">
           <Spinner size="xl" my="50" color="red" emptyColor="purple" />
           <Text>Loading initiates...</Text>
         </Box>
       )}
+
       {isInitiates ? renderInitiateList : <NobodyStaked />}
-      )
+
       <BackButton path="/cohorts" />
     </Stack>
   );

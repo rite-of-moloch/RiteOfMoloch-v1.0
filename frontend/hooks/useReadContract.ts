@@ -2,7 +2,6 @@ import { useContractRead } from "wagmi";
 import useAbi from "./useAbi";
 
 /**
- *
  * @remarks prepare wagmi hook read contract instance
  *
  * @param contractAddress - pass in contract name

@@ -15,10 +15,10 @@ import {
 import { Modal } from "@chakra-ui/modal";
 import { useNetwork } from "wagmi";
 import { getDeadline, unixToUTC } from "utils/general";
-import BlockExplorerLink from "./BlockExplorerLink";
+import BlockExplorerLink from "../blockExplorer/BlockExplorerLink";
 import useSacrifice from "hooks/useSacrifice";
-import GridTemplate from "./GridTemplate";
-import useCohort from "hooks/useCohortByAddress";
+import GridTemplate from "../GridTemplate";
+import {useCohortByAddress} from "hooks/useCohort";
 import { DateTime } from "luxon";
 
 interface CohortMemberModalProps {
@@ -37,7 +37,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { chain } = useNetwork();
 
-  const { cohort } = useCohort(cohortAddress);
+  const { cohort } = useCohortByAddress(cohortAddress);
 
   const deadline = DateTime.fromSeconds(+cohort?.createdAt).plus({
     seconds: cohort?.time,

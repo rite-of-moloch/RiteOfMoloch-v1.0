@@ -9,19 +9,15 @@ import {
   Tooltip,
 } from "@raidguild/design-system";
 import { useAccount, useNetwork } from "wagmi";
-// import { getHasRite } from "utils/general";
 import { useRouter } from "next/router";
 import BackButton from "components/BackButton";
-import NotConnected from "components/NotConnected";
 import useTokenSymbol from "hooks/useTokenSymbol";
-// import useRiteBalanceOf from "hooks/useRiteBalanceOf";
 import useIsMember from "hooks/useIsMember";
 import useClaimStake from "hooks/useClaimStake";
-import BlockExplorerLink from "components/BlockExplorerLink";
-// import useCohortName from "hooks/useCohortByAddress";
-import { getDeadline, unixToUTC } from "utils/general";
+import BlockExplorerLink from "components/blockExplorer/BlockExplorerLink";
+// import { getDeadline, unixToUTC } from "utils/general";
 import GridTemplate from "components/GridTemplate";
-import useCohort from "hooks/useCohortByAddress";
+import { useCohortByAddress } from "hooks/useCohort";
 import { DateTime } from "luxon";
 
 /**
@@ -37,7 +33,7 @@ const CohortPage = () => {
   const router = useRouter();
   const { address: cohortAddress } = router.query;
 
-  const { cohort, isLoading } = useCohort((cohortAddress as string) || "");
+  const { cohort } = useCohortByAddress((cohortAddress as string) || "");
 
   const tokenSymbol = useTokenSymbol(cohort?.token);
   const deadline = DateTime.fromSeconds(+cohort?.createdAt).plus({
@@ -49,11 +45,6 @@ const CohortPage = () => {
     else return "";
   }
 
-  // const riteBalance = useRiteBalanceOf(cohortAddress?.toString() || "", [
-  //   userAddress(),
-  // ]);
-
-  // const isStaked = getHasRite(riteBalance);
   const isMember = useIsMember(cohort?.address, [userAddress()]);
 
   console.log(isMember);
