@@ -215,7 +215,7 @@ const DeployCohortPt2 = () => {
                           "amount symbol empty"
                   `}
         >
-          <GridItem gridArea={"address"}>
+          <GridItem gridArea={"address"} pt={"1rem"}>
             <Input
               label="Staking Asset Address"
               placeholder="enter token address"
@@ -278,7 +278,7 @@ const DeployCohortPt2 = () => {
           </GridItem>
         </Grid>
 
-        <Box>
+        <Box pt={"1rem"}>
           <Input
             label="DAO treasury address"
             placeholder="Slashed stake will be sent here..."

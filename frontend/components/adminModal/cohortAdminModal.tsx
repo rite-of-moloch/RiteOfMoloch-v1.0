@@ -13,6 +13,7 @@ import { Modal } from "@chakra-ui/modal";
 import useReadContract from "hooks/useReadContract";
 import EditCohortAdmins from "./EditCohortAdmins";
 import {useCohortByAddress} from "hooks/useCohort";
+import { useAdmin1, useAdmin2 } from "hooks/useHats";
 
 interface CohortAdminModalProps {
   address: string | undefined;
@@ -31,25 +32,36 @@ const CohortAdminModal: React.FC<CohortAdminModalProps> = ({
 
   const { cohort } = useCohortByAddress(address || "");
 
-  const useAdmins = () => {
-    const { data: data1 } = useReadContract(
-      (cohort?.id as `0x${string}`) || "",
-      "riteOfMolochAddress",
-      "admin1"
-    );
-    const { data: data2 } = useReadContract(
-      (cohort?.id as `0x${string}`) || "",
-      "riteOfMolochAddress",
-      "admin2"
-    );
+  console.log(cohort);
+
+  // const useAdmins = () => {
+  //   const { data: data1 } = useReadContract(
+  //     (cohort?.id as `0x${string}`) || "",
+  //     "riteOfMolochAddress",
+  //     "admin1"
+  //   );
+  //   const { data: data2 } = useReadContract(
+  //     (cohort?.id as `0x${string}`) || "",
+  //     "riteOfMolochAddress",
+  //     "admin2"
+  //   );
     // force typing of admin1 and admin2 from "unknown" to string
-    const admin1 = data1 ? data1.toString() : "";
-    const admin2 = data2 ? data2.toString() : "";
+    // const admin1 = data1 ? data1.toString() : "";
+    // const admin2 = data2 ? data2.toString() : "";
 
-    return { admin1, admin2 };
-  };
+  //   return { admin1, admin2 };
+  // };
 
-  const { admin1, admin2 } = useAdmins();
+  let admin1 = useAdmin1(cohort?.address);
+  if (!admin1) {
+    admin1 = "";
+  }
+
+  let admin2 = useAdmin1(cohort?.address);
+  if (!admin2) {
+    admin2 = "";
+  }
+
 
   return (
     <>
