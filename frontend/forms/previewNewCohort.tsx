@@ -16,7 +16,7 @@ import CohortConfirmation from "components/cohort/CohortConfirmationModal";
 import BlockExplorerLink from "components/blockExplorer/BlockExplorerLink";
 import { zeroAddress } from "utils/constants";
 import { useDecimalOf, useSymbol } from "hooks/useERC20";
-import { ethers } from "ethers";
+import { utils, BigNumber } from "ethers";
 
 /**
  * @remarks this component renders a preview of all 3 parts of form data. It also builds function handleDeployCohort, which submits data to riteOfMolochFactory contract and creates a new cohort
@@ -68,9 +68,6 @@ const PreviewNewCohort = () => {
     setDisplayPreviewNewCohort(false);
   };
 
-  let decimalOf = useDecimalOf(stakingAsset as `0x${string}`);
-  let symbol = useSymbol(stakingAsset as `0x${string}`);
-
   const initData: InitDataDeployCohort = [
     membershipCriteria,
     stakingAsset,
@@ -80,7 +77,7 @@ const PreviewNewCohort = () => {
     Number(cohortSize),
     Number(onboardingPeriod) * 60 * 60 * 24,
     Number(shareThreshold),
-    Number(assetAmount),
+    BigNumber.from(assetAmount),
     Number(stakeDuration) * 60 * 60 * 24,
     tophatID ? tophatID : Number(0),
     nameCohort,
@@ -90,7 +87,7 @@ const PreviewNewCohort = () => {
     Boolean(shamanOn),
   ];
 
-  // console.log("initData", initData);
+  console.log("initData", initData);
   const {
     createCohort,
     prepareErrorCreateCohort,
@@ -101,14 +98,18 @@ const PreviewNewCohort = () => {
   console.log(prepareErrorCreateCohort);
 
   const handleDeployCohort = (): void => {
-    // console.log(createCohort);
+    console.log(createCohort);
     createCohort && createCohort();
   };
 
-  const amountString =
-    assetAmount && decimalOf
-      ? `${ethers.utils.formatUnits(assetAmount || "0", decimalOf)} ${symbol}`
-      : "0 ???";
+  let decimalOf = useDecimalOf(stakingAsset as `0x${string}`);
+    if (!decimalOf) {
+    decimalOf = "0";
+  }
+  let symbol = useSymbol(stakingAsset as `0x${string}`);
+
+  const amountString = assetAmount ? `${+utils.formatUnits(assetAmount || "0", decimalOf)} ${symbol}` : "0";
+
 
   return (
     <>
