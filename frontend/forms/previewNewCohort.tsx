@@ -15,7 +15,7 @@ import { InitDataDeployCohort } from "utils/types/initDataDeployCohort";
 import CohortConfirmation from "components/cohort/CohortConfirmationModal";
 import BlockExplorerLink from "components/blockExplorer/BlockExplorerLink";
 import { zeroAddress } from "utils/constants";
-import { useDecimalOf, useSymbol } from "hooks/useERC20";
+import { useDecimalOf, useTokenSymbol } from "hooks/useERC20";
 import { utils, BigNumber } from "ethers";
 
 /**
@@ -106,7 +106,7 @@ const PreviewNewCohort = () => {
     if (!decimalOf) {
     decimalOf = "0";
   }
-  let symbol = useSymbol(stakingAsset as `0x${string}`);
+  let symbol = useTokenSymbol(stakingAsset);
 
   const amountString = assetAmount ? `${+utils.formatUnits(assetAmount || "0", decimalOf)} ${symbol}` : "0";
 

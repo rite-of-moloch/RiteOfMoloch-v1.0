@@ -20,7 +20,7 @@ import {
 } from "@raidguild/design-system";
 import { useFormContext } from "context/FormContext";
 import FormErrorText from "components/FormErrorText";
-import { useDecimalOf, useSymbol } from "hooks/useERC20";
+import { useDecimalOf, useTokenSymbol } from "hooks/useERC20";
 
 const DeployCohortPt2 = () => {
   const {
@@ -76,7 +76,7 @@ const DeployCohortPt2 = () => {
     decimalOf = "0";
   }
 
-  let symbol = useSymbol((values.stakingAsset as `0x${string}`) || "0x0");
+  let symbol = useTokenSymbol((values.stakingAsset) || "0x0");
 
   const handleNext = async (): Promise<void> => {
     await trigger();

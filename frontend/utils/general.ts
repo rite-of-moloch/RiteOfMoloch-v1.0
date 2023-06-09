@@ -82,7 +82,6 @@ export const getDeadline = (
   time: string
 ): number => {
   let deadline = (Number(createdAt) * 1000 + Number(time) * 1000);
-
   return deadline;
 };
 

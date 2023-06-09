@@ -10,7 +10,6 @@ const useInitiates = (cohortAddress: string) => {
   useEffect(() => {
     const getCohort = async () => {
       setIsLoading(true);
-      //todo fix address when graph synced
       const initiates = await graphClient.InitiatesByCohortId({
         id: `gnosis-${cohortAddress}`,
       });

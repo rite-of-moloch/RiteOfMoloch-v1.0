@@ -11,7 +11,6 @@ import BackButton from "components/BackButton";
 import SelectForm from "components/SelectForm";
 import { FieldValues, useForm } from "react-hook-form";
 import { SelectOptions } from "utils/types/select";
-import { useAccount } from "wagmi";
 import CohortMetricsBox from "components/cohort/CohortMetricsBox";
 import { useCohorts } from "hooks/useCohort";
 

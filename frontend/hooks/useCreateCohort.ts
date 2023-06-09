@@ -10,7 +10,6 @@ import { useNetwork } from "wagmi";
  * @param implementationSelector string (use 1)
  * @Returns address
  */
-
 const useCreateCohort = (args: [InitDataDeployCohort, number]) => {
   const { chain } = useNetwork();
   const factoryAddress =

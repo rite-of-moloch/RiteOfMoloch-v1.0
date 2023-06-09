@@ -15,7 +15,7 @@ import {
 import { Modal } from "@chakra-ui/modal";
 import { useNetwork } from "wagmi";
 import BlockExplorerLink from "../blockExplorer/BlockExplorerLink";
-import useSacrifice from "hooks/useSacrifice";
+import { useSlaughter } from "hooks/useRiteOfMoloch";
 import GridTemplate from "../GridTemplate";
 import {useCohortByAddress} from "hooks/useCohort";
 
@@ -37,22 +37,20 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
 
   const { cohort } = useCohortByAddress(cohortAddress);
 
-  const { writeSacrifice, isError } = useSacrifice(address?.toString());
+  const { writeSlaughter, isError } = useSlaughter(address?.toString(),
+    address
+  );
 
   const deadline = Number(cohort?.createdAt) + Number(cohort?.time);
 
-  console.log(cohort);
-
   const isPassedStakingDate = () => {
     const nowUnix = Math.round(new Date().getTime() / 1000);
-    console.log(`${nowUnix}\n${deadline}`)
-    return deadline < nowUnix ? true : false;
+    return deadline > nowUnix ? true : false;
   };
 
-  // TODO: create cohort with msg.sender as admin and test writeSacrifice function
-  const handlSacrifice = () => {
+  const handlSlaughter = () => {
     if (!!isPassedStakingDate) {
-      writeSacrifice && writeSacrifice();
+      writeSlaughter && writeSlaughter();
     } else {
       return;
     }
@@ -98,7 +96,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
               <Button
                 variant="solid"
                 size="md"
-                onClick={handlSacrifice}
+                onClick={handlSlaughter}
                 isDisabled={!isPassedStakingDate() || isError}
               >
                 Slash Stake

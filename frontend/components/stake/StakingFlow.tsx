@@ -18,9 +18,9 @@ import { useAccount } from "wagmi";
 import { BigNumber, utils } from "ethers";
 import { approveTooltip, canStake, stakeTooltip } from "utils/general";
 import { useApprove, useBalanceOf, useDecimalOf, useGetAllowance } from "hooks/useERC20";
-import useJoinInitiation from "hooks/useJoinInitiation";
+import { useJoinInitiation } from "hooks/useRiteOfMoloch";
 import { FiAlertTriangle } from "react-icons/fi";
-import useTokenSymbol from "hooks/useTokenSymbol";
+import { useTokenSymbol } from "hooks/useERC20";
 import { useCohortByAddress } from "hooks/useCohort";
 
 interface StakingFlowProps {

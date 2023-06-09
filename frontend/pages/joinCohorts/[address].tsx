@@ -11,11 +11,10 @@ import {
 import { useAccount, useNetwork } from "wagmi";
 import { useRouter } from "next/router";
 import BackButton from "components/BackButton";
-import useTokenSymbol from "hooks/useTokenSymbol";
-import useIsMember from "hooks/useIsMember";
-import useClaimStake from "hooks/useClaimStake";
+import { useTokenSymbol } from "hooks/useERC20";
+import { useIsMember } from "hooks/useRiteOfMoloch";
+import { useClaimStake } from "hooks/useRiteOfMoloch";
 import BlockExplorerLink from "components/blockExplorer/BlockExplorerLink";
-// import { getDeadline, unixToUTC } from "utils/general";
 import GridTemplate from "components/GridTemplate";
 import { useCohortByAddress } from "hooks/useCohort";
 import { DateTime } from "luxon";

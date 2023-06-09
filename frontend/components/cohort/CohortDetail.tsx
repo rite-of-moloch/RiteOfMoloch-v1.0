@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Link, Text, HStack } from "@raidguild/design-system";
 import { useNetwork } from "wagmi";
-import useTokenSymbol from "hooks/useTokenSymbol";
+import { useTokenSymbol } from "hooks/useERC20";
 import GridTemplate from "../GridTemplate";
 import {useCohortByAddress} from "hooks/useCohort";
 

@@ -1,7 +1,6 @@
 import React, { FC, ReactNode } from "react";
 import { Box, Heading, Spinner, Stack, Text } from "@raidguild/design-system";
 import CohortDetail from "components/cohort/CohortDetail";
-// import { getDeadline, unixToUTC } from "utils/general";
 import BackButton from "components/BackButton";
 import SearchCohorts from "components/cohort/SearchCohorts";
 import { FieldValues, useForm } from "react-hook-form";
@@ -15,7 +14,6 @@ interface ReviewOngoingCohortProps {
 
 /**
  * Admin page. Page for admins to view active cohorts and members
- *
  */
 const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
   const { cohorts, isLoading } = useCohorts();

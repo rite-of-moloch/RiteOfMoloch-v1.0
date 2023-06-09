@@ -56,9 +56,13 @@ const useDecimalOf = (contractAddress: `0x${string}`) => {
   return data as string;
 };
 
-const useSymbol = (contractAddress: `0x${string}`) => {
-  const { data, error, isError } = useReadContract(
-    contractAddress,
+/**
+ * @param contractAddress Should be dynamic address from subgraphQuery from /stake/[address].tsx component from erc20TokenAddress abi
+ * @outputs string of symbol
+ */
+const useTokenSymbol = (contractAddress: string | undefined) => {
+  const { data, error, isError, isLoading } = useReadContract(
+    contractAddress as `0x${string}`,
     "erc20TokenAddress",
     "symbol"
   );
@@ -97,4 +101,4 @@ const useGetAllowance = (
   return data as BigNumber;
 };
 
-export {useApprove, useBalanceOf, useDecimalOf, useSymbol, useGetAllowance};
+export {useApprove, useBalanceOf, useDecimalOf, useTokenSymbol, useGetAllowance};
