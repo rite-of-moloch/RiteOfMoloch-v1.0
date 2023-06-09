@@ -17,7 +17,7 @@ import { useNetwork } from "wagmi";
 import BlockExplorerLink from "../blockExplorer/BlockExplorerLink";
 import { useSlaughter } from "hooks/useRiteOfMoloch";
 import GridTemplate from "../GridTemplate";
-import {useCohortByAddress} from "hooks/useCohort";
+import { useCohortByAddress } from "hooks/useCohort";
 
 interface CohortMemberModalProps {
   address: string;
@@ -37,8 +37,8 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
 
   const { cohort } = useCohortByAddress(cohortAddress);
 
-  const { writeSlaughter, isError } = useSlaughter(address?.toString(),
-    address
+  const { writeSlaughter, isError } = useSlaughter(cohortAddress?.toString(),
+    [address]
   );
 
   const deadline = Number(cohort?.createdAt) + Number(cohort?.time);
@@ -48,13 +48,15 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
     return deadline > nowUnix ? true : false;
   };
 
-  const handlSlaughter = () => {
-    if (!!isPassedStakingDate) {
+  const handleSlaughter = () => {
+    if (isPassedStakingDate()) {
       writeSlaughter && writeSlaughter();
     } else {
       return;
     }
   };
+
+  console.log(stake)
 
   return (
     <>
@@ -73,7 +75,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
             <GridTemplate
               isHeading
               column1="Initiate Address"
-              column2="Minimum Shares"
+              column2="Amount Staked"
               column3="Date Staked"
             />
             <GridTemplate
@@ -96,7 +98,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
               <Button
                 variant="solid"
                 size="md"
-                onClick={handlSlaughter}
+                onClick={handleSlaughter}
                 isDisabled={!isPassedStakingDate() || isError}
               >
                 Slash Stake

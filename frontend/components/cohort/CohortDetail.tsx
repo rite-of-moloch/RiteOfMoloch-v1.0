@@ -4,6 +4,8 @@ import { useNetwork } from "wagmi";
 import { useTokenSymbol } from "hooks/useERC20";
 import GridTemplate from "../GridTemplate";
 import {useCohortByAddress} from "hooks/useCohort";
+import { utils } from "ethers";
+import { useDecimalOf } from "hooks/useERC20";
 
 interface CohortDetailProps {
   address: string;
@@ -32,6 +34,12 @@ const CohortDetail: React.FC<CohortDetailProps> = ({
 }) => {
   const { chain } = useNetwork();
   const { cohort } = useCohortByAddress(address);
+
+  let decimalOf = useDecimalOf((cohort?.token as `0x${string}`) || "0x");
+  if (!decimalOf) {
+    decimalOf = "0";
+  }
+
   const cohortNameLink = (
     <Link
       href={`${chain?.blockExplorers?.default.url}/address/${address}`}
@@ -47,7 +55,7 @@ const CohortDetail: React.FC<CohortDetailProps> = ({
         column1={cohortNameLink}
         column2={
           <HStack>
-            <Text>{stake}</Text>
+            <Text>{utils.formatUnits(stake, decimalOf)}</Text>
             <Text ml="0.25rem">{useTokenSymbol(stakingAsset)}</Text>
           </HStack>
         }

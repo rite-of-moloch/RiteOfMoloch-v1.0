@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import {
+  Button,
   Box,
   Heading,
   Link,
@@ -17,12 +18,15 @@ import GridTemplate from "components/GridTemplate";
 import useInitiates from "hooks/useInitiates";
 import { InitiateDetailsFragment } from ".graphclient";
 import { useCohortByAddress } from "hooks/useCohort";
+import { useSacrifice } from "hooks/useRiteOfMoloch";
+import { utils } from "ethers";
+import { useDecimalOf } from "hooks/useERC20";
 
 interface CohortDetailProps {
   children: ReactNode;
 }
 
-const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
+const CohortDetail: React.FC<CohortDetailProps> = () => {
   const { chain } = useNetwork();
   const router = useRouter();
   const { address: cohortAddress } = router.query;
@@ -35,23 +39,40 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
     cohortAddress?.toString() || ""
   );
 
+  const { writeSacrifice } = useSacrifice(cohortAddress?.toString() || "");
+
+  const handleSacrifice = () => {
+    writeSacrifice && writeSacrifice();
+  }
+
+  let decimalOf = useDecimalOf((cohort?.token as `0x${string}`) || "0x");
+  if (!decimalOf) {
+    decimalOf = "0";
+  }
+
   const renderInitiateList = initiates?.map(
     (initiate: InitiateDetailsFragment) => {
       const dateJoined = new Date(
         +initiate.joinedAt * 1000
       ).toLocaleDateString();
+
+    console.log(`stake: ${initiate.stake}`)
+    console.log(`stake: ${utils.formatUnits(initiate.stake, decimalOf?.toString()).toString()}`)
+
+
       return (
         <InitiateData
           address={initiate.address}
           cohortAddress={cohortAddress?.toString() || ""}
           id={initiate.id}
           joinedAt={dateJoined}
-          stake={initiate.stake}
+          stake={utils.formatUnits(initiate.stake, decimalOf?.toString()).toString()}
           key={initiate.id}
         />
       );
     }
   );
+
 
   const isInitiates = renderInitiateList && renderInitiateList.length > 0;
 
@@ -98,7 +119,7 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
         <GridTemplate
           isHeading
           column1="Initiate"
-          column2="Shares"
+          column2="Amount Staked"
           column3="Date Staked"
           column4="Manage"
         />
@@ -112,6 +133,25 @@ const CohortDetail: React.FC<CohortDetailProps> = ({ children }) => {
       )}
 
       {isInitiates ? renderInitiateList : <NobodyStaked />}
+
+      {isInitiates && (
+        <Box>
+          <Button
+            variant="solid"
+            size="md"
+            onClick={handleSacrifice}
+            // isDisabled={!isPassedStakingDate() || isError}
+          >
+            Sacrifice Cohort
+          </Button>
+          <Text mt={1} fontSize="small" color="red" textAlign="left">
+            Sacrifice all initiates that expired,</Text>
+            <Text mt={1} fontSize="small" color="red" textAlign="left">
+            and carry over survivors to new cohort.
+          </Text>
+        </Box>
+      )}
+
 
       <BackButton path="/cohorts" />
     </Stack>

@@ -67,7 +67,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   const minimumStake = cohort?.tokenAmount || "0";
 
   let decimalOf = useDecimalOf((cohort?.token as `0x${string}`) || "0x");
-
   if (!decimalOf) {
     decimalOf = "0";
   }
@@ -75,8 +74,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   let balanceOf = useBalanceOf((cohort?.token as `0x${string}`) || "0x", [
     userAddress(),
   ]);
-
-  //TODO better handling of balanceOf === null
   if (!balanceOf) {
     balanceOf = BigNumber.from("0") || "0";
   }

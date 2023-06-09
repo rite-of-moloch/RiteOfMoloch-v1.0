@@ -102,7 +102,7 @@ const useClaimStake = (contractAddress: string) => {
  * @remarks function used to call sacrifice function on ROM contract
  * @param contractAddress
  */
-const useSlaughter = (contractAddress: string, args: string) => {
+const useSlaughter = (contractAddress: string, args: [string]) => {
   const {
     write: writeSlaughter,
     isError,
@@ -112,7 +112,7 @@ const useSlaughter = (contractAddress: string, args: string) => {
     contractAddress,
     "riteOfMolochAddress",
     "slaughter",
-    [args]
+    args
   );
 
   if (isError) {
