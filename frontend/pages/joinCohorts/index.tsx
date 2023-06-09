@@ -4,8 +4,6 @@ import BackButton from "components/BackButton";
 import CohortDetail from "components/cohort/CohortDetail";
 import SearchCohorts from "components/cohort/SearchCohorts";
 import { FieldValues, useForm } from "react-hook-form";
-// import { getDeadline, unixToUTC } from "utils/general";
-import { useAccount } from "wagmi";
 import GridTemplate from "components/GridTemplate";
 import { useCohorts } from "hooks/useCohort";
 import { DateTime } from "luxon";

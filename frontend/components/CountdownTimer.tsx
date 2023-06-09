@@ -28,8 +28,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ deadline }) => {
   const countdownExpired = (): Boolean => {
     const now = new Date().getTime();
     let result: boolean;
-    Number(deadline) > now ? (result = false) : (result = true);
-
+    Number(deadline.replace(/\,/g,'')) > now ? (result = false) : (result = true);
     return result;
   };
 
@@ -49,7 +48,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ deadline }) => {
       <HStack justifyContent="center" py={4}>
         {hourglassImage}
         <Text color="white" fontWeight="bold" fontSize={["xl", "2xl"]} mb={2}>
-          Deadline: {unixToUTC(deadline)}
+          Deadline: {unixToUTC((deadline.replace(/\,/g,'')))}
         </Text>
         {hourglassImage}
       </HStack>

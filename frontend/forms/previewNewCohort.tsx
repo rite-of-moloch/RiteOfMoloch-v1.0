@@ -15,8 +15,8 @@ import { InitDataDeployCohort } from "utils/types/initDataDeployCohort";
 import CohortConfirmation from "components/cohort/CohortConfirmationModal";
 import BlockExplorerLink from "components/blockExplorer/BlockExplorerLink";
 import { zeroAddress } from "utils/constants";
-import { useDecimalOf, useSymbol } from "hooks/useERC20";
-import { utils, BigNumber } from "ethers";
+import { useDecimalOf, useTokenSymbol } from "hooks/useERC20";
+import { utils } from "ethers";
 
 /**
  * @remarks this component renders a preview of all 3 parts of form data. It also builds function handleDeployCohort, which submits data to riteOfMolochFactory contract and creates a new cohort
@@ -77,7 +77,7 @@ const PreviewNewCohort = () => {
     Number(cohortSize),
     Number(onboardingPeriod) * 60 * 60 * 24,
     Number(shareThreshold),
-    BigNumber.from(assetAmount),
+    assetAmount,
     Number(stakeDuration) * 60 * 60 * 24,
     tophatID ? tophatID : Number(0),
     nameCohort,
@@ -106,7 +106,7 @@ const PreviewNewCohort = () => {
     if (!decimalOf) {
     decimalOf = "0";
   }
-  let symbol = useSymbol(stakingAsset as `0x${string}`);
+  let symbol = useTokenSymbol(stakingAsset);
 
   const amountString = assetAmount ? `${+utils.formatUnits(assetAmount || "0", decimalOf)} ${symbol}` : "0";
 

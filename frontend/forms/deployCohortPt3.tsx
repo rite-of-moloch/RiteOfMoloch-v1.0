@@ -65,9 +65,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
     const validationsTopHat = await trigger(["topHatWearer", "tophatID"]);
     const validationsAddAdmin = await trigger(["admin1", "admin2"]);
     if (hasTophat && !addAdmin) {
-      // console.log("has top hat, doesn't want to add admin");
       if (validationsTopHat) {
-        // console.log("validations pass");
         setTopHatWearer(values.topHatWearer);
         setTophatID(values.tophatID);
         setAdmin1(values.admin1);
@@ -77,9 +75,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
         setShamanOn(shamanOn);
       } else console.log("validations fail");
     } else if (!hasTophat && addAdmin) {
-      // console.log("doesn't have tophat, wants to add admin");
       if (validationsAddAdmin) {
-        // console.log("validations pass");
         setTopHatWearer(values.topHatWearer);
         setTophatID(values.tophatID);
         setAdmin1(values.admin1);
@@ -88,12 +84,9 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
         setDisplayPreviewNewCohort(true);
         setShamanOn(shamanOn);
       } else {
-        // console.log("validations fail");
       }
     } else if (hasTophat && addAdmin) {
-      // console.log("Has tophat and wants to add admin");
       if (validationsTopHat && validationsAddAdmin) {
-        // console.log("validations pass");
         setTopHatWearer(values.topHatWearer);
         setTophatID(values.tophatID);
         setAdmin1(values.admin1);
@@ -102,7 +95,6 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
         setDisplayPreviewNewCohort(true);
         setShamanOn(shamanOn);
       } else {
-        // console.log("validations fail");
       }
     } else if (!hasTophat && !addAdmin) {
       setTopHatWearer(values.topHatWearer);

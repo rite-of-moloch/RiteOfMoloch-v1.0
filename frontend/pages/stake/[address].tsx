@@ -9,7 +9,7 @@ import {
   Text,
 } from "@raidguild/design-system";
 import { useAccount, useNetwork } from "wagmi";
-import useRiteBalanceOf from "hooks/useRiteBalanceOf";
+import { useRiteBalanceOf } from "hooks/useRiteOfMoloch";
 import RiteStaked from "components/stake/RiteStaked";
 import StakingFlow from "components/stake/StakingFlow";
 import NotConnected from "components/wallet/NotConnected";

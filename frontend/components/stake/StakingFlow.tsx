@@ -18,9 +18,9 @@ import { useAccount } from "wagmi";
 import { BigNumber, utils } from "ethers";
 import { approveTooltip, canStake, stakeTooltip } from "utils/general";
 import { useApprove, useBalanceOf, useDecimalOf, useGetAllowance } from "hooks/useERC20";
-import useJoinInitiation from "hooks/useJoinInitiation";
+import { useJoinInitiation } from "hooks/useRiteOfMoloch";
 import { FiAlertTriangle } from "react-icons/fi";
-import useTokenSymbol from "hooks/useTokenSymbol";
+import { useTokenSymbol } from "hooks/useERC20";
 import { useCohortByAddress } from "hooks/useCohort";
 
 interface StakingFlowProps {
@@ -148,7 +148,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
         <HStack mb="1rem" justifyContent="space-between" w="full">
           <Text color="red">Required Stake</Text>
           <Text color="white">
-            {minimumStake} {tokenSymbol}
+            {+utils.formatUnits(minimumStake.toString(), decimalOf)} {tokenSymbol}
           </Text>
         </HStack>
         <HStack justifyContent="space-between" w="full">
