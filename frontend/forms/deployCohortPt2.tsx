@@ -21,6 +21,7 @@ import {
 import { useFormContext } from "context/FormContext";
 import FormErrorText from "components/FormErrorText";
 import { useDecimalOf, useTokenSymbol } from "hooks/useERC20";
+import { zeroAddress } from "utils/constants";
 
 const DeployCohortPt2 = () => {
   const {
@@ -76,7 +77,7 @@ const DeployCohortPt2 = () => {
     decimalOf = "0";
   }
 
-  let symbol = useTokenSymbol((values.stakingAsset) || "0x0");
+  let symbol = useTokenSymbol((values.stakingAsset) || zeroAddress);
 
   const handleNext = async (): Promise<void> => {
     await trigger();
@@ -264,17 +265,17 @@ const DeployCohortPt2 = () => {
 
           <GridItem gridArea="symbol" pt={"1rem"}>
             {symbol && decimalOf && (
-            <div>
+            <>
               <Text>{`${symbol} has ${decimalOf} decimal places`}</Text>
               <Text>---</Text>
               <Text fontWeight={900}>{`${+utils.formatUnits(values?.assetAmount || "0", decimalOf)} ${symbol}`}</Text>
-            </div>
+            </>
             ) || (
-              <div>
+              <>
                 <Text>{`${symbol} token address`}</Text>
                 <Text>---</Text>
                 <Text>Please enter valid ERC20 address</Text>
-              </div>
+              </>
             )}
           </GridItem>
           </Box>

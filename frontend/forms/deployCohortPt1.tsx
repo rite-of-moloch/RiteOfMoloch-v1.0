@@ -18,7 +18,7 @@ interface deployCohortPt1Props {
   children?: ReactNode;
 }
 
-const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
+const DeployCohortPt1: FC<deployCohortPt1Props> = () => {
   const {
     setNameCohort,
     setNameSBT,

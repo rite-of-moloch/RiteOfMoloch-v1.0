@@ -21,7 +21,7 @@ interface CohortConfirmationModalProps {
 const CohortConfirmationModal: React.FC<CohortConfirmationModalProps> = ({
   openLogic,
 }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure({
+  const { onOpen, onClose } = useDisclosure({
     defaultIsOpen: openLogic ? true : false,
   });
 
@@ -35,10 +35,8 @@ const CohortConfirmationModal: React.FC<CohortConfirmationModalProps> = ({
     <>
       <Modal isOpen={openLogic} onClose={onClose} variant="member">
         <ModalOverlay onClick={onClose} />
-
         <ModalContent minW="full">
           <ModalHeader color="red">Success!</ModalHeader>
-
           <ModalBody>
             <Text textAlign="center">
               You&apos;ve successfull deployed a chohort

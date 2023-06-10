@@ -6,6 +6,7 @@ import GridTemplate from "../GridTemplate";
 import {useCohortByAddress} from "hooks/useCohort";
 import { utils } from "ethers";
 import { useDecimalOf } from "hooks/useERC20";
+import { zeroAddress } from "utils/constants";
 
 interface CohortDetailProps {
   address: string;
@@ -35,7 +36,7 @@ const CohortDetail: React.FC<CohortDetailProps> = ({
   const { chain } = useNetwork();
   const { cohort } = useCohortByAddress(address);
 
-  let decimalOf = useDecimalOf((cohort?.token as `0x${string}`) || "0x");
+  let decimalOf = useDecimalOf((cohort?.token as `0x${string}`) || zeroAddress);
   if (!decimalOf) {
     decimalOf = "0";
   }
@@ -55,7 +56,7 @@ const CohortDetail: React.FC<CohortDetailProps> = ({
         column1={cohortNameLink}
         column2={
           <HStack>
-            <Text>{utils.formatUnits(stake, decimalOf)}</Text>
+            <Text>{Number(utils.formatUnits(stake, decimalOf)).toFixed(4)}</Text>
             <Text ml="0.25rem">{useTokenSymbol(stakingAsset)}</Text>
           </HStack>
         }

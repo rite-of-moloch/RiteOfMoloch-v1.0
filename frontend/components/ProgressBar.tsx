@@ -6,7 +6,7 @@ interface ProgressBarProps {
   children?: ReactNode;
 }
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ children }) => {
+const ProgressBar: React.FC<ProgressBarProps> = () => {
   const { displayPart1, displayPart2 } = useFormContext();
 
   const getProgress = (): number => {

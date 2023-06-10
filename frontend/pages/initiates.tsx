@@ -9,6 +9,7 @@ import { unixToUTC } from "utils/general";
 import GridTemplate from "components/GridTemplate";
 import { useGraphClient } from "hooks/useGraphClient";
 import { useQuery } from "@tanstack/react-query";
+import { zeroAddress } from "utils/constants";
 
 /**
  * @returns list of all addresses that have staked to a cohort
@@ -35,7 +36,7 @@ const Initiates = () => {
       <InitiatesAll
         address={initiate.address}
         cohortName={initiate.cohort?.name || "N/A"}
-        cohortAddress={initiate.cohort?.address || "0x0"}
+        cohortAddress={initiate.cohort?.address || zeroAddress}
         stake={initiate.stake}
         joinedAt={unixToUTC((joinedAt * 1000).toString())}
         key={initiate.id}

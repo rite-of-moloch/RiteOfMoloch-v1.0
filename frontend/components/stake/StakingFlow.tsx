@@ -22,6 +22,7 @@ import { useJoinInitiation } from "hooks/useRiteOfMoloch";
 import { FiAlertTriangle } from "react-icons/fi";
 import { useTokenSymbol } from "hooks/useERC20";
 import { useCohortByAddress } from "hooks/useCohort";
+import { zeroAddress } from "utils/constants";
 
 interface StakingFlowProps {
   contractAddress: string;
@@ -42,7 +43,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   };
 
   const { cohort } = useCohortByAddress(contractAddress);
-
   const localForm = useForm<FieldValues>();
 
   const {
@@ -64,46 +64,43 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     else return "";
   };
 
-  const minimumStake = cohort?.tokenAmount || "0";
-
-  let decimalOf = useDecimalOf((cohort?.token as `0x${string}`) || "0x");
+  let decimalOf = useDecimalOf((cohort?.token as `0x${string}`) || zeroAddress);
   if (!decimalOf) {
     decimalOf = "0";
   }
 
-  let balanceOf = useBalanceOf((cohort?.token as `0x${string}`) || "0x", [
+  let balanceOf = useBalanceOf((cohort?.token as `0x${string}`) || zeroAddress, [
     userAddress(),
   ]);
   if (!balanceOf) {
     balanceOf = BigNumber.from("0") || "0";
   }
 
-  const { approve, isLoadingApprove } = useApprove(cohort?.token || "0x", [
-    cohort?.address || "",
-    minimumStake,
-  ]);
-
-  let allowance = useGetAllowance((cohort?.token as `0x${string}`) || "0x", [
-    userAddress(),
-    cohort?.address || "0x",
-  ]);
-
   let tokenSymbol = useTokenSymbol(cohort?.token);
   if (!tokenSymbol) {
     tokenSymbol = "N/A";
   }
 
-  //TODO better handling of allowance === null
+  let allowance = useGetAllowance((cohort?.token as `0x${string}`) || zeroAddress, [
+    userAddress(),
+    cohort?.address || zeroAddress,
+  ]);
   if (!allowance) {
     allowance = BigNumber.from("0") || "0";
   }
 
+  const minimumStake = cohort?.tokenAmount || "0";
+
+  const { approve, isLoadingApprove } = useApprove(cohort?.token || zeroAddress, [
+    cohort?.address || zeroAddress,
+    minimumStake,
+  ]);
+
   const { writeJoinInitiation, isLoadingStake } = useJoinInitiation(
-    cohort?.address || "",
+    cohort?.address || zeroAddress,
     !willSponsor ? [userAddress()] : [initiateAddress]
   );
 
-  //TODO methods can accept BigNumbers instead of Strings
   const canUserStake = canStake(
     allowance,
     minimumStake || "",
@@ -135,6 +132,10 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     minimumStake
   );
 
+  const format = (num: string | BigNumber) => {
+    return Number(utils.formatUnits(num.toString(), decimalOf?.toString())).toFixed(4);
+  }
+
   // useEffect re-renders component when user creates an allowance, defined writeJoinInitiation
   useEffect(() => {
   }, [allowance]);
@@ -145,7 +146,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
         <HStack mb="1rem" justifyContent="space-between" w="full">
           <Text color="red">Required Stake</Text>
           <Text color="white">
-            {+utils.formatUnits(minimumStake.toString(), decimalOf)} {tokenSymbol}
+            {format(minimumStake)} {tokenSymbol}
           </Text>
         </HStack>
         <HStack justifyContent="space-between" w="full">
@@ -153,7 +154,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
             Your {tokenSymbol} balance
           </Text>
           <Text color="white" fontSize=".8rem">
-            {+utils.formatUnits(balanceOf, decimalOf)} {tokenSymbol}
+            {format(balanceOf)} {tokenSymbol}
           </Text>
         </HStack>
         <HStack justifyContent="space-between" w="full">
@@ -161,7 +162,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
             Your {tokenSymbol} allowance
           </Text>
           <Text color="white" fontSize=".8rem">
-            <span style={{ marginRight: "0.5em" }}>{+utils.formatUnits(allowance.toString(), decimalOf)}</span>
+            <span style={{ marginRight: "0.5em" }}>{format(allowance)}</span>
             <span>{tokenSymbol}</span>
           </Text>
         </HStack>

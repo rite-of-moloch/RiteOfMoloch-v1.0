@@ -53,19 +53,19 @@ const EditCohortAdmins: React.FC<EditCohortAdminsProps> = ({
   watch();
   const values = getValues();
 
-  const { writeMintHatProp: mintAdmin1, isLoadingMint: loadMint1 } = useMintHatProp(address || "0x", 
+  const { writeMintHatProp: mintAdmin1, isLoadingMint: loadMint1 } = useMintHatProp(address || zeroAddress, 
     values?.admin1
   );
 
-  const { writeMintHatProp: mintAdmin2, isLoadingMint: loadMint2 } = useMintHatProp(address || "0x", 
+  const { writeMintHatProp: mintAdmin2, isLoadingMint: loadMint2 } = useMintHatProp(address || zeroAddress, 
     values?.admin2
   );
 
-  const { writeTransferHatProp: transAdmin1, isLoadingTransfer: loadTrans1 } = useTransferHatProp(address || "0x", 
+  const { writeTransferHatProp: transAdmin1, isLoadingTransfer: loadTrans1 } = useTransferHatProp(address || zeroAddress, 
     [admin1, values?.admin1]
   );
 
-  const { writeTransferHatProp: transAdmin2, isLoadingTransfer: loadTrans2 } = useTransferHatProp(address || "0x", 
+  const { writeTransferHatProp: transAdmin2, isLoadingTransfer: loadTrans2 } = useTransferHatProp(address || zeroAddress, 
       [admin2, values?.admin2]
   );
 

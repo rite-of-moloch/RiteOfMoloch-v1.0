@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Heading, HStack, Spinner, Stack } from "@raidguild/design-system";
+import { Box, Heading, HStack, Spinner, Stack, Spacer} from "@raidguild/design-system";
 import BackButton from "components/BackButton";
 import CohortDetail from "components/cohort/CohortDetail";
 import SearchCohorts from "components/cohort/SearchCohorts";
@@ -22,7 +22,6 @@ const JoinCohorts: React.FC = () => {
     const deadline = DateTime.fromSeconds(+cohort?.createdAt).plus({
       seconds: cohort?.time,
     });
-
     return (
       <CohortDetail
         address={cohort.address}
@@ -42,17 +41,7 @@ const JoinCohorts: React.FC = () => {
           Active Cohorts
         </Heading>
         <HStack>
-          <Box mr={2} w="50%" pt={4}>
-            {/* <Box display="">
-                    <SelectForm
-                      name="selectCohorts"
-                      placeholder="SELECT COHORTS"
-                      options={cohortOptions}
-                      isClearable={false}
-                      localForm={localForm}
-                    />
-                  </Box> */}
-          </Box>
+          <Spacer />
           <Box ml={2} w="50%" alignItems="center">
             <SearchCohorts name="searchResult" localForm={localForm} />
           </Box>

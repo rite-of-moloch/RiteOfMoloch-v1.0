@@ -110,7 +110,6 @@ const PreviewNewCohort = () => {
 
   const amountString = assetAmount ? `${+utils.formatUnits(assetAmount || "0", decimalOf)} ${symbol}` : "0";
 
-
   return (
     <>
       <Box display={displayPreviewNewCohort ? "inline" : "none"}>

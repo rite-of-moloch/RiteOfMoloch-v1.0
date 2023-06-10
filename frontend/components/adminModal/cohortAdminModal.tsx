@@ -28,10 +28,7 @@ const CohortAdminModal: React.FC<CohortAdminModalProps> = ({
   btnVariant = "admin",
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const { cohort } = useCohortByAddress(address || "");
-
-  console.log(cohort);
 
   let admin1 = useAdmin1(cohort?.address);
   if (!admin1) {
@@ -42,8 +39,6 @@ const CohortAdminModal: React.FC<CohortAdminModalProps> = ({
   if (!admin2) {
     admin2 = "";
   }
-
-  const noAdmin = "Admin Not Elected";
 
   return (
     <>

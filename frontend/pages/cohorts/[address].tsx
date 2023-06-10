@@ -21,6 +21,7 @@ import { useCohortByAddress } from "hooks/useCohort";
 import { useSacrifice } from "hooks/useRiteOfMoloch";
 import { utils } from "ethers";
 import { useDecimalOf } from "hooks/useERC20";
+import { zeroAddress } from "utils/constants";
 
 interface CohortDetailProps {
   children: ReactNode;
@@ -45,7 +46,7 @@ const CohortDetail: React.FC<CohortDetailProps> = () => {
     writeSacrifice && writeSacrifice();
   }
 
-  let decimalOf = useDecimalOf((cohort?.token as `0x${string}`) || "0x");
+  let decimalOf = useDecimalOf((cohort?.token as `0x${string}`) || zeroAddress);
   if (!decimalOf) {
     decimalOf = "0";
   }
@@ -55,27 +56,20 @@ const CohortDetail: React.FC<CohortDetailProps> = () => {
       const dateJoined = new Date(
         +initiate.joinedAt * 1000
       ).toLocaleDateString();
-
-    console.log(`stake: ${initiate.stake}`)
-    console.log(`stake: ${utils.formatUnits(initiate.stake, decimalOf?.toString()).toString()}`)
-
-
       return (
         <InitiateData
           address={initiate.address}
           cohortAddress={cohortAddress?.toString() || ""}
           id={initiate.id}
           joinedAt={dateJoined}
-          stake={utils.formatUnits(initiate.stake, decimalOf?.toString()).toString()}
+          stake={utils.formatUnits(initiate.stake.toString(), decimalOf?.toString())}
           key={initiate.id}
         />
       );
     }
   );
 
-
   const isInitiates = renderInitiateList && renderInitiateList.length > 0;
-
   const cohortName = cohort?.name;
 
   return (
@@ -91,7 +85,7 @@ const CohortDetail: React.FC<CohortDetailProps> = () => {
         <Text>Loading cohorts...</Text>
       </Box>
       ) : (
-      <div>
+      <>
         <Heading as="h2" textAlign="center" color="red">
           {cohortName?.toString().toUpperCase()}
         </Heading>
@@ -112,7 +106,7 @@ const CohortDetail: React.FC<CohortDetailProps> = () => {
             <CohortAdminModal address={cohortAddress?.toString()} />
           </Box>
         </Stack>
-      </div>
+      </>
       )}
 
       {isInitiates && (
@@ -140,7 +134,6 @@ const CohortDetail: React.FC<CohortDetailProps> = () => {
             variant="solid"
             size="md"
             onClick={handleSacrifice}
-            // isDisabled={!isPassedStakingDate() || isError}
           >
             Sacrifice Cohort
           </Button>
@@ -151,7 +144,6 @@ const CohortDetail: React.FC<CohortDetailProps> = () => {
           </Text>
         </Box>
       )}
-
 
       <BackButton path="/cohorts" />
     </Stack>
