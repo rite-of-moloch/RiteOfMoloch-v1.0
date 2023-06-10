@@ -34,7 +34,6 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { chain } = useNetwork();
-
   const { cohort } = useCohortByAddress(cohortAddress);
 
   const { writeSlaughter, isError } = useSlaughter(cohortAddress?.toString(),
@@ -55,8 +54,6 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
       return;
     }
   };
-
-  console.log(stake)
 
   return (
     <>

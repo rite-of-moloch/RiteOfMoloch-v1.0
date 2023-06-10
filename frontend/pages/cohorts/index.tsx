@@ -69,7 +69,6 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
               <Box w={["50%", "50%", "40%", "30%"]} alignSelf="end">
                 <SearchCohorts name="searchResult" localForm={localForm} />
               </Box>
-
               <GridTemplate
                 isHeading
                 column1="Address"
@@ -78,12 +77,10 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
                 column4="Manage"
               />
             </>
-
             {filteredCohorts && filteredCohorts?.length > 0 && filteredCohorts}
           </>
         )}
       </Stack>
-
       <BackButton path="/admin" />
       {children}
     </>
