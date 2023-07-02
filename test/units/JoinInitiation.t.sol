@@ -9,9 +9,6 @@ import "test/TestHelper.sol";
 contract JoinInitiationTest is TestHelper {
     function setUp() public override {
         TestHelper.setUp();
-
-        // mint tokens to alice & bob
-        mintTokens([alice, bob, charlie, deployer]);
     }
     /**
      * TESTS
@@ -123,7 +120,7 @@ contract JoinInitiationTest is TestHelper {
         ROMF.updateSustainabilityFee(fee);
         ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
 
-        uint256 _sustainabilityFee = (minStake * ROM.PERC_POINTS()) * fee;
+        uint256 _sustainabilityFee = (minStake / ROM.PERC_POINTS()) * fee;
 
         uint256 _balanceTreasuryBefore = stakingAsset.balanceOf(sustainabilityTreasury);
         uint256 _balanceRoMBefore = stakingAsset.balanceOf(address(ROM));
@@ -141,5 +138,7 @@ contract JoinInitiationTest is TestHelper {
 
         assertGt(_balanceTreasuryAfter, _balanceTreasuryBefore);
         assertGt(_balanceRoMAfter, _balanceRoMBefore);
+        assertEq(_balanceTreasuryAfter, _sustainabilityFee);
+        assertEq(_balanceRoMAfter, minStake - _sustainabilityFee);
     }
 }

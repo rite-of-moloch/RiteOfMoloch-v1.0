@@ -29,6 +29,8 @@ contract TestHelper is Test, IInitData {
 
     address dao = 0x90F79bf6EB2c4f870365E785982E1f101E93b906;
     TestToken public stakingAsset = new TestToken();
+    TestToken public sharesToken = new TestToken();
+
     InitData Data;
 
     // DAO members
@@ -64,7 +66,7 @@ contract TestHelper is Test, IInitData {
     uint256 sustainabilityFee = 50_000;
 
     function setUp() public virtual {
-        vm.mockCall(dao, abi.encodeWithSelector(IBaal.sharesToken.selector), abi.encode(stakingAsset));
+        vm.mockCall(dao, abi.encodeWithSelector(IBaal.sharesToken.selector), abi.encode(sharesToken));
         // set and deploy ROM-Factory
         setUpFactory();
         // set initial data for ROM clone
