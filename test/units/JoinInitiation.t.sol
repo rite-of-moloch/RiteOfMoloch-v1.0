@@ -64,7 +64,7 @@ contract JoinInitiationTest is TestHelper {
     function testJoinInitiationCohortClosed(address initiate) public {
         vm.assume(initiate != address(0));
 
-        vm.warp(Data.joinDuration + 1 days);
+        vm.warp(data.joinDuration + 1 days);
 
         stakingAsset.mint(initiate, minStake);
 
@@ -86,7 +86,7 @@ contract JoinInitiationTest is TestHelper {
 
             vm.startPrank(_address, _address);
             stakingAsset.approve(address(ROM), minStake);
-            if (i >= Data.cohortSize) {
+            if (i >= data.cohortSize) {
                 vm.expectRevert("This cohort is already full");
             }
             ROM.joinInitiation(_address);
@@ -118,7 +118,7 @@ contract JoinInitiationTest is TestHelper {
         //TODO handle fee split of 0 or 1e6???
         fee = bound(fee, 1, 1e6 - 1); // 1e6 is PERC_POINTS; between 0.0001% and 99.9999%
         ROMF.updateSustainabilityFee(fee);
-        ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
+        ROM = RiteOfMoloch(ROMF.createCohort(data, 1));
 
         uint256 _sustainabilityFee = (minStake / ROM.PERC_POINTS()) * fee;
 

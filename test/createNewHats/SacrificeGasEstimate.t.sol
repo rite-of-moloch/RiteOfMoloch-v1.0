@@ -91,21 +91,21 @@ contract SacrificeGasEstimate is TestHelper {
     }
 
     function createInitData() public override {
-        Data.membershipCriteria = dao;
-        Data.stakingAsset = address(stakingAsset);
-        Data.daoTreasury = dao;
-        Data.admin1 = alice;
-        Data.admin2 = address(0);
-        Data.cohortSize = 500;
-        Data.joinDuration = 2 weeks;
-        Data.threshold = 10;
-        Data.assetAmount = minStake;
-        Data.stakeDuration = 1 weeks;
-        Data.topHatId = 0;
-        Data.cohortName = "SeasonV";
-        Data.sbtName = "RiteOfMolochSBT";
-        Data.sbtSymbol = "SBTMoloch";
-        Data.baseUri = "x";
-        Data.shamanOn = false;
+        data.membershipCriteria = dao;
+        data.stakingAsset = address(stakingAsset);
+        data.daoTreasury = dao;
+        data.admin1 = alice;
+        data.admin2 = address(0);
+        data.cohortSize = 500;
+        data.joinDuration = 2 weeks;
+        data.threshold = 10;
+        data.assetAmount = minStake;
+        data.stakeDuration = 1 weeks;
+        data.topHatId = 0;
+        data.cohortName = "SeasonV";
+        data.sbtName = "RiteOfMolochSBT";
+        data.sbtSymbol = "SBTMoloch";
+        data.baseUri = "x";
+        data.shamanOn = false;
     }
 }

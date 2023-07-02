@@ -11,19 +11,6 @@ import {IBaal} from "src/baal/IBaal.sol";
 
 // forge test --match-contract TestHelper -vv
 
-/**
- * @dev RiteOfMoloch line 139 needs to be changed for local testing:
- * from: _sharesToken = IERC20(baal.sharesToken());
- * to:   _sharesToken = IERC20(initData.stakingAsset);
- * //TODO make it work
- */
-
-/**
- * @dev RiteOfMoloch line 239 needs to be commented out:
- * disable callerIsUser for Forge tests/scripts
- * //TODO make it work
- */
-
 contract TestHelper is Test, IInitData {
     uint256 constant DAY_IN_SECONDS = 86400;
 
@@ -31,7 +18,7 @@ contract TestHelper is Test, IInitData {
     TestToken public stakingAsset = new TestToken();
     TestToken public sharesToken = new TestToken();
 
-    InitData Data;
+    InitData data;
 
     // DAO members
     address deployer = address(this); // superAdmin & admin
@@ -45,9 +32,6 @@ contract TestHelper is Test, IInitData {
 
     // Hats protocol
     Hats public HATS;
-
-    // Hats protocol implementation
-    address public hatsProtocol;
 
     // Hats / roles
     uint256 public factoryTopHat;
@@ -72,7 +56,7 @@ contract TestHelper is Test, IInitData {
         // set initial data for ROM clone
         createInitData();
         // // deploy ROM clone
-        ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
+        ROM = RiteOfMoloch(ROMF.createCohort(data, 1));
     }
 
     function setUpFactory() public {
@@ -92,22 +76,22 @@ contract TestHelper is Test, IInitData {
 
     // INIT CLONE DATA
     function createInitData() public virtual {
-        Data.membershipCriteria = dao;
-        Data.stakingAsset = address(stakingAsset);
-        Data.daoTreasury = dao;
-        Data.admin1 = alice;
-        Data.admin2 = address(0);
-        Data.cohortSize = 3;
-        Data.joinDuration = 2 weeks;
-        Data.threshold = 10;
-        Data.assetAmount = minStake;
-        Data.stakeDuration = 1 weeks;
-        Data.topHatId = 0;
-        Data.cohortName = "SeasonV";
-        Data.sbtName = "RiteOfMolochSBT";
-        Data.sbtSymbol = "SBTMoloch";
-        Data.baseUri = "x";
-        Data.shamanOn = false;
+        data.membershipCriteria = dao;
+        data.stakingAsset = address(stakingAsset);
+        data.daoTreasury = dao;
+        data.admin1 = alice;
+        data.admin2 = address(0);
+        data.cohortSize = 3;
+        data.joinDuration = 2 weeks;
+        data.threshold = 10;
+        data.assetAmount = minStake;
+        data.stakeDuration = 1 weeks;
+        data.topHatId = 0;
+        data.cohortName = "SeasonV";
+        data.sbtName = "RiteOfMolochSBT";
+        data.sbtSymbol = "SBTMoloch";
+        data.baseUri = "x";
+        data.shamanOn = false;
     }
 
     // UTILS

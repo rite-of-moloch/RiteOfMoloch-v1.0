@@ -584,6 +584,13 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
      */
 
     /**
+     * @dev returns the token to stake in this cohort
+     */
+    function stakingAsset() public view returns (address) {
+        return address(_token);
+    }
+
+    /**
      * @dev returns the user's deadline for onboarding
      */
     function getDeadline(address user) public view returns (uint256) {
