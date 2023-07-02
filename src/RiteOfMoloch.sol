@@ -233,7 +233,7 @@ contract RiteOfMoloch is
      */
     modifier callerIsUser() {
         // for testing in Forge: disable
-        // require(tx.origin == msg.sender, "The caller is another contract!");
+        require(tx.origin == msg.sender, "The caller is another contract!");
         _;
     }
 
@@ -251,7 +251,7 @@ contract RiteOfMoloch is
      * Prevents calling functions that will revert
      */
     modifier onlyShaman() {
-        // _checkManager();
+        _checkManager();
         _;
     }
 
