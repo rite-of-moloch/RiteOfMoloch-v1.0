@@ -49,7 +49,6 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
         sustainabilityTreasury = _sustainabilityTreasury;
 
         sustainabilityFee = _sustainabilityFee;
-
         // deploy the initial rite of moloch implementation and set it in implementations mapping
         implementations[iid] = address(new RiteOfMoloch());
 

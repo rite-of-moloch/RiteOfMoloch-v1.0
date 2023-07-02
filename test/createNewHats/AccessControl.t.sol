@@ -14,12 +14,7 @@ contract AccessControl is TestHelper {
     bytes32 public constant ADMIN = keccak256("ADMIN");
 
     function setUp() public override {
-        // set and deploy ROM-Factory
-        setUpFactory();
-        // set initial data for ROM clone
-        createInitData();
-        // deploy ROM clone
-        ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
+        TestHelper.setUp();
     }
 
     /**

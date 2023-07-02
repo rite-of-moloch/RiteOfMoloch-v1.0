@@ -11,19 +11,10 @@ import "test/TestHelper.sol";
 contract SacrificeGasEstimate is TestHelper {
     uint256 constant cohortSize = 100;
 
-    uint256 susFee = (adminFee * minStake) / 100;
-
     address[] initiates = new address[](cohortSize);
 
     function setUp() public override {
-        // set and deploy ROM-Factory
-        setUpFactory();
-
-        // set initial data for ROM clone
-        createInitData();
-
-        // deploy ROM clone
-        ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
+        TestHelper.setUp();
 
         // cohort initiates stake
         generateStakes();
@@ -37,9 +28,7 @@ contract SacrificeGasEstimate is TestHelper {
      */
     function generateStakes() public {
         for (uint256 i = 0; i < cohortSize; i++) {
-            address randomish = address(
-                uint160(uint256(keccak256(abi.encodePacked(i))))
-            );
+            address randomish = address(uint160(uint256(keccak256(abi.encodePacked(i)))));
 
             initiates[i] = randomish;
         }
@@ -67,7 +56,7 @@ contract SacrificeGasEstimate is TestHelper {
      * @dev half of initiates should be sacrificed, other half carried over to new cohort
      * in this scenario, no initiates achieved membership / claimed thier stake
      */
-    function testSacrficeMore() public {
+    function testSacrificeMore() public {
         vm.startPrank(alice);
 
         // stakes before
@@ -84,16 +73,17 @@ contract SacrificeGasEstimate is TestHelper {
 
     // UTILS
     function checkSampleOfStakesBefore() public {
+        uint256 susFee = (ROM.minimumStake() / ROM.PERC_POINTS()) * sustainabilityFee;
+
         assertEq(minStake - susFee, ROM.checkStake(initiates[0]));
-        assertEq(
-            minStake - susFee,
-            ROM.checkStake(initiates[(cohortSize / 2) - 1])
-        );
+        assertEq(minStake - susFee, ROM.checkStake(initiates[(cohortSize / 2) - 1]));
         assertEq(minStake - susFee, ROM.checkStake(initiates[cohortSize / 2]));
         assertEq(minStake - susFee, ROM.checkStake(initiates[cohortSize - 1]));
     }
 
     function checkSampleOfStakesAfter() public {
+        uint256 susFee = (ROM.minimumStake() / ROM.PERC_POINTS()) * sustainabilityFee;
+
         assertEq(0, ROM.checkStake(initiates[0]));
         assertEq(0, ROM.checkStake(initiates[(cohortSize / 2) - 1]));
         assertEq(minStake - susFee, ROM.checkStake(initiates[cohortSize / 2]));

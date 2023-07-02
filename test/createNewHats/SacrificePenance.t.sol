@@ -10,14 +10,10 @@ import "test/TestHelper.sol";
  */
 contract SacrificePenance is TestHelper {
     function setUp() public override {
-        // set and deploy ROM-Factory
-        setUpFactory();
+        TestHelper.setUp();
+
         // mint tokens to alice & bob
         mintTokens([alice, bob, charlie, deployer]);
-        // set initial data for ROM clone
-        createInitData();
-        // deploy ROM clone
-        ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
 
         prankJoinInititation(alice);
         prankJoinInititation(bob);
@@ -28,10 +24,10 @@ contract SacrificePenance is TestHelper {
     /**
      * TESTS
      */
-    function testSacrfice() public {
+    function testSacrifice() public {
         assertEq(1, ROM.cohortSeason());
         emit log_named_uint("ROM bal", stakingAsset.balanceOf(address(ROM)));
-        emit log_named_uint("Admin bal", stakingAsset.balanceOf(adminTreasury));
+        emit log_named_uint("Admin bal", stakingAsset.balanceOf(sustainabilityTreasury));
 
         vm.warp(8 days);
 
@@ -41,12 +37,13 @@ contract SacrificePenance is TestHelper {
 
         // stakes before
         uint256[3] memory userStakesBefore = checkAllUserStakes();
+        uint256 fee = (ROM.minimumStake() / ROM.PERC_POINTS()) * sustainabilityFee;
 
         // assert values of stakes
         for (uint256 i = 0; i < userStakesBefore.length; i++) {
             assertEq(
                 userStakesBefore[i], // Actual
-                minStake - ((adminFee * minStake) / 100) // Expected
+                minStake - fee // Expected
             );
         }
 
@@ -54,7 +51,7 @@ contract SacrificePenance is TestHelper {
         ROM.sacrifice();
 
         emit log_named_uint("ROM bal", stakingAsset.balanceOf(address(ROM)));
-        emit log_named_uint("Admin bal", stakingAsset.balanceOf(adminTreasury));
+        emit log_named_uint("Admin bal", stakingAsset.balanceOf(sustainabilityTreasury));
 
         // stakes after
         uint256[3] memory userStakesAfter = checkAllUserStakes();
@@ -63,7 +60,7 @@ contract SacrificePenance is TestHelper {
         assertEq(userStakesAfter[0], 0);
         assertEq(userStakesAfter[1], 0);
         // charlie's time has not expired, so he should not have been sacrificed
-        assertEq(userStakesAfter[2], minStake - ((adminFee * minStake) / 100));
+        assertEq(userStakesAfter[2], minStake - fee);
 
         vm.stopPrank();
 
@@ -74,11 +71,7 @@ contract SacrificePenance is TestHelper {
 
     // UTILS
     function checkAllUserStakes() public returns (uint256[3] memory) {
-        uint256[3] memory stakes = [
-            ROM.checkStake(alice),
-            ROM.checkStake(bob),
-            ROM.checkStake(charlie)
-        ];
+        uint256[3] memory stakes = [ROM.checkStake(alice), ROM.checkStake(bob), ROM.checkStake(charlie)];
         emit log_named_uint("Alice   stake", stakes[0]);
         emit log_named_uint("Bob     stake", stakes[1]);
         emit log_named_uint("Charlie stake", stakes[2]);

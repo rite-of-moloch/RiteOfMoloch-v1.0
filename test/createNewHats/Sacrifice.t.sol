@@ -10,14 +10,10 @@ import "test/TestHelper.sol";
  */
 contract Sacrifice is TestHelper {
     function setUp() public override {
-        // set and deploy ROM-Factory
-        setUpFactory();
+        TestHelper.setUp();
+
         // mint tokens to alice & bob
         mintTokens([alice, bob, charlie, deployer]);
-        // set initial data for ROM clone
-        createInitData();
-        // deploy ROM clone
-        ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
 
         emit log_named_uint("Cohort Counter", ROM.cohortCounter());
         prankJoinInititation(alice);
@@ -51,13 +47,11 @@ contract Sacrifice is TestHelper {
 
         // stakes before
         uint256[3] memory userStakesBefore = checkAllUserStakes();
+        uint256 fee = (ROM.minimumStake() / ROM.PERC_POINTS()) * sustainabilityFee;
 
         // assert values of stakes
         for (uint256 i = 0; i < userStakesBefore.length; i++) {
-            assertEq(
-                userStakesBefore[i],
-                minStake - ((minStake * adminFee) / 100)
-            );
+            assertEq(userStakesBefore[i], minStake - fee);
         }
 
         // sacrifice those that are eligible
@@ -70,7 +64,7 @@ contract Sacrifice is TestHelper {
         assertEq(userStakesAfter[0], 0);
         assertEq(userStakesAfter[1], 0);
         // charlie's time has not expired, so he should not have been sacrificed
-        assertEq(userStakesAfter[2], minStake - ((minStake * adminFee) / 100));
+        assertEq(userStakesAfter[2], minStake - fee);
 
         vm.stopPrank();
 
@@ -84,11 +78,7 @@ contract Sacrifice is TestHelper {
 
     // UTILS
     function checkAllUserStakes() public returns (uint256[3] memory) {
-        uint256[3] memory stakes = [
-            ROM.checkStake(alice),
-            ROM.checkStake(bob),
-            ROM.checkStake(charlie)
-        ];
+        uint256[3] memory stakes = [ROM.checkStake(alice), ROM.checkStake(bob), ROM.checkStake(charlie)];
         emit log_named_uint("Alice   stake", stakes[0]);
         emit log_named_uint("Bob     stake", stakes[1]);
         emit log_named_uint("Charlie stake", stakes[2]);

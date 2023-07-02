@@ -7,6 +7,7 @@ import {RiteOfMolochFactory} from "src/RiteOfMolochFactory.sol";
 import {IInitData} from "src/interfaces/IInitData.sol";
 import {TestToken} from "test/mocks/Token.sol";
 import {Hats} from "hats-protocol/Hats.sol";
+import {IBaal} from "src/baal/IBaal.sol";
 
 // forge test --match-contract TestHelper -vv
 
@@ -14,18 +15,20 @@ import {Hats} from "hats-protocol/Hats.sol";
  * @dev RiteOfMoloch line 139 needs to be changed for local testing:
  * from: _sharesToken = IERC20(baal.sharesToken());
  * to:   _sharesToken = IERC20(initData.stakingAsset);
+ * //TODO make it work
  */
 
 /**
  * @dev RiteOfMoloch line 239 needs to be commented out:
  * disable callerIsUser for Forge tests/scripts
+ * //TODO make it work
  */
 
 contract TestHelper is Test, IInitData {
     uint256 constant DAY_IN_SECONDS = 86400;
 
     address dao = 0x90F79bf6EB2c4f870365E785982E1f101E93b906;
-    TestToken public stakingAsset;
+    TestToken public stakingAsset = new TestToken();
     InitData Data;
 
     // DAO members
@@ -33,9 +36,6 @@ contract TestHelper is Test, IInitData {
     address alice = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266; // admin
     address bob = 0x70997970C51812dc3A010C7d01b50e0d17dc79C8; // user
     address charlie = 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC; // attacker
-
-    // Admin Treasury
-    address adminTreasury = address(0xcafebebe);
 
     // ROM factory and clone seed
     RiteOfMoloch public ROM;
@@ -55,11 +55,16 @@ contract TestHelper is Test, IInitData {
     address constant molochDAO = address(1);
 
     // staking
-    uint256 minStake = 200 * 1e18;
+    uint256 minStake = 200 ether;
 
-    uint256 adminFee = 5;
+    // Treasury that will receive sustainability fee
+    address sustainabilityTreasury = address(0xcafebebe);
+
+    // %5 of 1 milion (PERC_POINTS = 1e6)
+    uint256 sustainabilityFee = 50_000;
 
     function setUp() public virtual {
+        vm.mockCall(dao, abi.encodeWithSelector(IBaal.sharesToken.selector), abi.encode(stakingAsset));
         // set and deploy ROM-Factory
         setUpFactory();
         // set initial data for ROM clone
@@ -71,16 +76,15 @@ contract TestHelper is Test, IInitData {
     function setUpFactory() public {
         // deploy Hats protocol
         HATS = new Hats("Local-Hats", "");
-        // set token to be staked
-        stakingAsset = new TestToken();
+
         // factory hats setup
         createFactoryHats();
         // deploy ROM factory
         ROMF = new RiteOfMolochFactory(
             address(HATS),
             factoryOperatorHat,
-            adminTreasury,
-            adminFee
+            sustainabilityTreasury,
+            sustainabilityFee
         );
     }
 
@@ -107,22 +111,19 @@ contract TestHelper is Test, IInitData {
     // UTILS
     function mintTokens(address[4] memory eoas) public {
         for (uint256 i = 0; i < eoas.length; i++) {
-            stakingAsset.mint(eoas[i], 1000 * 1e18);
+            stakingAsset.mint(eoas[i], 1000 ether);
         }
     }
 
     function prankJoinInititation(address initiate) public {
-        vm.startPrank(initiate);
+        vm.startPrank(initiate, initiate);
         stakingAsset.approve(address(ROM), minStake);
         ROM.joinInitiation(initiate);
         vm.stopPrank();
     }
 
     function emitUserDeadline(string memory name, address initiate) public {
-        emit log_named_uint(
-            string.concat(name, " deadline"),
-            ROM.getDeadline(initiate) / DAY_IN_SECONDS
-        );
+        emit log_named_uint(string.concat(name, " deadline"), ROM.getDeadline(initiate) / DAY_IN_SECONDS);
     }
 
     function createFactoryHats() public {
@@ -130,15 +131,7 @@ contract TestHelper is Test, IInitData {
         factoryTopHat = HATS.mintTopHat(address(this), "Factory-TopHat", "");
 
         // create factory operator hat
-        factoryOperatorHat = HATS.createHat(
-            factoryTopHat,
-            "Factory-Operator",
-            1,
-            molochDAO,
-            molochDAO,
-            true,
-            ""
-        );
+        factoryOperatorHat = HATS.createHat(factoryTopHat, "Factory-Operator", 1, molochDAO, molochDAO, true, "");
         // mint factory operator
         HATS.mintHat(factoryOperatorHat, msg.sender);
         HATS.transferHat(factoryTopHat, address(this), address(444444));
@@ -176,10 +169,7 @@ contract TestHelper is Test, IInitData {
         // cohort settings
         emit log_named_uint("Min     Share", ROM.minimumShare());
         emit log_named_uint("Min     Stake", ROM.minimumStake());
-        emit log_named_uint(
-            "Max      Time",
-            ROM.maximumTime() / DAY_IN_SECONDS
-        );
+        emit log_named_uint("Max      Time", ROM.maximumTime() / DAY_IN_SECONDS);
     }
 
     // Hat ids

@@ -3,26 +3,31 @@
 pragma solidity ^0.8.13;
 
 import {CountersUpgradeable} from "openzeppelin-contracts-upgradeable/utils/CountersUpgradeable.sol";
-import {ERC721Upgradeable, ContextUpgradeable} from "openzeppelin-contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
+import {
+    ERC721Upgradeable,
+    ContextUpgradeable
+} from "openzeppelin-contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import {IERC20} from "openzeppelin-contracts/token/ERC20/IERC20.sol";
 import {IInitData} from "src/interfaces/IInitData.sol";
 import {IRiteOfMoloch} from "src/interfaces/IROM.sol";
 import {HatsAccessControl, IHats, Context} from "hats-auth/HatsAccessControl.sol";
 import {IBaal} from "src/baal/IBaal.sol";
 
-contract RiteOfMoloch is
-    IInitData,
-    ERC721Upgradeable,
-    HatsAccessControl,
-    IRiteOfMoloch
-{
+import "forge-std/console2.sol";
+
+contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteOfMoloch {
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
     bytes32 public constant ADMIN = keccak256("ADMIN");
 
-    /*************************
-     MAPPINGS AND ARRAYS
-     *************************/
+    /// @notice The constant that represents percentage points for calculations.
+    uint256 public constant PERC_POINTS = 1e6;
+
+    /**
+     *
+     *  MAPPINGS AND ARRAYS
+     *
+     */
 
     // initiation participant token balances
     mapping(address => uint256) internal _staked;
@@ -33,9 +38,11 @@ contract RiteOfMoloch is
     // initiates by season: season# => id# => initiateAddress
     mapping(uint256 => mapping(uint256 => address)) internal initiates;
 
-    /*************************
-     STATE VARIABLES
-     *************************/
+    /**
+     *
+     *  STATE VARIABLES
+     *
+     */
 
     CountersUpgradeable.Counter internal _tokenIdCounter;
 
@@ -78,8 +85,8 @@ contract RiteOfMoloch is
     // maximum length of time for initiates to succeed at joining
     uint256 public maximumTime;
 
-    // admin fee / percentage cut of sacrifice
-    uint256 public adminFee;
+    // percentage cut of sacrifice to support RoM maintenance and development
+    uint256 public sustainabilityFee;
 
     // DAO treasury address
     address public daoTreasury;
@@ -142,8 +149,7 @@ contract RiteOfMoloch is
         baal = IBaal(initData.membershipCriteria);
 
         // reference sharesToken of Baal
-        _sharesToken = IERC20(initData.stakingAsset); // <= for local testing only
-        // _sharesToken = IERC20(baal.sharesToken()); // <= correct
+        _sharesToken = IERC20(baal.sharesToken());
 
         // set the DAO treasury daoAddress
         daoTreasury = initData.daoTreasury;
@@ -154,11 +160,11 @@ contract RiteOfMoloch is
         // set the interface for accessing the required staking token
         _token = IERC20(initData.stakingAsset);
 
+        // set the adminFee for blood penance
+        sustainabilityFee = _sustainabilityFee;
+
         // set the minimum stake requirement
         _setMinimumStake(initData.assetAmount);
-
-        // set the adminFee for blood penance
-        adminFee = (_sustainabilityFee * minimumStake) / 100;
 
         // set the minimum shares
         _setShareThreshold(initData.threshold);
@@ -199,11 +205,7 @@ contract RiteOfMoloch is
             topHat = initData.topHatId;
             admin1 = initData.admin1;
             admin2 = initData.admin2;
-            accessHatData = _encodeTransferHat(
-                topHat,
-                daoTreasury,
-                address(this)
-            );
+            accessHatData = _encodeTransferHat(topHat, daoTreasury, address(this));
             buildHatData = _encodeBuildHatTree(caller_, admin1, admin2);
 
             // submit HATS proposal
@@ -223,17 +225,18 @@ contract RiteOfMoloch is
         }
     }
 
-    /*************************
-     MODIFIERS
-     *************************/
+    /**
+     *
+     *  MODIFIERS
+     *
+     */
 
     /**
      * @dev Modifier for preventing calls from contracts
      * Safety feature for preventing malicious contract call backs
      */
     modifier callerIsUser() {
-        // for testing in Forge: disable
-        // require(tx.origin == msg.sender, "The caller is another contract!");
+        require(tx.origin == msg.sender, "The caller is another contract!");
         _;
     }
 
@@ -255,9 +258,11 @@ contract RiteOfMoloch is
         _;
     }
 
-    /*************************
-     USER FUNCTIONS
-     *************************/
+    /**
+     *
+     *  USER FUNCTIONS
+     *
+     */
 
     /**
      * @dev Allows users to join the DAO initiation
@@ -266,22 +271,23 @@ contract RiteOfMoloch is
      */
     function joinInitiation(address user) public callerIsUser {
         require(block.timestamp <= joinEndTime, "This cohort is now closed");
-        require(
-            _tokenIdCounter.current() <= cohortSize,
-            "This cohort is already full"
-        );
+        require(_tokenIdCounter.current() <= cohortSize, "This cohort is already full");
 
         // enforce the initiate or sponsor transfers correct tokens to the contract
         require(_stake(user), "Staking failed!");
+
+        console2.log("Pass Stake");
 
         // increment cohort count
         cohortCounter++;
 
         // add initiate to tracker by season and id
         initiates[cohortSeason][cohortCounter] = msg.sender;
+        console2.log("Pass add initiate");
 
         // issue a soul bound token
         _soulBind(user);
+        console2.log("Pass _soulBind");
     }
 
     /**
@@ -305,13 +311,13 @@ contract RiteOfMoloch is
         return _staked[user];
     }
 
-    /*************************
-     ACCESS CONTROL FUNCTIONS
-     *************************/
+    /**
+     *
+     *  ACCESS CONTROL FUNCTIONS
+     *
+     */
 
-    function changeJoinTimeDuration(
-        uint256 _joinDuration
-    ) external onlyRole(ADMIN) {
+    function changeJoinTimeDuration(uint256 _joinDuration) external onlyRole(ADMIN) {
         joinDuration = _joinDuration;
     }
 
@@ -335,9 +341,7 @@ contract RiteOfMoloch is
      * @dev Allows changing the DAO member share threshold
      * @param newShareThreshold the number of shares required to be considered a DAO member
      */
-    function setShareThreshold(
-        uint256 newShareThreshold
-    ) external onlyRole(ADMIN) {
+    function setShareThreshold(uint256 newShareThreshold) external onlyRole(ADMIN) {
         _setShareThreshold(newShareThreshold);
     }
 
@@ -353,9 +357,7 @@ contract RiteOfMoloch is
      * @dev If ROM is a Shaman: Allows minting shares of Baal DAO to become member
      * @param to the list of initiate addresses who have passed their rites to become member
      */
-    function batchMintBaalShares(
-        address[] calldata to
-    ) external onlyRole(ADMIN) onlyShaman {
+    function batchMintBaalShares(address[] calldata to) external onlyRole(ADMIN) onlyShaman {
         uint256 length = to.length;
         uint256[] memory shares = new uint256[](length);
 
@@ -370,9 +372,7 @@ contract RiteOfMoloch is
     /**
      * @param _to initiate address who has passed their rite to become member
      */
-    function singleMintBaalShares(
-        address _to
-    ) external onlyRole(ADMIN) onlyShaman {
+    function singleMintBaalShares(address _to) external onlyRole(ADMIN) onlyShaman {
         uint256[] memory shares = new uint256[](1);
         address[] memory to = new address[](1);
 
@@ -398,16 +398,15 @@ contract RiteOfMoloch is
         cohortCounter--;
     }
 
-    /*************************
-     PRIVATE OR INTERNAL
-     *************************/
+    /**
+     *
+     *  PRIVATE OR INTERNAL
+     *
+     */
 
     function _setMinimumStake(uint256 newMinimumStake) internal virtual {
         // enforce that the minimum stake isn't zero
-        require(
-            newMinimumStake > 0,
-            "Minimum stake must be greater than zero!"
-        );
+        require(newMinimumStake > 0, "Minimum stake must be greater than zero!");
 
         // set the minimum staking requirement
         minimumStake = newMinimumStake;
@@ -418,10 +417,7 @@ contract RiteOfMoloch is
 
     function _setShareThreshold(uint256 newShareThreshold) internal virtual {
         // enforce that the minimum share threshold isn't zero
-        require(
-            newShareThreshold > 0,
-            "Minimum shares must be greater than zero!"
-        );
+        require(newShareThreshold > 0, "Minimum shares must be greater than zero!");
 
         // set the minimum number of DAO shares required to graduate
         minimumShare = newShareThreshold;
@@ -457,20 +453,20 @@ contract RiteOfMoloch is
         // enforce that the initiate hasn't previously staked
         require(balanceOf(_user) == 0, "Already joined the initiation!");
 
+        uint256 fee = (minimumStake / PERC_POINTS) * sustainabilityFee;
+
         // change the initiate's stake total
-        _staked[_user] = minimumStake - adminFee;
+        _staked[_user] = minimumStake - fee;
 
         // set the initiate's deadline
         deadlines[_user] = block.timestamp + maximumTime;
 
-        success = _token.transferFrom(msg.sender, address(this), minimumStake);
-
-        // admin blood penance if so desired
-        if (adminFee > 0) {
-            require(
-                _token.transfer(sustainabilityTreasury, adminFee),
-                "Failed Penance!"
-            );
+        // Transfer funds to rite (and sustainability treasury if applicable)
+        if (fee > 0) {
+            _token.transferFrom(msg.sender, address(this), minimumStake - fee);
+            success = _token.transfer(sustainabilityTreasury, fee);
+        } else {
+            success = _token.transferFrom(msg.sender, address(this), minimumStake);
         }
     }
 
@@ -513,13 +509,7 @@ contract RiteOfMoloch is
         _mint(_user, tokenId);
 
         // log the initiation data
-        emit Initiation(
-            _user,
-            msg.sender,
-            tokenId,
-            minimumStake,
-            deadlines[_user]
-        );
+        emit Initiation(_user, msg.sender, tokenId, minimumStake, deadlines[_user]);
     }
 
     function _darkRitual() internal virtual {
@@ -561,9 +551,7 @@ contract RiteOfMoloch is
         cohortSeason++;
     }
 
-    function _bloodLetting(
-        address _failedInitiate
-    ) internal virtual returns (uint256) {
+    function _bloodLetting(address _failedInitiate) internal virtual returns (uint256) {
         // access each initiate's balance
         uint256 balance = _staked[_failedInitiate];
 
@@ -588,15 +576,14 @@ contract RiteOfMoloch is
     }
 
     function _checkManager() internal virtual {
-        require(
-            baal.isManager(address(this)) == true,
-            "This RiteOfMoloch is not a Manager-Shaman!"
-        );
+        require(baal.isManager(address(this)) == true, "This RiteOfMoloch is not a Manager-Shaman!");
     }
 
-    /*************************
-     VIEW AND PURE FUNCTIONS
-     *************************/
+    /**
+     *
+     *  VIEW AND PURE FUNCTIONS
+     *
+     */
 
     /**
      * @dev returns the user's deadline for onboarding
@@ -614,25 +601,17 @@ contract RiteOfMoloch is
         return (shares >= minimumShare);
     }
 
-    /*************************
-     OVERRIDES
-     *************************/
+    /**
+     *
+     *  OVERRIDES
+     *
+     */
 
-    function _msgSender()
-        internal
-        view
-        override(Context, ContextUpgradeable)
-        returns (address)
-    {
+    function _msgSender() internal view override(Context, ContextUpgradeable) returns (address) {
         return msg.sender;
     }
 
-    function _msgData()
-        internal
-        pure
-        override(Context, ContextUpgradeable)
-        returns (bytes calldata)
-    {
+    function _msgData() internal pure override(Context, ContextUpgradeable) returns (bytes calldata) {
         return msg.data;
     }
 
@@ -641,48 +620,35 @@ contract RiteOfMoloch is
     }
 
     // Cohort NFTs cannot be transferred
-    function _beforeTokenTransfer(
-        address _from,
-        address,
-        uint256 /* firstTokenId */,
-        uint256
-    ) internal virtual override {
+    function _beforeTokenTransfer(address _from, address, uint256, /* firstTokenId */ uint256)
+        internal
+        virtual
+        override
+    {
         require(_from == address(0), "SBT cannot be transferred");
     }
 
     // The following functions are overrides required by Solidity.
-    function supportsInterface(
-        bytes4 interfaceId
-    ) public view override(ERC721Upgradeable) returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public view override(ERC721Upgradeable) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
 
-    /*************************
-     HATS ACCESS CONTROL SETUP
-     *************************/
+    /**
+     *
+     *  HATS ACCESS CONTROL SETUP
+     *
+     */
 
     /**
      * @dev create & mint admin hats to deployer & admin addresses
      * DAO can grant/revoke adminHats (after topHat is transferred below)
      */
-    function initializeHatTree(
-        address _deployer,
-        address _admin1,
-        address _admin2
-    ) public {
+    function initializeHatTree(address _deployer, address _admin1, address _admin2) public {
         require(initHatTreeLock == false, "Hats already initialized");
         initHatTreeLock = true;
 
         // admin privileges: access control
-        adminHat = HATS.createHat(
-            topHat,
-            "ROM Admin",
-            3,
-            address(baal),
-            address(baal),
-            true,
-            ""
-        );
+        adminHat = HATS.createHat(topHat, "ROM Admin", 3, address(baal), address(baal), true, "");
 
         // grant Hat Access Control role
         _grantRole(ADMIN, adminHat);
@@ -736,61 +702,42 @@ contract RiteOfMoloch is
         _submitBaalProposal(_encodeMultiMetaTx(data, targets), 4);
     }
 
-    /*************************
-     ENCODING
-     *************************/
+    /**
+     *
+     *  ENCODING
+     *
+     */
 
     /**
      * @dev Encoding function for Baal Shaman
      */
-    function _encodeShamanProposal(
-        address shaman,
-        uint256 permission
-    ) internal pure returns (bytes memory) {
+    function _encodeShamanProposal(address shaman, uint256 permission) internal pure returns (bytes memory) {
         address[] memory _shaman = new address[](1);
         _shaman[0] = shaman;
 
         uint256[] memory _permission = new uint256[](1);
         _permission[0] = permission;
 
-        return
-            abi.encodeWithSignature(
-                "setShamans(address[],uint256[])",
-                _shaman,
-                _permission
-            );
+        return abi.encodeWithSignature("setShamans(address[],uint256[])", _shaman, _permission);
     }
 
     /**
      * @dev Encoding function for accessing an existing topHat
      */
-    function _encodeTransferHat(
-        uint256 _hat,
-        address _from,
-        address _to
-    ) internal returns (bytes memory) {
+    function _encodeTransferHat(uint256 _hat, address _from, address _to) internal returns (bytes memory) {
         // todo: rm admin vars and replace w/ Hats Protocol subgraph query
         if (admin1 == _from) {
             admin1 = _to;
         } else if (admin2 == _from) {
             admin2 = _to;
         }
-        return
-            abi.encodeWithSignature(
-                "transferHat(uint256,address,address)",
-                _hat,
-                _from,
-                _to
-            );
+        return abi.encodeWithSignature("transferHat(uint256,address,address)", _hat, _from, _to);
     }
 
     /**
      * @dev Encoding function for minting an adminHat
      */
-    function _encodeMintHat(
-        uint256 _hat,
-        address _to
-    ) internal returns (bytes memory) {
+    function _encodeMintHat(uint256 _hat, address _to) internal returns (bytes memory) {
         // todo: rm admin vars and replace w/ Hats Protocol subgraph query
         if (admin1 == address(0)) {
             admin1 = _to;
@@ -803,38 +750,22 @@ contract RiteOfMoloch is
     /**
      * @dev Encoding function for building on existing Hats tree
      */
-    function _encodeBuildHatTree(
-        address _deployer,
-        address _admin1,
-        address _admin2
-    ) internal pure returns (bytes memory) {
-        return
-            abi.encodeWithSignature(
-                "initializeHatTree(address,address,address)",
-                _deployer,
-                _admin1,
-                _admin2
-            );
+    function _encodeBuildHatTree(address _deployer, address _admin1, address _admin2)
+        internal
+        pure
+        returns (bytes memory)
+    {
+        return abi.encodeWithSignature("initializeHatTree(address,address,address)", _deployer, _admin1, _admin2);
     }
 
     /**
      * @dev Format multiSend for encoded functions
      */
-    function _encodeMultiMetaTx(
-        bytes[] memory _data,
-        address[] memory _targets
-    ) internal pure returns (bytes memory) {
+    function _encodeMultiMetaTx(bytes[] memory _data, address[] memory _targets) internal pure returns (bytes memory) {
         bytes memory metaTx;
 
         for (uint256 i = 0; i < _data.length; i++) {
-            metaTx = abi.encodePacked(
-                metaTx,
-                uint8(0),
-                _targets[i],
-                uint256(0),
-                uint256(_data[i].length),
-                _data[i]
-            );
+            metaTx = abi.encodePacked(metaTx, uint8(0), _targets[i], uint256(0), uint256(_data[i].length), _data[i]);
         }
         return abi.encodeWithSignature("multiSend(bytes)", metaTx);
     }
@@ -842,32 +773,29 @@ contract RiteOfMoloch is
     /**
      * @dev Submit voting proposal to Baal DAO
      */
-    function _submitBaalProposal(
-        bytes memory multiSendMetaTx,
-        uint256 options
-    ) internal {
+    function _submitBaalProposal(bytes memory multiSendMetaTx, uint256 options) internal {
         uint256 proposalOffering = baal.proposalOffering();
         require(msg.value == proposalOffering, "Missing tribute");
 
         string memory metaString;
 
         if (options == 1) {
-            metaString = '{"proposalType": "ADD_SHAMAN", "title": "Rite of Moloch (ROM): Shaman Proposal", "description": "Assign ROM as a Manager-Shaman to mint minimum DAO shares"}';
+            metaString =
+                '{"proposalType": "ADD_SHAMAN", "title": "Rite of Moloch (ROM): Shaman Proposal", "description": "Assign ROM as a Manager-Shaman to mint minimum DAO shares"}';
         } else if (options == 2) {
-            metaString = '{"proposalType": "BORROW_TOPHAT", "title": "Rite of Moloch (ROM): Hats Proposal", "description": "Create and mint ROM-Admin hats from DAO TopHat"}';
+            metaString =
+                '{"proposalType": "BORROW_TOPHAT", "title": "Rite of Moloch (ROM): Hats Proposal", "description": "Create and mint ROM-Admin hats from DAO TopHat"}';
         } else if (options == 3) {
-            metaString = '{"proposalType": "MINT_ADMINHAT", "title": "Rite of Moloch (ROM): Mint Admin Hat", "description": "Mint ROM-Admin hat to EOA"}';
+            metaString =
+                '{"proposalType": "MINT_ADMINHAT", "title": "Rite of Moloch (ROM): Mint Admin Hat", "description": "Mint ROM-Admin hat to EOA"}';
         } else if (options == 4) {
-            metaString = '{"proposalType": "TRANSFER_ADMINHAT", "title": "Rite of Moloch (ROM): Transfer Admin Hat", "description": "Transfer ROM-Admin hat to EOA"}';
+            metaString =
+                '{"proposalType": "TRANSFER_ADMINHAT", "title": "Rite of Moloch (ROM): Transfer Admin Hat", "description": "Transfer ROM-Admin hat to EOA"}';
         } else {
-            metaString = '{"proposalType": "UNDEFINED", "title": "Rite of Moloch (ROM): undefined", "description": "Undefined"}';
+            metaString =
+                '{"proposalType": "UNDEFINED", "title": "Rite of Moloch (ROM): undefined", "description": "Undefined"}';
         }
 
-        baal.submitProposal{value: proposalOffering}(
-            multiSendMetaTx,
-            0,
-            0,
-            metaString
-        );
+        baal.submitProposal{value: proposalOffering}(multiSendMetaTx, 0, 0, metaString);
     }
 }
