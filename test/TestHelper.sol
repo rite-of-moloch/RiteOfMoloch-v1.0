@@ -109,6 +109,10 @@ contract TestHelper is Test, IInitData {
     }
 
     // UTILS
+    function mintTokens(address eoa) public {
+        stakingAsset.mint(eoa, 1000 ether);
+    }
+
     function mintTokens(address[4] memory eoas) public {
         for (uint256 i = 0; i < eoas.length; i++) {
             stakingAsset.mint(eoas[i], 1000 ether);
