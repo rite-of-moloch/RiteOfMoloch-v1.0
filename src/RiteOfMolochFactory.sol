@@ -72,21 +72,35 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
             "!implementation"
         );
 
+        address caller = msg.sender;
+
         // deploy cohort clone proxy with a certain implementation
         address clone = Clones.clone(implementations[implementationSelector]);
+
+        // check for Shaman
+        if (initData.shamanOn == true) {
+            // lookup proposal offering amount
+            uint256 offering = initData.membershipCriteria.proposalOffering();
+
+            if (offering > 0) {
+                require(msg.value == offering);
+            }
+
+            clone.transfer(offering);
+        }
 
         // initialize the cohort clone
         RiteOfMoloch(clone).initialize(
             initData,
             hatsProtocol,
-            msg.sender,
+            caller,
             sustainabilityTreasury,
             sustainabilityFee
         );
 
         emit NewRiteOfMoloch(
             clone,
-            msg.sender,
+            caller,
             implementations[implementationSelector],
             initData.membershipCriteria,
             initData.stakingAsset,
