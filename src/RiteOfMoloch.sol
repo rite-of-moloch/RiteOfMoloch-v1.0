@@ -157,10 +157,10 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
         // set the admin treasury daoAddress
         sustainabilityTreasury = _sustainabilityTreasury;
 
-        // set the interface for accessing the required staking token
+        // set the address for accessing the required staking token
         _token = IERC20(initData.stakingAsset);
 
-        // set the adminFee for blood penance
+        // set the sustainabilityFee for blood penance
         sustainabilityFee = _sustainabilityFee;
 
         // set the minimum stake requirement
@@ -254,7 +254,7 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
      * Prevents calling functions that will revert
      */
     modifier onlyShaman() {
-        // _checkManager();
+        _checkManager();
         _;
     }
 
@@ -276,18 +276,14 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
         // enforce the initiate or sponsor transfers correct tokens to the contract
         require(_stake(user), "Staking failed!");
 
-        console2.log("Pass Stake");
-
         // increment cohort count
         cohortCounter++;
 
         // add initiate to tracker by season and id
         initiates[cohortSeason][cohortCounter] = msg.sender;
-        console2.log("Pass add initiate");
 
         // issue a soul bound token
         _soulBind(user);
-        console2.log("Pass _soulBind");
     }
 
     /**
@@ -466,7 +462,7 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
         // Transfer funds to rite (and sustainability treasury if applicable)
         if (fee > 0) {
             _token.transferFrom(msg.sender, address(this), minimumStake - fee);
-            success = _token.transfer(sustainabilityTreasury, fee);
+            success = _token.transferFrom(msg.sender, sustainabilityTreasury, fee);
         } else {
             success = _token.transferFrom(msg.sender, address(this), minimumStake);
         }
