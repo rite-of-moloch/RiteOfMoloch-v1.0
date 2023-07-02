@@ -420,6 +420,7 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
         require(newShareThreshold > 0, "Minimum shares must be greater than zero!");
 
         // set the minimum number of DAO shares required to graduate
+        // TODO same function different names [minimumShare, shareThreshold], can we consolidate?
         minimumShare = newShareThreshold;
 
         // log data for the new minimum share threshold
@@ -431,6 +432,7 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
         require(newMaxTime > 0, "Minimum duration must be greater than 0!");
 
         // set the maximum length of time for initiations
+        // TODO same function different names [maxDuration, maximumTime], can we consolidate?
         maximumTime = newMaxTime;
 
         // log the new duration before stakes can be slashed

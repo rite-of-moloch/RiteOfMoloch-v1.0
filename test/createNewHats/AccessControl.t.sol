@@ -12,34 +12,51 @@ import {HatsAccessControl} from "hats-auth/HatsAccessControl.sol";
 contract AccessControl is TestHelper {
     bytes32 public constant SUPER_ADMIN = keccak256("SUPER_ADMIN");
     bytes32 public constant ADMIN = keccak256("ADMIN");
+    address admin;
+    address user;
+    address attacker;
 
     function setUp() public override {
         TestHelper.setUp();
+        admin = alice;
+        user = bob;
+        attacker = charlie;
     }
 
     /**
      * TESTS
      */
-    function testAdminPermissions() public {
-        changeSettings(deployer, 20);
-        changeSettings(alice, 30);
+    function testAdminPermissionsFuzz(uint256 deployerValue, uint256 adminValue) public {
+        vm.assume(deployerValue > 0);
+        vm.assume(adminValue > 0);
+
+        // Deployer wears the admin hat
+        changeSettings(deployer, deployerValue);
+
+        assertEq(ROM.minimumStake(), deployerValue);
+        assertEq(ROM.minimumShare(), deployerValue);
+        assertEq(ROM.maximumTime(), deployerValue);
+
+        // Admin wears the admin hat
+        changeSettings(admin, adminValue);
+
+        assertEq(ROM.minimumStake(), adminValue);
+        assertEq(ROM.minimumShare(), adminValue);
+        assertEq(ROM.maximumTime(), adminValue);
     }
 
-    function testAdminSecurity() public {
+    function testAdminSecurityFuzz(address attacker) public {
+        vm.assume(attacker != deployer);
+        vm.assume(attacker != admin);
+
         uint256 adminHat = ROM.adminHat();
 
         // charlie should not be able to call admin functions
-        vm.startPrank(charlie);
+        vm.startPrank(attacker);
 
-        vm.expectRevert(
-            abi.encodeWithSelector(
-                HatsAccessControl.NotWearingRoleHat.selector,
-                ADMIN,
-                adminHat,
-                charlie
-            )
-        );
+        vm.expectRevert(abi.encodeWithSelector(HatsAccessControl.NotWearingRoleHat.selector, ADMIN, adminHat, attacker));
         ROM.setMinimumStake(40);
+        assertEq(ROM.minimumStake(), minStake);
 
         vm.stopPrank();
     }
@@ -51,9 +68,6 @@ contract AccessControl is TestHelper {
         ROM.setMinimumStake(n);
         ROM.setShareThreshold(n);
         ROM.setMaxDuration(n);
-        emit log_named_uint("Min Share", ROM.minimumShare());
-        emit log_named_uint("Min Stake", ROM.minimumStake());
-        emit log_named_uint("Max  Time", ROM.maximumTime());
 
         vm.stopPrank();
     }
