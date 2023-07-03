@@ -139,36 +139,19 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
                 </span>
               </Text>
               <Text>
-                Cohort size: {dataText(cohort?.totalMembers.toString())}
+                Cohort size: {dataText(cohort?.totalMembers)}
               </Text>
               <Text>
                 Success percentage:{" "}
-                {dataText(cohort?.successPercentage.toString())}
+                {dataText(Number(cohort?.successPercentage).toFixed(2))}
               </Text>
               <Text>
-                Members slashed: {dataText(cohort?.slashedMembers.toString())}
+                Members slashed: {dataText(cohort?.slashedMembers)}
               </Text>
-              {/* TODO: create hook that calls `totalSupply` functioin on Baal contract and gets treasury size https://goerli.etherscan.io/address/0x6053de194226843e4fd99a82c1386b4c76e19e34#readContract */}
-              {/* <Text>
-              Treasury size:
-              <span style={{ color: "white", marginLeft: "0.5rem" }}>
-                {treasurySize}
-              </span>
-            </Text> */}
               <Text>
                 Staking date of last member: {dataText(lastMemberJoined())}
               </Text>
             </VStack>
-            {/* <HStack alignSelf="start" maxW="40%">
-              <Image
-                src={`${metrics?.sbtUrl}`}
-                alt="SBT image preview"
-                boxShadow="dark-lg"
-                p="1"
-                rounded="md"
-                bg="gray"
-              />
-            </HStack> */}
           </HStack>
           <VStack mt="2rem" mb="0.5rem" spacing="1rem">
             <Box w="full">
