@@ -8,12 +8,12 @@ import {
   Heading,
   Tooltip,
 } from "@raidguild/design-system";
+import { utils } from "ethers";
 import { useAccount, useNetwork } from "wagmi";
 import { useRouter } from "next/router";
 import BackButton from "components/BackButton";
-import { useTokenSymbol } from "hooks/useERC20";
-import { useIsMember } from "hooks/useRiteOfMoloch";
-import { useClaimStake } from "hooks/useRiteOfMoloch";
+import { useDecimalOf, useTokenSymbol } from "hooks/useERC20";
+import { useIsMember, useClaimStake } from "hooks/useRiteOfMoloch";
 import BlockExplorerLink from "components/blockExplorer/BlockExplorerLink";
 import GridTemplate from "components/GridTemplate";
 import { useCohortByAddress } from "hooks/useCohort";
@@ -39,14 +39,17 @@ const CohortPage = () => {
     seconds: cohort?.time,
   });
 
+  let decimalOf = useDecimalOf(cohort?.token);
+    if (!decimalOf) {
+    decimalOf = "0";
+  }
+
   function userAddress(): string {
     if (typeof address === "string") return address;
     else return "";
   }
 
   const isMember = useIsMember(cohort?.address, [userAddress()]);
-
-  console.log(isMember);
 
   const { writeClaimStake, prepareErrorClaimStake, isLoadingClaimStake } =
     useClaimStake(cohort?.address || "");
@@ -55,10 +58,8 @@ const CohortPage = () => {
   // checks error message to see if usere has any stake
   const userHasNoStake =
     prepareErrorClaimStake?.message?.includes("User has no stake");
-  console.log(userHasNoStake);
 
   const handleClaimStake = () => {
-    console.log("isMember", isMember);
     if (isMember) {
       writeClaimStake && writeClaimStake();
     }
@@ -98,7 +99,7 @@ const CohortPage = () => {
           }
           column2={
             <Text>
-              <span>{cohort?.tokenAmount}</span>
+              <span>{+utils.formatUnits(cohort?.tokenAmount || "0", decimalOf)}</span>
               <span style={{ marginLeft: "0.25em" }}>{tokenSymbol}</span>
             </Text>
           }
