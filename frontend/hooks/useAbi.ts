@@ -1,6 +1,7 @@
 import abiERC20 from "../contracts/erc20.json";
 import abiROM from "../contracts/riteOfMoloch.json";
 import abiROMFac from "../contracts/riteOfMolochFactory.json";
+import abiBaal from "../contracts/baal.json";
 
 type ABI = {}[];
 
@@ -15,8 +16,10 @@ const useAbi = (contract: string): ABI => {
     abi = abiROM;
   } else if (contract === "riteOfMolochFactoryAddress") {
     abi = abiROMFac;
-  } else {
+  } else if (contract === "erc20TokenAddress") {
     abi = abiERC20;
+  } else {
+    abi = abiBaal;
   }
   return abi;
 };

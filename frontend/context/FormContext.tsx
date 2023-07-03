@@ -29,8 +29,8 @@ export const FormContext = createContext<{
   setAssetAmount: Dispatch<string>;
   cohortSize: number | undefined;
   setCohortSize: Dispatch<number | undefined>;
-  shareThreshold: number | undefined;
-  setShareThreshold: Dispatch<number | undefined>;
+  shareThreshold: string;
+  setShareThreshold: Dispatch<string>;
   onboardingPeriod: number | undefined;
   setOnboardingPeriod: Dispatch<number | undefined>;
   stakeDuration: number | undefined;
@@ -117,9 +117,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   const [uriSBT, setUriSBT] = useState("");
   const [assetAmount, setAssetAmount] = useState("");
   const [cohortSize, setCohortSize] = useState<number | undefined>(undefined);
-  const [shareThreshold, setShareThreshold] = useState<number | undefined>(
-    undefined
-  );
+  const [shareThreshold, setShareThreshold] = useState("");
   const [onboardingPeriod, setOnboardingPeriod] = useState<number | undefined>(
     undefined
   );

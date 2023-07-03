@@ -76,7 +76,7 @@ const PreviewNewCohort = () => {
     admin2 !== "" ? admin2 : zeroAddress,
     Number(cohortSize),
     Number(onboardingPeriod) * 60 * 60 * 24,
-    Number(shareThreshold),
+    shareThreshold,
     assetAmount,
     Number(stakeDuration) * 60 * 60 * 24,
     tophatID ? tophatID : Number(0),
