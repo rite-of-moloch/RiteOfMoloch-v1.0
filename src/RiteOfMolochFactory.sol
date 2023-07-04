@@ -43,9 +43,6 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
         // point access control functionality to Hats protocol
         _changeHatsContract(hatsProtocol);
 
-        // increment the implementation id
-        iid = 1;
-
         sustainabilityTreasury = _sustainabilityTreasury;
 
         sustainabilityFee = _sustainabilityFee;
@@ -61,26 +58,20 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
      * @param initData the complete data for initializing a new cohort
      * @param implementationSelector points to a logic contract implementation
      */
-    function createCohort(
-        InitData calldata initData,
-        uint256 implementationSelector
-    ) external returns (address) {
+    function createCohort(InitData calldata initData, uint256 implementationSelector)
+        external
+        payable
+        returns (address)
+    {
         // enforce that a valid implementation is selected
-        require(
-            implementationSelector > 0 && implementationSelector <= iid,
-            "!implementation"
-        );
+        require(implementationSelector <= iid, "!implementation");
 
         // deploy cohort clone proxy with a certain implementation
         address clone = Clones.clone(implementations[implementationSelector]);
 
         // initialize the cohort clone
-        RiteOfMoloch(clone).initialize(
-            initData,
-            hatsProtocol,
-            msg.sender,
-            sustainabilityTreasury,
-            sustainabilityFee
+        RiteOfMoloch(clone).initialize{value: msg.value}(
+            initData, hatsProtocol, msg.sender, sustainabilityTreasury, sustainabilityFee
         );
 
         emit NewRiteOfMoloch(
@@ -103,28 +94,23 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
      * @dev marks a deployed contract as a suitable implementation for additional cohort formats
      * @param implementation the contract address for new cohort format logic
      */
-    function addImplementation(
-        address implementation
-    ) external onlyRole(FACTORY_OPERATOR) {
+    function addImplementation(address implementation) external onlyRole(FACTORY_OPERATOR) {
         iid++;
         implementations[iid] = implementation;
     }
 
     // point to new Hats protocol implementation
-    function changeHatsProtocol(
-        address _hatsProtocol
-    ) public onlyRole(FACTORY_OPERATOR) {
+    function changeHatsProtocol(address _hatsProtocol) public onlyRole(FACTORY_OPERATOR) {
         hatsProtocol = _hatsProtocol;
         _changeHatsContract(_hatsProtocol);
     }
 
-    function updateSustainabilityFee(uint256 fee) external {
+    function updateSustainabilityFee(uint256 fee) external onlyRole(FACTORY_OPERATOR) {
+        require(fee <= 1e6, "Sustainability fee too high");
         sustainabilityFee = fee;
     }
 
-    function updateSustainabilityTreasury(
-        address newSustainabilityTreasury
-    ) external {
+    function updateSustainabilityTreasury(address newSustainabilityTreasury) external onlyRole(FACTORY_OPERATOR) {
         sustainabilityTreasury = newSustainabilityTreasury;
     }
 }

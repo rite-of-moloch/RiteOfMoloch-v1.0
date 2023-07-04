@@ -2,15 +2,15 @@
 // @author huntrr / Raid Guild
 pragma solidity ^0.8.13;
 
-
 import {IInitData} from "src/interfaces/IInitData.sol";
 
 // todo: change this contract into an interface
 interface IRiteOfMolochFactory is IInitData {
-
-    /*************************
-     EVENTS
-     *************************/
+    /**
+     *
+     *  EVENTS
+     *
+     */
 
     event NewRiteOfMoloch(
         address cohortContract,
@@ -25,19 +25,21 @@ interface IRiteOfMolochFactory is IInitData {
         string sbtUrl
     );
 
-    /*************************
-     FUNCTIONS
-     *************************/
-     
+    /**
+     *
+     *  FUNCTIONS
+     *
+     */
+
     /**
      * @dev Deploys a new clone proxy instance for cohort staking
      * @param initData the complete data for initializing a new cohort
      * @param implementationSelector points to a logic contract implementation
      */
-    function createCohort(
-        InitData calldata initData,
-        uint256 implementationSelector
-    ) external returns (address);
+    function createCohort(InitData calldata initData, uint256 implementationSelector)
+        external
+        payable
+        returns (address);
 
     /**
      * @dev marks a deployed contract as a suitable implementation for additional cohort formats

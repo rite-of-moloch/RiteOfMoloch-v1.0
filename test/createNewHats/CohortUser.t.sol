@@ -21,10 +21,10 @@ contract CohortUser is TestHelper {
      */
     function testUserStake() public {
         vm.startPrank(bob, bob);
-        stakingAsset.approve(address(ROM), minStake);
-        ROM.joinInitiation(bob);
-        emit log_named_uint("Bob deadline", ROM.getDeadline(bob) / DAY_IN_SECONDS);
-        ROM.cryForHelp("Help me!");
+        stakingAsset.approve(address(riteOfMoloch), minStake);
+        riteOfMoloch.joinInitiation(bob);
+        emit log_named_uint("Bob deadline", riteOfMoloch.getDeadline(bob) / DAY_IN_SECONDS);
+        riteOfMoloch.cryForHelp("Help me!");
         vm.stopPrank();
     }
 
@@ -37,10 +37,10 @@ contract CohortUser is TestHelper {
         prankJoinInititation(deployer);
 
         vm.startPrank(charlie, charlie);
-        stakingAsset.approve(address(ROM), minStake);
+        stakingAsset.approve(address(riteOfMoloch), minStake);
         // should revert becuase size limit is reached
         vm.expectRevert("This cohort is already full");
-        ROM.joinInitiation(charlie);
+        riteOfMoloch.joinInitiation(charlie);
         vm.stopPrank();
 
         emit log_named_uint("Alice tokenBal", stakingAsset.balanceOf(alice));
@@ -56,10 +56,10 @@ contract CohortUser is TestHelper {
 
         vm.warp(15 days);
         vm.startPrank(charlie, charlie);
-        stakingAsset.approve(address(ROM), minStake);
+        stakingAsset.approve(address(riteOfMoloch), minStake);
         // should revert becuase time limit is reached
         vm.expectRevert("This cohort is now closed");
-        ROM.joinInitiation(charlie);
+        riteOfMoloch.joinInitiation(charlie);
         vm.stopPrank();
     }
 }

@@ -63,7 +63,7 @@ contract SacrificeGasEstimate is TestHelper {
         checkSampleOfStakesBefore();
 
         // sacrifice those that are eligible
-        ROM.sacrifice();
+        riteOfMoloch.sacrifice();
 
         // re-assert values of stakes
         checkSampleOfStakesAfter();
@@ -73,21 +73,21 @@ contract SacrificeGasEstimate is TestHelper {
 
     // UTILS
     function checkSampleOfStakesBefore() public {
-        uint256 susFee = (ROM.minimumStake() / ROM.PERC_POINTS()) * sustainabilityFee;
+        uint256 susFee = (riteOfMoloch.minimumStake() / riteOfMoloch.PERC_POINTS()) * sustainabilityFee;
 
-        assertEq(minStake - susFee, ROM.checkStake(initiates[0]));
-        assertEq(minStake - susFee, ROM.checkStake(initiates[(cohortSize / 2) - 1]));
-        assertEq(minStake - susFee, ROM.checkStake(initiates[cohortSize / 2]));
-        assertEq(minStake - susFee, ROM.checkStake(initiates[cohortSize - 1]));
+        assertEq(minStake - susFee, riteOfMoloch.checkStake(initiates[0]));
+        assertEq(minStake - susFee, riteOfMoloch.checkStake(initiates[(cohortSize / 2) - 1]));
+        assertEq(minStake - susFee, riteOfMoloch.checkStake(initiates[cohortSize / 2]));
+        assertEq(minStake - susFee, riteOfMoloch.checkStake(initiates[cohortSize - 1]));
     }
 
     function checkSampleOfStakesAfter() public {
-        uint256 susFee = (ROM.minimumStake() / ROM.PERC_POINTS()) * sustainabilityFee;
+        uint256 susFee = (riteOfMoloch.minimumStake() / riteOfMoloch.PERC_POINTS()) * sustainabilityFee;
 
-        assertEq(0, ROM.checkStake(initiates[0]));
-        assertEq(0, ROM.checkStake(initiates[(cohortSize / 2) - 1]));
-        assertEq(minStake - susFee, ROM.checkStake(initiates[cohortSize / 2]));
-        assertEq(minStake - susFee, ROM.checkStake(initiates[cohortSize - 1]));
+        assertEq(0, riteOfMoloch.checkStake(initiates[0]));
+        assertEq(0, riteOfMoloch.checkStake(initiates[(cohortSize / 2) - 1]));
+        assertEq(minStake - susFee, riteOfMoloch.checkStake(initiates[cohortSize / 2]));
+        assertEq(minStake - susFee, riteOfMoloch.checkStake(initiates[cohortSize - 1]));
     }
 
     function createInitData() public override {

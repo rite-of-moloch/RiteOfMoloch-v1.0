@@ -95,7 +95,7 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
     address public sustainabilityTreasury;
 
     // Hats protocol:
-    IHats public HATS;
+    IHats public hats;
 
     // Hats variables
     uint256 public topHat;
@@ -123,7 +123,7 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
         address caller_,
         address _sustainabilityTreasury,
         uint256 _sustainabilityFee
-    ) external initializer {
+    ) external payable initializer {
         // increment the counter so our first sbt has token id of one
         _tokenIdCounter.increment();
 
@@ -176,7 +176,7 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
         _setBaseUri(initData.baseUri);
 
         // point to Hats Protocol
-        HATS = IHats(hatsProtocol);
+        hats = IHats(hatsProtocol);
 
         // point access control functionality to Hats protocol
         _changeHatsContract(hatsProtocol);
@@ -197,7 +197,7 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
             _submitBaalProposal(_encodeMultiMetaTx(data, targets), 1);
         }
 
-        if (HATS.isWearerOfHat(daoTreasury, initData.topHatId)) {
+        if (hats.isWearerOfHat(daoTreasury, initData.topHatId)) {
             bytes memory accessHatData;
             bytes memory buildHatData;
 
@@ -214,13 +214,13 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
             data[1] = buildHatData;
 
             address[] memory targets = new address[](2);
-            targets[0] = address(HATS);
+            targets[0] = address(hats);
             targets[1] = address(this);
 
             _submitBaalProposal(_encodeMultiMetaTx(data, targets), 2);
         } else {
             // creates a new topHat, initialize hat tree
-            topHat = HATS.mintTopHat(address(this), "ROM TopHat", "");
+            topHat = hats.mintTopHat(address(this), "ROM TopHat", "");
             initializeHatTree(caller_, initData.admin1, initData.admin2);
         }
     }
@@ -653,22 +653,22 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
         initHatTreeLock = true;
 
         // admin privileges: access control
-        adminHat = HATS.createHat(topHat, "ROM Admin", 3, address(baal), address(baal), true, "");
+        adminHat = hats.createHat(topHat, "ROM Admin", 3, address(baal), address(baal), true, "");
 
         // grant Hat Access Control role
         _grantRole(ADMIN, adminHat);
 
-        HATS.mintHat(adminHat, _deployer);
+        hats.mintHat(adminHat, _deployer);
 
         if (_admin1 != address(0)) {
-            HATS.mintHat(adminHat, _admin1);
+            hats.mintHat(adminHat, _admin1);
         }
         if (_admin2 != address(0)) {
-            HATS.mintHat(adminHat, _admin2);
+            hats.mintHat(adminHat, _admin2);
         }
 
         // return topHat to  Baal Avatar
-        HATS.transferHat(topHat, address(this), daoTreasury);
+        hats.transferHat(topHat, address(this), daoTreasury);
     }
 
     /**
@@ -684,7 +684,7 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
         data[0] = hatData;
 
         address[] memory targets = new address[](1);
-        targets[0] = address(HATS);
+        targets[0] = address(hats);
 
         _submitBaalProposal(_encodeMultiMetaTx(data, targets), 3);
     }
@@ -702,7 +702,7 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
         data[0] = hatData;
 
         address[] memory targets = new address[](1);
-        targets[0] = address(HATS);
+        targets[0] = address(hats);
 
         _submitBaalProposal(_encodeMultiMetaTx(data, targets), 4);
     }
@@ -801,6 +801,6 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
                 '{"proposalType": "UNDEFINED", "title": "Rite of Moloch (ROM): undefined", "description": "Undefined"}';
         }
 
-        baal.submitProposal{value: proposalOffering}(multiSendMetaTx, 0, 0, metaString);
+        baal.submitProposal{value: msg.value}(multiSendMetaTx, 0, 0, metaString);
     }
 }

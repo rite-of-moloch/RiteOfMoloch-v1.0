@@ -20,7 +20,7 @@ contract SacrificeScript is TestHelperScript {
         createInitData(0, false);
 
         // deploy ROM-clone
-        ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
+        riteOfMoloch = RiteOfMoloch(romFactory.createCohort(cohortData, 1));
 
         // test joinInitiation multiple
         joinCohort(deployer);
@@ -35,7 +35,7 @@ contract SacrificeScript is TestHelperScript {
         vm.stopBroadcast();
 
         vm.startBroadcast(vm.envUint("PK1"));
-        ROM.sacrifice();
+        riteOfMoloch.sacrifice();
         vm.stopBroadcast();
     }
 }

@@ -19,27 +19,27 @@ contract AccessControlScript is TestHelperScript {
         // topHat: NO, shaman: NO
         createInitData(0, false);
 
-        // deploy ROM-clone
-        ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
+        // deploy riteOfMoloch-clone
+        riteOfMoloch = RiteOfMoloch(romFactory.createCohort(cohortData, 1));
 
-        uint256 joinTime1 = ROM.joinDuration();
-        ROM.changeJoinTimeDuration(20 days);
-        uint256 joinTime2 = ROM.joinDuration();
+        uint256 joinTime1 = riteOfMoloch.joinDuration();
+        riteOfMoloch.changeJoinTimeDuration(20 days);
+        uint256 joinTime2 = riteOfMoloch.joinDuration();
         require(joinTime1 < joinTime2);
 
-        uint256 endTime1 = ROM.joinEndTime();
-        ROM.extendJoinTimeLimit(7 days);
-        uint256 endTime2 = ROM.joinEndTime();
+        uint256 endTime1 = riteOfMoloch.joinEndTime();
+        riteOfMoloch.extendJoinTimeLimit(7 days);
+        uint256 endTime2 = riteOfMoloch.joinEndTime();
         require(endTime1 + 7 days == endTime2);
 
-        uint256 sizeLimit1 = ROM.cohortSize();
-        ROM.changeJoinSizeLimit(99);
-        uint256 sizeLimit2 = ROM.cohortSize();
+        uint256 sizeLimit1 = riteOfMoloch.cohortSize();
+        riteOfMoloch.changeJoinSizeLimit(99);
+        uint256 sizeLimit2 = riteOfMoloch.cohortSize();
         require(sizeLimit1 < sizeLimit2);
 
-        ROM.setMinimumStake(55);
-        ROM.setShareThreshold(65);
-        ROM.setMaxDuration(75);
+        riteOfMoloch.setMinimumStake(55);
+        riteOfMoloch.setShareThreshold(65);
+        riteOfMoloch.setMaxDuration(75);
 
         vm.stopBroadcast();
     }

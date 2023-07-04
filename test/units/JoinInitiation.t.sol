@@ -21,12 +21,12 @@ contract JoinInitiationTest is TestHelper {
         stakingAsset.mint(initiate, minStake);
 
         vm.startPrank(initiate, initiate);
-        stakingAsset.approve(address(ROM), minStake);
-        ROM.joinInitiation(initiate);
+        stakingAsset.approve(address(riteOfMoloch), minStake);
+        riteOfMoloch.joinInitiation(initiate);
         vm.stopPrank();
 
-        assertEq(ROM.cohortCounter(), 1);
-        assertEq(ROM.balanceOf(initiate), 1);
+        assertEq(riteOfMoloch.cohortCounter(), 1);
+        assertEq(riteOfMoloch.balanceOf(initiate), 1);
     }
 
     function testJoinInitiationInsuffientAllowance(address initiate) public {
@@ -35,14 +35,14 @@ contract JoinInitiationTest is TestHelper {
         stakingAsset.mint(initiate, minStake);
 
         vm.startPrank(initiate, initiate);
-        stakingAsset.approve(address(ROM), minStake - 1 ether);
+        stakingAsset.approve(address(riteOfMoloch), minStake - 1 ether);
         vm.expectRevert("ERC20: insufficient allowance");
-        ROM.joinInitiation(initiate);
+        riteOfMoloch.joinInitiation(initiate);
 
         vm.stopPrank();
 
-        assertEq(ROM.cohortCounter(), 0);
-        assertEq(ROM.balanceOf(initiate), 0);
+        assertEq(riteOfMoloch.cohortCounter(), 0);
+        assertEq(riteOfMoloch.balanceOf(initiate), 0);
     }
 
     function testJoinInitiationInsuffientBalance(address initiate) public {
@@ -51,14 +51,14 @@ contract JoinInitiationTest is TestHelper {
         stakingAsset.mint(initiate, minStake);
 
         vm.startPrank(initiate, initiate);
-        stakingAsset.approve(address(ROM), minStake - 1 ether);
+        stakingAsset.approve(address(riteOfMoloch), minStake - 1 ether);
         vm.expectRevert("ERC20: insufficient allowance");
-        ROM.joinInitiation(initiate);
+        riteOfMoloch.joinInitiation(initiate);
 
         vm.stopPrank();
 
-        assertEq(ROM.cohortCounter(), 0);
-        assertEq(ROM.balanceOf(initiate), 0);
+        assertEq(riteOfMoloch.cohortCounter(), 0);
+        assertEq(riteOfMoloch.balanceOf(initiate), 0);
     }
 
     function testJoinInitiationCohortClosed(address initiate) public {
@@ -69,14 +69,14 @@ contract JoinInitiationTest is TestHelper {
         stakingAsset.mint(initiate, minStake);
 
         vm.startPrank(initiate, initiate);
-        stakingAsset.approve(address(ROM), minStake - 1 ether);
+        stakingAsset.approve(address(riteOfMoloch), minStake - 1 ether);
         vm.expectRevert("This cohort is now closed");
-        ROM.joinInitiation(initiate);
+        riteOfMoloch.joinInitiation(initiate);
 
         vm.stopPrank();
 
-        assertEq(ROM.cohortCounter(), 0);
-        assertEq(ROM.balanceOf(initiate), 0);
+        assertEq(riteOfMoloch.cohortCounter(), 0);
+        assertEq(riteOfMoloch.balanceOf(initiate), 0);
     }
 
     function testJoinInitiationCohortFull() public {
@@ -85,15 +85,15 @@ contract JoinInitiationTest is TestHelper {
             stakingAsset.mint(_address, minStake);
 
             vm.startPrank(_address, _address);
-            stakingAsset.approve(address(ROM), minStake);
+            stakingAsset.approve(address(riteOfMoloch), minStake);
             if (i >= data.cohortSize) {
                 vm.expectRevert("This cohort is already full");
             }
-            ROM.joinInitiation(_address);
+            riteOfMoloch.joinInitiation(_address);
             vm.stopPrank();
         }
 
-        assertEq(ROM.cohortCounter(), ROM.cohortSize());
+        assertEq(riteOfMoloch.cohortCounter(), riteOfMoloch.cohortSize());
     }
 
     function testJoinInitiationAlreadyJoined(address initiate) public {
@@ -102,39 +102,39 @@ contract JoinInitiationTest is TestHelper {
         mintTokens(initiate);
 
         vm.startPrank(initiate, initiate);
-        stakingAsset.approve(address(ROM), 2 * minStake);
-        ROM.joinInitiation(initiate);
+        stakingAsset.approve(address(riteOfMoloch), 2 * minStake);
+        riteOfMoloch.joinInitiation(initiate);
 
         vm.expectRevert("Already joined the initiation!");
-        ROM.joinInitiation(initiate);
+        riteOfMoloch.joinInitiation(initiate);
 
         vm.stopPrank();
 
-        assertEq(ROM.cohortCounter(), 1);
-        assertEq(ROM.balanceOf(initiate), 1);
+        assertEq(riteOfMoloch.cohortCounter(), 1);
+        assertEq(riteOfMoloch.balanceOf(initiate), 1);
     }
 
     function testJoinInitiationFeeSplit(uint256 fee) public {
         //TODO handle fee split of 0 or 1e6???
         fee = bound(fee, 1, 1e6 - 1); // 1e6 is PERC_POINTS; between 0.0001% and 99.9999%
-        ROMF.updateSustainabilityFee(fee);
-        ROM = RiteOfMoloch(ROMF.createCohort(data, 1));
+        romFactory.updateSustainabilityFee(fee);
+        riteOfMoloch = RiteOfMoloch(romFactory.createCohort(data, 1));
 
-        uint256 _sustainabilityFee = (minStake / ROM.PERC_POINTS()) * fee;
+        uint256 _sustainabilityFee = (minStake / riteOfMoloch.PERC_POINTS()) * fee;
 
         uint256 _balanceTreasuryBefore = stakingAsset.balanceOf(sustainabilityTreasury);
-        uint256 _balanceRoMBefore = stakingAsset.balanceOf(address(ROM));
+        uint256 _balanceRoMBefore = stakingAsset.balanceOf(address(riteOfMoloch));
 
         mintTokens(alice);
 
         vm.startPrank(alice, alice);
-        stakingAsset.approve(address(ROM), 2 * minStake);
-        ROM.joinInitiation(alice);
+        stakingAsset.approve(address(riteOfMoloch), 2 * minStake);
+        riteOfMoloch.joinInitiation(alice);
 
         vm.stopPrank();
 
         uint256 _balanceTreasuryAfter = stakingAsset.balanceOf(sustainabilityTreasury);
-        uint256 _balanceRoMAfter = stakingAsset.balanceOf(address(ROM));
+        uint256 _balanceRoMAfter = stakingAsset.balanceOf(address(riteOfMoloch));
 
         assertGt(_balanceTreasuryAfter, _balanceTreasuryBefore);
         assertGt(_balanceRoMAfter, _balanceRoMBefore);

@@ -15,9 +15,9 @@ contract SacrificeExistingScript is TestHelperScript {
         vm.startBroadcast(vm.envUint("PK1"));
 
         // set ROM-clone
-        ROM = RiteOfMoloch(0xdE86E7702BE3e492ea1c34308954807C0a0Bd54d);
+        riteOfMoloch = RiteOfMoloch(0xdE86E7702BE3e492ea1c34308954807C0a0Bd54d);
 
-        ROM.sacrifice();
+        riteOfMoloch.sacrifice();
         vm.stopBroadcast();
     }
 }

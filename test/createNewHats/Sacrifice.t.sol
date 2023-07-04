@@ -15,25 +15,25 @@ contract Sacrifice is TestHelper {
         // mint tokens to alice & bob
         mintTokens([alice, bob, charlie, deployer]);
 
-        emit log_named_uint("Cohort Counter", ROM.cohortCounter());
+        emit log_named_uint("Cohort Counter", riteOfMoloch.cohortCounter());
         prankJoinInititation(alice);
 
-        emit log_named_uint("Cohort Counter", ROM.cohortCounter());
+        emit log_named_uint("Cohort Counter", riteOfMoloch.cohortCounter());
         prankJoinInititation(bob);
 
         vm.warp(2 days);
-        emit log_named_uint("Cohort Counter", ROM.cohortCounter());
+        emit log_named_uint("Cohort Counter", riteOfMoloch.cohortCounter());
         prankJoinInititation(charlie);
-        emit log_named_uint("Cohort Counter", ROM.cohortCounter());
+        emit log_named_uint("Cohort Counter", riteOfMoloch.cohortCounter());
     }
 
     /**
      * TESTS
      */
     function testSacrfice() public {
-        assertEq(1, ROM.cohortSeason());
-        emit log_named_uint("Cohort Season", ROM.cohortSeason());
-        emit log_named_uint("Join Endtime", ROM.joinEndTime());
+        assertEq(1, riteOfMoloch.cohortSeason());
+        emit log_named_uint("Cohort Season", riteOfMoloch.cohortSeason());
+        emit log_named_uint("Join Endtime", riteOfMoloch.joinEndTime());
 
         emitUserDeadline("Alice", alice);
         emitUserDeadline("Bob", bob);
@@ -47,7 +47,7 @@ contract Sacrifice is TestHelper {
 
         // stakes before
         uint256[3] memory userStakesBefore = checkAllUserStakes();
-        uint256 fee = (ROM.minimumStake() / ROM.PERC_POINTS()) * sustainabilityFee;
+        uint256 fee = (riteOfMoloch.minimumStake() / riteOfMoloch.PERC_POINTS()) * sustainabilityFee;
 
         // assert values of stakes
         for (uint256 i = 0; i < userStakesBefore.length; i++) {
@@ -55,7 +55,7 @@ contract Sacrifice is TestHelper {
         }
 
         // sacrifice those that are eligible
-        ROM.sacrifice();
+        riteOfMoloch.sacrifice();
 
         // stakes after
         uint256[3] memory userStakesAfter = checkAllUserStakes();
@@ -68,17 +68,18 @@ contract Sacrifice is TestHelper {
 
         vm.stopPrank();
 
-        assertEq(2, ROM.cohortSeason());
-        emit log_named_uint("Cohort Season", ROM.cohortSeason());
-        emit log_named_uint("Join Endtime", ROM.joinEndTime());
-        emit log_named_uint("Cohort Counter", ROM.cohortCounter());
+        assertEq(2, riteOfMoloch.cohortSeason());
+        emit log_named_uint("Cohort Season", riteOfMoloch.cohortSeason());
+        emit log_named_uint("Join Endtime", riteOfMoloch.joinEndTime());
+        emit log_named_uint("Cohort Counter", riteOfMoloch.cohortCounter());
     }
 
     // todo: test initiates & cohorst list sizes and carry-over, and reset variables
 
     // UTILS
     function checkAllUserStakes() public returns (uint256[3] memory) {
-        uint256[3] memory stakes = [ROM.checkStake(alice), ROM.checkStake(bob), ROM.checkStake(charlie)];
+        uint256[3] memory stakes =
+            [riteOfMoloch.checkStake(alice), riteOfMoloch.checkStake(bob), riteOfMoloch.checkStake(charlie)];
         emit log_named_uint("Alice   stake", stakes[0]);
         emit log_named_uint("Bob     stake", stakes[1]);
         emit log_named_uint("Charlie stake", stakes[2]);

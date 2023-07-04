@@ -11,7 +11,7 @@ import {IHats} from "hats-protocol/Interfaces/IHats.sol";
 
 contract ROMFactoryScript is Script {
     // Hats interface and protocol implementation
-    IHats internal HATS;
+    IHats internal hats;
     address constant OPERATOR = 0xd083764c39Eddb70A749e0c1F808C14706b0CF44;
     address constant ROM_DAO_SAFE = 0x4Af06F8490c75d55A75488b022da7b1B734291Ce;
     address constant HATS_PROTOCOL = 0x9D2dfd6066d5935267291718E8AA16C8Ab729E9d;
@@ -24,7 +24,7 @@ contract ROMFactoryScript is Script {
     uint256 public factoryOperatorHat;
 
     function setUp() public {
-        HATS = IHats(HATS_PROTOCOL);
+        hats = IHats(HATS_PROTOCOL);
     }
 
     function run() public {
@@ -39,26 +39,18 @@ contract ROMFactoryScript is Script {
             SUS_FEE
         );
 
-        HATS.transferHat(topHatFactory, msg.sender, ROM_DAO_SAFE);
+        hats.transferHat(topHatFactory, msg.sender, ROM_DAO_SAFE);
 
         vm.stopBroadcast();
     }
 
     function hatTreeSetup() public {
         // this Script contract will be the admin of the factory (for development only)
-        topHatFactory = HATS.mintTopHat(msg.sender, "ROM-Factory TopHat", "");
+        topHatFactory = hats.mintTopHat(msg.sender, "ROM-Factory TopHat", "");
 
-        factoryOperatorHat = HATS.createHat(
-            topHatFactory,
-            "ROM-Factory Operator",
-            2,
-            OPERATOR,
-            OPERATOR,
-            true,
-            ""
-        );
+        factoryOperatorHat = hats.createHat(topHatFactory, "ROM-Factory Operator", 2, OPERATOR, OPERATOR, true, "");
 
-        HATS.mintHat(factoryOperatorHat, OPERATOR);
-        HATS.mintHat(factoryOperatorHat, ROM_DAO_SAFE);
+        hats.mintHat(factoryOperatorHat, OPERATOR);
+        hats.mintHat(factoryOperatorHat, ROM_DAO_SAFE);
     }
 }

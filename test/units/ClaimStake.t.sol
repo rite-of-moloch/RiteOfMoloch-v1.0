@@ -30,11 +30,11 @@ contract ClaimStakeTest is TestHelper {
             address(sharesToken), abi.encodeWithSelector(ERC20.balanceOf.selector, initiate), abi.encode(minStake)
         );
 
-        ROM.claimStake();
+        riteOfMoloch.claimStake();
         vm.stopPrank();
 
-        assertEq(ROM.checkStake(initiate), 0);
-        assertEq(ROM.deadlines(initiate), 0);
+        assertEq(riteOfMoloch.checkStake(initiate), 0);
+        assertEq(riteOfMoloch.deadlines(initiate), 0);
     }
 
     function testClaimStakeNoStake(address initiate) public {
@@ -48,12 +48,12 @@ contract ClaimStakeTest is TestHelper {
         );
 
         vm.expectRevert("User has no stake!!");
-        ROM.claimStake();
+        riteOfMoloch.claimStake();
 
         vm.stopPrank();
 
-        assertEq(ROM.checkStake(initiate), 0);
-        assertEq(ROM.deadlines(initiate), 0);
+        assertEq(riteOfMoloch.checkStake(initiate), 0);
+        assertEq(riteOfMoloch.deadlines(initiate), 0);
     }
 
     function testClaimStakeNotAMember(address initiate) public {
@@ -62,25 +62,25 @@ contract ClaimStakeTest is TestHelper {
         stakingAsset.mint(initiate, minStake);
 
         prankJoinInititation(initiate);
-        uint256 stake = ROM.checkStake(initiate);
-        uint256 deadline = ROM.deadlines(initiate);
+        uint256 stake = riteOfMoloch.checkStake(initiate);
+        uint256 deadline = riteOfMoloch.deadlines(initiate);
 
         vm.startPrank(initiate, initiate);
         vm.expectRevert("You must be a member!");
-        ROM.claimStake();
+        riteOfMoloch.claimStake();
 
-        assertEq(ROM.checkStake(initiate), stake);
-        assertEq(ROM.deadlines(initiate), deadline);
+        assertEq(riteOfMoloch.checkStake(initiate), stake);
+        assertEq(riteOfMoloch.deadlines(initiate), deadline);
 
         vm.mockCall(dao, abi.encodeWithSelector(IBaal.sharesToken.selector), abi.encode(sharesToken));
         vm.mockCall(
             address(sharesToken), abi.encodeWithSelector(ERC20.balanceOf.selector, initiate), abi.encode(minStake)
         );
 
-        ROM.claimStake();
+        riteOfMoloch.claimStake();
         vm.stopPrank();
 
-        assertEq(ROM.checkStake(initiate), 0);
-        assertEq(ROM.deadlines(initiate), 0);
+        assertEq(riteOfMoloch.checkStake(initiate), 0);
+        assertEq(riteOfMoloch.deadlines(initiate), 0);
     }
 }

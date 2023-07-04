@@ -27,11 +27,11 @@ contract TestHelper is Test, IInitData {
     address charlie = 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC; // attacker
 
     // ROM factory and clone seed
-    RiteOfMoloch public ROM;
-    RiteOfMolochFactory public ROMF;
+    RiteOfMoloch public riteOfMoloch;
+    RiteOfMolochFactory public romFactory;
 
     // Hats protocol
-    Hats public HATS;
+    Hats public hatsProtocol;
 
     // Hats / roles
     uint256 public factoryTopHat;
@@ -55,19 +55,19 @@ contract TestHelper is Test, IInitData {
         setUpFactory();
         // set initial data for ROM clone
         createInitData();
-        // // deploy ROM clone
-        ROM = RiteOfMoloch(ROMF.createCohort(data, 1));
+        // deploy ROM clone with default implementation (0)
+        riteOfMoloch = RiteOfMoloch(romFactory.createCohort(data, 0));
     }
 
     function setUpFactory() public {
         // deploy Hats protocol
-        HATS = new Hats("Local-Hats", "");
+        hatsProtocol = new Hats("Local-Hats", "");
 
         // factory hats setup
         createFactoryHats();
         // deploy ROM factory
-        ROMF = new RiteOfMolochFactory(
-            address(HATS),
+        romFactory = new RiteOfMolochFactory(
+            address(hatsProtocol),
             factoryOperatorHat,
             sustainabilityTreasury,
             sustainabilityFee
@@ -107,24 +107,25 @@ contract TestHelper is Test, IInitData {
 
     function prankJoinInititation(address initiate) public {
         vm.startPrank(initiate, initiate);
-        stakingAsset.approve(address(ROM), minStake);
-        ROM.joinInitiation(initiate);
+        stakingAsset.approve(address(riteOfMoloch), minStake);
+        riteOfMoloch.joinInitiation(initiate);
         vm.stopPrank();
     }
 
     function emitUserDeadline(string memory name, address initiate) public {
-        emit log_named_uint(string.concat(name, " deadline"), ROM.getDeadline(initiate) / DAY_IN_SECONDS);
+        emit log_named_uint(string.concat(name, " deadline"), riteOfMoloch.getDeadline(initiate) / DAY_IN_SECONDS);
     }
 
     function createFactoryHats() public {
         // mint topHat
-        factoryTopHat = HATS.mintTopHat(address(this), "Factory-TopHat", "");
+        factoryTopHat = hatsProtocol.mintTopHat(address(this), "Factory-TopHat", "");
 
         // create factory operator hat
-        factoryOperatorHat = HATS.createHat(factoryTopHat, "Factory-Operator", 1, molochDAO, molochDAO, true, "");
+        factoryOperatorHat =
+            hatsProtocol.createHat(factoryTopHat, "Factory-Operator", 1, molochDAO, molochDAO, true, "");
         // mint factory operator
-        HATS.mintHat(factoryOperatorHat, msg.sender);
-        HATS.transferHat(factoryTopHat, address(this), address(444444));
+        hatsProtocol.mintHat(factoryOperatorHat, msg.sender);
+        hatsProtocol.transferHat(factoryTopHat, address(this), address(444444));
     }
 
     // LOGS
@@ -148,26 +149,26 @@ contract TestHelper is Test, IInitData {
 
     // factory deployment
     function factoryDeployment() public {
-        emit log_named_address("ROMF Contract", address(ROMF));
+        emit log_named_address("ROMF Contract", address(romFactory));
     }
 
     // clone deployment
     function cloneDeployment() public {
         // contract addresses
-        emit log_named_address("ROM  Contract", address(ROM));
-        emit log_named_address("ROM  Treasury", ROM.daoTreasury());
+        emit log_named_address("ROM  Contract", address(romFactory));
+        emit log_named_address("ROM  Treasury", riteOfMoloch.daoTreasury());
         // cohort settings
-        emit log_named_uint("Min     Share", ROM.minimumShare());
-        emit log_named_uint("Min     Stake", ROM.minimumStake());
-        emit log_named_uint("Max      Time", ROM.maximumTime() / DAY_IN_SECONDS);
+        emit log_named_uint("Min     Share", riteOfMoloch.minimumShare());
+        emit log_named_uint("Min     Stake", riteOfMoloch.minimumStake());
+        emit log_named_uint("Max      Time", riteOfMoloch.maximumTime() / DAY_IN_SECONDS);
     }
 
     // Hat ids
     function hatsIdentities() public {
         // protocol
-        emit log_named_address("Hats Protocol", address(ROM.HATS()));
+        emit log_named_address("Hats Protocol", address(hatsProtocol));
         // hats
-        emit log_named_uint("Top       Hat", ROM.topHat());
-        emit log_named_uint("Admin     Hat", ROM.adminHat());
+        emit log_named_uint("Top       Hat", riteOfMoloch.topHat());
+        emit log_named_uint("Admin     Hat", riteOfMoloch.adminHat());
     }
 }

@@ -17,7 +17,7 @@ contract DeployCloneWshamanScript is TestHelperScript {
         createInitData(0, true);
 
         // deploy ROM-clone
-        ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
+        riteOfMoloch = RiteOfMoloch(romFactory.createCohort(cohortData, 1));
 
         vm.stopBroadcast();
     }

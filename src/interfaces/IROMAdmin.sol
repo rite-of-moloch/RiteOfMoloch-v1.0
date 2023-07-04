@@ -12,7 +12,7 @@ interface IRiteOfMolochAdmin is IInitData {
         address caller_,
         address _sustainabilityTreasury,
         uint256 _sustainabilityFee
-    ) external;
+    ) external payable;
 
     function changeJoinTimeDuration(uint256 _joinDuration) external;
 

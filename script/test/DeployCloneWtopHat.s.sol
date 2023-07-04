@@ -17,19 +17,16 @@ contract DeployCloneWtopHatScript is TestHelperScript {
         topHatMoloch = 215679573337205118357336120696157045389097155380324579848828881993728;
 
         // check id is topHat
-        require(HATS.isTopHat(topHatMoloch), "Hat is not topHat!");
+        require(hats.isTopHat(topHatMoloch), "Hat is not topHat!");
 
         // check that DAO is wearer / admin of topHat id
-        require(
-            HATS.isAdminOfHat(baalAvatar, topHatMoloch),
-            "DAO not owner of hat!"
-        );
+        require(hats.isAdminOfHat(baalAvatar, topHatMoloch), "DAO not owner of hat!");
 
         // topHat: YES, shaman: NO
         createInitData(topHatMoloch, false);
 
         // deploy ROM-clone
-        ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
+        riteOfMoloch = RiteOfMoloch(romFactory.createCohort(cohortData, 1));
 
         vm.stopBroadcast();
     }
