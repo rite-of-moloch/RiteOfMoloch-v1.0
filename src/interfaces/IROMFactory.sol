@@ -2,7 +2,7 @@
 // @author huntrr / Raid Guild
 pragma solidity ^0.8.13;
 
-import {IInitData} from "src/interfaces/IInitData.sol";
+import { IInitData } from "src/interfaces/IInitData.sol";
 
 // todo: change this contract into an interface
 interface IRiteOfMolochFactory is IInitData {
@@ -36,7 +36,10 @@ interface IRiteOfMolochFactory is IInitData {
      * @param initData the complete data for initializing a new cohort
      * @param implementationSelector points to a logic contract implementation
      */
-    function createCohort(InitData calldata initData, uint256 implementationSelector)
+    function createCohort(
+        InitData calldata initData,
+        uint256 implementationSelector
+    )
         external
         payable
         returns (address);

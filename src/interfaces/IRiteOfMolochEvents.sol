@@ -2,7 +2,7 @@
 // @author huntrr / Raid Guild
 pragma solidity ^0.8.13;
 
-import {IBaal} from "src/baal/IBaal.sol";
+import { IBaal } from "src/baal/IBaal.sol";
 
 // todo: change this contract into an interface
 contract IRiteOfMolochEvents {
@@ -12,18 +12,14 @@ contract IRiteOfMolochEvents {
     // Hats protocol
     address private hats;
 
-    /*************************
-     EVENTS
-     *************************/
+    /**
+     *
+     *  EVENTS
+     *
+     */
 
     // logs new initiation data
-    event Initiation(
-        address newInitiate,
-        address benefactor,
-        uint256 tokenId,
-        uint256 stake,
-        uint256 deadline
-    );
+    event Initiation(address newInitiate, address benefactor, uint256 tokenId, uint256 stake, uint256 deadline);
 
     // logs data when failed initiates get slashed
     event Sacrifice(address sacrifice, uint256 slashedAmount, address slasher);

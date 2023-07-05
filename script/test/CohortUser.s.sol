@@ -1,13 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {TestHelperScript} from "script/test/utils/TestHelper.s.sol";
-import {RiteOfMoloch} from "src/RiteOfMoloch.sol";
-import {RiteOfMolochFactory} from "src/RiteOfMolochFactory.sol";
+import { TestHelperScript } from "script/test/utils/TestHelper.s.sol";
+import { RiteOfMoloch } from "src/RiteOfMoloch.sol";
+import { RiteOfMolochFactory } from "src/RiteOfMolochFactory.sol";
 
 // create with verify
-// forge script script/test/CohortUser.s.sol:CohortUserScript --rpc-url $RUG --broadcast --verify --etherscan-api-key $EK -vvvv
-// forge script script/test/CohortUser.s.sol:CohortUserScript --rpc-url $RUS --broadcast --verify --etherscan-api-key $EK -vvvv
+// forge script script/test/CohortUser.s.sol:CohortUserScript --rpc-url $RUG --broadcast --verify --etherscan-api-key
+// $EK -vvvv
+// forge script script/test/CohortUser.s.sol:CohortUserScript --rpc-url $RUS --broadcast --verify --etherscan-api-key
+// $EK -vvvv
 
 // test; no broadcast
 // forge script script/test/CohortUser.s.sol:CohortUserScript --rpc-url $RUG -vvvv

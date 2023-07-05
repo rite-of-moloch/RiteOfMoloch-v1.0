@@ -2,7 +2,7 @@
 pragma solidity ^0.8.13;
 
 import "test/TestHelper.sol";
-import {HatsAccessControl} from "hats-auth/HatsAccessControl.sol";
+import { HatsAccessControl } from "hats-auth/HatsAccessControl.sol";
 
 // forge test --match-contract AccessControl -vv
 

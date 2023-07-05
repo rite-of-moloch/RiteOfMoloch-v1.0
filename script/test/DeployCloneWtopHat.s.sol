@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {TestHelperScript} from "script/test/utils/TestHelper.s.sol";
-import {RiteOfMoloch} from "src/RiteOfMoloch.sol";
+import { TestHelperScript } from "script/test/utils/TestHelper.s.sol";
+import { RiteOfMoloch } from "src/RiteOfMoloch.sol";
 
 // create with verify
-// forge script script/test/DeployCloneWtopHat.s.sol:DeployCloneWtopHatScript --rpc-url $RU --broadcast --verify --etherscan-api-key $EK -vvvv
+// forge script script/test/DeployCloneWtopHat.s.sol:DeployCloneWtopHatScript --rpc-url $RU --broadcast --verify
+// --etherscan-api-key $EK -vvvv
 
 contract DeployCloneWtopHatScript is TestHelperScript {
     function run() public {
@@ -14,7 +15,7 @@ contract DeployCloneWtopHatScript is TestHelperScript {
         setUpHelper();
 
         // DAO's topHat id
-        topHatMoloch = 215679573337205118357336120696157045389097155380324579848828881993728;
+        topHatMoloch = 215_679_573_337_205_118_357_336_120_696_157_045_389_097_155_380_324_579_848_828_881_993_728;
 
         // check id is topHat
         require(hats.isTopHat(topHatMoloch), "Hat is not topHat!");

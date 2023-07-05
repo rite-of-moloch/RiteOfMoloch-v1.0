@@ -24,6 +24,7 @@ interface IInitData {
     // baseURI the uniform resource identifier for accessing SBT metadata
     // shamanOn automate Shaman proposal request to DAO
 
+    //TODO packing; many values don't need 256 range
     struct InitData {
         address membershipCriteria;
         address stakingAsset;

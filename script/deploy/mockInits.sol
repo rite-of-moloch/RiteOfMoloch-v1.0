@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {IInitData} from "src/interfaces/IInitData.sol";
+import { IInitData } from "src/interfaces/IInitData.sol";
 
 /*
 0	initData.membershipCriteria	address	0x6053dE194226843E4FD99A82C1386B4C76E19E34
@@ -39,10 +39,10 @@ contract MockInits is IInitData {
             address(0),
             address(0),
             25,
-            38880,
+            38_880,
             10,
             5,
-            129600,
+            129_600,
             0,
             "KenBen",
             "Killroy",
@@ -60,10 +60,10 @@ contract MockInits is IInitData {
             address(0),
             address(0),
             25,
-            38880,
+            38_880,
             10,
             5,
-            129600,
+            129_600,
             0,
             "KanBan",
             "Leroy",
@@ -81,10 +81,10 @@ contract MockInits is IInitData {
             address(0),
             address(0),
             25,
-            38880,
+            38_880,
             10,
             5,
-            129600,
+            129_600,
             0,
             "Jenkins",
             "Jenks",

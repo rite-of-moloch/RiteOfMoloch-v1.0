@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {TestHelperScript} from "script/test/utils/TestHelper.s.sol";
-import {RiteOfMoloch} from "src/RiteOfMoloch.sol";
+import { TestHelperScript } from "script/test/utils/TestHelper.s.sol";
+import { RiteOfMoloch } from "src/RiteOfMoloch.sol";
 
 // create with verify
-// forge script script/test/ShamanMint.s.sol:ShamanMintScript --rpc-url $RU --broadcast --verify --etherscan-api-key $EK -vvvv
+// forge script script/test/ShamanMint.s.sol:ShamanMintScript --rpc-url $RU --broadcast --verify --etherscan-api-key $EK
+// -vvvv
 
 // test; no broadcast
 // forge script script/test/SacrificeMint.s.sol:SacrificeMintScript --rpc-url $RU -vvvv
@@ -15,7 +16,8 @@ contract ShamanMintScript is TestHelperScript {
         vm.startBroadcast(vm.envUint("PK1"));
 
         // deploy ROM-clone
-        riteOfMoloch = RiteOfMoloch(0xdE86E7702BE3e492ea1c34308954807C0a0Bd54d); // point to DAO that has approved ROM as a shaman
+        riteOfMoloch = RiteOfMoloch(0xdE86E7702BE3e492ea1c34308954807C0a0Bd54d); // point to DAO that has approved ROM
+            // as a shaman
 
         vm.stopBroadcast();
 

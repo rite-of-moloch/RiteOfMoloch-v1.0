@@ -320,6 +320,7 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
      *
      */
 
+    //TODO value checks
     function changeJoinTimeDuration(uint256 _joinDuration) external onlyRole(ADMIN) {
         joinDuration = _joinDuration;
     }

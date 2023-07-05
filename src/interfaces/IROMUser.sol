@@ -2,7 +2,6 @@
 // @author huntrr / Raid Guild
 pragma solidity ^0.8.13;
 
-
 // todo: change this contract into an interface
 interface IRiteOfMolochUser {
     function joinInitiation(address user) external;
@@ -20,7 +19,7 @@ interface IRiteOfMolochUser {
     function cryForHelp(string calldata feedback) external;
 
     function checkStake(address user) external view returns (uint256);
-    
+
     /**
      * @dev returns the user's deadline for onboarding
      */
