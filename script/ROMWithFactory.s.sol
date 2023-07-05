@@ -25,6 +25,8 @@ contract ROMWithFactoryScript is Script {
 
     // Hats interface and protocol implementation
     IHats internal hats;
+
+    // RoM DAO
     address constant OPERATOR = 0xd083764c39Eddb70A749e0c1F808C14706b0CF44;
     address constant ROM_DAO_SAFE = 0x4Af06F8490c75d55A75488b022da7b1B734291Ce;
     address constant HATS_PROTOCOL = 0x9D2dfd6066d5935267291718E8AA16C8Ab729E9d;
