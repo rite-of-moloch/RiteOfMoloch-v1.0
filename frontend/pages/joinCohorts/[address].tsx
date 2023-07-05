@@ -54,7 +54,6 @@ const CohortPage = () => {
   const { writeClaimStake, prepareErrorClaimStake, isLoadingClaimStake } =
     useClaimStake(cohort?.address || "");
 
-  console.log(writeClaimStake);
   // checks error message to see if usere has any stake
   const userHasNoStake =
     prepareErrorClaimStake?.message?.includes("User has no stake");

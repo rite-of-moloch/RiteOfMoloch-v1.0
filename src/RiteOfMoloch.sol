@@ -142,8 +142,8 @@ contract RiteOfMoloch is
         baal = IBaal(initData.membershipCriteria);
 
         // reference sharesToken of Baal
-        _sharesToken = IERC20(initData.stakingAsset); // <= for local testing only
-        // _sharesToken = IERC20(baal.sharesToken()); // <= correct
+        // _sharesToken = IERC20(initData.stakingAsset); // <= for local testing only
+        _sharesToken = IERC20(baal.sharesToken()); // <= correct
 
         // set the DAO treasury daoAddress
         daoTreasury = initData.daoTreasury;
