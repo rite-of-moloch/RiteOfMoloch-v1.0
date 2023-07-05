@@ -13,8 +13,6 @@ import { IRiteOfMoloch } from "src/interfaces/IROM.sol";
 import { HatsAccessControl, IHats, Context } from "hats-auth/HatsAccessControl.sol";
 import { IBaal } from "src/baal/IBaal.sol";
 
-import "forge-std/console2.sol";
-
 contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteOfMoloch {
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
@@ -274,9 +272,6 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
      * Stakes required tokens and mints soul bound token
      */
     function joinInitiation(address user) public callerIsUser {
-        console2.log("Join EndTime: %s", joinEndTime);
-        console2.log("Now: %s", block.timestamp);
-
         require(block.timestamp <= joinEndTime, "This cohort is now closed");
         require(_tokenIdCounter.current() <= cohortSize, "This cohort is already full");
 
