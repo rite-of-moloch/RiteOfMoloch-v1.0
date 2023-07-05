@@ -3,11 +3,11 @@ pragma solidity ^0.8.13;
 
 import "forge-std/Script.sol";
 import "src/interfaces/IInitData.sol";
-import {RiteOfMolochFactory} from "src/RiteOfMolochFactory.sol";
-import {RiteOfMoloch} from "src/RiteOfMoloch.sol";
-import {IHats} from "hats-protocol/Interfaces/IHats.sol";
-import {ERC20} from "lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
-import {IBaal} from "src/baal/IBaal.sol";
+import { RiteOfMolochFactory } from "src/RiteOfMolochFactory.sol";
+import { RiteOfMoloch } from "src/RiteOfMoloch.sol";
+import { IHats } from "hats-protocol/Interfaces/IHats.sol";
+import { ERC20 } from "lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
+import { IBaal } from "src/baal/IBaal.sol";
 
 /**
  * @dev RiteOfMoloch line 239 needs to be commented out:
@@ -60,7 +60,7 @@ contract TestHelperScript is Script, IInitData {
         cohortData.admin2 = address(0);
         cohortData.cohortSize = 5;
         cohortData.joinDuration = 10 days;
-        cohortData.threshold = 10;
+        cohortData.shareThreshold = 10;
         cohortData.assetAmount = minStake;
         cohortData.stakeDuration = 10 days;
         cohortData.topHatId = _topHat; // hats proposal data
@@ -101,8 +101,11 @@ contract TestHelperScript is Script, IInitData {
         // create Hats tree for ROM-Factory
         hatTreeSetup();
 
+        riteOfMoloch = new RiteOfMoloch();
+
         // deploy ROM-factory
         romFactory = new RiteOfMolochFactory(
+            address(riteOfMoloch),
             hatsProtocol,
             factoryOperatorHat,
             adminTreasury,

@@ -2,10 +2,10 @@
 // @author st4rgard3n, bitbeckers, MrDeadce11, huntrr / Raid Guild
 pragma solidity ^0.8.13;
 
-import {Clones} from "lib/openzeppelin-contracts/contracts/proxy/Clones.sol";
-import {RiteOfMoloch} from "src/RiteOfMoloch.sol";
-import {IRiteOfMolochFactory} from "src/interfaces/IROMFactory.sol";
-import {HatsAccessControl} from "hats-auth/HatsAccessControl.sol";
+import { Clones } from "lib/openzeppelin-contracts/contracts/proxy/Clones.sol";
+import { RiteOfMoloch } from "src/RiteOfMoloch.sol";
+import { IRiteOfMolochFactory } from "src/interfaces/IROMFactory.sol";
+import { HatsAccessControl } from "hats-auth/HatsAccessControl.sol";
 
 contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
     bytes32 public constant FACTORY_OPERATOR = keccak256("FACTORY_OPERATOR");
@@ -32,6 +32,7 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
      * @param _hatsProtocol current release: 0x96bD657Fcc04c71B47f896a829E5728415cbcAa1
      */
     constructor(
+        address _implementation,
         address _hatsProtocol,
         uint256 _factoryOperatorHat,
         address _sustainabilityTreasury,
@@ -47,7 +48,7 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
 
         sustainabilityFee = _sustainabilityFee;
         // deploy the initial rite of moloch implementation and set it in implementations mapping
-        implementations[iid] = address(new RiteOfMoloch());
+        implementations[iid] = _implementation;
 
         // assign admin roles to deployer
         _grantRole(FACTORY_OPERATOR, _factoryOperatorHat);
@@ -58,7 +59,10 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
      * @param initData the complete data for initializing a new cohort
      * @param implementationSelector points to a logic contract implementation
      */
-    function createCohort(InitData calldata initData, uint256 implementationSelector)
+    function createCohort(
+        InitData calldata initData,
+        uint256 implementationSelector
+    )
         external
         payable
         returns (address)
@@ -70,7 +74,7 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
         address clone = Clones.clone(implementations[implementationSelector]);
 
         // initialize the cohort clone
-        RiteOfMoloch(clone).initialize{value: msg.value}(
+        RiteOfMoloch(clone).initialize{ value: msg.value }(
             initData, hatsProtocol, msg.sender, sustainabilityTreasury, sustainabilityFee
         );
 
@@ -81,7 +85,7 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
             initData.membershipCriteria,
             initData.stakingAsset,
             initData.daoTreasury,
-            initData.threshold,
+            initData.shareThreshold,
             initData.assetAmount,
             initData.stakeDuration,
             initData.baseUri

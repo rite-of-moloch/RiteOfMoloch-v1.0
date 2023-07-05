@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {TestHelperScript} from "script/test/utils/TestHelper.s.sol";
-import {RiteOfMoloch} from "src/RiteOfMoloch.sol";
+import { TestHelperScript } from "script/test/utils/TestHelper.s.sol";
+import { RiteOfMoloch } from "src/RiteOfMoloch.sol";
 
 // create with verify
-// forge script script/test/AccessControl.s.sol:AccessControlScript --rpc-url $RU --broadcast --verify --etherscan-api-key $EK -vvvv
+// forge script script/test/AccessControl.s.sol:AccessControlScript --rpc-url $RU --broadcast --verify
+// --etherscan-api-key $EK -vvvv
 
 // test; no broadcast
 // forge script script/test/AccessControl.s.sol:AccessControlScript --rpc-url $RU -vvvv
@@ -39,7 +40,7 @@ contract AccessControlScript is TestHelperScript {
 
         riteOfMoloch.setMinimumStake(55);
         riteOfMoloch.setShareThreshold(65);
-        riteOfMoloch.setMaxDuration(75);
+        riteOfMoloch.setStakeDuration(75);
 
         vm.stopBroadcast();
     }

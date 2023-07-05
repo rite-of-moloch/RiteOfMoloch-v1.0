@@ -64,7 +64,7 @@ contract JoinInitiationTest is TestHelper {
     function testJoinInitiationCohortClosed(address initiate) public {
         vm.assume(initiate != address(0));
 
-        vm.warp(data.joinDuration + 1 days);
+        vm.warp(riteOfMoloch.joinEndTime() + 1);
 
         stakingAsset.mint(initiate, minStake);
 
@@ -115,10 +115,12 @@ contract JoinInitiationTest is TestHelper {
     }
 
     function testJoinInitiationFeeSplit(uint256 fee) public {
-        //TODO handle fee split of 0 or 1e6???
-        fee = bound(fee, 1, 1e6 - 1); // 1e6 is PERC_POINTS; between 0.0001% and 99.9999%
+        vm.assume(fee <= riteOfMoloch.PERC_POINTS());
+        vm.startPrank(factoryAdmin);
         romFactory.updateSustainabilityFee(fee);
-        riteOfMoloch = RiteOfMoloch(romFactory.createCohort(data, 1));
+        vm.stopPrank();
+
+        riteOfMoloch = RiteOfMoloch(romFactory.createCohort(data, 0));
 
         uint256 _sustainabilityFee = (minStake / riteOfMoloch.PERC_POINTS()) * fee;
 
@@ -136,8 +138,16 @@ contract JoinInitiationTest is TestHelper {
         uint256 _balanceTreasuryAfter = stakingAsset.balanceOf(sustainabilityTreasury);
         uint256 _balanceRoMAfter = stakingAsset.balanceOf(address(riteOfMoloch));
 
-        assertGt(_balanceTreasuryAfter, _balanceTreasuryBefore);
-        assertGt(_balanceRoMAfter, _balanceRoMBefore);
+        if (fee > 0) {
+            assertGt(_balanceTreasuryAfter, _balanceTreasuryBefore);
+        } else {
+            assertEq(_balanceTreasuryAfter, _balanceTreasuryBefore);
+        }
+        if (fee < riteOfMoloch.PERC_POINTS()) {
+            assertGt(_balanceRoMAfter, _balanceRoMBefore);
+        } else {
+            assertEq(_balanceRoMAfter, _balanceRoMBefore);
+        }
         assertEq(_balanceTreasuryAfter, _sustainabilityFee);
         assertEq(_balanceRoMAfter, minStake - _sustainabilityFee);
     }

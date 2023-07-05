@@ -2,7 +2,7 @@
 // @author huntrr / Raid Guild
 pragma solidity ^0.8.13;
 
-import {IInitData} from "src/interfaces/IInitData.sol";
+import { IInitData } from "src/interfaces/IInitData.sol";
 
 // todo: change this contract into an interface
 interface IRiteOfMolochAdmin is IInitData {
@@ -12,7 +12,9 @@ interface IRiteOfMolochAdmin is IInitData {
         address caller_,
         address _sustainabilityTreasury,
         uint256 _sustainabilityFee
-    ) external payable;
+    )
+        external
+        payable;
 
     function changeJoinTimeDuration(uint256 _joinDuration) external;
 
@@ -34,9 +36,9 @@ interface IRiteOfMolochAdmin is IInitData {
 
     /**
      * @dev Allows changing the maximum initiation duration
-     * @param newMaxTime the length in seconds until an initiate's stake is forfeit
+     * @param newStakeDuration the length in seconds until an initiate's stake is forfeit
      */
-    function setMaxDuration(uint256 newMaxTime) external;
+    function setStakeDuration(uint256 newStakeDuration) external;
 
     /**
      * @dev If ROM is a Shaman: Allows minting shares of Baal DAO to become member

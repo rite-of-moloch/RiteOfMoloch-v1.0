@@ -2,28 +2,52 @@
 pragma solidity ^0.8.13;
 
 import "forge-std/Script.sol";
-import {RiteOfMolochFactory} from "src/RiteOfMolochFactory.sol";
-import {IHats} from "hats-protocol/Interfaces/IHats.sol";
+import { RiteOfMoloch } from "src/RiteOfMoloch.sol";
+import { RiteOfMolochFactory } from "src/RiteOfMolochFactory.sol";
+import { IHats } from "hats-protocol/Interfaces/IHats.sol";
 
-// create with verify
-// forge script script/ROMFactory.s.sol:ROMFactoryScript --rpc-url $RUS --private-key $PK --broadcast --verify --etherscan-api-key $EK -vvvv
-// forge script script/ROMFactory.s.sol:ROMFactoryScript --rpc-url https://rpc.gnosischain.com --private-key $PK --broadcast --verify --etherscan-api-key $ETHERSCAN_KEY -vvvv
+import { console2 } from "forge-std/console2.sol";
 
-contract ROMFactoryScript is Script {
+// Simulate deployment:
+// forge script script/ROMWithFactory.s.sol:ROMWithFactoryScript --fork-url gnosis --force
+
+// Actual deployment:
+// forge script script/ROMWithFactory.s.sol:ROMWithFactoryScript --broadcast --verify -vvvv --fork-url gnosis
+
+contract ROMWithFactoryScript is Script {
+    address internal deployer;
+    uint256 internal deployerPk;
+
+    // Contracts to deploy
+
+    RiteOfMoloch implementation;
+    RiteOfMolochFactory factory;
+
     // Hats interface and protocol implementation
     IHats internal hats;
     address constant OPERATOR = 0xd083764c39Eddb70A749e0c1F808C14706b0CF44;
     address constant ROM_DAO_SAFE = 0x4Af06F8490c75d55A75488b022da7b1B734291Ce;
     address constant HATS_PROTOCOL = 0x9D2dfd6066d5935267291718E8AA16C8Ab729E9d;
     address constant SUS_TREASURY = 0x849233B1a9ca424716458297589f474B250bf1f2;
-    uint256 constant SUS_FEE = 1;
+    uint256 constant SUS_FEE = 10_000;
 
     uint256 topHatFactory;
 
     // Operator hat for ROM-factory deployment
     uint256 public factoryOperatorHat;
 
-    function setUp() public {
+    function setUp() public virtual {
+        string memory mnemonic = vm.envString("MNEMONIC");
+        if (bytes(mnemonic).length > 0) {
+            console2.log("Using mnemonic");
+
+            (deployer,) = deriveRememberKey(mnemonic, 0);
+        } else {
+            console2.log("Using private key");
+
+            deployerPk = vm.envUint("PRIVATE_KEY");
+        }
+
         hats = IHats(HATS_PROTOCOL);
     }
 
@@ -31,8 +55,11 @@ contract ROMFactoryScript is Script {
         vm.startBroadcast();
         hatTreeSetup();
 
+        implementation = new RiteOfMoloch();
+
         // deploy ROM-factory
-        new RiteOfMolochFactory(
+        factory = new RiteOfMolochFactory(
+            address(implementation),
             HATS_PROTOCOL,
             factoryOperatorHat,
             SUS_TREASURY,
@@ -40,6 +67,9 @@ contract ROMFactoryScript is Script {
         );
 
         hats.transferHat(topHatFactory, msg.sender, ROM_DAO_SAFE);
+
+        console2.log('"implementation": "%s"', address(implementation));
+        console2.log('"factory": "%s"', address(factory));
 
         vm.stopBroadcast();
     }

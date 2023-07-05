@@ -10,7 +10,7 @@ contract IRiteOfMolochEvents {
     IBaal private baal;
 
     // Hats protocol
-    address private HATS;
+    address private hats;
 
     /*************************
      EVENTS

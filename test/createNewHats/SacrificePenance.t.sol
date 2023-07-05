@@ -9,6 +9,8 @@ import "test/TestHelper.sol";
  * @dev see note on TestHelper
  */
 contract SacrificePenance is TestHelper {
+    uint256 creationTime = block.timestamp;
+
     function setUp() public override {
         TestHelper.setUp();
 
@@ -17,7 +19,7 @@ contract SacrificePenance is TestHelper {
 
         prankJoinInititation(alice);
         prankJoinInititation(bob);
-        vm.warp(2 days);
+        vm.warp(creationTime + 2 days);
         prankJoinInititation(charlie);
     }
 
@@ -29,11 +31,11 @@ contract SacrificePenance is TestHelper {
         emit log_named_uint("ROM bal", stakingAsset.balanceOf(address(riteOfMoloch)));
         emit log_named_uint("Admin bal", stakingAsset.balanceOf(sustainabilityTreasury));
 
-        vm.warp(8 days);
+        vm.warp(creationTime + 8 days);
 
         vm.startPrank(alice);
         // check current timeStamp
-        emit log_named_uint("Timestamp", block.timestamp / DAY_IN_SECONDS);
+        emit log_named_uint("Timestamp", block.timestamp / 1 days);
 
         // stakes before
         uint256[3] memory userStakesBefore = checkAllUserStakes();
@@ -79,5 +81,3 @@ contract SacrificePenance is TestHelper {
         return stakes;
     }
 }
-
-// 10000.000000000000001000

@@ -9,6 +9,8 @@ import "test/TestHelper.sol";
  * @dev see note on TestHelper
  */
 contract Sacrifice is TestHelper {
+    uint256 creationTime = block.timestamp;
+
     function setUp() public override {
         TestHelper.setUp();
 
@@ -21,7 +23,7 @@ contract Sacrifice is TestHelper {
         emit log_named_uint("Cohort Counter", riteOfMoloch.cohortCounter());
         prankJoinInititation(bob);
 
-        vm.warp(2 days);
+        vm.warp(creationTime + 2 days);
         emit log_named_uint("Cohort Counter", riteOfMoloch.cohortCounter());
         prankJoinInititation(charlie);
         emit log_named_uint("Cohort Counter", riteOfMoloch.cohortCounter());
@@ -39,11 +41,11 @@ contract Sacrifice is TestHelper {
         emitUserDeadline("Bob", bob);
         emitUserDeadline("Charlie", charlie);
 
-        vm.warp(8 days);
+        vm.warp(creationTime + 8 days);
 
         vm.startPrank(alice);
         // check current timeStamp
-        emit log_named_uint("Timestamp", block.timestamp / DAY_IN_SECONDS);
+        emit log_named_uint("Timestamp", block.timestamp / 1 days);
 
         // stakes before
         uint256[3] memory userStakesBefore = checkAllUserStakes();

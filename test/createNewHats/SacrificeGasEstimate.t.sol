@@ -9,6 +9,7 @@ import "test/TestHelper.sol";
  * @dev see note on TestHelper
  */
 contract SacrificeGasEstimate is TestHelper {
+    uint256 creationTime = block.timestamp;
     uint256 constant cohortSize = 100;
 
     address[] initiates = new address[](cohortSize);
@@ -20,7 +21,7 @@ contract SacrificeGasEstimate is TestHelper {
         generateStakes();
 
         // fast-forward past half of initiates' deadlines
-        vm.warp(8 days);
+        vm.warp(creationTime + 8 days);
     }
 
     /**
@@ -40,7 +41,7 @@ contract SacrificeGasEstimate is TestHelper {
             prankJoinInititation(initiates[i]);
         }
 
-        vm.warp(2 days);
+        vm.warp(creationTime + 2 days);
 
         for (uint256 i = breakPoint; i < cohortSize; i++) {
             stakingAsset.mint(initiates[i], 1000 * 1e18);
@@ -98,7 +99,7 @@ contract SacrificeGasEstimate is TestHelper {
         data.admin2 = address(0);
         data.cohortSize = 500;
         data.joinDuration = 2 weeks;
-        data.threshold = 10;
+        data.shareThreshold = 10;
         data.assetAmount = minStake;
         data.stakeDuration = 1 weeks;
         data.topHatId = 0;

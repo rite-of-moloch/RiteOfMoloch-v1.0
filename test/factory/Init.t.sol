@@ -54,8 +54,8 @@ contract InitTest is TestHelper {
         assertEq(_riteOfMoloch.cohortCounter(), 0);
         assertEq(_riteOfMoloch.cohortSize(), initData.cohortSize);
         assertEq(_riteOfMoloch.joinDuration(), initData.joinDuration);
-        assertEq(_riteOfMoloch.minimumShare(), initData.threshold);
-        assertEq(_riteOfMoloch.maximumTime(), initData.stakeDuration);
+        assertEq(_riteOfMoloch.shareThreshold(), initData.shareThreshold);
+        assertEq(_riteOfMoloch.stakeDuration(), initData.stakeDuration);
 
         // Sustainability fees
         assertEq(address(_riteOfMoloch.sustainabilityTreasury()), address(sustainabilityTreasury));
@@ -94,7 +94,7 @@ contract InitTest is TestHelper {
         romFactory.createCohort(initData, 0);
 
         // Test with offering provided
-        RiteOfMoloch _riteOfMoloch = RiteOfMoloch(romFactory.createCohort{value: 1 ether}(initData, 0));
+        RiteOfMoloch _riteOfMoloch = RiteOfMoloch(romFactory.createCohort{ value: 1 ether }(initData, 0));
 
         // DAO to onboard to
         assertEq(address(_riteOfMoloch.baal()), address(dao));
@@ -105,8 +105,8 @@ contract InitTest is TestHelper {
         assertEq(_riteOfMoloch.cohortCounter(), 0);
         assertEq(_riteOfMoloch.cohortSize(), initData.cohortSize);
         assertEq(_riteOfMoloch.joinDuration(), initData.joinDuration);
-        assertEq(_riteOfMoloch.minimumShare(), initData.threshold);
-        assertEq(_riteOfMoloch.maximumTime(), initData.stakeDuration);
+        assertEq(_riteOfMoloch.shareThreshold(), initData.shareThreshold);
+        assertEq(_riteOfMoloch.stakeDuration(), initData.stakeDuration);
 
         // Sustainability fees
         assertEq(address(_riteOfMoloch.sustainabilityTreasury()), address(sustainabilityTreasury));
@@ -154,8 +154,8 @@ contract InitTest is TestHelper {
         assertEq(_riteOfMoloch.cohortCounter(), 0);
         assertEq(_riteOfMoloch.cohortSize(), initData.cohortSize);
         assertEq(_riteOfMoloch.joinDuration(), initData.joinDuration);
-        assertEq(_riteOfMoloch.minimumShare(), initData.threshold);
-        assertEq(_riteOfMoloch.maximumTime(), initData.stakeDuration);
+        assertEq(_riteOfMoloch.shareThreshold(), initData.shareThreshold);
+        assertEq(_riteOfMoloch.stakeDuration(), initData.stakeDuration);
 
         // Sustainability fees
         assertEq(address(_riteOfMoloch.sustainabilityTreasury()), address(sustainabilityTreasury));

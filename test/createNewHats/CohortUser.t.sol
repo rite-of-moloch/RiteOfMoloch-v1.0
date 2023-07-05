@@ -9,6 +9,8 @@ import "test/TestHelper.sol";
  * @dev see note on TestHelper
  */
 contract CohortUser is TestHelper {
+    uint256 creationTime = block.timestamp;
+
     function setUp() public override {
         TestHelper.setUp();
 
@@ -23,7 +25,7 @@ contract CohortUser is TestHelper {
         vm.startPrank(bob, bob);
         stakingAsset.approve(address(riteOfMoloch), minStake);
         riteOfMoloch.joinInitiation(bob);
-        emit log_named_uint("Bob deadline", riteOfMoloch.getDeadline(bob) / DAY_IN_SECONDS);
+        emit log_named_uint("Bob deadline", riteOfMoloch.getDeadline(bob) / 1 days);
         riteOfMoloch.cryForHelp("Help me!");
         vm.stopPrank();
     }
@@ -48,13 +50,13 @@ contract CohortUser is TestHelper {
     }
 
     function testJoinTimeRestriction() public {
-        vm.warp(7 days);
+        vm.warp(creationTime + 7 days);
         prankJoinInititation(alice);
 
-        vm.warp(13 days);
+        vm.warp(creationTime + 13 days);
         prankJoinInititation(bob);
 
-        vm.warp(15 days);
+        vm.warp(creationTime + 15 days);
         vm.startPrank(charlie, charlie);
         stakingAsset.approve(address(riteOfMoloch), minStake);
         // should revert becuase time limit is reached

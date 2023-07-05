@@ -2,18 +2,16 @@
 pragma solidity ^0.8.13;
 
 import "forge-std/Test.sol";
-import {RiteOfMoloch} from "src/RiteOfMoloch.sol";
-import {RiteOfMolochFactory} from "src/RiteOfMolochFactory.sol";
-import {IInitData} from "src/interfaces/IInitData.sol";
-import {TestToken} from "test/mocks/Token.sol";
-import {Hats} from "hats-protocol/Hats.sol";
-import {IBaal} from "src/baal/IBaal.sol";
+import { RiteOfMoloch } from "src/RiteOfMoloch.sol";
+import { RiteOfMolochFactory } from "src/RiteOfMolochFactory.sol";
+import { IInitData } from "src/interfaces/IInitData.sol";
+import { TestToken } from "test/mocks/Token.sol";
+import { Hats } from "hats-protocol/Hats.sol";
+import { IBaal } from "src/baal/IBaal.sol";
 
 // forge test --match-contract TestHelper -vv
 
 contract TestHelper is Test, IInitData {
-    uint256 constant DAY_IN_SECONDS = 86400;
-
     address dao = 0x90F79bf6EB2c4f870365E785982E1f101E93b906;
     TestToken public stakingAsset = new TestToken();
     TestToken public sharesToken = new TestToken();
@@ -21,6 +19,7 @@ contract TestHelper is Test, IInitData {
     InitData data;
 
     // DAO members
+    address factoryAdmin = address(1337);
     address deployer = address(this); // superAdmin & admin
     address alice = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266; // admin
     address bob = 0x70997970C51812dc3A010C7d01b50e0d17dc79C8; // user
@@ -51,27 +50,28 @@ contract TestHelper is Test, IInitData {
 
     function setUp() public virtual {
         vm.mockCall(dao, abi.encodeWithSelector(IBaal.sharesToken.selector), abi.encode(sharesToken));
-        // set and deploy ROM-Factory
-        setUpFactory();
-        // set initial data for ROM clone
-        createInitData();
-        // deploy ROM clone with default implementation (0)
-        riteOfMoloch = RiteOfMoloch(romFactory.createCohort(data, 0));
-    }
+        riteOfMoloch = new RiteOfMoloch();
 
-    function setUpFactory() public {
         // deploy Hats protocol
         hatsProtocol = new Hats("Local-Hats", "");
 
         // factory hats setup
         createFactoryHats();
+
         // deploy ROM factory
         romFactory = new RiteOfMolochFactory(
+            address(riteOfMoloch),
             address(hatsProtocol),
             factoryOperatorHat,
             sustainabilityTreasury,
             sustainabilityFee
         );
+
+        // set initial data for ROM clone
+        createInitData();
+
+        // deploy ROM clone with default implementation (0)
+        riteOfMoloch = RiteOfMoloch(romFactory.createCohort(data, 0));
     }
 
     // INIT CLONE DATA
@@ -83,7 +83,7 @@ contract TestHelper is Test, IInitData {
         data.admin2 = address(0);
         data.cohortSize = 3;
         data.joinDuration = 2 weeks;
-        data.threshold = 10;
+        data.shareThreshold = 10;
         data.assetAmount = minStake;
         data.stakeDuration = 1 weeks;
         data.topHatId = 0;
@@ -113,7 +113,7 @@ contract TestHelper is Test, IInitData {
     }
 
     function emitUserDeadline(string memory name, address initiate) public {
-        emit log_named_uint(string.concat(name, " deadline"), riteOfMoloch.getDeadline(initiate) / DAY_IN_SECONDS);
+        emit log_named_uint(string.concat(name, " deadline"), riteOfMoloch.getDeadline(initiate) / 1 days);
     }
 
     function createFactoryHats() public {
@@ -124,8 +124,8 @@ contract TestHelper is Test, IInitData {
         factoryOperatorHat =
             hatsProtocol.createHat(factoryTopHat, "Factory-Operator", 1, molochDAO, molochDAO, true, "");
         // mint factory operator
-        hatsProtocol.mintHat(factoryOperatorHat, msg.sender);
-        hatsProtocol.transferHat(factoryTopHat, address(this), address(444444));
+        hatsProtocol.mintHat(factoryOperatorHat, factoryAdmin);
+        hatsProtocol.transferHat(factoryTopHat, address(this), factoryAdmin);
     }
 
     // LOGS
@@ -158,9 +158,9 @@ contract TestHelper is Test, IInitData {
         emit log_named_address("ROM  Contract", address(romFactory));
         emit log_named_address("ROM  Treasury", riteOfMoloch.daoTreasury());
         // cohort settings
-        emit log_named_uint("Min     Share", riteOfMoloch.minimumShare());
+        emit log_named_uint("Min     Share", riteOfMoloch.shareThreshold());
         emit log_named_uint("Min     Stake", riteOfMoloch.minimumStake());
-        emit log_named_uint("Max      Time", riteOfMoloch.maximumTime() / DAY_IN_SECONDS);
+        emit log_named_uint("Max      Time", riteOfMoloch.stakeDuration() / 1 days);
     }
 
     // Hat ids

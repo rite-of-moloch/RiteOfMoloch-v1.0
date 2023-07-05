@@ -2,16 +2,16 @@
 // @author st4rgard3n, bitbeckers, MrDeadce11, huntrr / Raid Guild
 pragma solidity ^0.8.13;
 
-import {CountersUpgradeable} from "openzeppelin-contracts-upgradeable/utils/CountersUpgradeable.sol";
+import { CountersUpgradeable } from "openzeppelin-contracts-upgradeable/utils/CountersUpgradeable.sol";
 import {
     ERC721Upgradeable,
     ContextUpgradeable
 } from "openzeppelin-contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
-import {IERC20} from "openzeppelin-contracts/token/ERC20/IERC20.sol";
-import {IInitData} from "src/interfaces/IInitData.sol";
-import {IRiteOfMoloch} from "src/interfaces/IROM.sol";
-import {HatsAccessControl, IHats, Context} from "hats-auth/HatsAccessControl.sol";
-import {IBaal} from "src/baal/IBaal.sol";
+import { IERC20 } from "openzeppelin-contracts/token/ERC20/IERC20.sol";
+import { IInitData } from "src/interfaces/IInitData.sol";
+import { IRiteOfMoloch } from "src/interfaces/IROM.sol";
+import { HatsAccessControl, IHats, Context } from "hats-auth/HatsAccessControl.sol";
+import { IBaal } from "src/baal/IBaal.sol";
 
 import "forge-std/console2.sol";
 
@@ -20,7 +20,7 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
 
     bytes32 public constant ADMIN = keccak256("ADMIN");
 
-    /// @notice The constant that represents percentage points for calculations.
+    /// @notice 1_000_000 percentage points. 10_000 is 1.0000%.
     uint256 public constant PERC_POINTS = 1e6;
 
     /**
@@ -77,13 +77,13 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
     uint256 public joinEndTime;
 
     // minimum amount of dao shares required to be considered a member
-    uint256 public minimumShare;
+    uint256 public shareThreshold;
 
     // minimum amount of staked tokens required to join the initiation
     uint256 public minimumStake;
 
     // maximum length of time for initiates to succeed at joining
-    uint256 public maximumTime;
+    uint256 public stakeDuration;
 
     // percentage cut of sacrifice to support RoM maintenance and development
     uint256 public sustainabilityFee;
@@ -123,7 +123,11 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
         address caller_,
         address _sustainabilityTreasury,
         uint256 _sustainabilityFee
-    ) external payable initializer {
+    )
+        external
+        payable
+        initializer
+    {
         // increment the counter so our first sbt has token id of one
         _tokenIdCounter.increment();
 
@@ -167,10 +171,10 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
         _setMinimumStake(initData.assetAmount);
 
         // set the minimum shares
-        _setShareThreshold(initData.threshold);
+        _setShareThreshold(initData.shareThreshold);
 
         // set the cohort staking duration
-        _setMaxDuration(initData.stakeDuration);
+        _setStakeDuration(initData.stakeDuration);
 
         // set the cohort token's base uri
         _setBaseUri(initData.baseUri);
@@ -270,6 +274,9 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
      * Stakes required tokens and mints soul bound token
      */
     function joinInitiation(address user) public callerIsUser {
+        console2.log("Join EndTime: %s", joinEndTime);
+        console2.log("Now: %s", block.timestamp);
+
         require(block.timestamp <= joinEndTime, "This cohort is now closed");
         require(_tokenIdCounter.current() <= cohortSize, "This cohort is already full");
 
@@ -345,8 +352,8 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
      * @dev Allows changing the maximum initiation duration
      * @param newMaxTime the length in seconds until an initiate's stake is forfeit
      */
-    function setMaxDuration(uint256 newMaxTime) external onlyRole(ADMIN) {
-        _setMaxDuration(newMaxTime);
+    function setStakeDuration(uint256 newMaxTime) external onlyRole(ADMIN) {
+        _setStakeDuration(newMaxTime);
     }
 
     /**
@@ -359,7 +366,7 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
 
         // can only mint minimum share for Baal DAO membership
         for (uint256 i = 0; i < length; i++) {
-            shares[i] = minimumShare;
+            shares[i] = shareThreshold;
         }
 
         baal.mintShares(to, shares);
@@ -373,7 +380,7 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
         address[] memory to = new address[](1);
 
         // can only mint minimum share for Baal DAO membership
-        shares[0] = minimumShare;
+        shares[0] = shareThreshold;
         to[0] = _to;
 
         baal.mintShares(to, shares);
@@ -416,23 +423,20 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
         require(newShareThreshold > 0, "Minimum shares must be greater than zero!");
 
         // set the minimum number of DAO shares required to graduate
-        // TODO same function different names [minimumShare, shareThreshold], can we consolidate?
-        minimumShare = newShareThreshold;
+        shareThreshold = newShareThreshold;
 
         // log data for the new minimum share threshold
         emit ChangedShares(newShareThreshold);
     }
 
-    function _setMaxDuration(uint256 newMaxTime) internal virtual {
-        // enforce that the minimum time is greater than 1 week
-        require(newMaxTime > 0, "Minimum duration must be greater than 0!");
+    function _setStakeDuration(uint256 newStakeDuration) internal virtual {
+        require(newStakeDuration > 0, "Stake duration must be greater than 0!");
 
         // set the maximum length of time for initiations
-        // TODO same function different names [maxDuration, maximumTime], can we consolidate?
-        maximumTime = newMaxTime;
+        stakeDuration = newStakeDuration;
 
         // log the new duration before stakes can be slashed
-        emit ChangedTime(newMaxTime);
+        emit ChangedTime(newStakeDuration);
     }
 
     /**
@@ -457,7 +461,7 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
         _staked[_user] = minimumStake - fee;
 
         // set the initiate's deadline
-        deadlines[_user] = block.timestamp + maximumTime;
+        deadlines[_user] = block.timestamp + stakeDuration;
 
         // Transfer funds to rite (and sustainability treasury if applicable)
         if (fee > 0) {
@@ -570,7 +574,7 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
      */
     function _checkMember() internal virtual {
         uint256 shares = _sharesToken.balanceOf(msg.sender);
-        require(shares >= minimumShare, "You must be a member!");
+        require(shares >= shareThreshold, "You must be a member!");
     }
 
     function _checkManager() internal virtual {
@@ -603,7 +607,7 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
     function isMember(address user) public view returns (bool) {
         uint256 shares = _sharesToken.balanceOf(user);
 
-        return (shares >= minimumShare);
+        return (shares >= shareThreshold);
     }
 
     /**
@@ -625,7 +629,12 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
     }
 
     // Cohort NFTs cannot be transferred
-    function _beforeTokenTransfer(address _from, address, uint256, /* firstTokenId */ uint256)
+    function _beforeTokenTransfer(
+        address _from,
+        address,
+        uint256, /* firstTokenId */
+        uint256
+    )
         internal
         virtual
         override
@@ -675,7 +684,7 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
      * @dev send proposal to Baal to mint another admin
      * protected by Hats protocol logic and Baal governance
      */
-    function mintAdminHatProposal(address _to) external {
+    function mintAdminHatProposal(address _to) external payable {
         bytes memory hatData;
 
         hatData = _encodeMintHat(adminHat, _to);
@@ -693,7 +702,7 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
      * @dev send proposal to Baal to transfer adminHat to new EOA
      * protected by Hats protocol logic and Baal governance
      */
-    function transferAdminHatProposal(address _from, address _to) external {
+    function transferAdminHatProposal(address _from, address _to) external payable {
         bytes memory hatData;
 
         hatData = _encodeTransferHat(adminHat, _from, _to);
@@ -755,7 +764,11 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
     /**
      * @dev Encoding function for building on existing Hats tree
      */
-    function _encodeBuildHatTree(address _deployer, address _admin1, address _admin2)
+    function _encodeBuildHatTree(
+        address _deployer,
+        address _admin1,
+        address _admin2
+    )
         internal
         pure
         returns (bytes memory)
@@ -801,6 +814,6 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
                 '{"proposalType": "UNDEFINED", "title": "Rite of Moloch (ROM): undefined", "description": "Undefined"}';
         }
 
-        baal.submitProposal{value: msg.value}(multiSendMetaTx, 0, 0, metaString);
+        baal.submitProposal{ value: msg.value }(multiSendMetaTx, 0, 0, metaString);
     }
 }

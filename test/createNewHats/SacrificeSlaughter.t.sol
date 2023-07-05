@@ -8,7 +8,9 @@ import "test/TestHelper.sol";
 /**
  * @dev see note on TestHelper
  */
-contract SacrificeSlaugher is TestHelper {
+contract SacrificeSlaughter is TestHelper {
+    uint256 creationTime = block.timestamp;
+
     function setUp() public override {
         TestHelper.setUp();
 
@@ -18,7 +20,7 @@ contract SacrificeSlaugher is TestHelper {
         emit log_named_uint("Cohort Counter", riteOfMoloch.cohortCounter());
         prankJoinInititation(alice);
 
-        vm.warp(2 days);
+        vm.warp(creationTime + 2 days);
 
         emit log_named_uint("Cohort Counter", riteOfMoloch.cohortCounter());
         prankJoinInititation(bob);
@@ -31,7 +33,7 @@ contract SacrificeSlaugher is TestHelper {
     /**
      * TESTS
      */
-    function testSacrfice() public {
+    function testSacrifice() public {
         assertEq(1, riteOfMoloch.cohortSeason());
         emit log_named_uint("Cohort Season", riteOfMoloch.cohortSeason());
         emit log_named_uint("Join Endtime", riteOfMoloch.joinEndTime());
@@ -40,11 +42,12 @@ contract SacrificeSlaugher is TestHelper {
         emitUserDeadline("Bob", bob);
         emitUserDeadline("Charlie", charlie);
 
-        vm.warp(8 days);
+        vm.warp(creationTime + 8 days);
 
         vm.startPrank(alice);
+
         // check current timeStamp
-        emit log_named_uint("Timestamp", block.timestamp / DAY_IN_SECONDS);
+        emit log_named_uint("Timestamp", block.timestamp / 1 days);
 
         // stakes before
         uint256[3] memory userStakesBefore = checkAllUserStakes();

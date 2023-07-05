@@ -37,15 +37,15 @@ contract AccessControl is TestHelper {
         changeSettings(_deployer, deployerValue);
 
         assertEq(riteOfMoloch.minimumStake(), deployerValue);
-        assertEq(riteOfMoloch.minimumShare(), deployerValue);
-        assertEq(riteOfMoloch.maximumTime(), deployerValue);
+        assertEq(riteOfMoloch.shareThreshold(), deployerValue);
+        assertEq(riteOfMoloch.stakeDuration(), deployerValue);
 
         // Admin wears the admin hat
         changeSettings(_admin, adminValue);
 
         assertEq(riteOfMoloch.minimumStake(), adminValue);
-        assertEq(riteOfMoloch.minimumShare(), adminValue);
-        assertEq(riteOfMoloch.maximumTime(), adminValue);
+        assertEq(riteOfMoloch.shareThreshold(), adminValue);
+        assertEq(riteOfMoloch.stakeDuration(), adminValue);
     }
 
     function testAdminSecurityFuzz(address _attacker) public {
@@ -72,7 +72,7 @@ contract AccessControl is TestHelper {
 
         riteOfMoloch.setMinimumStake(n);
         riteOfMoloch.setShareThreshold(n);
-        riteOfMoloch.setMaxDuration(n);
+        riteOfMoloch.setStakeDuration(n);
 
         vm.stopPrank();
     }
