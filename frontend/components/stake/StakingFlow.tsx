@@ -57,7 +57,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   const initiateAddress: string = values?.initiateAddress;
 
   const userAddress = (): string => {
-
     if (typeof address === "string") {
       return address;
     }
@@ -103,33 +102,25 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
 
   const canUserStake = canStake(
     allowance,
-    minimumStake || "",
     balanceOf,
-    initiateAddress,
-    willSponsor
-  );
-
-  console.log(
-    allowance,
     minimumStake || "",
-    balanceOf,
     initiateAddress,
     willSponsor
   );
 
   const approveTooltiplabel = approveTooltip(
     allowance,
-    minimumStake,
     balanceOf,
+    minimumStake,
     tokenSymbol
   );
 
   const stakeToolTipLabel = stakeTooltip(
-    willSponsor,
-    initiateAddress,
-    balanceOf,
     allowance,
-    minimumStake
+    balanceOf,
+    minimumStake,
+    initiateAddress,
+    willSponsor
   );
 
   const format = (num: string | BigNumber) => {
@@ -232,7 +223,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
           </GridItem>
           <GridItem>
             <Tooltip
-              isDisabled={!canUserStake}
               label={stakeToolTipLabel}
               placement="top-start"
             >
