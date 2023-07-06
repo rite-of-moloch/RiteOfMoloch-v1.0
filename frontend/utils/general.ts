@@ -10,8 +10,8 @@ export const convertBigNumber = (data: TxHash): string => {
 
 export const canStake = (
   allowance: BigNumberish,
-  minimumStake: BigNumberish,
   balanceOf: BigNumberish,
+  minimumStake: BigNumberish,
   initiateAddress: string,
   willSponsor: boolean
 ): boolean => {
@@ -23,6 +23,8 @@ export const canStake = (
     _allowance >= _minimumStake &&
     _balanceOf >= _minimumStake;
 
+  console.log(canStakeLogic);
+
   let willSponsorlogic = willSponsor
     ? canStakeLogic
     : canStakeLogic && utils.isAddress(initiateAddress);
@@ -31,11 +33,11 @@ export const canStake = (
 };
 
 export const stakeTooltip = (
-  willSponsor: boolean,
-  initiateAddress: string,
-  balanceOf: BigNumberish,
   allowance: BigNumberish,
-  minimumStake: BigNumberish
+  balanceOf: BigNumberish,
+  minimumStake: BigNumberish,
+  initiateAddress: string,
+  willSponsor: boolean
 ): string | null => {
   let label: string = "";
 
@@ -65,8 +67,8 @@ export const stakeTooltip = (
 
 export const approveTooltip = (
   allowance: BigNumberish,
-  minimumStake: BigNumberish,
   balanceOf: BigNumberish,
+  minimumStake: BigNumberish,
   tokenSymbol: string
 ): string | null => {
   let label: string = "";

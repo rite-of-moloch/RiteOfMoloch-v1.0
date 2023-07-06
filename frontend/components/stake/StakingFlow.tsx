@@ -102,25 +102,25 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
 
   const canUserStake = canStake(
     allowance,
-    minimumStake || "",
     balanceOf,
+    minimumStake || "",
     initiateAddress,
     willSponsor
   );
 
   const approveTooltiplabel = approveTooltip(
     allowance,
-    minimumStake,
     balanceOf,
+    minimumStake,
     tokenSymbol
   );
 
   const stakeToolTipLabel = stakeTooltip(
-    willSponsor,
-    initiateAddress,
-    balanceOf,
     allowance,
-    minimumStake
+    balanceOf,
+    minimumStake,
+    initiateAddress,
+    willSponsor
   );
 
   const format = (num: string | BigNumber) => {
