@@ -78,7 +78,7 @@ export const FormContext = createContext<{
   setAssetAmount: useState,
   cohortSize: undefined,
   setCohortSize: useState,
-  shareThreshold: undefined,
+  shareThreshold: "",
   setShareThreshold: useState,
   onboardingPeriod: undefined,
   setOnboardingPeriod: useState,

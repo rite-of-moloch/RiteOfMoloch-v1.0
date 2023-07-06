@@ -56,7 +56,7 @@ const CohortDetail: React.FC<CohortDetailProps> = ({
         column1={cohortNameLink}
         column2={
           <HStack>
-            <Text>{Number(utils.formatUnits(stake, decimalOf)).toFixed(4)}</Text>
+            <Text>{utils.formatUnits(stake, decimalOf)}</Text>
             <Text ml="0.25rem">{useTokenSymbol(stakingAsset)}</Text>
           </HStack>
         }
