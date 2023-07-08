@@ -48,17 +48,20 @@ contract JoinInitiationTest is TestHelper {
     function testJoinInitiationInsuffientBalance(address initiate) public {
         vm.assume(initiate != address(0));
 
+        vm.startPrank(initiate, initiate);
+        stakingAsset.approve(address(riteOfMoloch), minStake);
+        vm.expectRevert("ERC20: transfer amount exceeds balance");
+        riteOfMoloch.joinInitiation(initiate);
+        vm.stopPrank();
+
         stakingAsset.mint(initiate, minStake);
 
         vm.startPrank(initiate, initiate);
-        stakingAsset.approve(address(riteOfMoloch), minStake - 1 ether);
-        vm.expectRevert("ERC20: insufficient allowance");
         riteOfMoloch.joinInitiation(initiate);
-
         vm.stopPrank();
 
-        assertEq(riteOfMoloch.cohortCounter(), 0);
-        assertEq(riteOfMoloch.balanceOf(initiate), 0);
+        assertEq(riteOfMoloch.cohortCounter(), 1);
+        assertEq(riteOfMoloch.balanceOf(initiate), 1);
     }
 
     function testJoinInitiationCohortClosed(address initiate) public {

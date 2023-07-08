@@ -55,7 +55,7 @@ contract ROMWithFactoryScript is Script {
 
     function run() public {
         vm.startBroadcast(deployer);
-        hatTreeSetup();
+        // hatTreeSetup();
 
         implementation = new RiteOfMoloch();
 

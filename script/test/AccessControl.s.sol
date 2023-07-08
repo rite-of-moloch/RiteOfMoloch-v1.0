@@ -24,7 +24,7 @@ contract AccessControlScript is TestHelperScript {
         riteOfMoloch = RiteOfMoloch(romFactory.createCohort(cohortData, 1));
 
         uint256 joinTime1 = riteOfMoloch.joinDuration();
-        riteOfMoloch.changeJoinTimeDuration(20 days);
+        riteOfMoloch.setJoinTimeDuration(20 days);
         uint256 joinTime2 = riteOfMoloch.joinDuration();
         require(joinTime1 < joinTime2);
 
@@ -34,7 +34,7 @@ contract AccessControlScript is TestHelperScript {
         require(endTime1 + 7 days == endTime2);
 
         uint256 sizeLimit1 = riteOfMoloch.cohortSize();
-        riteOfMoloch.changeJoinSizeLimit(99);
+        riteOfMoloch.setMaxCohortSize(99);
         uint256 sizeLimit2 = riteOfMoloch.cohortSize();
         require(sizeLimit1 < sizeLimit2);
 

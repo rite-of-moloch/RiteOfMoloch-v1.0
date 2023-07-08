@@ -30,17 +30,17 @@ contract ConfigTest is TestHelper {
      * TESTS
      */
 
-    function testChangeJoinTimeDuration(uint256 duration) public {
+    function testSetJoinTimeDuration(uint256 duration) public {
         vm.startPrank(_attacker);
         vm.expectRevert(
             abi.encodeWithSelector(HatsAccessControl.NotWearingRoleHat.selector, ADMIN, adminHat, _attacker)
         );
-        riteOfMoloch.changeJoinTimeDuration(duration);
+        riteOfMoloch.setJoinTimeDuration(duration);
         vm.stopPrank();
 
         vm.startPrank(admin);
 
-        riteOfMoloch.changeJoinTimeDuration(duration);
+        riteOfMoloch.setJoinTimeDuration(duration);
 
         vm.stopPrank();
 
@@ -67,17 +67,17 @@ contract ConfigTest is TestHelper {
         assertEq(riteOfMoloch.joinEndTime(), currentLimit + timeLimit);
     }
 
-    function testExtendJoinSizeLimit(uint256 sizeLimit) public {
+    function testSetMaxCohortSize(uint256 sizeLimit) public {
         vm.startPrank(_attacker);
         vm.expectRevert(
             abi.encodeWithSelector(HatsAccessControl.NotWearingRoleHat.selector, ADMIN, adminHat, _attacker)
         );
-        riteOfMoloch.changeJoinSizeLimit(sizeLimit);
+        riteOfMoloch.setMaxCohortSize(sizeLimit);
         vm.stopPrank();
 
         vm.startPrank(admin);
 
-        riteOfMoloch.changeJoinSizeLimit(sizeLimit);
+        riteOfMoloch.setMaxCohortSize(sizeLimit);
 
         vm.stopPrank();
 

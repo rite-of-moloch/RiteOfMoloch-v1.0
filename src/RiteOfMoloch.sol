@@ -18,7 +18,20 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
 
     bytes32 public constant ADMIN = keccak256("ADMIN");
 
-    /// @notice 1_000_000 percentage points. 10_000 is 1.0000%.
+    /**
+     * @dev The number of percentage points used for the sustainability fee; set to 1_000_000.
+     *
+     * We use the PERC_POINTS together with `sustainabilityFee` to calculate the sustainability fee deducted from
+     * stakes.
+     * For example, to calculate the fee represented by a `value` as a percentage of a `total`, you can use the
+     * following code:
+     *
+     * ```
+     * uint256 stake = 5 * 1e18; // 5 ether
+     * uint256 sustainabilityFee = 50_000; // 5%
+     * uint256 fee = (stake / PERC_POINTS) * sustainabilityFee; // (5 ether / 1e6) * 50,000 = 0.25 ether
+     * ```
+     */
     uint256 public constant PERC_POINTS = 1e6;
 
     /**
@@ -44,62 +57,104 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
 
     CountersUpgradeable.Counter internal _tokenIdCounter;
 
-    // Baal DAO
+    /**
+     * @dev The `baal` variable represents the Baal DAO contract.
+     */
     IBaal public baal;
 
-    // Baal sharesToken
+    /**
+     * @dev The `_sharesToken` variable represents the Baal shares token contract.
+     */
     IERC20 private _sharesToken;
 
-    // ERC20 interface for staking asset
+    /**
+     * @dev The `_token` variable represents the ERC20 interface for the token that will be staked to join the cohort.
+     */
     IERC20 private _token;
 
-    // cohort's base URI for accessing token metadata
+    /**
+     * @dev The `__baseURI` variable represents the cohort's base URI for accessing token metadata.
+     */
     string internal __baseURI;
 
-    // cohort name
+    /**
+     * @dev The `cohortName` variable represents the name of the cohort.
+     */
     string public cohortName;
 
-    // cohort season counter (increases after each Sacrifice)
+    /**
+     * @dev The `cohortSeason` variable represents the cohort season counter, which increases after each Sacrifice.
+     */
     uint256 public cohortSeason;
 
-    // cohort size limit
+    /**
+     * @dev The `cohortSize` variable represents the cohort size limit.
+     */
     uint256 public cohortSize;
 
-    // cohort size count
+    /**
+     * @dev The `cohortCounter` variable represents the cohort size count.
+     */
     uint256 public cohortCounter;
 
-    // cohort join duration
+    /**
+     * @dev The `joinDuration` variable represents the cohort join duration.
+     */
     uint256 public joinDuration;
 
-    // cohort join expiration
+    /**
+     * @dev The `joinEndTime` variable represents the cohort join expiration.
+     */
     uint256 public joinEndTime;
 
-    // minimum amount of dao shares required to be considered a member
+    /**
+     * @dev The `shareThreshold` variable represents the minimum amount of DAO shares required to be considered a
+     * member.
+     */
     uint256 public shareThreshold;
 
-    // minimum amount of staked tokens required to join the initiation
+    /**
+     * @dev The `minimumStake` variable represents the minimum amount of staked tokens required to join the initiation.
+     */
     uint256 public minimumStake;
 
-    // maximum length of time for initiates to succeed at joining
+    /**
+     * @dev The `stakeDuration` variable represents the maximum length of time for initiates to succeed at joining.
+     */
     uint256 public stakeDuration;
 
-    // percentage cut of sacrifice to support RoM maintenance and development
+    /**
+     * @dev The `sustainabilityFee` variable represents the percentage cut from stakes to support RoM maintenance and
+     * development.
+     */
     uint256 public sustainabilityFee;
 
-    // DAO treasury address
+    /**
+     * @dev The `daoTreasury` variable represents the address of the DAO treasury which will receive the slashed stakes.
+     */
     address public daoTreasury;
 
-    // admin treasury address
+    /**
+     * @dev The `sustainabilityTreasury` variable represents the address of the sustainability treasury.
+     */
     address public sustainabilityTreasury;
 
-    // Hats protocol:
+    /**
+     * @dev The `hats` variable represents the Hats protocol contract.
+     */
     IHats public hats;
 
-    // Hats variables
+    /**
+     * @dev The `topHat` variable represents the ID of the top hat.
+     */
     uint256 public topHat;
+
+    /**
+     * @dev The `adminHat` variable represents the ID of the admin hat.
+     */
     uint256 public adminHat;
 
-    // todo: rm admin vars and replace w/ Hats Protocol subgraph query
+    //TODO: rm admin vars and replace w/ Hats Protocol subgraph query
     address public admin1;
     address public admin2;
 
@@ -267,9 +322,15 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
      */
 
     /**
-     * @dev Allows users to join the DAO initiation
-     * @param user the address which will be activated for the cohort
-     * Stakes required tokens and mints soul bound token
+     * @dev Allows an initiate to join the current cohort.
+     * @param user The address of the initiate to join.
+     *
+     * This function allows an initiate to join the current cohort. It first checks that the cohort is still open for
+     * joining and that the cohort has not reached its size limit. It then enforces the initiate or sponsor to transfer
+     * the correct tokens to the contract by calling the internal `_stake` function. If the stake is successful, the
+     * function increments the cohort count, adds the initiate to the tracker by season and ID, and issues a soul bound
+     * token by calling the internal `_soulBind` function.
+     *
      */
     function joinInitiation(address user) public callerIsUser {
         require(block.timestamp <= joinEndTime, "This cohort is now closed");
@@ -289,24 +350,37 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
     }
 
     /**
-     * @dev Allows DAO members to claim their initiation stake
+     * @dev Allows a member to claim their staked tokens after the stake duration has passed.
+     *
+     * This function allows a member to claim their staked tokens after the stake duration has passed. It first checks
+     * that the member has a stake. If the claim is successful, the
+     * function passes. Otherwise, it reverts.
+     *
      */
     function claimStake() external onlyMember {
         require(_claim(), "Claim failed!");
     }
 
     /**
-     * @dev Allows initiates to log permanent feedback data on-chain
-     * @param feedback "Developers do something!"
-     * Doesn't change contract state; simply passes call-data through an event
+     * @dev Allows a cohort participant to submit feedback to the DAO treasury.
+     * @param feedback The feedback message to submit.
+     *
+     * This function allows a cohort participant to submit feedback to the DAO treasury. It first checks that the
+     * participant has a balance of 1, which means they have successfully completed the initiation. If the check passes,
+     * the function emits a `Feedback` event with the participant's address, the DAO treasury address, and the feedback
+     * message.
+     *
      */
     function cryForHelp(string calldata feedback) public {
         require(balanceOf(msg.sender) == 1, "Only cohort participants!");
         emit Feedback(msg.sender, daoTreasury, feedback);
     }
 
-    function checkStake(address user) external view returns (uint256) {
-        return _staked[user];
+    /**
+     * @dev Bleeds the life force of failed initiates into the treasury
+     */
+    function sacrifice() external onlyRole(ADMIN) {
+        _darkRitual();
     }
 
     /**
@@ -315,17 +389,28 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
      *
      */
 
-    //TODO value checks
-    function changeJoinTimeDuration(uint256 _joinDuration) external onlyRole(ADMIN) {
-        joinDuration = _joinDuration;
+    /**
+     * @dev Sets the duration of the join time window for new cohorts.
+     * @param _newJoinTimeDuration The new duration of the join time window, in seconds.
+     */
+    function setJoinTimeDuration(uint256 _newJoinTimeDuration) external onlyRole(ADMIN) {
+        _setJoinTimeDuration(_newJoinTimeDuration);
     }
 
+    /**
+     * @dev Extends the join time window for new cohorts by a specified amount.
+     * @param _extension The amount of time, in seconds, by which to extend the join time window.
+     */
     function extendJoinTimeLimit(uint256 _extension) external onlyRole(ADMIN) {
-        joinEndTime = joinEndTime + _extension;
+        _setJoinTimeLimit(joinEndTime + _extension);
     }
 
-    function changeJoinSizeLimit(uint256 _cohortSize) external onlyRole(ADMIN) {
-        cohortSize = _cohortSize;
+    /**
+     * @dev Sets the maximum size of a cohort.
+     * @param _newMaxCohortSize The new maximum size of a cohort.
+     */
+    function setMaxCohortSize(uint256 _newMaxCohortSize) external onlyRole(ADMIN) {
+        _setMaxCohortSize(_newMaxCohortSize);
     }
 
     /**
@@ -351,6 +436,18 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
     function setStakeDuration(uint256 newMaxTime) external onlyRole(ADMIN) {
         _setStakeDuration(newMaxTime);
     }
+
+    /**
+     * @dev Bleeds the life force of a single failed initiate into the treasury
+     */
+    function slaughter(address _sacrificialLamb) external onlyRole(ADMIN) {
+        _bloodLetting(_sacrificialLamb);
+        cohortCounter--;
+    }
+
+    /**
+     * BAAL DAO FUNCTIONS
+     */
 
     /**
      * @dev If ROM is a Shaman: Allows minting shares of Baal DAO to become member
@@ -383,96 +480,48 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
     }
 
     /**
-     * @dev Bleeds the life force of failed initiates into the treasury
-     */
-    function sacrifice() external onlyRole(ADMIN) {
-        _darkRitual();
-    }
-
-    /**
-     * @dev Bleeds the life force of a single failed initiate into the treasury
-     */
-    function slaughter(address _sacrificialLamb) external onlyRole(ADMIN) {
-        _bloodLetting(_sacrificialLamb);
-        cohortCounter--;
-    }
-
-    /**
      *
      *  PRIVATE OR INTERNAL
      *
      */
 
-    function _setMinimumStake(uint256 newMinimumStake) internal virtual {
-        // enforce that the minimum stake isn't zero
-        require(newMinimumStake > 0, "Minimum stake must be greater than zero!");
-
-        // set the minimum staking requirement
-        minimumStake = newMinimumStake;
-
-        //  new staking requirement data
-        emit ChangedStake(newMinimumStake);
-    }
-
-    function _setShareThreshold(uint256 newShareThreshold) internal virtual {
-        // enforce that the minimum share threshold isn't zero
-        require(newShareThreshold > 0, "Minimum shares must be greater than zero!");
-
-        // set the minimum number of DAO shares required to graduate
-        shareThreshold = newShareThreshold;
-
-        // log data for the new minimum share threshold
-        emit ChangedShares(newShareThreshold);
-    }
-
-    function _setStakeDuration(uint256 newStakeDuration) internal virtual {
-        require(newStakeDuration > 0, "Stake duration must be greater than 0!");
-
-        // set the maximum length of time for initiations
-        stakeDuration = newStakeDuration;
-
-        // log the new duration before stakes can be slashed
-        emit ChangedTime(newStakeDuration);
-    }
-
     /**
-     * @dev Sets base URI during initialization
-     * @param baseURI the base uri for accessing token metadata
+     * RITE OF MOLOCH FUNCTIONS
      */
-    function _setBaseUri(string calldata baseURI) internal virtual {
-        __baseURI = baseURI;
-    }
 
     /**
-     * @dev Stakes the user's tokens
-     * @param _user the address to activate for the cohort
+     * @dev Removes a failed initiate's stake and deadline.
+     * @param _failedInitiate The address of the failed initiate.
+     * @return The amount of the failed initiate's stake that was removed.
      */
-    function _stake(address _user) internal virtual returns (bool success) {
-        // enforce that the initiate hasn't previously staked
-        require(balanceOf(_user) == 0, "Already joined the initiation!");
+    function _bloodLetting(address _failedInitiate) internal virtual returns (uint256) {
+        // access each initiate's balance
+        uint256 balance = _staked[_failedInitiate];
 
-        uint256 fee = (minimumStake / PERC_POINTS) * sustainabilityFee;
+        // remove the sacrifice's balance
+        delete _staked[_failedInitiate];
 
-        // change the initiate's stake total
-        _staked[_user] = minimumStake - fee;
+        // remove the sacrifice's starting time
+        delete deadlines[_failedInitiate];
 
-        // set the initiate's deadline
-        deadlines[_user] = block.timestamp + stakeDuration;
+        // log sacrifice data
+        emit Sacrifice(_failedInitiate, balance, msg.sender);
 
-        // Transfer funds to rite (and sustainability treasury if applicable)
-        if (fee > 0) {
-            _token.transferFrom(msg.sender, address(this), minimumStake - fee);
-            success = _token.transferFrom(msg.sender, sustainabilityTreasury, fee);
-        } else {
-            success = _token.transferFrom(msg.sender, address(this), minimumStake);
-        }
+        return balance;
     }
 
     /**
-     * @dev Claims the successful new members stake
+     * @dev Internal function to process a successful claim by a member.
+     * @return A boolean indicating whether the claim was successful.
+     *
+     * This function is called internally when a member successfully claims their stake. It first checks that the member
+     * has staked tokens, and then stores the member's balance in a local variable. It then deletes the member's balance
+     * and deadline timestamp from the contract's storage. Finally, it emits a `Claim` event with the member's address
+     * and balance, and transfers the member's original stake back to their address using the `_token.transfer`
+     * function.
      */
     function _claim() internal virtual returns (bool) {
-        address msgSender = msg.sender;
+        address msgSender = _msgSender();
         // enforce that the initiate has stake
         require(_staked[msgSender] > 0, "User has no stake!!");
 
@@ -490,24 +539,6 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
 
         // return the new member's original stake
         return _token.transfer(msgSender, balance);
-    }
-
-    /**
-     * @dev Mints soul bound tokens to the initiate
-     * @param _user the recipient of the cohort SBT
-     */
-    function _soulBind(address _user) internal virtual {
-        // store the current token counter
-        uint256 tokenId = _tokenIdCounter.current();
-
-        // increment the token counter
-        _tokenIdCounter.increment();
-
-        // mint the user's soul bound initiation token
-        _mint(_user, tokenId);
-
-        // log the initiation data
-        emit Initiation(_user, msg.sender, tokenId, minimumStake, deadlines[_user]);
     }
 
     function _darkRitual() internal virtual {
@@ -549,32 +580,169 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
         cohortSeason++;
     }
 
-    function _bloodLetting(address _failedInitiate) internal virtual returns (uint256) {
-        // access each initiate's balance
-        uint256 balance = _staked[_failedInitiate];
+    /**
+     * @dev Internal function to stake tokens on behalf of an initiate.
+     * @param _user The address of the initiate to stake tokens for.
+     * @return success A boolean indicating whether the stake was successful.
+     *
+     * This function is called internally to stake tokens on behalf of an initiate. It first checks that the initiate
+     * hasn't previously staked by verifying that their balance is zero. It then calculates the sustainability fee as a
+     * percentage of the minimum stake, subtracts this fee from the minimum stake to get the actual stake amount, and
+     * sets the initiate's stake total to this amount. It also sets the initiate's deadline timestamp to the current
+     * block timestamp plus the stake duration.
+     *
+     * If the sustainability fee is greater than zero, the function transfers the stake amount minus the fee to the
+     * contract's address, and transfers the fee to the sustainability treasury. If the sustainability fee is zero, the
+     * function transfers the entire stake amount to the contract's address.
+     *
+     */
+    function _stake(address _user) internal virtual returns (bool success) {
+        // enforce that the initiate hasn't previously staked
+        require(balanceOf(_user) == 0, "Already joined the initiation!");
 
-        // remove the sacrifice's balance
-        delete _staked[_failedInitiate];
+        uint256 fee = (minimumStake / PERC_POINTS) * sustainabilityFee;
 
-        // remove the sacrifice's starting time
-        delete deadlines[_failedInitiate];
+        // change the initiate's stake total
+        _staked[_user] = minimumStake - fee;
 
-        // log sacrifice data
-        emit Sacrifice(_failedInitiate, balance, msg.sender);
+        // set the initiate's deadline
+        deadlines[_user] = block.timestamp + stakeDuration;
 
-        return balance;
+        // Transfer funds to rite (and sustainability treasury if applicable)
+        if (fee > 0) {
+            _token.transferFrom(msg.sender, address(this), minimumStake - fee);
+            success = _token.transferFrom(msg.sender, sustainabilityTreasury, fee);
+        } else {
+            success = _token.transferFrom(msg.sender, address(this), minimumStake);
+        }
+    }
+
+    /**
+     * @dev Mints soul bound tokens to the initiate
+     * @param _user the recipient of the cohort SBT
+     */
+    function _soulBind(address _user) internal virtual {
+        // store the current token counter
+        uint256 tokenId = _tokenIdCounter.current();
+
+        // increment the token counter
+        _tokenIdCounter.increment();
+
+        // mint the user's soul bound initiation token
+        _mint(_user, tokenId);
+
+        // log the initiation data
+        emit Initiation(_user, msg.sender, tokenId, minimumStake, deadlines[_user]);
+    }
+
+    /**
+     * BAAL INTERNAL
+     */
+
+    /**
+     * @dev Submit voting proposal to Baal DAO
+     */
+    function _submitBaalProposal(bytes memory multiSendMetaTx, uint256 options) internal {
+        require(msg.value == baal.proposalOffering(), "Missing tribute");
+
+        string memory metaString;
+
+        if (options == 1) {
+            metaString =
+                '{"proposalType": "ADD_SHAMAN", "title": "Rite of Moloch (ROM): Shaman Proposal", "description": "Assign ROM as a Manager-Shaman to mint minimum DAO shares"}';
+        } else if (options == 2) {
+            metaString =
+                '{"proposalType": "BORROW_TOPHAT", "title": "Rite of Moloch (ROM): Hats Proposal", "description": "Create and mint ROM-Admin hats from DAO TopHat"}';
+        } else if (options == 3) {
+            metaString =
+                '{"proposalType": "MINT_ADMINHAT", "title": "Rite of Moloch (ROM): Mint Admin Hat", "description": "Mint ROM-Admin hat to EOA"}';
+        } else if (options == 4) {
+            metaString =
+                '{"proposalType": "TRANSFER_ADMINHAT", "title": "Rite of Moloch (ROM): Transfer Admin Hat", "description": "Transfer ROM-Admin hat to EOA"}';
+        } else {
+            metaString =
+                '{"proposalType": "UNDEFINED", "title": "Rite of Moloch (ROM): undefined", "description": "Undefined"}';
+        }
+
+        baal.submitProposal{ value: msg.value }(multiSendMetaTx, 0, 0, metaString);
+    }
+
+    /**
+     * CONFIGURATION FUNCTIONS
+     */
+
+    /**
+     * @dev Sets base URI during initialization
+     * @param baseURI the base uri for accessing token metadata
+     */
+    function _setBaseUri(string calldata baseURI) internal virtual {
+        __baseURI = baseURI;
+    }
+
+    function _setJoinTimeDuration(uint256 _newJoinDuration) internal {
+        uint256 oldDuration = joinDuration;
+        joinDuration = _newJoinDuration;
+        emit UpdatedJoinTimeDuration(oldDuration, _newJoinDuration);
+    }
+
+    function _setJoinTimeLimit(uint256 _newJoinTimeLimit) internal {
+        uint256 oldLimit = joinEndTime;
+        joinEndTime = _newJoinTimeLimit;
+        emit UpdatedJoinTimeLimit(oldLimit, _newJoinTimeLimit);
+    }
+
+    function _setMaxCohortSize(uint256 _newMaxCohortSize) internal {
+        uint256 oldSize = cohortSize;
+        cohortSize = _newMaxCohortSize;
+        emit UpdatedMaxCohortSize(oldSize, _newMaxCohortSize);
+    }
+
+    function _setMinimumStake(uint256 newMinimumStake) internal virtual {
+        // enforce that the minimum stake isn't zero
+        require(newMinimumStake > 0, "Minimum stake must be greater than zero!");
+
+        uint256 oldMinimumStake = minimumStake;
+        // set the minimum staking requirement
+        minimumStake = newMinimumStake;
+
+        //  new staking requirement data
+        emit UpdatedMinimumStake(oldMinimumStake, newMinimumStake);
+    }
+
+    function _setShareThreshold(uint256 newShareThreshold) internal virtual {
+        // enforce that the minimum share threshold isn't zero
+        require(newShareThreshold > 0, "Minimum shares must be greater than zero!");
+
+        uint256 oldShareThreshold = shareThreshold;
+
+        // set the minimum number of DAO shares required to graduate
+        shareThreshold = newShareThreshold;
+
+        // log data for the new minimum share threshold
+        emit UpdatedShareThreshold(oldShareThreshold, newShareThreshold);
+    }
+
+    function _setStakeDuration(uint256 newStakeDuration) internal virtual {
+        require(newStakeDuration > 0, "Stake duration must be greater than 0!");
+
+        uint256 oldStakeDuration = stakeDuration;
+
+        // set the maximum length of time for initiations
+        stakeDuration = newStakeDuration;
+
+        // log the new duration before stakes can be slashed
+        emit UpdatedStakeDuration(oldStakeDuration, newStakeDuration);
     }
 
     /**
      * @dev Authenticates users through the DAO contract
      */
     function _checkMember() internal virtual {
-        uint256 shares = _sharesToken.balanceOf(msg.sender);
-        require(shares >= shareThreshold, "You must be a member!");
+        require(_sharesToken.balanceOf(msg.sender) >= shareThreshold, "You must be a member!");
     }
 
     function _checkManager() internal virtual {
-        require(baal.isManager(address(this)) == true, "This RiteOfMoloch is not a Manager-Shaman!");
+        require(baal.isManager(address(this)), "This RiteOfMoloch is not a Manager-Shaman!");
     }
 
     /**
@@ -583,11 +751,8 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
      *
      */
 
-    /**
-     * @dev returns the token to stake in this cohort
-     */
-    function stakingAsset() public view returns (address) {
-        return address(_token);
+    function checkStake(address user) external view returns (uint256) {
+        return _staked[user];
     }
 
     /**
@@ -601,9 +766,14 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
      * @dev returns the user's member status
      */
     function isMember(address user) public view returns (bool) {
-        uint256 shares = _sharesToken.balanceOf(user);
+        return (_sharesToken.balanceOf(user) >= shareThreshold);
+    }
 
-        return (shares >= shareThreshold);
+    /**
+     * @dev returns the token to stake in this cohort
+     */
+    function stakingAsset() public view returns (address) {
+        return address(_token);
     }
 
     /**
@@ -782,34 +952,5 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
             metaTx = abi.encodePacked(metaTx, uint8(0), _targets[i], uint256(0), uint256(_data[i].length), _data[i]);
         }
         return abi.encodeWithSignature("multiSend(bytes)", metaTx);
-    }
-
-    /**
-     * @dev Submit voting proposal to Baal DAO
-     */
-    function _submitBaalProposal(bytes memory multiSendMetaTx, uint256 options) internal {
-        uint256 proposalOffering = baal.proposalOffering();
-        require(msg.value == proposalOffering, "Missing tribute");
-
-        string memory metaString;
-
-        if (options == 1) {
-            metaString =
-                '{"proposalType": "ADD_SHAMAN", "title": "Rite of Moloch (ROM): Shaman Proposal", "description": "Assign ROM as a Manager-Shaman to mint minimum DAO shares"}';
-        } else if (options == 2) {
-            metaString =
-                '{"proposalType": "BORROW_TOPHAT", "title": "Rite of Moloch (ROM): Hats Proposal", "description": "Create and mint ROM-Admin hats from DAO TopHat"}';
-        } else if (options == 3) {
-            metaString =
-                '{"proposalType": "MINT_ADMINHAT", "title": "Rite of Moloch (ROM): Mint Admin Hat", "description": "Mint ROM-Admin hat to EOA"}';
-        } else if (options == 4) {
-            metaString =
-                '{"proposalType": "TRANSFER_ADMINHAT", "title": "Rite of Moloch (ROM): Transfer Admin Hat", "description": "Transfer ROM-Admin hat to EOA"}';
-        } else {
-            metaString =
-                '{"proposalType": "UNDEFINED", "title": "Rite of Moloch (ROM): undefined", "description": "Undefined"}';
-        }
-
-        baal.submitProposal{ value: msg.value }(multiSendMetaTx, 0, 0, metaString);
     }
 }
