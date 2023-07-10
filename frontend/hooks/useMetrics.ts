@@ -8,7 +8,6 @@ const useMetrics = () => {
 
   useEffect(() => {
     const getMetric = async () => {
-      //todo fix address when graph synced
       const query = await graphClient.Metrics();
 
       if (query.metric) {

@@ -9,16 +9,15 @@ import {
   Text,
 } from "@raidguild/design-system";
 import { useAccount, useNetwork } from "wagmi";
-import useRiteBalanceOf from "hooks/useRiteBalanceOf";
-import RiteStaked from "components/RiteStaked";
-import StakingFlow from "components/StakingFlow";
-import NotConnected from "components/NotConnected";
+import { useRiteBalanceOf } from "hooks/useRiteOfMoloch";
+import RiteStaked from "components/stake/RiteStaked";
+import StakingFlow from "components/stake/StakingFlow";
+import NotConnected from "components/wallet/NotConnected";
 import { useRouter } from "next/router";
 import { utils } from "ethers";
 import BackButton from "components/BackButton";
 import { getDeadline, getHasRite } from "utils/general";
-import useCohortName from "hooks/useCohortByAddress";
-import useCohort from "hooks/useCohortByAddress";
+import { useCohortByAddress } from "hooks/useCohort";
 
 const Stake: React.FC = (): any => {
   const { address, isConnected } = useAccount();
@@ -26,7 +25,7 @@ const Stake: React.FC = (): any => {
   const router = useRouter();
   const { address: cohortAddress } = router.query;
 
-  const { cohort } = useCohort(cohortAddress as string);
+  const { cohort } = useCohortByAddress(cohortAddress as string);
 
   const deadline = getDeadline(cohort?.createdAt, cohort?.time);
 
@@ -91,7 +90,7 @@ const Stake: React.FC = (): any => {
           {isConnected && isStaked && (
             <RiteStaked
               riteBalance={riteBalance?.toString() || ""}
-              deadline={deadline}
+              deadline={deadline.toLocaleString()}
               contractAddress={cohort?.address || ""}
             />
           )}

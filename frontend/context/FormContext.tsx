@@ -25,12 +25,12 @@ export const FormContext = createContext<{
   setDaoTreasury: Dispatch<string>;
   membershipCriteria: string;
   setMembershipCriteria: Dispatch<string>;
-  assetAmount: number | undefined;
-  setAssetAmount: Dispatch<number | undefined>;
+  assetAmount: string;
+  setAssetAmount: Dispatch<string>;
   cohortSize: number | undefined;
   setCohortSize: Dispatch<number | undefined>;
-  shareThreshold: number | undefined;
-  setShareThreshold: Dispatch<number | undefined>;
+  shareThreshold: string;
+  setShareThreshold: Dispatch<string>;
   onboardingPeriod: number | undefined;
   setOnboardingPeriod: Dispatch<number | undefined>;
   stakeDuration: number | undefined;
@@ -74,11 +74,11 @@ export const FormContext = createContext<{
   setDaoTreasury: useState,
   membershipCriteria: "",
   setMembershipCriteria: useState,
-  assetAmount: undefined,
+  assetAmount: "",
   setAssetAmount: useState,
   cohortSize: undefined,
   setCohortSize: useState,
-  shareThreshold: undefined,
+  shareThreshold: "",
   setShareThreshold: useState,
   onboardingPeriod: undefined,
   setOnboardingPeriod: useState,
@@ -115,11 +115,9 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   const [sbtImage, setSbtImage] = useState("");
   const [symbolSBT, setSymbolSBT] = useState("");
   const [uriSBT, setUriSBT] = useState("");
-  const [assetAmount, setAssetAmount] = useState<number | undefined>(undefined);
+  const [assetAmount, setAssetAmount] = useState("");
   const [cohortSize, setCohortSize] = useState<number | undefined>(undefined);
-  const [shareThreshold, setShareThreshold] = useState<number | undefined>(
-    undefined
-  );
+  const [shareThreshold, setShareThreshold] = useState("");
   const [onboardingPeriod, setOnboardingPeriod] = useState<number | undefined>(
     undefined
   );

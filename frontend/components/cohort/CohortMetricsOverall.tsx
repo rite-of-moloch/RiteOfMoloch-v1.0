@@ -20,8 +20,6 @@ const CohortMetricsOverall: React.FC<CohortMetricsOverallProps> = ({
     <span style={{ color: "white", marginLeft: "0.25rem" }}>{text}</span>
   );
 
-  const claimRate = dataText(metrics?.slashedMembers);
-
   return (
     <Box border="red solid 1px" rounded="lg" bg="gradientSBTPrev" p={6}>
       {/* TODO: SETUP OVERALL COHORT METRICS */}
@@ -47,7 +45,7 @@ const CohortMetricsOverall: React.FC<CohortMetricsOverallProps> = ({
         <Text>Claim rate: {dataText(metrics?.slashedMembers)}</Text>
         <Text>Claimed members: {dataText(metrics?.claimedMembers)}</Text>
         <Text>Slashed members: {dataText(metrics?.slashedMembers)}</Text>
-        <Text>Slash rate: {dataText(metrics?.slashRate)}</Text>
+        <Text>Slash rate: {dataText(Number(metrics?.slashRate).toFixed(2))}</Text>
         <Text>Total cohorts: {dataText(metrics?.totalCohorts)}</Text>
         <Text>Total members: {dataText(metrics?.totalMembers)}</Text>
       </VStack>

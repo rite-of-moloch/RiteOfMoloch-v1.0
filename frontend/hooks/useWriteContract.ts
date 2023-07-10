@@ -6,6 +6,7 @@ import {
 } from "wagmi";
 import useAbi from "./useAbi";
 import { useChakraToast } from "@raidguild/design-system";
+import { zeroAddress } from "utils/constants";
 
 /**
  * @remarks hook to prepare wagmi hook contract instances
@@ -27,7 +28,7 @@ const useWriteContract = (
   const toast = useChakraToast();
 
   const { config, error: prepareError } = usePrepareContractWrite({
-    address: (contractAddress as `0x${string}`) || "",
+    address: (contractAddress as `0x${string}`) || zeroAddress,
     abi,
     functionName,
     args,
@@ -71,11 +72,6 @@ const useWriteContract = (
     },
     onSuccess(data) {
       console.log("success", data);
-      // toast({
-      //   status: "success",
-      //   title: `Transaction success! ${data?.hash}`,
-      //   size: "xs",
-      // });
     },
     onError(err) {
       console.log(err);
@@ -85,8 +81,6 @@ const useWriteContract = (
       });
     },
   });
-
-  // console.log(txResponse);
 
   return {
     write,

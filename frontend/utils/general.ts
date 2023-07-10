@@ -10,15 +10,21 @@ export const convertBigNumber = (data: TxHash): string => {
 
 export const canStake = (
   allowance: BigNumberish,
-  minimumStake: BigNumberish,
   balanceOf: BigNumberish,
+  minimumStake: BigNumberish,
   initiateAddress: string,
   willSponsor: boolean
 ): boolean => {
-  let format = utils.formatEther;
+  const _minimumStake = Number(utils.formatEther(minimumStake));
+  const _allowance = Number(utils.formatEther(allowance));
+  const _balanceOf = Number(utils.formatEther(balanceOf));
+
   let canStakeLogic =
-    format(allowance) >= format(minimumStake) &&
-    format(balanceOf) >= format(minimumStake);
+    _allowance >= _minimumStake &&
+    _balanceOf >= _minimumStake;
+
+  console.log(canStakeLogic);
+
   let willSponsorlogic = willSponsor
     ? canStakeLogic
     : canStakeLogic && utils.isAddress(initiateAddress);
@@ -27,26 +33,31 @@ export const canStake = (
 };
 
 export const stakeTooltip = (
-  willSponsor: boolean,
-  initiateAddress: string,
-  balanceOf: BigNumberish,
   allowance: BigNumberish,
-  minimumStake: BigNumberish
+  balanceOf: BigNumberish,
+  minimumStake: BigNumberish,
+  initiateAddress: string,
+  willSponsor: boolean
 ): string | null => {
   let label: string = "";
+
+  const _minimumStake = Number(utils.formatEther(minimumStake));
+  const _allowance = Number(utils.formatEther(allowance));
+  const _balanceOf = Number(utils.formatEther(balanceOf));
+
   if (willSponsor) {
     if (!utils.isAddress(initiateAddress)) {
       label = "Please input a valid wallet address";
-    } else if (utils.formatEther(allowance) < utils.formatEther(minimumStake)) {
+    } else if (_allowance < _minimumStake) {
       label =
         "You must approve the contract to spend your balance before you can stake";
-    } else if (utils.formatEther(balanceOf) < utils.formatEther(minimumStake)) {
+    } else if (_balanceOf < _minimumStake) {
       label = "Your balance is too low";
     }
   } else if (!willSponsor) {
-    if (utils.formatEther(balanceOf) < utils.formatEther(minimumStake)) {
+    if (_balanceOf < _minimumStake) {
       label = "Your balance is too low";
-    } else if (utils.formatEther(allowance) < utils.formatEther(minimumStake)) {
+    } else if (_allowance < _minimumStake) {
       label =
         "Allowance is smaller than the minimum stake amount. Please approve allowance.";
     }
@@ -56,17 +67,21 @@ export const stakeTooltip = (
 
 export const approveTooltip = (
   allowance: BigNumberish,
-  minimumStake: BigNumberish,
   balanceOf: BigNumberish,
+  minimumStake: BigNumberish,
   tokenSymbol: string
 ): string | null => {
   let label: string = "";
-  if (utils.formatEther(balanceOf) < utils.formatEther(minimumStake)) {
+
+  const _minimumStake = Number(utils.formatEther(minimumStake));
+  const _allowance = Number(utils.formatEther(allowance));
+  const _balanceOf = Number(utils.formatEther(balanceOf));
+
+  if (_balanceOf < _minimumStake) {
     label = "Your balance is too low";
-  } else if (utils.formatEther(allowance) < utils.formatEther(minimumStake)) {
+  } else if (_allowance < _minimumStake) {
     label = `Approve contract to spend your ${tokenSymbol}`;
   } else {
-    // label = `Approve contract to use ${tokenSymbol}`;
     return null;
   }
   return label;
@@ -79,11 +94,10 @@ export const approveTooltip = (
  * @returns unix strring
  */
 export const getDeadline = (
-  createdAt: string | undefined,
-  time: string | undefined
-): string => {
-  let deadline = (Number(createdAt) * 1000 + Number(time) * 1000).toString();
-
+  createdAt: string,
+  time: string
+): number => {
+  let deadline = (Number(createdAt) * 1000 + Number(time) * 1000);
   return deadline;
 };
 

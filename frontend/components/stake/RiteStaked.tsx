@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Flex, Text, Box, VStack, Checkbox } from "@raidguild/design-system";
-import CountdownTimer from "./CountdownTimer";
+import CountdownTimer from "../CountdownTimer";
 import StakingFlow from "./StakingFlow";
 import { useForm } from "react-hook-form";
 

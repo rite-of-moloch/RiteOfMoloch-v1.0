@@ -1,9 +1,12 @@
 import React from "react";
 import { Button, Link, Text, HStack } from "@raidguild/design-system";
 import { useNetwork } from "wagmi";
-import useTokenSymbol from "hooks/useTokenSymbol";
-import GridTemplate from "./GridTemplate";
-import useCohortByAddress from "hooks/useCohortByAddress";
+import { useTokenSymbol } from "hooks/useERC20";
+import GridTemplate from "../GridTemplate";
+import {useCohortByAddress} from "hooks/useCohort";
+import { utils } from "ethers";
+import { useDecimalOf } from "hooks/useERC20";
+import { zeroAddress } from "utils/constants";
 
 interface CohortDetailProps {
   address: string;
@@ -32,6 +35,12 @@ const CohortDetail: React.FC<CohortDetailProps> = ({
 }) => {
   const { chain } = useNetwork();
   const { cohort } = useCohortByAddress(address);
+
+  let decimalOf = useDecimalOf((cohort?.token as `0x${string}`) || zeroAddress);
+  if (!decimalOf) {
+    decimalOf = "0";
+  }
+
   const cohortNameLink = (
     <Link
       href={`${chain?.blockExplorers?.default.url}/address/${address}`}
@@ -47,7 +56,7 @@ const CohortDetail: React.FC<CohortDetailProps> = ({
         column1={cohortNameLink}
         column2={
           <HStack>
-            <Text>{stake}</Text>
+            <Text>{utils.formatUnits(stake, decimalOf)}</Text>
             <Text ml="0.25rem">{useTokenSymbol(stakingAsset)}</Text>
           </HStack>
         }

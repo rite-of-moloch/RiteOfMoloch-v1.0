@@ -47,8 +47,7 @@ const AdminModalAddresses: React.FC<AdminModalAddressesProps> = ({
           {admin1}
         </Box>
       </Box>
-
-      <Box display={admin2 === zeroAddress ? "none" : "block"}>
+      <Box>        
         <Text>Admin 2:</Text>
         <Box
           bg="black"
@@ -60,7 +59,7 @@ const AdminModalAddresses: React.FC<AdminModalAddressesProps> = ({
           rounded="md"
           w="full"
         >
-          {admin2}
+          {admin2 === zeroAddress ? "No Admin Elected" : admin2}
         </Box>
       </Box>
       <Box w="full" textAlign="center">

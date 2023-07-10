@@ -7,25 +7,21 @@ import {
   FormControl,
   Input,
   SimpleGrid,
-  Tooltip,
 } from "@raidguild/design-system";
 import { useFormContext } from "context/FormContext";
 import PreviewModal from "components/PreviewModal";
-import { utils } from "ethers";
 import FormErrorText from "components/FormErrorText";
 
 interface deployCohortPt1Props {
   children?: ReactNode;
 }
 
-const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
+const DeployCohortPt1: FC<deployCohortPt1Props> = () => {
   const {
     setNameCohort,
     setNameSBT,
     setSymbolSBT,
     setUriSBT,
-    setDaoTreasury,
-    setMembershipCriteria,
     displayPart1,
     setDisplayPart1,
     setDisplayPart2,
@@ -48,14 +44,11 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
 
   const handleNext = async (): Promise<void> => {
     await trigger();
-    // console.log(isValid);
     if (isValid) {
       setNameCohort(values.nameCohort);
       setNameSBT(values.nameSBT);
       setSymbolSBT(values.symbolSBT);
       setUriSBT(values.uriSBT);
-      setDaoTreasury(values.daoTreasury);
-      setMembershipCriteria(values.membershipCriteria);
       setDisplayPart1(false);
       setDisplayPart2(true);
     }
@@ -85,36 +78,6 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               render={({ message }) => <FormErrorText message={message} />}
             />
           </Box>
-          <Tooltip
-            label="Must be a valid Moloch DAO address. The Rite of Moloch contract will read from this to ascertain cohort completion"
-            placement="top-start"
-            hasArrow
-          >
-            <Box>
-              <Input
-                label="Moloch DAO Address"
-                id="membershipCriteria"
-                placeholder="enter address"
-                autoComplete="off"
-                localForm={localForm}
-                {...register("membershipCriteria", {
-                  required: {
-                    value: true,
-                    message: "Value required",
-                  },
-                  validate: () =>
-                    utils.isAddress(values.membershipCriteria) ||
-                    "invalid address",
-                })}
-              />
-
-              <ErrorMessage
-                errors={errors}
-                name="membershipCriteria"
-                render={({ message }) => <FormErrorText message={message} />}
-              />
-            </Box>
-          </Tooltip>
           <Box>
             <Input
               label="Name SBT"
@@ -161,7 +124,6 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
               render={({ message }) => <FormErrorText message={message} />}
             />
           </Box>
-
           <Box>
             <Input
               label="URL SBT"
@@ -183,20 +145,21 @@ const DeployCohortPt1: FC<deployCohortPt1Props> = ({ children }) => {
             />
           </Box>
 
-          <Box mt={10}>
+          {/* <Box mt={10}> */}
+          <Box mt={4}>
             <PreviewModal
               sbtImageURL={values.uriSBT}
               sbtName={values.nameSBT}
             />
           </Box>
-          <Box />
-          <Box textAlign="right">
+          {/* <Box textAlign="right"> */}
+          <Box mt={4}>
             <Button
               variant="solid"
               w="full"
               color="black"
-              mt={6}
-              mb={10}
+              // mt={6}
+              // mb={10}
               onClick={handleNext}
             >
               NEXT

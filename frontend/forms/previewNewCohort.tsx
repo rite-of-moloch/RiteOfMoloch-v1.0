@@ -12,9 +12,11 @@ import { useFormContext } from "context/FormContext";
 import useCreateCohort from "../hooks/useCreateCohort";
 import { useNetwork } from "wagmi";
 import { InitDataDeployCohort } from "utils/types/initDataDeployCohort";
-import CohortConfirmation from "components/CohortConfirmationModal";
-import BlockExplorerLink from "components/BlockExplorerLink";
+import CohortConfirmation from "components/cohort/CohortConfirmationModal";
+import BlockExplorerLink from "components/blockExplorer/BlockExplorerLink";
 import { zeroAddress } from "utils/constants";
+import { useDecimalOf, useTokenSymbol } from "hooks/useERC20";
+import { utils } from "ethers";
 
 /**
  * @remarks this component renders a preview of all 3 parts of form data. It also builds function handleDeployCohort, which submits data to riteOfMolochFactory contract and creates a new cohort
@@ -74,8 +76,8 @@ const PreviewNewCohort = () => {
     admin2 !== "" ? admin2 : zeroAddress,
     Number(cohortSize),
     Number(onboardingPeriod) * 60 * 60 * 24,
-    Number(shareThreshold),
-    Number(assetAmount),
+    shareThreshold,
+    assetAmount,
     Number(stakeDuration) * 60 * 60 * 24,
     tophatID ? tophatID : Number(0),
     nameCohort,
@@ -85,7 +87,7 @@ const PreviewNewCohort = () => {
     Boolean(shamanOn),
   ];
 
-  // console.log("initData", initData);
+  console.log("initData", initData);
   const {
     createCohort,
     prepareErrorCreateCohort,
@@ -96,9 +98,17 @@ const PreviewNewCohort = () => {
   console.log(prepareErrorCreateCohort);
 
   const handleDeployCohort = (): void => {
-    // console.log(createCohort);
+    console.log(createCohort);
     createCohort && createCohort();
   };
+
+  let decimalOf = useDecimalOf(stakingAsset as `0x${string}`);
+    if (!decimalOf) {
+    decimalOf = "0";
+  }
+  let symbol = useTokenSymbol(stakingAsset);
+
+  const amountString = assetAmount ? `${+utils.formatUnits(assetAmount || "0", decimalOf)} ${symbol}` : "0";
 
   return (
     <>
@@ -122,7 +132,7 @@ const PreviewNewCohort = () => {
               </Text>
               {responseText("Name SBT", nameSBT)}
               {responseText("Symbol SBT", symbolSBT)}
-              {responseText("Stake per member", assetAmount, assetAmount)}
+              {responseText("Stake per member", amountString)}
               {responseText("Staking duration", stakeDuration, stakeDuration)}
               {responseText("Cohort size", cohortSize)}
               {responseText("Shares per member", shareThreshold)}

@@ -1,13 +1,12 @@
 import React from "react";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
-import { BigNumber, utils } from "ethers";
+import { utils } from "ethers";
 import {
   Box,
   Button,
-  Center,
-  Flex,
   FormControl,
+  GridItem,
   Input,
   NumberDecrementStepper,
   NumberIncrementStepper,
@@ -15,12 +14,14 @@ import {
   NumberInputField,
   NumberInputStepper,
   SimpleGrid,
-  Switch,
   Tooltip,
+  Text,
 } from "@raidguild/design-system";
 import { useFormContext } from "context/FormContext";
 import FormErrorText from "components/FormErrorText";
-import { useDecimalOf, useSymbol } from "hooks/useERC20";
+import { useDecimalOf, useTokenSymbol } from "hooks/useERC20";
+import { useBaalShares, useBaalAvatar } from "hooks/useBaal";
+import { zeroAddress } from "utils/constants";
 
 const DeployCohortPt2 = () => {
   const {
@@ -31,12 +32,12 @@ const DeployCohortPt2 = () => {
     setStakingAsset,
     setStakeDuration,
     setDaoTreasury,
+    setMembershipCriteria,
     displayPart2,
     setDisplayPart1,
     setDisplayPart2,
     setDisplayPart3,
   } = useFormContext();
-  const [weiToggle, setWeiToggle] = React.useState(true);
 
   const localForm = useForm<FieldValues>();
 
@@ -50,8 +51,10 @@ const DeployCohortPt2 = () => {
     formState: { errors, isValid },
   } = localForm;
 
-  watch();
+  console.log(watch());
   const values = getValues();
+
+  console.log(values);
 
   const numberInputRules = {
     validate: (val: number) => val > 0,
@@ -70,57 +73,57 @@ const DeployCohortPt2 = () => {
     setDisplayPart2(false);
   };
 
+  // staking token info
+  let decimalOf = useDecimalOf(values.stakingAsset as `0x${string}`);
+  if (!decimalOf) {
+    decimalOf = "0";
+  }
+  let symbol = useTokenSymbol((values.stakingAsset) || zeroAddress);
+
+  // get DAO treasury (avatar)
+  let baalAvatar = useBaalAvatar(values.membershipCriteria as `0x${string}`);
+  if (!baalAvatar) {
+    baalAvatar = "0";
+  }
+
+  let baalShares = useBaalShares(values.membershipCriteria as `0x${string}`);
+  if (!baalShares) {
+    baalShares = "0";
+  } else {
+    setDaoTreasury(baalShares);
+  }
+
+  // share token info
+  let decimalOfShare = useDecimalOf(baalShares as `0x${string}`);
+  if (!decimalOf) {
+    decimalOf = "0";
+  }
+  let symbolOfShare = useTokenSymbol((baalShares) || zeroAddress);
+
   const handleNext = async (): Promise<void> => {
     await trigger();
+
     if (isValid) {
-      setAssetAmount(values.assetAmount);
+      if (decimalOf == "0") {
+        console.log("Error: decimalOf is undefined");
+        return;
+      }
       setCohortSize(values.cohortSize);
       setShareThreshold(values.shareThreshold);
       setOnboardingPeriod(values.onboardingPeriod);
       setStakeDuration(values.stakeDuration);
       setStakingAsset(values.stakingAsset);
-      setDaoTreasury(values.daoTreasury);
+      setAssetAmount(values.assetAmount);
+      setMembershipCriteria(values.membershipCriteria);
       setDisplayPart2(false);
       setDisplayPart3(true);
-    }
-  };
-
-  let decimalOf = useDecimalOf((values?.stakingAsset as `0x${string}`) || "0x");
-
-  if (!decimalOf) {
-    decimalOf = BigNumber.from("0") || "0";
-  }
-
-  let symbol = useSymbol((values?.stakingAsset as `0x${string}`) || "0x");
-
-  if (!symbol) {
-    symbol = "symbol";
-  }
-
-  const handleWeiToggle = () => {
-    setStakingAsset(values.stakingAsset);
-    setWeiToggle(!weiToggle);
-  };
-
-  const handleAmountInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const amount = e.target.value;
-    if (amount === "") {
-      return e;
-    }
-    if (weiToggle) {
-      return e;
-    }
-
-    if (!weiToggle) {
-      const amountInWei = utils.parseEther(amount);
-      return (e.target.value = amountInWei.toString());
     }
   };
 
   return (
     <FormControl onSubmit={handleSubmit(handleBack)}>
       <Box display={displayPart2 ? "inline" : "none"}>
-        <SimpleGrid columns={2} spacingX={4} spacingY={3}>
+        <SimpleGrid columns={3} spacingX={4} spacingY={3}>
           <Box>
             <Controller
               control={control}
@@ -146,52 +149,20 @@ const DeployCohortPt2 = () => {
               )}
             />
           </Box>
-          <Tooltip
-            label="Set the minimum amount of shares required for membership"
-            placement="top-start"
-            hasArrow
-          >
-            <Box>
-              <Controller
-                control={control}
-                name="shareThreshold"
-                rules={numberInputRules}
-                render={({ field: { ref, ...restField } }) => (
-                  <NumberInput
-                    label="Minimum Shares for DAO Membership"
-                    variant="none"
-                    placeholder="shares required for membership..."
-                    localForm={localForm}
-                    step={1}
-                    min={0}
-                    max={Infinity}
-                    {...restField}
-                  >
-                    <NumberInputField ref={ref} name={restField.name} />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-                )}
-              />
-            </Box>
-          </Tooltip>
           <Box>
             <Controller
               control={control}
               name="onboardingPeriod"
               rules={numberInputRules}
-              render={({ field: { onChange, ref, ...restField } }) => (
+              render={({ field: { ref, ...restField } }) => (
                 <NumberInput
-                  label="Onboarding Period (in days)"
+                  label="Onboarding Period (days)"
                   variant="none"
                   placeholder="time in days..."
                   localForm={localForm}
                   step={1}
                   min={0}
                   max={Infinity}
-                  onChange={(e) => onChange(handleAmountInput)}
                   {...restField}
                 >
                   <NumberInputField ref={ref} name={restField.name} />
@@ -203,7 +174,6 @@ const DeployCohortPt2 = () => {
               )}
             />
           </Box>
-
           <Box>
             <Controller
               control={control}
@@ -211,7 +181,7 @@ const DeployCohortPt2 = () => {
               rules={numberInputRules}
               render={({ field: { ref, ...restField } }) => (
                 <NumberInput
-                  label="Stake Duration (in days)"
+                  label="Stake Duration (days)"
                   variant="none"
                   placeholder="amount in days..."
                   localForm={localForm}
@@ -230,8 +200,77 @@ const DeployCohortPt2 = () => {
             />
           </Box>
         </SimpleGrid>
-        <Flex direction={"column"} gap={2}>
+          <Tooltip
+            label="Must be a valid Moloch DAO address. The Rite of Moloch contract will read from this to ascertain cohort completion"
+            placement="top-start"
+            hasArrow
+          >
+            <Box pt={"1rem"}>
+              <Input
+                label="Moloch DAO Address"
+                placeholder="enter Moloch DAO address"
+                autoComplete="off"
+                localForm={localForm}
+                {...register("membershipCriteria", {
+                  required: {
+                    value: true,
+                    message: "Value required",
+                  },
+                  validate: () =>
+                    utils.isAddress(values.membershipCriteria) ||
+                    "invalid address",
+                })}
+              />
+              <ErrorMessage
+                errors={errors}
+                name="membershipCriteria"
+                render={({ message }) => <FormErrorText message={message} />}
+              />
+            </Box>
+          </Tooltip>
+        <SimpleGrid columns={2} spacingX={4} spacingY={3}>
+          <Tooltip
+              label="Set the minimum amount of shares required for membership"
+              placement="top-start"
+              hasArrow
+            >
+            <Box>
+              <GridItem gridArea={"amount"} pt={"1rem"}>
+                <Input
+                  label="Minimum Shares for DAO Membership"
+                  placeholder="enter membership shares requirement"
+                  autoComplete="off"
+                  localForm={localForm}
+                  {...register("shareThreshold", {
+                    required: {
+                      value: true,
+                      message: "Value required",
+                    }
+                  })}
+                />
+              </GridItem>
+            </Box>
+          </Tooltip>
           <Box>
+            <GridItem gridArea="symbol" pt={"1rem"}>
+              {symbolOfShare && decimalOfShare && (
+              <>
+                <Text>{`${symbolOfShare} has ${decimalOfShare} decimal places`}</Text>
+                <Text>---</Text>
+                <Text fontWeight={900}>{`${+utils.formatUnits(values?.shareThreshold || "0", decimalOfShare)} ${symbolOfShare}`}</Text>
+              </>
+              ) || (
+                <>
+                  <Text>{`${symbolOfShare} token address`}</Text>
+                  <Text>---</Text>
+                  <Text>Please enter valid DAO address</Text>
+                </>
+              )}
+            </GridItem>
+          </Box>
+        </SimpleGrid>
+        
+          <Box pt={"1rem"}>
             <Input
               label="Staking Asset Address"
               placeholder="enter token address"
@@ -246,76 +285,47 @@ const DeployCohortPt2 = () => {
                   utils.isAddress(values.stakingAsset) || "invalid address",
               })}
             />
-            <ErrorMessage
-              errors={errors}
-              name="stakingAsset"
-              render={({ message }) => <FormErrorText message={message} />}
-            />
           </Box>
-          <SimpleGrid columns={2} spacing={2}>
-          <Controller
-            control={control}
-            name="assetAmount"
-            rules={numberInputRules}
-            render={({ field: { ref, ...restField } }) => (
-              <NumberInput
-                maxWidth={"50%"}
-                label={`Required Stake (in ${weiToggle ? "wei" : symbol})`}
-                variant="none"
-                placeholder="Required stake"
-                localForm={localForm}
-                step={1}
-                min={0}
-                max={Infinity}
-                {...restField}
-              >
-                <NumberInputField ref={ref} name={restField.name} />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            )}
-          />
-          <Center margin={"auto"}>
-            <FormControl
-              display="flex"
-              alignItems="center"
-              justifyContent={"center"}
-            >
-              <Switch
-                id="toggle-wei"
-                localForm={localForm}
-                label={"Wei or human readable?"}
-                onChange={handleWeiToggle}
-                defaultChecked={weiToggle}
-              />
-            </FormControl>
-          </Center>
-        </SimpleGrid>
+          <ErrorMessage
+            errors={errors}
+            name="stakingAsset"
+            render={({ message }) => <FormErrorText message={message} />}
+          />        
+        <SimpleGrid columns={2} spacingX={4} spacingY={3}>
           <Box>
-            <Input
-              label="DAO treasury address"
-              placeholder="Slashed stake will be sent here..."
-              autoComplete="off"
-              localForm={localForm}
-              {...register("daoTreasury", {
-                required: {
-                  value: true,
-                  message: "Value required",
-                },
-                validate: () =>
-                  utils.isAddress(values.daoTreasury) || "invalid address",
-              })}
-            />
-
-            <ErrorMessage
-              errors={errors}
-              name="daoTreasury"
-              render={({ message }) => <FormErrorText message={message} />}
-            />
+            <GridItem gridArea={"amount"} pt={"1rem"}>
+              <Input
+                label="Staking Amount"
+                placeholder="enter staking amount in wei"
+                autoComplete="off"
+                localForm={localForm}
+                {...register("assetAmount", {
+                  required: {
+                    value: true,
+                    message: "Value required",
+                  }
+                })}
+              />
+            </GridItem>
           </Box>
-        </Flex>
+          <Box>
+            <GridItem gridArea="symbol" pt={"1rem"}>
+              {symbol && decimalOf && (
+              <>
+                <Text>{`${symbol} has ${decimalOf} decimal places`}</Text>
+                <Text>---</Text>
+                <Text fontWeight={900}>{`${+utils.formatUnits(values?.assetAmount || "0", decimalOf)} ${symbol}`}</Text>
+              </>
+              ) || (
+                <>
+                  <Text>{`${symbol} token address`}</Text>
+                  <Text>---</Text>
+                  <Text>Please enter valid ERC20 address</Text>
+                </>
+              )}
+            </GridItem>
+          </Box>
+        </SimpleGrid>
         <SimpleGrid columns={2} spacingX={4} spacingY={3} my={10}>
           <Box>
             <Button

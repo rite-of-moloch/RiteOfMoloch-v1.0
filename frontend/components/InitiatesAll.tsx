@@ -1,14 +1,14 @@
 import { Box, Link, Text, Tooltip } from "@raidguild/design-system";
 import React from "react";
-import useCohortName from "hooks/useCohortByAddress";
 import { useNetwork } from "wagmi";
-import BlockExplorerLink from "./BlockExplorerLink";
-import CohortMemberModal from "./cohortMemberModal";
+import BlockExplorerLink from "./blockExplorer/BlockExplorerLink";
+import CohortMemberModal from "./cohort/CohortMemberModal";
 import GridTemplate from "./GridTemplate";
 
 interface InitiatesAllProps {
   address: string;
-  cohortId: string;
+  cohortName: string;
+  cohortAddress: string;
   stake: string;
   joinedAt: string;
 }
@@ -23,12 +23,12 @@ interface InitiatesAllProps {
  */
 const InitiatesAll: React.FC<InitiatesAllProps> = ({
   address,
-  cohortId,
+  cohortName,
+  cohortAddress,
   stake,
   joinedAt,
 }) => {
   const { chain } = useNetwork();
-  const cohortName = useCohortName(cohortId);
 
   return (
     <GridTemplate
@@ -39,16 +39,16 @@ const InitiatesAll: React.FC<InitiatesAllProps> = ({
       }
       column2={
         <Tooltip
-          label={cohortId}
+          label={cohortName}
           shouldWrapChildren
           hasArrow
           placement="bottom"
         >
           <Link
-            href={`${chain?.blockExplorers?.default.url}/address/${cohortId}`}
+            href={`${chain?.blockExplorers?.default.url}/address/${cohortAddress}`}
             isExternal
           >
-            {cohortName?.toString()}
+            {cohortName}
           </Link>
         </Tooltip>
       }
@@ -58,7 +58,7 @@ const InitiatesAll: React.FC<InitiatesAllProps> = ({
         <Box justifySelf="end">
           <CohortMemberModal
             address={address}
-            cohortAddress={cohortId}
+            cohortAddress={cohortAddress}
             joinedAt={joinedAt}
             stake={stake}
           />

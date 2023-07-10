@@ -17,13 +17,12 @@ import {
 import { useAccount } from "wagmi";
 import { BigNumber, utils } from "ethers";
 import { approveTooltip, canStake, stakeTooltip } from "utils/general";
-import {useBalanceOf, useDecimalOf} from "hooks/useERC20";
-import useApprove from "hooks/useApprove";
-import useJoinInitiation from "hooks/useJoinInitiation";
-import useGetAllowance from "hooks/useGetAllowance";
+import { useApprove, useBalanceOf, useDecimalOf, useGetAllowance } from "hooks/useERC20";
+import { useJoinInitiation } from "hooks/useRiteOfMoloch";
 import { FiAlertTriangle } from "react-icons/fi";
-import useTokenSymbol from "hooks/useTokenSymbol";
-import useCohort from "hooks/useCohortByAddress";
+import { useTokenSymbol } from "hooks/useERC20";
+import { useCohortByAddress } from "hooks/useCohort";
+import { zeroAddress } from "utils/constants";
 
 interface StakingFlowProps {
   contractAddress: string;
@@ -43,8 +42,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     setWillSponsor(!willSponsor);
   };
 
-  const { cohort } = useCohort(contractAddress);
-
+  const { cohort } = useCohortByAddress(contractAddress);
   const localForm = useForm<FieldValues>();
 
   const {
@@ -59,86 +57,75 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
   const initiateAddress: string = values?.initiateAddress;
 
   const userAddress = (): string => {
-
     if (typeof address === "string") {
       return address;
     }
     else return "";
   };
 
-  const minimumStake = cohort?.tokenAmount || "0";
-
-  let decimalOf = useDecimalOf((cohort?.token as `0x${string}`) || "0x");
-
+  let decimalOf = useDecimalOf((cohort?.token as `0x${string}`) || zeroAddress);
   if (!decimalOf) {
-    decimalOf = BigNumber.from("0") || "0";
+    decimalOf = "0";
   }
 
-  let balanceOf = useBalanceOf((cohort?.token as `0x${string}`) || "0x", [
+  let balanceOf = useBalanceOf((cohort?.token as `0x${string}`) || zeroAddress, [
     userAddress(),
   ]);
-
-  //TODO better handling of balanceOf === null
   if (!balanceOf) {
     balanceOf = BigNumber.from("0") || "0";
   }
-
-  const { approve, isLoadingApprove } = useApprove(cohort?.token || "0x", [
-    cohort?.address || "",
-    minimumStake,
-  ]);
-
-  let allowance = useGetAllowance((cohort?.token as `0x${string}`) || "0x", [
-    userAddress(),
-    cohort?.address || "0x",
-  ]);
 
   let tokenSymbol = useTokenSymbol(cohort?.token);
   if (!tokenSymbol) {
     tokenSymbol = "N/A";
   }
 
-  //TODO better handling of allowance === null
+  let allowance = useGetAllowance((cohort?.token as `0x${string}`) || zeroAddress, [
+    userAddress(),
+    cohort?.address || zeroAddress,
+  ]);
   if (!allowance) {
     allowance = BigNumber.from("0") || "0";
   }
 
+  const minimumStake = cohort?.tokenAmount || "0";
+
+  const { approve, isLoadingApprove } = useApprove(cohort?.token || zeroAddress, [
+    cohort?.address || zeroAddress,
+    minimumStake,
+  ]);
+
   const { writeJoinInitiation, isLoadingStake } = useJoinInitiation(
-    cohort?.address || "",
+    cohort?.address || zeroAddress,
     !willSponsor ? [userAddress()] : [initiateAddress]
   );
 
-  //TODO methods can accept BigNumbers instead of Strings
   const canUserStake = canStake(
     allowance,
-    minimumStake || "",
     balanceOf,
-    initiateAddress,
-    willSponsor
-  );
-
-  console.log(
-    allowance,
     minimumStake || "",
-    balanceOf,
     initiateAddress,
     willSponsor
   );
 
   const approveTooltiplabel = approveTooltip(
     allowance,
-    minimumStake,
     balanceOf,
+    minimumStake,
     tokenSymbol
   );
 
   const stakeToolTipLabel = stakeTooltip(
-    willSponsor,
-    initiateAddress,
-    balanceOf,
     allowance,
-    minimumStake
+    balanceOf,
+    minimumStake,
+    initiateAddress,
+    willSponsor
   );
+
+  const format = (num: string | BigNumber) => {
+    return Number(utils.formatUnits(num.toString(), decimalOf?.toString())).toFixed(4);
+  }
 
   // useEffect re-renders component when user creates an allowance, defined writeJoinInitiation
   useEffect(() => {
@@ -150,7 +137,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
         <HStack mb="1rem" justifyContent="space-between" w="full">
           <Text color="red">Required Stake</Text>
           <Text color="white">
-            {minimumStake} {tokenSymbol}
+            {format(minimumStake)} {tokenSymbol}
           </Text>
         </HStack>
         <HStack justifyContent="space-between" w="full">
@@ -158,7 +145,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
             Your {tokenSymbol} balance
           </Text>
           <Text color="white" fontSize=".8rem">
-            {+utils.formatUnits(balanceOf, decimalOf)} {tokenSymbol}
+            {format(balanceOf)} {tokenSymbol}
           </Text>
         </HStack>
         <HStack justifyContent="space-between" w="full">
@@ -166,7 +153,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
             Your {tokenSymbol} allowance
           </Text>
           <Text color="white" fontSize=".8rem">
-            <span style={{ marginRight: "0.5em" }}>{+utils.formatUnits(allowance.toString(), "ether")}</span>
+            <span style={{ marginRight: "0.5em" }}>{format(allowance)}</span>
             <span>{tokenSymbol}</span>
           </Text>
         </HStack>
@@ -236,7 +223,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
           </GridItem>
           <GridItem>
             <Tooltip
-              isDisabled={!canUserStake}
               label={stakeToolTipLabel}
               placement="top-start"
             >

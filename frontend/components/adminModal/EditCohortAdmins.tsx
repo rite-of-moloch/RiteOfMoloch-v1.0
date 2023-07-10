@@ -10,7 +10,6 @@ import {
 import { utils } from "ethers";
 import {useMintHatProp, useTransferHatProp} from "hooks/useHats";
 import { FieldValues, useForm } from "react-hook-form";
-
 import { zeroAddress } from "utils/constants";
 import AdminModalAddresses from "./AdminModalAddresses";
 
@@ -54,28 +53,37 @@ const EditCohortAdmins: React.FC<EditCohortAdminsProps> = ({
   watch();
   const values = getValues();
 
-  const { writeMintHatProp: mintAdmin1, isLoadingMint: loadMint1 } = useMintHatProp(address || "0x", 
+  const { writeMintHatProp: mintAdmin1, isLoadingMint: loadMint1 } = useMintHatProp(address || zeroAddress, 
     values?.admin1
   );
 
-  const { writeMintHatProp: mintAdmin2, isLoadingMint: loadMint2 } = useMintHatProp(address || "0x", 
+  const { writeMintHatProp: mintAdmin2, isLoadingMint: loadMint2 } = useMintHatProp(address || zeroAddress, 
     values?.admin2
   );
 
-  const { writeTransferHatProp: transAdmin1, isLoadingTransfer: loadTrans1 } = useTransferHatProp(address || "0x", 
-    [values?.admin1, zeroAddress]
+  const { writeTransferHatProp: transAdmin1, isLoadingTransfer: loadTrans1 } = useTransferHatProp(address || zeroAddress, 
+    [admin1, values?.admin1]
   );
 
-  const { writeTransferHatProp: transAdmin2, isLoadingTransfer: loadTrans2 } = useTransferHatProp(address || "0x", 
-      [values?.admin2, zeroAddress]
+  const { writeTransferHatProp: transAdmin2, isLoadingTransfer: loadTrans2 } = useTransferHatProp(address || zeroAddress, 
+      [admin2, values?.admin2]
   );
 
   const handleHatsProp = () => {
     if (values?.admin1) {
-      mintAdmin1 && mintAdmin1();
+      if (admin1 == zeroAddress) {
+        mintAdmin1 && mintAdmin1();
+      } else {
+        transAdmin1 && transAdmin1();
+      }
     }
-    if (values?.admin2) {
-      mintAdmin2 && mintAdmin2();
+
+    if (admin2 == zeroAddress) {
+      if (admin2 == zeroAddress) {
+        mintAdmin2 && mintAdmin2();
+      } else {
+        transAdmin2 && transAdmin2();
+      }
     }
     setEditAdmins(false);
     onClose();

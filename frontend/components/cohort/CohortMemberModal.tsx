@@ -9,19 +9,15 @@ import {
   ModalOverlay,
   useDisclosure,
   Text,
-  SimpleGrid,
   Box,
-  GridItem,
   Tooltip,
 } from "@raidguild/design-system";
 import { Modal } from "@chakra-ui/modal";
 import { useNetwork } from "wagmi";
-import { getDeadline, unixToUTC } from "utils/general";
-import BlockExplorerLink from "./BlockExplorerLink";
-import useSacrifice from "hooks/useSacrifice";
-import useCohortName from "hooks/useCohortByAddress";
-import GridTemplate from "./GridTemplate";
-import useCohort from "hooks/useCohortByAddress";
+import BlockExplorerLink from "../blockExplorer/BlockExplorerLink";
+import { useSlaughter } from "hooks/useRiteOfMoloch";
+import GridTemplate from "../GridTemplate";
+import { useCohortByAddress } from "hooks/useCohort";
 
 interface CohortMemberModalProps {
   address: string;
@@ -38,23 +34,22 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { chain } = useNetwork();
+  const { cohort } = useCohortByAddress(cohortAddress);
 
-  const { cohort } = useCohort(cohortAddress);
+  const { writeSlaughter, isError } = useSlaughter(cohortAddress?.toString(),
+    [address]
+  );
 
-  const deadline = getDeadline(cohort?.createdAt, cohort?.time);
-  const { writeSacrifice, isError, errorSacrifice, prepareErrorSacrifice } =
-    useSacrifice(address?.toString());
+  const deadline = Number(cohort?.createdAt) + Number(cohort?.time);
 
   const isPassedStakingDate = () => {
-    const today = new Date().getTime();
-    const stakingLogic = deadline < today.toString();
-    return stakingLogic ? true : false;
+    const nowUnix = Math.round(new Date().getTime() / 1000);
+    return deadline > nowUnix ? true : false;
   };
 
-  // TODO: create cohort with msg.sender as admin and test writeSacrifice function
-  const handlSacrifice = () => {
-    if (!!isPassedStakingDate) {
-      writeSacrifice && writeSacrifice();
+  const handleSlaughter = () => {
+    if (isPassedStakingDate()) {
+      writeSlaughter && writeSlaughter();
     } else {
       return;
     }
@@ -77,7 +72,7 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
             <GridTemplate
               isHeading
               column1="Initiate Address"
-              column2="Minimum Shares"
+              column2="Amount Staked"
               column3="Date Staked"
             />
             <GridTemplate
@@ -100,13 +95,13 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
               <Button
                 variant="solid"
                 size="md"
-                onClick={handlSacrifice}
+                onClick={handleSlaughter}
                 isDisabled={!isPassedStakingDate() || isError}
               >
                 Slash Stake
               </Button>
               <Text mt={1} fontSize="xx-small" color="red" textAlign="center">
-                Slashing is available on {unixToUTC(deadline)}
+                Slashing is available on {deadline.toLocaleString()}
               </Text>
             </Box>
           </ModalFooter>
