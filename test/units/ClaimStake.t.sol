@@ -31,6 +31,7 @@ contract ClaimStakeTest is TestHelper {
         );
 
         riteOfMoloch.claimStake();
+        vm.clearMockedCalls();
         vm.stopPrank();
 
         assertEq(riteOfMoloch.checkStake(initiate), 0);
@@ -49,6 +50,8 @@ contract ClaimStakeTest is TestHelper {
 
         vm.expectRevert("User has no stake!!");
         riteOfMoloch.claimStake();
+
+        vm.clearMockedCalls();
 
         vm.stopPrank();
 
@@ -78,6 +81,9 @@ contract ClaimStakeTest is TestHelper {
         );
 
         riteOfMoloch.claimStake();
+
+        vm.clearMockedCalls();
+
         vm.stopPrank();
 
         assertEq(riteOfMoloch.checkStake(initiate), 0);

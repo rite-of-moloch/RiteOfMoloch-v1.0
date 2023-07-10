@@ -1,5 +1,5 @@
 # IRiteOfMolochFactory
-[Git Source](https://github.com/bitbeckers/RiteOfMoloch-v1.0/blob/50dc1c530dd4ea29cc1789da020cd05e4c1c1f2f/src/interfaces/IROMFactory.sol)
+[Git Source](https://github.com/bitbeckers/RiteOfMoloch-v1.0/blob/3b83c2a4b53015049ac521ff1124c3303695c3c7/src/interfaces/IROMFactory.sol)
 
 **Inherits:**
 [IInitData](/src/interfaces/IInitData.sol/interface.IInitData.md)
@@ -64,5 +64,23 @@ event NewRiteOfMoloch(
     uint256 stakeDuration,
     string sbtUrl
 );
+```
+
+### AddedImplementation
+
+```solidity
+event AddedImplementation(uint256 id, address romImplementation);
+```
+
+### UpdatedSustainabilityFee
+
+```solidity
+event UpdatedSustainabilityFee(uint256 oldSustainabilityFee, uint256 newSustainabilityFee);
+```
+
+### UpdatedSustainabilityTreasury
+
+```solidity
+event UpdatedSustainabilityTreasury(address oldSustainabilityTreasury, address newSustainabilityTreasury);
 ```
 

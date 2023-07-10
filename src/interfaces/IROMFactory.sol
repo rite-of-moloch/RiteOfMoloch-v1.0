@@ -25,6 +25,10 @@ interface IRiteOfMolochFactory is IInitData {
         string sbtUrl
     );
 
+    event AddedImplementation(uint256 id, address romImplementation);
+    event UpdatedSustainabilityFee(uint256 oldSustainabilityFee, uint256 newSustainabilityFee);
+    event UpdatedSustainabilityTreasury(address oldSustainabilityTreasury, address newSustainabilityTreasury);
+
     /**
      *
      *  FUNCTIONS

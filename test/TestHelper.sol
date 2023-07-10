@@ -48,6 +48,26 @@ contract TestHelper is Test, IInitData {
     // %5 of 1 milion (PERC_POINTS = 1e6)
     uint256 sustainabilityFee = 50_000;
 
+    // EVENTS (Foudnry thing)
+
+    // Factory
+    event AddedImplementation(uint256 id, address romImplementation);
+    event HatsContractChanged(address indexed previousHatsContract, address indexed newHatsContract);
+    event UpdatedSustainabilityFee(uint256 oldSustainabilityFee, uint256 newSustainabilityFee);
+    event UpdatedSustainabilityTreasury(address oldSustainabilityTreasury, address newSustainabilityTreasury);
+
+    // RoM
+    event Initiation(address newInitiate, address benefactor, uint256 tokenId, uint256 stake, uint256 deadline);
+    event Sacrifice(address sacrifice, uint256 slashedAmount, address slasher);
+    event Claim(address newMember, uint256 claimAmount);
+    event UpdatedJoinTimeDuration(uint256 oldJoinTimeDuration, uint256 newJoinTimeDuration);
+    event UpdatedJoinTimeLimit(uint256 oldJoinTimeLimit, uint256 newJoinTimeLimit);
+    event UpdatedMaxCohortSize(uint256 oldCohortSizeLimit, uint256 newCohortSizeLimit);
+    event UpdatedShareThreshold(uint256 oldShareThreshold, uint256 newShareThreshold);
+    event UpdatedMinimumStake(uint256 oldMinimumStake, uint256 newMinimumStake);
+    event UpdatedStakeDuration(uint256 oldStakeDuration, uint256 newStakeDuration);
+    event Feedback(address user, address dao, string feedback);
+
     function setUp() public virtual {
         vm.mockCall(dao, abi.encodeWithSelector(IBaal.sharesToken.selector), abi.encode(sharesToken));
         riteOfMoloch = new RiteOfMoloch();
@@ -76,22 +96,22 @@ contract TestHelper is Test, IInitData {
 
     // INIT CLONE DATA
     function createInitData() public virtual {
-        data.membershipCriteria = dao;
-        data.stakingAsset = address(stakingAsset);
-        data.daoTreasury = dao;
         data.admin1 = alice;
         data.admin2 = address(0);
-        data.cohortSize = 3;
-        data.joinDuration = 2 weeks;
-        data.shareThreshold = 10;
         data.assetAmount = minStake;
-        data.stakeDuration = 1 weeks;
-        data.topHatId = 0;
+        data.baseUri = "x";
         data.cohortName = "SeasonV";
+        data.cohortSize = 3;
+        data.daoTreasury = dao;
+        data.joinDuration = 2 weeks;
+        data.membershipCriteria = dao;
+        data.shareThreshold = 10;
         data.sbtName = "RiteOfMolochSBT";
         data.sbtSymbol = "SBTMoloch";
-        data.baseUri = "x";
         data.shamanOn = false;
+        data.stakeDuration = 1 weeks;
+        data.stakingAsset = address(stakingAsset);
+        data.topHatId = 0;
     }
 
     // UTILS

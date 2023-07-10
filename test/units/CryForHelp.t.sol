@@ -8,9 +8,7 @@ import "openzeppelin-contracts/token/ERC20/ERC20.sol";
 /**
  * @dev see note on TestHelper
  */
-contract ClaimStakeTest is TestHelper {
-    event Feedback(address user, address treasury, string feedback);
-
+contract CryForHelpTest is TestHelper {
     function setUp() public override {
         TestHelper.setUp();
     }
@@ -30,9 +28,8 @@ contract ClaimStakeTest is TestHelper {
 
         vm.startPrank(initiate, initiate);
 
-        vm.expectEmit(false, false, false, false);
-        // We emit the event we expect to see.
-        emit Feedback(initiate, sustainabilityTreasury, "HELP!");
+        vm.expectEmit(false, false, false, true);
+        emit Feedback(initiate, data.daoTreasury, "HELP!");
         riteOfMoloch.cryForHelp("HELP!");
 
         vm.stopPrank();

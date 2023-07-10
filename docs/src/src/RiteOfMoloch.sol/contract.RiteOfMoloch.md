@@ -1,5 +1,5 @@
 # RiteOfMoloch
-[Git Source](https://github.com/bitbeckers/RiteOfMoloch-v1.0/blob/50dc1c530dd4ea29cc1789da020cd05e4c1c1f2f/src/RiteOfMoloch.sol)
+[Git Source](https://github.com/bitbeckers/RiteOfMoloch-v1.0/blob/3b83c2a4b53015049ac521ff1124c3303695c3c7/src/RiteOfMoloch.sol)
 
 **Inherits:**
 [IInitData](/src/interfaces/IInitData.sol/interface.IInitData.md), ERC721Upgradeable, HatsAccessControl, [IRiteOfMoloch](/src/interfaces/IROM.sol/interface.IRiteOfMoloch.md)
@@ -356,7 +356,7 @@ function claimStake() external onlyMember;
 
 ### cryForHelp
 
-*Allows a cohort participant to submit feedback to the DAO treasury.*
+*Allows a cohort participant to submit feedback to the DAO.*
 
 
 ```solidity
@@ -366,7 +366,7 @@ function cryForHelp(string calldata feedback) public;
 
 |Name|Type|Description|
 |----|----|-----------|
-|`feedback`|`string`|The feedback message to submit. This function allows a cohort participant to submit feedback to the DAO treasury. It first checks that the participant has a balance of 1, which means they have successfully completed the initiation. If the check passes, the function emits a `Feedback` event with the participant's address, the DAO treasury address, and the feedback message.|
+|`feedback`|`string`|The feedback message to submit. This function allows a cohort participant to submit feedback to the DAO treasury. It first checks that the participant has a balance of 1, which means they have successfully committed to the initiation. If the check passes, the function emits a `Feedback` event with the participant's address, the DAO treasury address, and the feedback message.|
 
 
 ### sacrifice

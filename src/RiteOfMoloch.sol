@@ -362,11 +362,11 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
     }
 
     /**
-     * @dev Allows a cohort participant to submit feedback to the DAO treasury.
+     * @dev Allows a cohort participant to submit feedback to the DAO.
      * @param feedback The feedback message to submit.
      *
      * This function allows a cohort participant to submit feedback to the DAO treasury. It first checks that the
-     * participant has a balance of 1, which means they have successfully completed the initiation. If the check passes,
+     * participant has a balance of 1, which means they have successfully committed to the initiation. If the check passes,
      * the function emits a `Feedback` event with the participant's address, the DAO treasury address, and the feedback
      * message.
      *
