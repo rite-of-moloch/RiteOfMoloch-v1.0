@@ -1,5 +1,5 @@
 # RiteOfMolochFactory
-[Git Source](https://github.com/bitbeckers/RiteOfMoloch-v1.0/blob/3b83c2a4b53015049ac521ff1124c3303695c3c7/src/RiteOfMolochFactory.sol)
+[Git Source](https://github.com/bitbeckers/RiteOfMoloch-v1.0/blob/b5061029ecd18fcdad4a31307cf3f098d7bae269/src/RiteOfMolochFactory.sol)
 
 **Inherits:**
 [IRiteOfMolochFactory](/src/interfaces/IROMFactory.sol/interface.IRiteOfMolochFactory.md), HatsAccessControl
@@ -127,7 +127,7 @@ function addImplementation(address implementation) external onlyRole(FACTORY_OPE
 This function allows the factory operator to change the Hats protocol implementation. It first checks
 that the
 new Hats protocol address is not the zero address. If the check passes, the function updates the `hatsProtocol`
-variable and calls the `_changeHatsContract` function with the new address. It does not emit any events.
+variable and calls the `_changeHatsContract` function provided by Hats protocol.
 
 *Allows the factory operator to change the Hats protocol implementation.*
 
