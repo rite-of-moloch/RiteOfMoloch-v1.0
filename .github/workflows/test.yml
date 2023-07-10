@@ -39,10 +39,3 @@ jobs:
         run: |
           forge test -vvv
         id: test
-
-      - name: Coverage
-        run: |
-          forge coverage --report lcov
-        id: coverage
-
-      - uses: codecov/codecov-action@v2
