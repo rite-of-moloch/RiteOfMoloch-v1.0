@@ -239,6 +239,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
             </Tooltip>
           </GridItem>
         </SimpleGrid>
+        <Text mt="1rem" fontSize="2xs">1% of stake will be collected for application maintanence and cannot be claimed back.</Text>
       </Flex>
     </>
   );

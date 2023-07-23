@@ -25,7 +25,8 @@ const AdminModalAddresses: React.FC<AdminModalAddressesProps> = ({
 }) => {
   return (
     <VStack spacing={"1rem"} display={editAdmins ? "none" : "block"} w="full">
-      {admin1 === zeroAddress && admin2 === zeroAddress && (
+      {(admin1 === zeroAddress && admin2 === zeroAddress) ||
+      (admin1 === "" && admin2 === "") && (
         <Box textAlign="center">
           <Text>
             This cohort has no admin! Click Edit to add up to (2) HATS admin
@@ -47,7 +48,7 @@ const AdminModalAddresses: React.FC<AdminModalAddressesProps> = ({
           {admin1}
         </Box>
       </Box>
-      <Box>        
+      <Box display={admin1 === zeroAddress ? "none" : "block"}>        
         <Text>Admin 2:</Text>
         <Box
           bg="black"
@@ -59,7 +60,7 @@ const AdminModalAddresses: React.FC<AdminModalAddressesProps> = ({
           rounded="md"
           w="full"
         >
-          {admin2 === zeroAddress ? "No Admin Elected" : admin2}
+          {admin2}
         </Box>
       </Box>
       <Box w="full" textAlign="center">
