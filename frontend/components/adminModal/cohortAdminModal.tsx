@@ -13,6 +13,7 @@ import { Modal } from "@chakra-ui/modal";
 import EditCohortAdmins from "./EditCohortAdmins";
 import {useCohortByAddress} from "hooks/useCohort";
 import { useAdmin1, useAdmin2 } from "hooks/useHats";
+import { zeroAddress } from "utils/constants";
 
 interface CohortAdminModalProps {
   address: string | undefined;
@@ -31,14 +32,17 @@ const CohortAdminModal: React.FC<CohortAdminModalProps> = ({
   const { cohort } = useCohortByAddress(address || "");
 
   let admin1 = useAdmin1(cohort?.address);
-  if (!admin1) {
+  if (!admin1 || admin1 === zeroAddress) {
     admin1 = "";
   }
 
   let admin2 = useAdmin2(cohort?.address);
-  if (!admin2) {
+  if (!admin2 || admin2 === zeroAddress) {
     admin2 = "";
   }
+
+  console.log(`admin1: ${admin1}\nadmin2: ${admin2}`);
+
 
   return (
     <>
