@@ -15,6 +15,9 @@ const useCreateCohort = (args: [InitDataDeployCohort, number]) => {
   const factoryAddress =
     CONTRACT_ADDRESSES[chain?.id || 5]["riteOfMolochFactoryAddress"];
 
+  console.log("factoryAddress", factoryAddress);
+  console.log("args", args);
+
   const {
     write: createCohort,
     prepareError: prepareErrorCreateCohort,

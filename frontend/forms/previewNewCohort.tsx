@@ -93,7 +93,7 @@ const PreviewNewCohort = () => {
     prepareErrorCreateCohort,
     isLoadingApprove,
     isSuccessApprove,
-  } = useCreateCohort([initData, 1]);
+  } = useCreateCohort([initData, 0]);
 
   console.log(prepareErrorCreateCohort);
 
