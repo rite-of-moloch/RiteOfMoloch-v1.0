@@ -53,16 +53,18 @@ export const { chains, provider } = configureChains(
   { stallTimeout: 5000 }
 );
 
+const PROJECT_ID = process.env.NEXT_PUBLIC_WALLETCONNECT_ID || "";
+
 const connectors = connectorsForWallets([
   {
     groupName: "Recommended",
     wallets: [
       injectedWallet({ chains }),
-      ledgerWallet({ chains }),
-      metaMaskWallet({ chains }),
+      ledgerWallet({ chains, projectId: PROJECT_ID }),
+      metaMaskWallet({ chains, projectId: PROJECT_ID }),
       coinbaseWallet({ chains, appName: "Rite Of Moloch" }),
-      walletConnectWallet({ chains }),
-      rainbowWallet({ chains }),
+      walletConnectWallet({ chains, projectId: PROJECT_ID }),
+      rainbowWallet({ chains, projectId: PROJECT_ID }),
     ],
   },
 ]);
