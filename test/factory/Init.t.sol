@@ -73,9 +73,6 @@ contract InitTest is TestHelper {
         // Hats
         assertEq(address(_riteOfMoloch.hats()), address(hatsProtocol));
 
-        // Tophat will be minted and ID returned
-        assertGt(_riteOfMoloch.topHat(), 0);
-
         // Adminst from InitData will not be set; FALSE: HATS.isWearerOfHat(daoTreasury, initData.topHatId))
         assertEq(address(_riteOfMoloch.admin1()), address(0));
         assertEq(address(_riteOfMoloch.admin2()), address(0));
@@ -134,13 +131,13 @@ contract InitTest is TestHelper {
 
     function testHatsDoesNotExistInit() public {
         // Hats and factory have a top hat
-        assertEq(hatsProtocol.lastTopHatId(), 2);
+        assertEq(hatsProtocol.lastTopHatId(), 1);
 
         // Does not exist so a new one will be created
         initData.topHatId = 1337;
 
         romFactory.createCohort(initData, 0);
-        assertEq(hatsProtocol.lastTopHatId(), 3);
+        assertEq(hatsProtocol.lastTopHatId(), 2);
 
         // Test with offering provided
         RiteOfMoloch _riteOfMoloch = RiteOfMoloch(romFactory.createCohort(initData, 0));

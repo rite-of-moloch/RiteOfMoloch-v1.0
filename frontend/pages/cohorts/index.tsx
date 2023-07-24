@@ -23,14 +23,12 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
   const searchResult = getValues().searchResult;
 
   const renderCohorts = cohorts?.map((cohort) => {
-    const deadline = DateTime.fromSeconds(+cohort?.createdAt).plus({
-      seconds: cohort?.time,
-    });
+    const deadline = DateTime.fromSeconds(+cohort?.joinEndTime);
     return (
       <CohortDetail
         address={cohort.address}
-        stake={cohort.tokenAmount}
-        stakingAsset={cohort.token}
+        stake={cohort.minimumStake}
+        stakingAsset={cohort.stakingToken}
         stakingDate={deadline.toLocaleString()}
         key={cohort.id}
         memberOrAdmin={"admin"}

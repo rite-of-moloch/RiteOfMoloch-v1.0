@@ -26,6 +26,7 @@ interface IRiteOfMolochFactory is IInitData {
     );
 
     event AddedImplementation(uint256 id, address romImplementation);
+    event UpdatedHatsProtocol(address oldHatsProtocol, address newHatsProtocol);
     event UpdatedSustainabilityFee(uint256 oldSustainabilityFee, uint256 newSustainabilityFee);
     event UpdatedSustainabilityTreasury(address oldSustainabilityTreasury, address newSustainabilityTreasury);
 
@@ -55,5 +56,9 @@ interface IRiteOfMolochFactory is IInitData {
     function addImplementation(address implementation) external;
 
     // point to new Hats protocol implementation
-    function changeHatsProtocol(address _hatsProtocol) external;
+    function updateHatsProtocol(address _hatsProtocol) external;
+
+    function updateSustainabilityFee(uint256 _sustainabilityFee) external;
+
+    function updateSustainabilityTreasury(address _sustainabilityTreasury) external;
 }

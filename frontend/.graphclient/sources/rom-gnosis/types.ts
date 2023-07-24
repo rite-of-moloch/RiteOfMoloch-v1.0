@@ -110,8 +110,8 @@ export type Claim_orderBy =
   | 'initiate__id'
   | 'initiate__address'
   | 'initiate__benefactor'
-  | 'initiate__tokenId'
-  | 'initiate__stake'
+  | 'initiate__sbtId'
+  | 'initiate__stakeAmount'
   | 'initiate__deadline'
   | 'initiate__joinedAt'
   | 'initiate__claimed'
@@ -119,18 +119,19 @@ export type Claim_orderBy =
   | 'amount'
   | 'cohort'
   | 'cohort__id'
-  | 'cohort__name'
   | 'cohort__address'
   | 'cohort__chain'
+  | 'cohort__name'
   | 'cohort__deployer'
-  | 'cohort__dao'
-  | 'cohort__token'
-  | 'cohort__sbtUrl'
   | 'cohort__implementation'
-  | 'cohort__tokenAmount'
-  | 'cohort__sharesAmount'
-  | 'cohort__time'
-  | 'cohort__treasury'
+  | 'cohort__dao'
+  | 'cohort__daoTreasury'
+  | 'cohort__shareThreshold'
+  | 'cohort__stakeDuration'
+  | 'cohort__joinEndTime'
+  | 'cohort__stakingToken'
+  | 'cohort__minimumStake'
+  | 'cohort__sbtUrl'
   | 'cohort__createdAt'
   | 'cohort__totalMembers'
   | 'cohort__claimedMembers'
@@ -139,18 +140,19 @@ export type Claim_orderBy =
 
 export type Cohort = {
   id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
   address: Scalars['Bytes'];
   chain: Scalars['String'];
+  name: Scalars['String'];
   deployer: Scalars['Bytes'];
-  dao: Scalars['Bytes'];
-  token: Scalars['Bytes'];
-  sbtUrl: Scalars['String'];
   implementation: Scalars['Bytes'];
-  tokenAmount: Scalars['BigInt'];
-  sharesAmount: Scalars['BigInt'];
-  time: Scalars['BigInt'];
-  treasury: Scalars['Bytes'];
+  dao: Scalars['Bytes'];
+  daoTreasury: Scalars['Bytes'];
+  shareThreshold: Scalars['BigInt'];
+  stakeDuration: Scalars['BigInt'];
+  joinEndTime: Scalars['BigInt'];
+  stakingToken: Scalars['Bytes'];
+  minimumStake: Scalars['BigInt'];
+  sbtUrl: Scalars['String'];
   createdAt: Scalars['BigInt'];
   initiates?: Maybe<Array<Initiate>>;
   criesForHelp?: Maybe<Array<CryForHelp>>;
@@ -207,26 +209,6 @@ export type Cohort_filter = {
   id_lte?: InputMaybe<Scalars['ID']>;
   id_in?: InputMaybe<Array<Scalars['ID']>>;
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
-  name?: InputMaybe<Scalars['String']>;
-  name_not?: InputMaybe<Scalars['String']>;
-  name_gt?: InputMaybe<Scalars['String']>;
-  name_lt?: InputMaybe<Scalars['String']>;
-  name_gte?: InputMaybe<Scalars['String']>;
-  name_lte?: InputMaybe<Scalars['String']>;
-  name_in?: InputMaybe<Array<Scalars['String']>>;
-  name_not_in?: InputMaybe<Array<Scalars['String']>>;
-  name_contains?: InputMaybe<Scalars['String']>;
-  name_contains_nocase?: InputMaybe<Scalars['String']>;
-  name_not_contains?: InputMaybe<Scalars['String']>;
-  name_not_contains_nocase?: InputMaybe<Scalars['String']>;
-  name_starts_with?: InputMaybe<Scalars['String']>;
-  name_starts_with_nocase?: InputMaybe<Scalars['String']>;
-  name_not_starts_with?: InputMaybe<Scalars['String']>;
-  name_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
-  name_ends_with?: InputMaybe<Scalars['String']>;
-  name_ends_with_nocase?: InputMaybe<Scalars['String']>;
-  name_not_ends_with?: InputMaybe<Scalars['String']>;
-  name_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   address?: InputMaybe<Scalars['Bytes']>;
   address_not?: InputMaybe<Scalars['Bytes']>;
   address_gt?: InputMaybe<Scalars['Bytes']>;
@@ -257,6 +239,26 @@ export type Cohort_filter = {
   chain_ends_with_nocase?: InputMaybe<Scalars['String']>;
   chain_not_ends_with?: InputMaybe<Scalars['String']>;
   chain_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_gt?: InputMaybe<Scalars['String']>;
+  name_lt?: InputMaybe<Scalars['String']>;
+  name_gte?: InputMaybe<Scalars['String']>;
+  name_lte?: InputMaybe<Scalars['String']>;
+  name_in?: InputMaybe<Array<Scalars['String']>>;
+  name_not_in?: InputMaybe<Array<Scalars['String']>>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_contains_nocase?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  name_starts_with?: InputMaybe<Scalars['String']>;
+  name_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  name_not_starts_with?: InputMaybe<Scalars['String']>;
+  name_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  name_ends_with?: InputMaybe<Scalars['String']>;
+  name_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  name_not_ends_with?: InputMaybe<Scalars['String']>;
+  name_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
   deployer?: InputMaybe<Scalars['Bytes']>;
   deployer_not?: InputMaybe<Scalars['Bytes']>;
   deployer_gt?: InputMaybe<Scalars['Bytes']>;
@@ -267,6 +269,16 @@ export type Cohort_filter = {
   deployer_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   deployer_contains?: InputMaybe<Scalars['Bytes']>;
   deployer_not_contains?: InputMaybe<Scalars['Bytes']>;
+  implementation?: InputMaybe<Scalars['Bytes']>;
+  implementation_not?: InputMaybe<Scalars['Bytes']>;
+  implementation_gt?: InputMaybe<Scalars['Bytes']>;
+  implementation_lt?: InputMaybe<Scalars['Bytes']>;
+  implementation_gte?: InputMaybe<Scalars['Bytes']>;
+  implementation_lte?: InputMaybe<Scalars['Bytes']>;
+  implementation_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  implementation_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  implementation_contains?: InputMaybe<Scalars['Bytes']>;
+  implementation_not_contains?: InputMaybe<Scalars['Bytes']>;
   dao?: InputMaybe<Scalars['Bytes']>;
   dao_not?: InputMaybe<Scalars['Bytes']>;
   dao_gt?: InputMaybe<Scalars['Bytes']>;
@@ -277,16 +289,58 @@ export type Cohort_filter = {
   dao_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   dao_contains?: InputMaybe<Scalars['Bytes']>;
   dao_not_contains?: InputMaybe<Scalars['Bytes']>;
-  token?: InputMaybe<Scalars['Bytes']>;
-  token_not?: InputMaybe<Scalars['Bytes']>;
-  token_gt?: InputMaybe<Scalars['Bytes']>;
-  token_lt?: InputMaybe<Scalars['Bytes']>;
-  token_gte?: InputMaybe<Scalars['Bytes']>;
-  token_lte?: InputMaybe<Scalars['Bytes']>;
-  token_in?: InputMaybe<Array<Scalars['Bytes']>>;
-  token_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
-  token_contains?: InputMaybe<Scalars['Bytes']>;
-  token_not_contains?: InputMaybe<Scalars['Bytes']>;
+  daoTreasury?: InputMaybe<Scalars['Bytes']>;
+  daoTreasury_not?: InputMaybe<Scalars['Bytes']>;
+  daoTreasury_gt?: InputMaybe<Scalars['Bytes']>;
+  daoTreasury_lt?: InputMaybe<Scalars['Bytes']>;
+  daoTreasury_gte?: InputMaybe<Scalars['Bytes']>;
+  daoTreasury_lte?: InputMaybe<Scalars['Bytes']>;
+  daoTreasury_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  daoTreasury_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  daoTreasury_contains?: InputMaybe<Scalars['Bytes']>;
+  daoTreasury_not_contains?: InputMaybe<Scalars['Bytes']>;
+  shareThreshold?: InputMaybe<Scalars['BigInt']>;
+  shareThreshold_not?: InputMaybe<Scalars['BigInt']>;
+  shareThreshold_gt?: InputMaybe<Scalars['BigInt']>;
+  shareThreshold_lt?: InputMaybe<Scalars['BigInt']>;
+  shareThreshold_gte?: InputMaybe<Scalars['BigInt']>;
+  shareThreshold_lte?: InputMaybe<Scalars['BigInt']>;
+  shareThreshold_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  shareThreshold_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  stakeDuration?: InputMaybe<Scalars['BigInt']>;
+  stakeDuration_not?: InputMaybe<Scalars['BigInt']>;
+  stakeDuration_gt?: InputMaybe<Scalars['BigInt']>;
+  stakeDuration_lt?: InputMaybe<Scalars['BigInt']>;
+  stakeDuration_gte?: InputMaybe<Scalars['BigInt']>;
+  stakeDuration_lte?: InputMaybe<Scalars['BigInt']>;
+  stakeDuration_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  stakeDuration_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  joinEndTime?: InputMaybe<Scalars['BigInt']>;
+  joinEndTime_not?: InputMaybe<Scalars['BigInt']>;
+  joinEndTime_gt?: InputMaybe<Scalars['BigInt']>;
+  joinEndTime_lt?: InputMaybe<Scalars['BigInt']>;
+  joinEndTime_gte?: InputMaybe<Scalars['BigInt']>;
+  joinEndTime_lte?: InputMaybe<Scalars['BigInt']>;
+  joinEndTime_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  joinEndTime_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  stakingToken?: InputMaybe<Scalars['Bytes']>;
+  stakingToken_not?: InputMaybe<Scalars['Bytes']>;
+  stakingToken_gt?: InputMaybe<Scalars['Bytes']>;
+  stakingToken_lt?: InputMaybe<Scalars['Bytes']>;
+  stakingToken_gte?: InputMaybe<Scalars['Bytes']>;
+  stakingToken_lte?: InputMaybe<Scalars['Bytes']>;
+  stakingToken_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  stakingToken_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  stakingToken_contains?: InputMaybe<Scalars['Bytes']>;
+  stakingToken_not_contains?: InputMaybe<Scalars['Bytes']>;
+  minimumStake?: InputMaybe<Scalars['BigInt']>;
+  minimumStake_not?: InputMaybe<Scalars['BigInt']>;
+  minimumStake_gt?: InputMaybe<Scalars['BigInt']>;
+  minimumStake_lt?: InputMaybe<Scalars['BigInt']>;
+  minimumStake_gte?: InputMaybe<Scalars['BigInt']>;
+  minimumStake_lte?: InputMaybe<Scalars['BigInt']>;
+  minimumStake_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  minimumStake_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   sbtUrl?: InputMaybe<Scalars['String']>;
   sbtUrl_not?: InputMaybe<Scalars['String']>;
   sbtUrl_gt?: InputMaybe<Scalars['String']>;
@@ -307,50 +361,6 @@ export type Cohort_filter = {
   sbtUrl_ends_with_nocase?: InputMaybe<Scalars['String']>;
   sbtUrl_not_ends_with?: InputMaybe<Scalars['String']>;
   sbtUrl_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
-  implementation?: InputMaybe<Scalars['Bytes']>;
-  implementation_not?: InputMaybe<Scalars['Bytes']>;
-  implementation_gt?: InputMaybe<Scalars['Bytes']>;
-  implementation_lt?: InputMaybe<Scalars['Bytes']>;
-  implementation_gte?: InputMaybe<Scalars['Bytes']>;
-  implementation_lte?: InputMaybe<Scalars['Bytes']>;
-  implementation_in?: InputMaybe<Array<Scalars['Bytes']>>;
-  implementation_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
-  implementation_contains?: InputMaybe<Scalars['Bytes']>;
-  implementation_not_contains?: InputMaybe<Scalars['Bytes']>;
-  tokenAmount?: InputMaybe<Scalars['BigInt']>;
-  tokenAmount_not?: InputMaybe<Scalars['BigInt']>;
-  tokenAmount_gt?: InputMaybe<Scalars['BigInt']>;
-  tokenAmount_lt?: InputMaybe<Scalars['BigInt']>;
-  tokenAmount_gte?: InputMaybe<Scalars['BigInt']>;
-  tokenAmount_lte?: InputMaybe<Scalars['BigInt']>;
-  tokenAmount_in?: InputMaybe<Array<Scalars['BigInt']>>;
-  tokenAmount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
-  sharesAmount?: InputMaybe<Scalars['BigInt']>;
-  sharesAmount_not?: InputMaybe<Scalars['BigInt']>;
-  sharesAmount_gt?: InputMaybe<Scalars['BigInt']>;
-  sharesAmount_lt?: InputMaybe<Scalars['BigInt']>;
-  sharesAmount_gte?: InputMaybe<Scalars['BigInt']>;
-  sharesAmount_lte?: InputMaybe<Scalars['BigInt']>;
-  sharesAmount_in?: InputMaybe<Array<Scalars['BigInt']>>;
-  sharesAmount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
-  time?: InputMaybe<Scalars['BigInt']>;
-  time_not?: InputMaybe<Scalars['BigInt']>;
-  time_gt?: InputMaybe<Scalars['BigInt']>;
-  time_lt?: InputMaybe<Scalars['BigInt']>;
-  time_gte?: InputMaybe<Scalars['BigInt']>;
-  time_lte?: InputMaybe<Scalars['BigInt']>;
-  time_in?: InputMaybe<Array<Scalars['BigInt']>>;
-  time_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
-  treasury?: InputMaybe<Scalars['Bytes']>;
-  treasury_not?: InputMaybe<Scalars['Bytes']>;
-  treasury_gt?: InputMaybe<Scalars['Bytes']>;
-  treasury_lt?: InputMaybe<Scalars['Bytes']>;
-  treasury_gte?: InputMaybe<Scalars['Bytes']>;
-  treasury_lte?: InputMaybe<Scalars['Bytes']>;
-  treasury_in?: InputMaybe<Array<Scalars['Bytes']>>;
-  treasury_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
-  treasury_contains?: InputMaybe<Scalars['Bytes']>;
-  treasury_not_contains?: InputMaybe<Scalars['Bytes']>;
   createdAt?: InputMaybe<Scalars['BigInt']>;
   createdAt_not?: InputMaybe<Scalars['BigInt']>;
   createdAt_gt?: InputMaybe<Scalars['BigInt']>;
@@ -403,18 +413,19 @@ export type Cohort_filter = {
 
 export type Cohort_orderBy =
   | 'id'
-  | 'name'
   | 'address'
   | 'chain'
+  | 'name'
   | 'deployer'
-  | 'dao'
-  | 'token'
-  | 'sbtUrl'
   | 'implementation'
-  | 'tokenAmount'
-  | 'sharesAmount'
-  | 'time'
-  | 'treasury'
+  | 'dao'
+  | 'daoTreasury'
+  | 'shareThreshold'
+  | 'stakeDuration'
+  | 'joinEndTime'
+  | 'stakingToken'
+  | 'minimumStake'
+  | 'sbtUrl'
   | 'createdAt'
   | 'initiates'
   | 'criesForHelp'
@@ -516,26 +527,27 @@ export type CryForHelp_orderBy =
   | 'sender__id'
   | 'sender__address'
   | 'sender__benefactor'
-  | 'sender__tokenId'
-  | 'sender__stake'
+  | 'sender__sbtId'
+  | 'sender__stakeAmount'
   | 'sender__deadline'
   | 'sender__joinedAt'
   | 'sender__claimed'
   | 'sender__sacrificed'
   | 'cohort'
   | 'cohort__id'
-  | 'cohort__name'
   | 'cohort__address'
   | 'cohort__chain'
+  | 'cohort__name'
   | 'cohort__deployer'
-  | 'cohort__dao'
-  | 'cohort__token'
-  | 'cohort__sbtUrl'
   | 'cohort__implementation'
-  | 'cohort__tokenAmount'
-  | 'cohort__sharesAmount'
-  | 'cohort__time'
-  | 'cohort__treasury'
+  | 'cohort__dao'
+  | 'cohort__daoTreasury'
+  | 'cohort__shareThreshold'
+  | 'cohort__stakeDuration'
+  | 'cohort__joinEndTime'
+  | 'cohort__stakingToken'
+  | 'cohort__minimumStake'
+  | 'cohort__sbtUrl'
   | 'cohort__createdAt'
   | 'cohort__totalMembers'
   | 'cohort__claimedMembers'
@@ -546,8 +558,8 @@ export type Initiate = {
   id: Scalars['ID'];
   address: Scalars['Bytes'];
   benefactor: Scalars['Bytes'];
-  tokenId: Scalars['BigInt'];
-  stake: Scalars['BigInt'];
+  sbtId: Scalars['BigInt'];
+  stakeAmount: Scalars['BigInt'];
   deadline: Scalars['BigInt'];
   joinedAt: Scalars['BigInt'];
   cohort: Cohort;
@@ -586,22 +598,22 @@ export type Initiate_filter = {
   benefactor_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
   benefactor_contains?: InputMaybe<Scalars['Bytes']>;
   benefactor_not_contains?: InputMaybe<Scalars['Bytes']>;
-  tokenId?: InputMaybe<Scalars['BigInt']>;
-  tokenId_not?: InputMaybe<Scalars['BigInt']>;
-  tokenId_gt?: InputMaybe<Scalars['BigInt']>;
-  tokenId_lt?: InputMaybe<Scalars['BigInt']>;
-  tokenId_gte?: InputMaybe<Scalars['BigInt']>;
-  tokenId_lte?: InputMaybe<Scalars['BigInt']>;
-  tokenId_in?: InputMaybe<Array<Scalars['BigInt']>>;
-  tokenId_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
-  stake?: InputMaybe<Scalars['BigInt']>;
-  stake_not?: InputMaybe<Scalars['BigInt']>;
-  stake_gt?: InputMaybe<Scalars['BigInt']>;
-  stake_lt?: InputMaybe<Scalars['BigInt']>;
-  stake_gte?: InputMaybe<Scalars['BigInt']>;
-  stake_lte?: InputMaybe<Scalars['BigInt']>;
-  stake_in?: InputMaybe<Array<Scalars['BigInt']>>;
-  stake_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  sbtId?: InputMaybe<Scalars['BigInt']>;
+  sbtId_not?: InputMaybe<Scalars['BigInt']>;
+  sbtId_gt?: InputMaybe<Scalars['BigInt']>;
+  sbtId_lt?: InputMaybe<Scalars['BigInt']>;
+  sbtId_gte?: InputMaybe<Scalars['BigInt']>;
+  sbtId_lte?: InputMaybe<Scalars['BigInt']>;
+  sbtId_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  sbtId_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  stakeAmount?: InputMaybe<Scalars['BigInt']>;
+  stakeAmount_not?: InputMaybe<Scalars['BigInt']>;
+  stakeAmount_gt?: InputMaybe<Scalars['BigInt']>;
+  stakeAmount_lt?: InputMaybe<Scalars['BigInt']>;
+  stakeAmount_gte?: InputMaybe<Scalars['BigInt']>;
+  stakeAmount_lte?: InputMaybe<Scalars['BigInt']>;
+  stakeAmount_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  stakeAmount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   deadline?: InputMaybe<Scalars['BigInt']>;
   deadline_not?: InputMaybe<Scalars['BigInt']>;
   deadline_gt?: InputMaybe<Scalars['BigInt']>;
@@ -659,24 +671,25 @@ export type Initiate_orderBy =
   | 'id'
   | 'address'
   | 'benefactor'
-  | 'tokenId'
-  | 'stake'
+  | 'sbtId'
+  | 'stakeAmount'
   | 'deadline'
   | 'joinedAt'
   | 'cohort'
   | 'cohort__id'
-  | 'cohort__name'
   | 'cohort__address'
   | 'cohort__chain'
+  | 'cohort__name'
   | 'cohort__deployer'
-  | 'cohort__dao'
-  | 'cohort__token'
-  | 'cohort__sbtUrl'
   | 'cohort__implementation'
-  | 'cohort__tokenAmount'
-  | 'cohort__sharesAmount'
-  | 'cohort__time'
-  | 'cohort__treasury'
+  | 'cohort__dao'
+  | 'cohort__daoTreasury'
+  | 'cohort__shareThreshold'
+  | 'cohort__stakeDuration'
+  | 'cohort__joinEndTime'
+  | 'cohort__stakingToken'
+  | 'cohort__minimumStake'
+  | 'cohort__sbtUrl'
   | 'cohort__createdAt'
   | 'cohort__totalMembers'
   | 'cohort__claimedMembers'
@@ -1008,8 +1021,8 @@ export type Sacrifice_orderBy =
   | 'initiate__id'
   | 'initiate__address'
   | 'initiate__benefactor'
-  | 'initiate__tokenId'
-  | 'initiate__stake'
+  | 'initiate__sbtId'
+  | 'initiate__stakeAmount'
   | 'initiate__deadline'
   | 'initiate__joinedAt'
   | 'initiate__claimed'
@@ -1018,18 +1031,19 @@ export type Sacrifice_orderBy =
   | 'slasher'
   | 'cohort'
   | 'cohort__id'
-  | 'cohort__name'
   | 'cohort__address'
   | 'cohort__chain'
+  | 'cohort__name'
   | 'cohort__deployer'
-  | 'cohort__dao'
-  | 'cohort__token'
-  | 'cohort__sbtUrl'
   | 'cohort__implementation'
-  | 'cohort__tokenAmount'
-  | 'cohort__sharesAmount'
-  | 'cohort__time'
-  | 'cohort__treasury'
+  | 'cohort__dao'
+  | 'cohort__daoTreasury'
+  | 'cohort__shareThreshold'
+  | 'cohort__stakeDuration'
+  | 'cohort__joinEndTime'
+  | 'cohort__stakingToken'
+  | 'cohort__minimumStake'
+  | 'cohort__sbtUrl'
   | 'cohort__createdAt'
   | 'cohort__totalMembers'
   | 'cohort__claimedMembers'

@@ -3,13 +3,12 @@
 pragma solidity ^0.8.13;
 
 import { Clones } from "lib/openzeppelin-contracts/contracts/proxy/Clones.sol";
+import { Ownable } from "lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 import { RiteOfMoloch } from "src/RiteOfMoloch.sol";
 import { IRiteOfMolochFactory } from "src/interfaces/IROMFactory.sol";
 import { HatsAccessControl } from "hats-auth/HatsAccessControl.sol";
 
-contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
-    bytes32 public constant FACTORY_OPERATOR = keccak256("FACTORY_OPERATOR");
-
+contract RiteOfMolochFactory is IRiteOfMolochFactory, Ownable {
     // access an existing implementation of cohort staking sbt contracts
     mapping(uint256 => address) public implementations;
 
@@ -26,15 +25,10 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
     uint256 public sustainabilityFee;
 
     /**
-     * @param _hatsProtocol
-     */
-
-    /**
      * @dev Initializes a new instance of the RiteOfMolochFactory contract.
      * @param _implementation The address of the initial RiteOfMoloch implementation contract.
      * @param _hatsProtocol The address of the Hats protocol implementation contract (current release:
-     * 0x96bD657Fcc04c71B47f896a829E5728415cbcAa1).
-     * @param _factoryOperatorHat The ID of the hat to assign to the factory operator role.
+     * 0x850f3384829D7bab6224D141AFeD9A559d745E3D).
      * @param _sustainabilityTreasury The address of the sustainability treasury contract.
      * @param _sustainabilityFee The sustainability fee percentage to apply to new cohorts.
      *
@@ -49,15 +43,12 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
     constructor(
         address _implementation,
         address _hatsProtocol,
-        uint256 _factoryOperatorHat,
         address _sustainabilityTreasury,
-        uint256 _sustainabilityFee
+        uint256 _sustainabilityFee,
+        address owner
     ) {
         // point to Hats implementation
         hatsProtocol = _hatsProtocol;
-
-        // point access control functionality to Hats protocol
-        _changeHatsContract(hatsProtocol);
 
         // Configure sustainability fee and treasury
         sustainabilityTreasury = _sustainabilityTreasury;
@@ -67,8 +58,7 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
         implementations[iid] = _implementation;
         emit AddedImplementation(iid, _implementation);
 
-        // assign admin roles to deployer
-        _grantRole(FACTORY_OPERATOR, _factoryOperatorHat);
+        if (owner != msg.sender) _transferOwnership(owner);
     }
 
     /**
@@ -127,7 +117,7 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
      * `AddedImplementation` event with the ID and implementation address.
      *
      */
-    function addImplementation(address implementation) external onlyRole(FACTORY_OPERATOR) {
+    function addImplementation(address implementation) external onlyOwner {
         require(implementation != address(0), "Implementation can not be zero address");
 
         iid++;
@@ -140,39 +130,40 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
      * @param _hatsProtocol The address of the new Hats protocol implementation to set.
      *
      * @notice This function allows the factory operator to change the Hats protocol implementation. It first checks
-     * that the
-     * new Hats protocol address is not the zero address. If the check passes, the function updates the `hatsProtocol`
-     * variable and calls the `_changeHatsContract` function provided by Hats protocol.
+     * that the new Hats protocol address is not the zero address. If the check passes, the function updates the
+     * `hatsProtocol` address.
      *
      */
-    function changeHatsProtocol(address _hatsProtocol) external onlyRole(FACTORY_OPERATOR) {
+    function updateHatsProtocol(address _hatsProtocol) external onlyOwner {
         require(_hatsProtocol != address(0), "Hats protocol can not be zero address");
 
+        address oldHatsProtocol = hatsProtocol;
         hatsProtocol = _hatsProtocol;
-        _changeHatsContract(_hatsProtocol);
+
+        emit UpdatedHatsProtocol(oldHatsProtocol, _hatsProtocol);
     }
 
     /**
      * @dev Allows the factory operator to update the sustainability fee.
-     * @param fee The new sustainability fee to set.
+     * @param _sustainabilityFee The new sustainability fee to set.
      *
      * @notice This function allows the factory operator to update the sustainability fee. It first checks that the new
      * fee is not greater than 1e6. If the check passes, the function updates the `sustainabilityFee` variable and emits
      * an `UpdatedSustainabilityFee` event with the old and new fees.
      *
      */
-    function updateSustainabilityFee(uint256 fee) external onlyRole(FACTORY_OPERATOR) {
-        require(fee <= 1e6, "Sustainability fee too high");
+    function updateSustainabilityFee(uint256 _sustainabilityFee) external onlyOwner {
+        require(_sustainabilityFee <= 1e6, "Sustainability fee too high");
 
         uint256 oldSustainabilityFee = sustainabilityFee;
-        sustainabilityFee = fee;
+        sustainabilityFee = _sustainabilityFee;
 
-        emit UpdatedSustainabilityFee(oldSustainabilityFee, fee);
+        emit UpdatedSustainabilityFee(oldSustainabilityFee, _sustainabilityFee);
     }
 
     /**
      * @dev Allows the factory operator to update the sustainability treasury.
-     * @param newSustainabilityTreasury The new sustainability treasury address to set.
+     * @param _sustainabilityTreasury The new sustainability treasury address to set.
      *
      * @notice This function allows the factory operator to update the sustainability treasury. It first checks that the
      * new treasury address is not the zero address. If the check passes, the function updates the
@@ -180,11 +171,11 @@ contract RiteOfMolochFactory is IRiteOfMolochFactory, HatsAccessControl {
      * treasury addresses.
      *
      */
-    function updateSustainabilityTreasury(address newSustainabilityTreasury) external onlyRole(FACTORY_OPERATOR) {
-        require(newSustainabilityTreasury != address(0), "Treasury can not be zero address");
+    function updateSustainabilityTreasury(address _sustainabilityTreasury) external onlyOwner {
+        require(_sustainabilityTreasury != address(0), "Treasury can not be zero address");
         address oldSustainabilityTreasury = sustainabilityTreasury;
-        sustainabilityTreasury = newSustainabilityTreasury;
+        sustainabilityTreasury = _sustainabilityTreasury;
 
-        emit UpdatedSustainabilityTreasury(oldSustainabilityTreasury, newSustainabilityTreasury);
+        emit UpdatedSustainabilityTreasury(oldSustainabilityTreasury, _sustainabilityTreasury);
     }
 }

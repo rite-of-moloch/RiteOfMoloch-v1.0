@@ -11,8 +11,6 @@ import { IRiteOfMolochEvents } from "src/interfaces/IROMEvents.sol";
  * @dev see note on TestHelper
  */
 contract ConfigTest is TestHelper {
-    bytes32 public constant FACTORY_OPERATOR = keccak256("FACTORY_OPERATOR");
-
     address _attacker = address(666);
 
     function setUp() public override {
@@ -25,11 +23,7 @@ contract ConfigTest is TestHelper {
     function testAddImplementation() public {
         address implementation = address(new RiteOfMoloch());
         vm.startPrank(_attacker);
-        vm.expectRevert(
-            abi.encodeWithSelector(
-                HatsAccessControl.NotWearingRoleHat.selector, FACTORY_OPERATOR, factoryOperatorHat, _attacker
-            )
-        );
+        vm.expectRevert("Ownable: caller is not the owner");
         romFactory.addImplementation(implementation);
         vm.stopPrank();
 
@@ -47,27 +41,24 @@ contract ConfigTest is TestHelper {
         assertEq(romFactory.implementations(1), implementation);
     }
 
-    function testChangeHatsProtocol() public {
+    function testUpdateHatsProtocol() public {
         address newHats = address(new Hats("Updated-Hats", ""));
         vm.startPrank(_attacker);
-        vm.expectRevert(
-            abi.encodeWithSelector(
-                HatsAccessControl.NotWearingRoleHat.selector, FACTORY_OPERATOR, factoryOperatorHat, _attacker
-            )
-        );
-        romFactory.changeHatsProtocol(newHats);
+        vm.expectRevert("Ownable: caller is not the owner");
+
+        romFactory.updateHatsProtocol(newHats);
         vm.stopPrank();
 
         vm.startPrank(factoryAdmin);
 
         vm.expectRevert("Hats protocol can not be zero address");
-        romFactory.changeHatsProtocol(address(0));
+        romFactory.updateHatsProtocol(address(0));
 
         address oldHats = address(romFactory.hatsProtocol());
 
         vm.expectEmit(true, true, false, true);
-        emit HatsContractChanged(oldHats, newHats);
-        romFactory.changeHatsProtocol(newHats);
+        emit UpdatedHatsProtocol(oldHats, newHats);
+        romFactory.updateHatsProtocol(newHats);
 
         vm.stopPrank();
 
@@ -76,11 +67,8 @@ contract ConfigTest is TestHelper {
 
     function testUpdateSustainabilityFee(uint256 newFee) public {
         vm.startPrank(_attacker);
-        vm.expectRevert(
-            abi.encodeWithSelector(
-                HatsAccessControl.NotWearingRoleHat.selector, FACTORY_OPERATOR, factoryOperatorHat, _attacker
-            )
-        );
+        vm.expectRevert("Ownable: caller is not the owner");
+
         romFactory.updateSustainabilityFee(newFee);
         vm.stopPrank();
 
@@ -105,11 +93,8 @@ contract ConfigTest is TestHelper {
     function testUpdateSustainabilityTreasury() public {
         address newTreasury = address(9999);
         vm.startPrank(_attacker);
-        vm.expectRevert(
-            abi.encodeWithSelector(
-                HatsAccessControl.NotWearingRoleHat.selector, FACTORY_OPERATOR, factoryOperatorHat, _attacker
-            )
-        );
+        vm.expectRevert("Ownable: caller is not the owner");
+
         romFactory.updateSustainabilityTreasury(newTreasury);
         vm.stopPrank();
 

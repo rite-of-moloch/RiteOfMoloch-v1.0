@@ -16,7 +16,7 @@ import NotConnected from "components/wallet/NotConnected";
 import { useRouter } from "next/router";
 import { utils } from "ethers";
 import BackButton from "components/BackButton";
-import { getDeadline, getHasRite } from "utils/general";
+import { getHasRite } from "utils/general";
 import { useCohortByAddress } from "hooks/useCohort";
 
 const Stake: React.FC = (): any => {
@@ -27,7 +27,7 @@ const Stake: React.FC = (): any => {
 
   const { cohort } = useCohortByAddress(cohortAddress as string);
 
-  const deadline = getDeadline(cohort?.createdAt, cohort?.time);
+  const deadline = cohort?.joinEndTime;
 
   const riteBalance = useRiteBalanceOf(cohortAddress?.toString() || "", [
     address || "",

@@ -44,9 +44,11 @@ const CohortDetail: React.FC<CohortDetailProps> = () => {
 
   const handleSacrifice = () => {
     writeSacrifice && writeSacrifice();
-  }
+  };
 
-  let decimalOf = useDecimalOf((cohort?.token as `0x${string}`) || zeroAddress);
+  let decimalOf = useDecimalOf(
+    (cohort?.stakingToken as `0x${string}`) || zeroAddress
+  );
   if (!decimalOf) {
     decimalOf = "0";
   }
@@ -62,7 +64,10 @@ const CohortDetail: React.FC<CohortDetailProps> = () => {
           cohortAddress={cohortAddress?.toString() || ""}
           id={initiate.id}
           joinedAt={dateJoined}
-          stake={utils.formatUnits(initiate.stake.toString(), decimalOf?.toString())}
+          stake={utils.formatUnits(
+            initiate.stakeAmount.toString(),
+            decimalOf?.toString()
+          )}
           key={initiate.id}
         />
       );
@@ -80,33 +85,33 @@ const CohortDetail: React.FC<CohortDetailProps> = () => {
       my={!isInitiates ? 8 : 0}
     >
       {isLoadingCohort ? (
-      <Box w="full" textAlign="center" p={2} fontFamily="texturina">
-        <Spinner size="xl" my="50" color="red" emptyColor="purple" />
-        <Text>Loading cohorts...</Text>
-      </Box>
+        <Box w="full" textAlign="center" p={2} fontFamily="texturina">
+          <Spinner size="xl" my="50" color="red" emptyColor="purple" />
+          <Text>Loading cohorts...</Text>
+        </Box>
       ) : (
-      <>
-        <Heading as="h2" textAlign="center" color="red">
-          {cohortName?.toString().toUpperCase()}
-        </Heading>
-        <Stack
-          direction={["column", "column", "row"]}
-          textAlign="center"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Link
-            fontSize={["sm", "md"]}
-            href={`${chain?.blockExplorers?.default.url}/address/${cohortAddress}`}
-            isExternal
+        <>
+          <Heading as="h2" textAlign="center" color="red">
+            {cohortName?.toString().toUpperCase()}
+          </Heading>
+          <Stack
+            direction={["column", "column", "row"]}
+            textAlign="center"
+            justifyContent="center"
+            alignItems="center"
           >
-            {cohortAddress}
-          </Link>
-          <Box>
-            <CohortAdminModal address={cohortAddress?.toString()} />
-          </Box>
-        </Stack>
-      </>
+            <Link
+              fontSize={["sm", "md"]}
+              href={`${chain?.blockExplorers?.default.url}/address/${cohortAddress}`}
+              isExternal
+            >
+              {cohortAddress}
+            </Link>
+            <Box>
+              <CohortAdminModal address={cohortAddress?.toString()} />
+            </Box>
+          </Stack>
+        </>
       )}
 
       {isInitiates && (
@@ -130,16 +135,13 @@ const CohortDetail: React.FC<CohortDetailProps> = () => {
 
       {isInitiates && (
         <Box>
-          <Button
-            variant="solid"
-            size="md"
-            onClick={handleSacrifice}
-          >
+          <Button variant="solid" size="md" onClick={handleSacrifice}>
             Sacrifice Cohort
           </Button>
           <Text mt={1} fontSize="small" color="red" textAlign="left">
-            Sacrifice all initiates that expired,</Text>
-            <Text mt={1} fontSize="small" color="red" textAlign="left">
+            Sacrifice all initiates that expired,
+          </Text>
+          <Text mt={1} fontSize="small" color="red" textAlign="left">
             and carry over survivors to new cohort.
           </Text>
         </Box>

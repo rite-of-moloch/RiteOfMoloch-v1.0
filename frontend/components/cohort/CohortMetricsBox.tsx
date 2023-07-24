@@ -56,10 +56,8 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
     return formatAddr(addr);
   };
 
-  const symbol = useTokenSymbol(cohort?.token);
-  const deadline = DateTime.fromSeconds(+cohort?.createdAt).plus({
-    seconds: cohort?.time,
-  });
+  const symbol = useTokenSymbol(cohort?.stakingToken);
+  const deadline = DateTime.fromSeconds(+cohort?.joinEndTime);
 
   const lastMemberJoined = (): string => {
     if (!cohort?.initiates) return "N/A";
@@ -125,8 +123,8 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
                 <span style={{ color: "white", marginLeft: "0.5rem" }}>
                   {BlockExplorerMetricLink(
                     chain,
-                    cohort ? formatAddr(cohort?.token) : "",
-                    cohort?.token
+                    cohort ? formatAddr(cohort?.stakingToken) : "",
+                    cohort?.stakingToken
                   )}
                 </span>
               </Text>
@@ -138,16 +136,12 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
                   {deadline.toLocaleString()}
                 </span>
               </Text>
-              <Text>
-                Cohort size: {dataText(cohort?.totalMembers)}
-              </Text>
+              <Text>Cohort size: {dataText(cohort?.totalMembers)}</Text>
               <Text>
                 Success percentage:{" "}
                 {dataText(Number(cohort?.successPercentage).toFixed(2))}
               </Text>
-              <Text>
-                Members slashed: {dataText(cohort?.slashedMembers)}
-              </Text>
+              <Text>Members slashed: {dataText(cohort?.slashedMembers)}</Text>
               <Text>
                 Staking date of last member: {dataText(lastMemberJoined())}
               </Text>

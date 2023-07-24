@@ -3,7 +3,7 @@ import { Button, Link, Text, HStack } from "@raidguild/design-system";
 import { useNetwork } from "wagmi";
 import { useTokenSymbol } from "hooks/useERC20";
 import GridTemplate from "../GridTemplate";
-import {useCohortByAddress} from "hooks/useCohort";
+import { useCohortByAddress } from "hooks/useCohort";
 import { utils } from "ethers";
 import { useDecimalOf } from "hooks/useERC20";
 import { zeroAddress } from "utils/constants";
@@ -36,7 +36,9 @@ const CohortDetail: React.FC<CohortDetailProps> = ({
   const { chain } = useNetwork();
   const { cohort } = useCohortByAddress(address);
 
-  let decimalOf = useDecimalOf((cohort?.token as `0x${string}`) || zeroAddress);
+  let decimalOf = useDecimalOf(
+    (cohort?.stakingToken as `0x${string}`) || zeroAddress
+  );
   if (!decimalOf) {
     decimalOf = "0";
   }

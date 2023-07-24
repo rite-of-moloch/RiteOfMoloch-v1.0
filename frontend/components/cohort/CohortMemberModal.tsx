@@ -36,11 +36,11 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
   const { chain } = useNetwork();
   const { cohort } = useCohortByAddress(cohortAddress);
 
-  const { writeSlaughter, isError } = useSlaughter(cohortAddress?.toString(),
-    [address]
-  );
+  const { writeSlaughter, isError } = useSlaughter(cohortAddress?.toString(), [
+    address,
+  ]);
 
-  const deadline = Number(cohort?.createdAt) + Number(cohort?.time);
+  const deadline = Number(cohort?.joinEndTime);
 
   const isPassedStakingDate = () => {
     const nowUnix = Math.round(new Date().getTime() / 1000);

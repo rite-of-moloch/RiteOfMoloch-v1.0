@@ -34,14 +34,10 @@ contract TestHelperScript is Script, IInitData {
 
     // Hats interface and current deployment release
     IHats public hats;
-    address public constant hatsProtocol = 0x9D2dfd6066d5935267291718E8AA16C8Ab729E9d;
+    address public constant hatsProtocol = 0x850f3384829D7bab6224D141AFeD9A559d745E3D;
 
     // Hats topHat for testing Baal proposal with existing topHat
     uint256 public topHatMoloch;
-
-    // Hats for ROM-Factory, not for ROM-clone (for development only)
-    uint256 public factoryOperatorHat;
-    uint256 public topHatFactory;
 
     // sustainability
     address adminTreasury = 0x849233B1a9ca424716458297589f474B250bf1f2;
@@ -71,26 +67,6 @@ contract TestHelperScript is Script, IInitData {
         cohortData.shamanOn = _shamanOn; // shaman proposal data
     }
 
-    /**
-     * @dev this Hats setup is only for ROM-Factory admin, not for ROM-clone
-     */
-    function hatTreeSetup() public {
-        // this Script contract will be the admin of the factory (for development only)
-        topHatFactory = hats.mintTopHat(deployer, "ROM-Factory TopHat", "");
-
-        factoryOperatorHat = hats.createHat(
-            topHatFactory,
-            "ROM-Factory Operator",
-            2,
-            address(333), // arbitrary elgibility addr
-            address(333), // arbitrary toggle addr
-            true,
-            ""
-        );
-
-        hats.mintHat(factoryOperatorHat, deployer);
-    }
-
     function setUpHelper() public {
         // check link between Baal and Avatar
         require(baalAvatar == baal.avatar(), "Incorrect avatar");
@@ -98,18 +74,15 @@ contract TestHelperScript is Script, IInitData {
         // set Hats protocol implementation
         hats = IHats(hatsProtocol);
 
-        // create Hats tree for ROM-Factory
-        hatTreeSetup();
-
         riteOfMoloch = new RiteOfMoloch();
 
         // deploy ROM-factory
         romFactory = new RiteOfMolochFactory(
             address(riteOfMoloch),
             hatsProtocol,
-            factoryOperatorHat,
             adminTreasury,
-            adminFee
+            adminFee,
+            msg.sender
         );
     }
 

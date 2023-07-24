@@ -37,7 +37,7 @@ const Initiates = () => {
         address={initiate.address}
         cohortName={initiate.cohort?.name || "N/A"}
         cohortAddress={initiate.cohort?.address || zeroAddress}
-        stake={initiate.stake}
+        stake={initiate.stakeAmount}
         joinedAt={unixToUTC((joinedAt * 1000).toString())}
         key={initiate.id}
       />

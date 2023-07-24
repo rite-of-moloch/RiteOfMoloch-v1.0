@@ -366,7 +366,8 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
      * @param feedback The feedback message to submit.
      *
      * This function allows a cohort participant to submit feedback to the DAO treasury. It first checks that the
-     * participant has a balance of 1, which means they have successfully committed to the initiation. If the check passes,
+     * participant has a balance of 1, which means they have successfully committed to the initiation. If the check
+     * passes,
      * the function emits a `Feedback` event with the participant's address, the DAO treasury address, and the feedback
      * message.
      *
@@ -610,8 +611,8 @@ contract RiteOfMoloch is IInitData, ERC721Upgradeable, HatsAccessControl, IRiteO
 
         // Transfer funds to rite (and sustainability treasury if applicable)
         if (fee > 0) {
-            _token.transferFrom(msg.sender, address(this), minimumStake - fee);
-            success = _token.transferFrom(msg.sender, sustainabilityTreasury, fee);
+            success = _token.transferFrom(msg.sender, address(this), minimumStake - fee)
+                && _token.transferFrom(msg.sender, sustainabilityTreasury, fee);
         } else {
             success = _token.transferFrom(msg.sender, address(this), minimumStake);
         }

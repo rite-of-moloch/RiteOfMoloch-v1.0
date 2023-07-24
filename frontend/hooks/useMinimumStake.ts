@@ -13,7 +13,7 @@ const useMinimumStake = (contractAddress: string) => {
     return null;
   }
 
-  return cohort.tokenAmount as BigNumber;
+  return BigNumber.from(cohort.minimumStake);
 };
 
 export default useMinimumStake;

@@ -1,5 +1,12 @@
 import React from "react";
-import { Box, Heading, HStack, Spinner, Stack, Spacer} from "@raidguild/design-system";
+import {
+  Box,
+  Heading,
+  HStack,
+  Spinner,
+  Stack,
+  Spacer,
+} from "@raidguild/design-system";
 import BackButton from "components/BackButton";
 import CohortDetail from "components/cohort/CohortDetail";
 import SearchCohorts from "components/cohort/SearchCohorts";
@@ -19,21 +26,19 @@ const JoinCohorts: React.FC = () => {
   watch();
 
   const renderCohorts = cohorts?.map((cohort) => {
-    const deadline = DateTime.fromSeconds(+cohort?.createdAt).plus({
-      seconds: cohort?.time,
-    });
+    const deadline = DateTime.fromSeconds(+cohort?.joinEndTime);
     return (
       <CohortDetail
         address={cohort.address}
-        stake={cohort.tokenAmount}
-        stakingAsset={cohort.token}
+        stake={cohort.minimumStake}
+        stakingAsset={cohort.stakingToken}
         stakingDate={deadline.toLocaleString()}
         key={cohort.address}
         memberOrAdmin={"member"}
       />
     );
   });
-  
+
   return (
     <>
       <Stack spacing={6} w={["full", "full", "80%"]} mb={6}>

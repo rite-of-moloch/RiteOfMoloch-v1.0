@@ -34,13 +34,11 @@ const CohortPage = () => {
 
   const { cohort } = useCohortByAddress((cohortAddress as string) || "");
 
-  const tokenSymbol = useTokenSymbol(cohort?.token);
-  const deadline = DateTime.fromSeconds(+cohort?.createdAt).plus({
-    seconds: cohort?.time,
-  });
+  const tokenSymbol = useTokenSymbol(cohort?.stakingToken);
+  const deadline = DateTime.fromSeconds(+cohort?.joinEndTime);
 
-  let decimalOf = useDecimalOf(cohort?.token);
-    if (!decimalOf) {
+  let decimalOf = useDecimalOf(cohort?.stakingToken);
+  if (!decimalOf) {
     decimalOf = "0";
   }
 
@@ -98,7 +96,9 @@ const CohortPage = () => {
           }
           column2={
             <Text>
-              <span>{+utils.formatUnits(cohort?.tokenAmount || "0", decimalOf)}</span>
+              <span>
+                {+utils.formatUnits(cohort?.minimumStake || "0", decimalOf)}
+              </span>
               <span style={{ marginLeft: "0.25em" }}>{tokenSymbol}</span>
             </Text>
           }

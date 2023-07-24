@@ -2,7 +2,7 @@ sources:
   - name: rom-gnosis
     handler:
       graphql:
-        endpoint: https://api.thegraph.com/subgraphs/name/rite-of-moloch/rom-gnosis
+        endpoint: https://api.thegraph.com/subgraphs/name/rite-of-moloch/rom-develop
 
 plugins:
   - pollingLive:

@@ -52,7 +52,7 @@ contract TestHelper is Test, IInitData {
 
     // Factory
     event AddedImplementation(uint256 id, address romImplementation);
-    event HatsContractChanged(address indexed previousHatsContract, address indexed newHatsContract);
+    event UpdatedHatsProtocol(address oldHatsProtocol, address newHatsProtocol);
     event UpdatedSustainabilityFee(uint256 oldSustainabilityFee, uint256 newSustainabilityFee);
     event UpdatedSustainabilityTreasury(address oldSustainabilityTreasury, address newSustainabilityTreasury);
 
@@ -75,16 +75,13 @@ contract TestHelper is Test, IInitData {
         // deploy Hats protocol
         hatsProtocol = new Hats("Local-Hats", "");
 
-        // factory hats setup
-        createFactoryHats();
-
         // deploy ROM factory
         romFactory = new RiteOfMolochFactory(
             address(riteOfMoloch),
             address(hatsProtocol),
-            factoryOperatorHat,
             sustainabilityTreasury,
-            sustainabilityFee
+            sustainabilityFee,
+            factoryAdmin
         );
 
         // set initial data for ROM clone
@@ -134,18 +131,6 @@ contract TestHelper is Test, IInitData {
 
     function emitUserDeadline(string memory name, address initiate) public {
         emit log_named_uint(string.concat(name, " deadline"), riteOfMoloch.getDeadline(initiate) / 1 days);
-    }
-
-    function createFactoryHats() public {
-        // mint topHat
-        factoryTopHat = hatsProtocol.mintTopHat(address(this), "Factory-TopHat", "");
-
-        // create factory operator hat
-        factoryOperatorHat =
-            hatsProtocol.createHat(factoryTopHat, "Factory-Operator", 1, molochDAO, molochDAO, true, "");
-        // mint factory operator
-        hatsProtocol.mintHat(factoryOperatorHat, factoryAdmin);
-        hatsProtocol.transferHat(factoryTopHat, address(this), factoryAdmin);
     }
 
     // LOGS

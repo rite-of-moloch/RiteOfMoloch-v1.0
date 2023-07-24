@@ -24,7 +24,7 @@ fragment InitiateDetails on Initiate {
   deadline
   joinedAt
   sacrificed
-  stake
+  stakeAmount
   cohort {
     id
     name

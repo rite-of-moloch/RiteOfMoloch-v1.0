@@ -91,7 +91,7 @@ export const approveTooltip = (
  *
  * @param createdAt
  * @param time
- * @returns unix strring
+ * @returns unix string
  */
 export const getDeadline = (
   createdAt: string,
