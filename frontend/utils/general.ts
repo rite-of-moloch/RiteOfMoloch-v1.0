@@ -23,8 +23,6 @@ export const canStake = (
     _allowance >= _minimumStake &&
     _balanceOf >= _minimumStake;
 
-  console.log(canStakeLogic);
-
   let willSponsorlogic = willSponsor
     ? canStakeLogic
     : canStakeLogic && utils.isAddress(initiateAddress);
