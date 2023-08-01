@@ -6,21 +6,16 @@ import GridTemplate from "../GridTemplate";
 import { useCohortByAddress } from "hooks/useCohort";
 import { utils } from "ethers";
 import { useDecimalOf } from "hooks/useERC20";
-import { zeroAddress } from "utils/constants";
+import { DateTime } from "luxon";
 
 interface CohortDetailProps {
   address: string;
-  stake: string;
-  stakingAsset: string;
-  stakingDate: string;
   memberOrAdmin: string | number;
 }
 
 /**
  *
  * @param address cohort address
- * @param stake required stake (tokenAmount variable)
- * @param stakingDate calculated with createdAt * time
  * @param memberOrAdmin 'admin' can view cohort initiates. 'member' can view cohort details and stake to cohort
  *
  * @returns grid with cohort data. Gets rendered on ../index.tsx
@@ -28,21 +23,19 @@ interface CohortDetailProps {
 
 const CohortDetail: React.FC<CohortDetailProps> = ({
   address,
-  stake,
-  stakingAsset,
-  stakingDate,
   memberOrAdmin,
 }) => {
   const { chain } = useNetwork();
-  const { cohort } = useCohortByAddress(address);
+  const { cohorts } = useCohortByAddress(address);
 
-  let decimalOf = useDecimalOf(
-    (cohort?.stakingToken as `0x${string}`) || zeroAddress
-  );
-  if (!decimalOf) {
-    decimalOf = "0";
-  }
-
+  const cohort = cohorts?.cohorts?.[0];
+  const stake = cohort?.minimumStake;
+  const stakingAsset = cohort?.stakingToken;
+  const { tokenSymbol } = useTokenSymbol(stakingAsset);
+  const stakingDate = DateTime.fromSeconds(
+    +cohort?.joinEndTime
+  ).toLocaleString();
+  let { decimals } = useDecimalOf(cohort?.stakingToken as `0x${string}`);
   const cohortNameLink = (
     <Link
       href={`${chain?.blockExplorers?.default.url}/address/${address}`}
@@ -58,8 +51,10 @@ const CohortDetail: React.FC<CohortDetailProps> = ({
         column1={cohortNameLink}
         column2={
           <HStack>
-            <Text>{utils.formatUnits(stake, decimalOf)}</Text>
-            <Text ml="0.25rem">{useTokenSymbol(stakingAsset)}</Text>
+            <Text>
+              {stake && decimals ? utils.formatUnits(stake, decimals) : "N/A"}
+            </Text>
+            <Text ml="0.25rem">{`${tokenSymbol ?? "N/A"}`}</Text>
           </HStack>
         }
         column3={stakingDate}

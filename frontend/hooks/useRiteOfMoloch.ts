@@ -7,20 +7,20 @@ import useWriteContract from "./useWriteContract";
  * @param args [owner: address]
  * @returns: uint256
  */
-const useRiteBalanceOf = (contractAddress: string, args: [string]) => {
-  const { data, error, isError } = useReadContract(
+const useRiteBalanceOf = (contractAddress: `0x${string}`, args: [string]) => {
+  const { data, isLoading, error, isError } = useReadContract(
     contractAddress as `0x${string}`,
     "riteOfMolochAddress",
     "balanceOf",
     args
   );
 
-  if (isError) {
-    console.log("Error: ", error);
-    return null;
-  }
-
-  return data as BigNumber;
+  return {
+    riteBalance: data ? BigNumber.from(data) : undefined,
+    isLoading,
+    error,
+    isError,
+  };
 };
 
 /**
@@ -29,80 +29,22 @@ const useRiteBalanceOf = (contractAddress: string, args: [string]) => {
  * @param args user address
  * @returns Boolean
  */
-const useIsMember = (contractAddress: string, args: [string]) => {
-  const { data, error, isError } = useReadContract(
+const useIsMember = (contractAddress: `0x${string}`, args: [string]) => {
+  const { data, isLoading, error, isError } = useReadContract(
     contractAddress as `0x${string}`,
     "riteOfMolochAddress",
     "isMember",
     args
   );
 
-  if (isError) {
-    console.log("Error: ", error);
-    return null;
-  }
-
-  return data as Boolean;
-};
-
-/**
- * @remarks prepareError returns an object containing a message for why a 'prepare transaction' fails. Can extract the error message from here and use it for error handling
- * @param contractAddress should be dynamic address from subgraphQuery from /stake/[address].tsx component
- * @param args [user address]
- */
-const useJoinInitiation = (contractAddress: string, args: [string]) => {
-  const {
-    write: writeJoinInitiation,
-    isLoading: isLoadingStake,
-    isError: isErrorStake,
-    error: errorJoinInitiation,
-  } = useWriteContract(
-    contractAddress,
-    "riteOfMolochAddress",
-    "joinInitiation",
-    args
-  );
-
-  if (isErrorStake) {
-    console.log(errorJoinInitiation);
-  }
-
-  return {
-    writeJoinInitiation,
-    isLoadingStake,
-  };
-};
-
-/**
- * @remarks function lets user claim stake only if EOA is member of DAO
- * @param contractAddress ROM address where the user can claim stake
- */
-const useClaimStake = (contractAddress: string) => {
-  const {
-    write: writeClaimStake,
-    prepareError: prepareErrorClaimStake,
-    isLoading: isLoadingClaimStake,
-    isError,
-    error: errorClaimStake,
-  } = useWriteContract(contractAddress, "riteOfMolochAddress", "claimStake");
-
-  if (isError) {
-    console.log(errorClaimStake);
-  }
-
-  return {
-    writeClaimStake,
-    prepareErrorClaimStake,
-    isLoadingClaimStake,
-    errorClaimStake,
-  };
+  return { isMember: data as boolean, isLoading, error, isError };
 };
 
 /**
  * @remarks function used to call sacrifice function on ROM contract
  * @param contractAddress
  */
-const useSlaughter = (contractAddress: string, args: [string]) => {
+const useSlaughter = (contractAddress: `0x${string}`, args: [string]) => {
   const {
     write: writeSlaughter,
     isError,
@@ -126,7 +68,7 @@ const useSlaughter = (contractAddress: string, args: [string]) => {
  * @remarks function used to call sacrifice function on ROM contract
  * @param contractAddress
  */
-const useSacrifice = (contractAddress: string) => {
+const useSacrifice = (contractAddress: `0x${string}`) => {
   const {
     write: writeSacrifice,
     isError,
@@ -141,5 +83,4 @@ const useSacrifice = (contractAddress: string) => {
   return { writeSacrifice, prepareErrorSacrifice, errorSacrifice, isError };
 };
 
-
-export {useRiteBalanceOf, useIsMember, useJoinInitiation, useClaimStake, useSlaughter, useSacrifice};
+export { useRiteBalanceOf, useIsMember, useSlaughter, useSacrifice };

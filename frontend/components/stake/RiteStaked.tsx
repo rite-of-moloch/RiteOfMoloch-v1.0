@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 interface RiteStakedProps {
   riteBalance: string;
   deadline: string;
-  contractAddress: string;
+  contractAddress: `0x${string}`;
 }
 
 /**
@@ -20,7 +20,7 @@ interface RiteStakedProps {
 const RiteStaked: React.FC<RiteStakedProps> = ({
   riteBalance,
   deadline,
-  contractAddress
+  contractAddress,
 }) => {
   const _localForm = useForm();
 
@@ -51,7 +51,7 @@ const RiteStaked: React.FC<RiteStakedProps> = ({
           hidden={willSponsor ? true : false}
         />
       </Flex>
-      {willSponsor && <StakingFlow contractAddress={contractAddress || ""} />}
+      {willSponsor && <StakingFlow contractAddress={contractAddress} />}
     </VStack>
   );
 };

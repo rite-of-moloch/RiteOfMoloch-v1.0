@@ -6,9 +6,8 @@ import CohortMemberModal from "./cohort/CohortMemberModal";
 import GridTemplate from "./GridTemplate";
 
 export type MemberData = {
-  address: string;
-  cohortAddress: string;
-  id: string;
+  address: `0x${string}`;
+  cohortAddress: `0x${string}`;
   joinedAt: string;
   stake: string;
 };

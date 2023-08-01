@@ -19,7 +19,7 @@ import { zeroAddress } from "utils/constants";
  */
 
 const useWriteContract = (
-  contractAddress: string,
+  contractAddress: `0x${string}`,
   abiName: string,
   functionName: string,
   args?: any
@@ -28,12 +28,12 @@ const useWriteContract = (
   const toast = useChakraToast();
 
   const { config, error: prepareError } = usePrepareContractWrite({
-    address: (contractAddress as `0x${string}`) || zeroAddress,
+    address: contractAddress,
     abi,
     functionName,
     args,
     cacheTime: 2_000,
-    enabled: Boolean(contractAddress),
+    enabled: !!contractAddress,
   });
 
   const { data, write } = useContractWrite({
@@ -47,6 +47,8 @@ const useWriteContract = (
     },
   });
 
+  console.log("data", data);
+
   const {
     data: txData,
     isLoading,
@@ -54,7 +56,7 @@ const useWriteContract = (
     isError,
     error,
   } = useWaitForTransaction({
-    enabled: Boolean(data),
+    enabled: !!data,
     hash: data?.hash,
     onError(error) {
       console.log("Error", error);

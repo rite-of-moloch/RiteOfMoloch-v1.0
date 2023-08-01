@@ -38,10 +38,10 @@ const Metrics = () => {
   const { cohorts, isLoading } = useCohorts();
 
   const cohortOptions: SelectOptions = [];
-  cohorts?.map((chort) => {
+  cohorts?.cohorts.map((cohort) => {
     cohortOptions.push({
-      value: chort?.id,
-      label: `${chort?.name}   ...${chort.id.substr(-5)}` || chort?.id,
+      value: cohort?.id,
+      label: `${cohort?.name}   ...${cohort.id.substr(-5)}` || cohort?.id,
     });
   });
 

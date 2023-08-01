@@ -40,7 +40,9 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
   overallPerformance,
 }) => {
   const { chain } = useNetwork();
-  const cohort = useCohortByID(id);
+  const { cohorts } = useCohortByID(id);
+
+  const cohort = cohorts?.cohort;
 
   const splitAddr = (str: string): string => {
     const names = str.split("-");
@@ -56,16 +58,17 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
     return formatAddr(addr);
   };
 
-  const symbol = useTokenSymbol(cohort?.stakingToken);
+  const { tokenSymbol } = useTokenSymbol(cohort?.stakingToken);
   const deadline = DateTime.fromSeconds(+cohort?.joinEndTime);
 
   const lastMemberJoined = (): string => {
     if (!cohort?.initiates) return "N/A";
 
     let date = cohort?.initiates[cohort?.initiates.length - 1]?.joinedAt;
+
     let formattedDate = DateTime.fromSeconds(+date).toLocaleString();
 
-    if (!formattedDate || formattedDate === "Invalid Date") {
+    if (!date || formattedDate === "Invalid Date") {
       return "N/A";
     }
     return formattedDate;
@@ -128,7 +131,7 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
                   )}
                 </span>
               </Text>
-              <Text>Symbol: {dataText(symbol || "")}</Text>
+              <Text>Symbol: {dataText(tokenSymbol)}</Text>
               <Text>Deploy date: {dataText(deployDate)}</Text>
               <Text>
                 Onboarding end:
@@ -156,7 +159,10 @@ const CohortMetricsBox: React.FC<CohortMetricsBoxProps> = ({
               </Link>
             </Box>
             <Box w="full">
-              <CohortAdminModal address={id} btnVariant="outline" />
+              <CohortAdminModal
+                address={id as `0x${string}`}
+                btnVariant="outline"
+              />
             </Box>
           </VStack>
         </Box>

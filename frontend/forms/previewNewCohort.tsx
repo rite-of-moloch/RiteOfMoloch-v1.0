@@ -102,13 +102,13 @@ const PreviewNewCohort = () => {
     createCohort && createCohort();
   };
 
-  let decimalOf = useDecimalOf(stakingAsset as `0x${string}`);
-    if (!decimalOf) {
-    decimalOf = "0";
-  }
+  let { decimals } = useDecimalOf(stakingAsset as `0x${string}`);
+
   let symbol = useTokenSymbol(stakingAsset);
 
-  const amountString = assetAmount ? `${+utils.formatUnits(assetAmount || "0", decimalOf)} ${symbol}` : "0";
+  const amountString = assetAmount
+    ? `${+utils.formatUnits(assetAmount || "0", decimals)} ${symbol}`
+    : "0";
 
   return (
     <>

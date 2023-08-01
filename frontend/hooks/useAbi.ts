@@ -5,23 +5,17 @@ import abiBaal from "../contracts/baal.json";
 
 type ABI = {}[];
 
-/**
- * @remarks returns abi based on contract type
- * @param contract
- * @returns
- */
 const useAbi = (contract: string): ABI => {
-  let abi;
-  if (contract === "riteOfMolochAddress") {
-    abi = abiROM;
-  } else if (contract === "riteOfMolochFactoryAddress") {
-    abi = abiROMFac;
-  } else if (contract === "erc20TokenAddress") {
-    abi = abiERC20;
-  } else {
-    abi = abiBaal;
+  switch (contract) {
+    case "riteOfMolochAddress":
+      return abiROM;
+    case "riteOfMolochFactoryAddress":
+      return abiROMFac;
+    case "erc20TokenAddress":
+      return abiERC20;
+    default:
+      return abiBaal;
   }
-  return abi;
 };
 
 export default useAbi;

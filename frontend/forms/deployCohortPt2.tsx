@@ -74,11 +74,9 @@ const DeployCohortPt2 = () => {
   };
 
   // staking token info
-  let decimalOf = useDecimalOf(values.stakingAsset as `0x${string}`);
-  if (!decimalOf) {
-    decimalOf = "0";
-  }
-  let symbol = useTokenSymbol((values.stakingAsset) || zeroAddress);
+  let { decimals } = useDecimalOf(values.stakingAsset as `0x${string}`);
+
+  let { tokenSymbol } = useTokenSymbol(values.stakingAsset || zeroAddress);
 
   // get DAO treasury (avatar)
   let baalAvatar = useBaalAvatar(values.membershipCriteria as `0x${string}`);
@@ -94,18 +92,16 @@ const DeployCohortPt2 = () => {
   }
 
   // share token info
-  let decimalOfShare = useDecimalOf(baalShares as `0x${string}`);
-  if (!decimalOf) {
-    decimalOf = "0";
-  }
-  let symbolOfShare = useTokenSymbol((baalShares) || zeroAddress);
+  let { decimals: decimalsOfShare } = useDecimalOf(baalShares as `0x${string}`);
+
+  let symbolOfShare = useTokenSymbol(baalShares || zeroAddress);
 
   const handleNext = async (): Promise<void> => {
     await trigger();
 
     if (isValid) {
-      if (decimalOf == "0") {
-        console.log("Error: decimalOf is undefined");
+      if (!decimals) {
+        console.log("Error: decimals is undefined");
         return;
       }
       setCohortSize(values.cohortSize);
@@ -200,40 +196,40 @@ const DeployCohortPt2 = () => {
             />
           </Box>
         </SimpleGrid>
+        <Tooltip
+          label="Must be a valid Moloch DAO address. The Rite of Moloch contract will read from this to ascertain cohort completion"
+          placement="top-start"
+          hasArrow
+        >
+          <Box pt={"1rem"}>
+            <Input
+              label="Moloch DAO Address"
+              placeholder="enter Moloch DAO address"
+              autoComplete="off"
+              localForm={localForm}
+              {...register("membershipCriteria", {
+                required: {
+                  value: true,
+                  message: "Value required",
+                },
+                validate: () =>
+                  utils.isAddress(values.membershipCriteria) ||
+                  "invalid address",
+              })}
+            />
+            <ErrorMessage
+              errors={errors}
+              name="membershipCriteria"
+              render={({ message }) => <FormErrorText message={message} />}
+            />
+          </Box>
+        </Tooltip>
+        <SimpleGrid columns={2} spacingX={4} spacingY={3}>
           <Tooltip
-            label="Must be a valid Moloch DAO address. The Rite of Moloch contract will read from this to ascertain cohort completion"
+            label="Set the minimum amount of shares required for membership"
             placement="top-start"
             hasArrow
           >
-            <Box pt={"1rem"}>
-              <Input
-                label="Moloch DAO Address"
-                placeholder="enter Moloch DAO address"
-                autoComplete="off"
-                localForm={localForm}
-                {...register("membershipCriteria", {
-                  required: {
-                    value: true,
-                    message: "Value required",
-                  },
-                  validate: () =>
-                    utils.isAddress(values.membershipCriteria) ||
-                    "invalid address",
-                })}
-              />
-              <ErrorMessage
-                errors={errors}
-                name="membershipCriteria"
-                render={({ message }) => <FormErrorText message={message} />}
-              />
-            </Box>
-          </Tooltip>
-        <SimpleGrid columns={2} spacingX={4} spacingY={3}>
-          <Tooltip
-              label="Set the minimum amount of shares required for membership"
-              placement="top-start"
-              hasArrow
-            >
             <Box>
               <GridItem gridArea={"amount"} pt={"1rem"}>
                 <Input
@@ -245,7 +241,7 @@ const DeployCohortPt2 = () => {
                     required: {
                       value: true,
                       message: "Value required",
-                    }
+                    },
                   })}
                 />
               </GridItem>
@@ -253,13 +249,16 @@ const DeployCohortPt2 = () => {
           </Tooltip>
           <Box>
             <GridItem gridArea="symbol" pt={"1rem"}>
-              {symbolOfShare && decimalOfShare && (
-              <>
-                <Text>{`${symbolOfShare} has ${decimalOfShare} decimal places`}</Text>
-                <Text>---</Text>
-                <Text fontWeight={900}>{`${+utils.formatUnits(values?.shareThreshold || "0", decimalOfShare)} ${symbolOfShare}`}</Text>
-              </>
-              ) || (
+              {(symbolOfShare && decimalsOfShare && (
+                <>
+                  <Text>{`${symbolOfShare} has ${decimalsOfShare} decimal places`}</Text>
+                  <Text>---</Text>
+                  <Text fontWeight={900}>{`${+utils.formatUnits(
+                    values?.shareThreshold || "0",
+                    decimalsOfShare
+                  )} ${symbolOfShare}`}</Text>
+                </>
+              )) || (
                 <>
                   <Text>{`${symbolOfShare} token address`}</Text>
                   <Text>---</Text>
@@ -269,28 +268,28 @@ const DeployCohortPt2 = () => {
             </GridItem>
           </Box>
         </SimpleGrid>
-        
-          <Box pt={"1rem"}>
-            <Input
-              label="Staking Asset Address"
-              placeholder="enter token address"
-              autoComplete="off"
-              localForm={localForm}
-              {...register("stakingAsset", {
-                required: {
-                  value: true,
-                  message: "Value required",
-                },
-                validate: () =>
-                  utils.isAddress(values.stakingAsset) || "invalid address",
-              })}
-            />
-          </Box>
-          <ErrorMessage
-            errors={errors}
-            name="stakingAsset"
-            render={({ message }) => <FormErrorText message={message} />}
-          />        
+
+        <Box pt={"1rem"}>
+          <Input
+            label="Staking Asset Address"
+            placeholder="enter token address"
+            autoComplete="off"
+            localForm={localForm}
+            {...register("stakingAsset", {
+              required: {
+                value: true,
+                message: "Value required",
+              },
+              validate: () =>
+                utils.isAddress(values.stakingAsset) || "invalid address",
+            })}
+          />
+        </Box>
+        <ErrorMessage
+          errors={errors}
+          name="stakingAsset"
+          render={({ message }) => <FormErrorText message={message} />}
+        />
         <SimpleGrid columns={2} spacingX={4} spacingY={3}>
           <Box>
             <GridItem gridArea={"amount"} pt={"1rem"}>
@@ -303,22 +302,25 @@ const DeployCohortPt2 = () => {
                   required: {
                     value: true,
                     message: "Value required",
-                  }
+                  },
                 })}
               />
             </GridItem>
           </Box>
           <Box>
             <GridItem gridArea="symbol" pt={"1rem"}>
-              {symbol && decimalOf && (
-              <>
-                <Text>{`${symbol} has ${decimalOf} decimal places`}</Text>
-                <Text>---</Text>
-                <Text fontWeight={900}>{`${+utils.formatUnits(values?.assetAmount || "0", decimalOf)} ${symbol}`}</Text>
-              </>
-              ) || (
+              {(tokenSymbol && decimals && (
                 <>
-                  <Text>{`${symbol} token address`}</Text>
+                  <Text>{`${tokenSymbol} has ${decimals} decimal places`}</Text>
+                  <Text>---</Text>
+                  <Text fontWeight={900}>{`${+utils.formatUnits(
+                    values?.assetAmount || "0",
+                    decimals
+                  )} ${tokenSymbol}`}</Text>
+                </>
+              )) || (
+                <>
+                  <Text>{`${tokenSymbol} token address`}</Text>
                   <Text>---</Text>
                   <Text>Please enter valid ERC20 address</Text>
                 </>

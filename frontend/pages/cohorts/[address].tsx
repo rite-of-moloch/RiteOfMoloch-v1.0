@@ -15,13 +15,12 @@ import BackButton from "components/BackButton";
 import NobodyStaked from "components/stake/NobodyStaked";
 import CohortAdminModal from "components/adminModal/cohortAdminModal";
 import GridTemplate from "components/GridTemplate";
-import useInitiates from "hooks/useInitiates";
+import { useInitiatesByCohort } from "hooks/useInitiates";
 import { InitiateDetailsFragment } from ".graphclient";
 import { useCohortByAddress } from "hooks/useCohort";
 import { useSacrifice } from "hooks/useRiteOfMoloch";
 import { utils } from "ethers";
 import { useDecimalOf } from "hooks/useERC20";
-import { zeroAddress } from "utils/constants";
 
 interface CohortDetailProps {
   children: ReactNode;
@@ -32,28 +31,25 @@ const CohortDetail: React.FC<CohortDetailProps> = () => {
   const router = useRouter();
   const { address: cohortAddress } = router.query;
 
-  const { cohort, isLoading: isLoadingCohort } = useCohortByAddress(
-    cohortAddress?.toString() || ""
+  const { cohorts, isLoading: isLoadingCohort } = useCohortByAddress(
+    cohortAddress as string
   );
 
-  const { initiates, isLoading: isLoadingInitiates } = useInitiates(
-    cohortAddress?.toString() || ""
+  const cohort = cohorts?.cohorts?.[0];
+
+  const { initiates, isLoading: isLoadingInitiates } = useInitiatesByCohort(
+    cohortAddress as string
   );
 
-  const { writeSacrifice } = useSacrifice(cohortAddress?.toString() || "");
+  const { writeSacrifice } = useSacrifice(cohortAddress as `0x${string}`);
 
   const handleSacrifice = () => {
     writeSacrifice && writeSacrifice();
   };
 
-  let decimalOf = useDecimalOf(
-    (cohort?.stakingToken as `0x${string}`) || zeroAddress
-  );
-  if (!decimalOf) {
-    decimalOf = "0";
-  }
+  let { decimals } = useDecimalOf(cohort?.stakingToken as `0x${string}`);
 
-  const renderInitiateList = initiates?.map(
+  const renderInitiateList = initiates?.initiates.map(
     (initiate: InitiateDetailsFragment) => {
       const dateJoined = new Date(
         +initiate.joinedAt * 1000
@@ -61,13 +57,9 @@ const CohortDetail: React.FC<CohortDetailProps> = () => {
       return (
         <InitiateData
           address={initiate.address}
-          cohortAddress={cohortAddress?.toString() || ""}
-          id={initiate.id}
+          cohortAddress={cohortAddress as `0x${string}`}
           joinedAt={dateJoined}
-          stake={utils.formatUnits(
-            initiate.stakeAmount.toString(),
-            decimalOf?.toString()
-          )}
+          stake={utils.formatUnits(initiate.stakeAmount.toString(), decimals)}
           key={initiate.id}
         />
       );
@@ -108,7 +100,7 @@ const CohortDetail: React.FC<CohortDetailProps> = () => {
               {cohortAddress}
             </Link>
             <Box>
-              <CohortAdminModal address={cohortAddress?.toString()} />
+              <CohortAdminModal address={cohortAddress as `0x${string}`} />
             </Box>
           </Stack>
         </>
@@ -124,7 +116,7 @@ const CohortDetail: React.FC<CohortDetailProps> = () => {
         />
       )}
 
-      {initiates?.length === 0 && isLoadingInitiates && (
+      {initiates?.initiates.length === 0 && isLoadingInitiates && (
         <Box w="full" textAlign="center" p={2} fontFamily="texturina">
           <Spinner size="xl" my="50" color="red" emptyColor="purple" />
           <Text>Loading initiates...</Text>

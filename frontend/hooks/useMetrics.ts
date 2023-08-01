@@ -1,23 +1,16 @@
-import { useEffect, useState } from "react";
 import { useGraphClient } from "./useGraphClient";
-import { MetricFragmentFragment } from ".graphclient";
+import { useQuery } from "@tanstack/react-query";
 
 const useMetrics = () => {
   const graphClient = useGraphClient();
-  const [metrics, setMetrics] = useState<MetricFragmentFragment>();
 
-  useEffect(() => {
-    const getMetric = async () => {
-      const query = await graphClient.Metrics();
+  const { data: metrics, isLoading } = useQuery({
+    queryKey: ["metrics"],
+    queryFn: async () => graphClient.Metrics(),
+    refetchInterval: 5000,
+  });
 
-      if (query.metric) {
-        setMetrics(query.metric);
-      }
-    };
-    getMetric();
-  }, []);
-
-  return metrics;
+  return { metrics, isLoading };
 };
 
 export default useMetrics;

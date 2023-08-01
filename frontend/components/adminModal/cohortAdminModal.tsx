@@ -11,12 +11,11 @@ import {
 } from "@raidguild/design-system";
 import { Modal } from "@chakra-ui/modal";
 import EditCohortAdmins from "./EditCohortAdmins";
-import {useCohortByAddress} from "hooks/useCohort";
-import { useAdmin1, useAdmin2 } from "hooks/useHats";
-import { zeroAddress } from "utils/constants";
+import { useCohortByAddress } from "hooks/useCohort";
+import { useAdmins } from "hooks/useHats";
 
 interface CohortAdminModalProps {
-  address: string | undefined;
+  address: `0x${string}`;
   btnVariant?: "outline" | "admin";
 }
 /**
@@ -29,20 +28,12 @@ const CohortAdminModal: React.FC<CohortAdminModalProps> = ({
   btnVariant = "admin",
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { cohort } = useCohortByAddress(address || "");
+  const { cohorts } = useCohortByAddress(address);
 
-  let admin1 = useAdmin1(cohort?.address);
-  if (!admin1 || admin1 === zeroAddress) {
-    admin1 = "";
-  }
+  const cohort = cohorts?.cohorts?.[0];
 
-  let admin2 = useAdmin2(cohort?.address);
-  if (!admin2 || admin2 === zeroAddress) {
-    admin2 = "";
-  }
-
-  console.log(`admin1: ${admin1}\nadmin2: ${admin2}`);
-
+  const { admins } = useAdmins(cohort?.address);
+  const [admin1, admin2] = admins;
 
   return (
     <>

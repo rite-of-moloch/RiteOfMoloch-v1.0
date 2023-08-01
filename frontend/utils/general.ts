@@ -15,19 +15,24 @@ export const canStake = (
   initiateAddress: string,
   willSponsor: boolean
 ): boolean => {
-  const _minimumStake = Number(utils.formatEther(minimumStake));
-  const _allowance = Number(utils.formatEther(allowance));
-  const _balanceOf = Number(utils.formatEther(balanceOf));
+  const _minimumStake = BigNumber.from(minimumStake);
+  const _allowance = BigNumber.from(allowance);
+  const _balanceOf = BigNumber.from(balanceOf);
+
+  console.log("minimumStake", _minimumStake.toString());
+  console.log("allowance", _allowance.toString());
+  console.log("balanceOf", _balanceOf.toString());
 
   let canStakeLogic =
-    _allowance >= _minimumStake &&
-    _balanceOf >= _minimumStake;
+    _allowance.gte(_minimumStake) && _balanceOf.gte(_minimumStake);
 
-  let willSponsorlogic = willSponsor
-    ? canStakeLogic
-    : canStakeLogic && utils.isAddress(initiateAddress);
-  if (willSponsor) return willSponsorlogic;
-  else return canStakeLogic;
+  console.log("canStakeLogic", canStakeLogic);
+
+  if (willSponsor) {
+    return canStakeLogic && utils.isAddress(initiateAddress);
+  } else {
+    return canStakeLogic;
+  }
 };
 
 export const stakeTooltip = (
@@ -91,11 +96,8 @@ export const approveTooltip = (
  * @param time
  * @returns unix string
  */
-export const getDeadline = (
-  createdAt: string,
-  time: string
-): number => {
-  let deadline = (Number(createdAt) * 1000 + Number(time) * 1000);
+export const getDeadline = (createdAt: string, time: string): number => {
+  let deadline = Number(createdAt) * 1000 + Number(time) * 1000;
   return deadline;
 };
 
@@ -103,16 +105,6 @@ export const unixToUTC = (unix: string): string => {
   const utc = new Date(Number(unix));
   const localDate = utc.toLocaleDateString();
   return localDate;
-};
-
-export const getHasRite = (riteBalance: BigNumber | null): boolean => {
-  let rites = Number(riteBalance?.toString());
-  if (rites > 0) {
-    return true;
-  } else if (rites === 0 || !rites) {
-    return false;
-  }
-  return false;
 };
 
 export const numberDecimals = (variable: string, decimals: number) =>

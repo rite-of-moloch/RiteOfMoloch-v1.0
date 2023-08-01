@@ -13,7 +13,6 @@ import SearchCohorts from "components/cohort/SearchCohorts";
 import { FieldValues, useForm } from "react-hook-form";
 import GridTemplate from "components/GridTemplate";
 import { useCohorts } from "hooks/useCohort";
-import { DateTime } from "luxon";
 
 /**
  * @remarks Non-admin page. Page for prospective and cohort members
@@ -25,19 +24,13 @@ const JoinCohorts: React.FC = () => {
   const { watch } = localForm;
   watch();
 
-  const renderCohorts = cohorts?.map((cohort) => {
-    const deadline = DateTime.fromSeconds(+cohort?.joinEndTime);
-    return (
-      <CohortDetail
-        address={cohort.address}
-        stake={cohort.minimumStake}
-        stakingAsset={cohort.stakingToken}
-        stakingDate={deadline.toLocaleString()}
-        key={cohort.address}
-        memberOrAdmin={"member"}
-      />
-    );
-  });
+  const renderCohorts = cohorts?.cohorts.map((cohort) => (
+    <CohortDetail
+      address={cohort.address}
+      key={cohort.id}
+      memberOrAdmin={"member"}
+    />
+  ));
 
   return (
     <>
@@ -55,7 +48,7 @@ const JoinCohorts: React.FC = () => {
           isHeading
           column1="Cohort"
           column2="Required Stake"
-          column3="Staking Date"
+          column3="Staking Deadline"
           column4="Cohort Details"
         />
         {!renderCohorts ||

@@ -1,23 +1,6 @@
 import { BigNumber } from "ethers";
 import useReadContract from "./useReadContract";
-import useWriteContract from "./useWriteContract";
 
-/**
- * @remarks erc20 token address contract must approve the ROM contract to spend the erc20 token amount that gets approved
- * @param contractAddress erc20TokenAddress type. Should be dynamic address from subgraphQuery, comes from /stake/[address].tsx component
- * @param args [_to: address, _value: uint256]. _to is the ROM contract
- * @Returns bool
- */
-const useApprove = (contractAddress: string, args: [string, string]) => {
-  const {
-    write: approve,
-    isLoading: isLoadingApprove,
-    isSuccess: isSuccessApprove,
-    isError: isErrorApprove,
-  } = useWriteContract(contractAddress, "erc20TokenAddress", "approve", args);
-
-  return { approve, isLoadingApprove, isSuccessApprove, isErrorApprove };
-};
 
 /**
  * @param contractAddress Should be dynamic address from subgraphQuery from /stake/[address].tsx component
@@ -25,35 +8,38 @@ const useApprove = (contractAddress: string, args: [string, string]) => {
  * @outputs uint256
  *
  */
-const useBalanceOf = (contractAddress: `0x${string}`, args: [string]) => {
-  const { data, error, isError } = useReadContract(
+const useBalanceOf = (
+  contractAddress: `0x${string}`,
+  args: [string | `0x${string}`]
+) => {
+  const { data, isLoading, error, isError } = useReadContract(
     contractAddress,
     "erc20TokenAddress",
     "balanceOf",
     args
   );
 
-  if (isError) {
-    console.log("Error: ", error);
-    return null;
-  }
-
-  return data as BigNumber;
+  return {
+    balanceOf: data ? BigNumber.from(data) : undefined,
+    isLoading,
+    error,
+    isError,
+  };
 };
 
 const useDecimalOf = (contractAddress: `0x${string}`) => {
-  const { data, error, isError } = useReadContract(
+  const { data, isLoading, error, isError } = useReadContract(
     contractAddress,
     "erc20TokenAddress",
     "decimals"
   );
 
-  if (isError) {
-    console.log("Error: ", error);
-    return null;
-  }
-
-  return data as string;
+  return {
+    decimals: data ? BigNumber.from(data) : undefined,
+    isLoading,
+    error,
+    isError,
+  };
 };
 
 /**
@@ -67,12 +53,7 @@ const useTokenSymbol = (contractAddress: string | undefined) => {
     "symbol"
   );
 
-  if (isError) {
-    console.log("Error: ", error);
-    return null;
-  }
-
-  return data as string;
+  return { tokenSymbol: data as string, isLoading, error, isError };
 };
 
 /**
@@ -93,12 +74,17 @@ const useGetAllowance = (
     args
   );
 
-  if (isError) {
-    console.log("Error: ", error);
-    return null;
-  }
-
-  return data as BigNumber;
+  return {
+    allowance: data ? BigNumber.from(data) : undefined,
+    isLoading,
+    error,
+    isError,
+  };
 };
 
-export {useApprove, useBalanceOf, useDecimalOf, useTokenSymbol, useGetAllowance};
+export {
+  useBalanceOf,
+  useDecimalOf,
+  useTokenSymbol,
+  useGetAllowance,
+};

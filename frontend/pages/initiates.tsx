@@ -1,59 +1,47 @@
 import React from "react";
 import { Box, Heading, Spinner, Stack, Text } from "@raidguild/design-system";
 import BackButton from "components/BackButton";
-import { useAccount } from "wagmi";
 import SearchCohorts from "components/cohort/SearchCohorts";
 import { FieldValues, useForm } from "react-hook-form";
 import InitiatesAll from "components/InitiatesAll";
 import { unixToUTC } from "utils/general";
 import GridTemplate from "components/GridTemplate";
-import { useGraphClient } from "hooks/useGraphClient";
-import { useQuery } from "@tanstack/react-query";
 import { zeroAddress } from "utils/constants";
+import { useInitiates } from "hooks/useInitiates";
 
 /**
  * @returns list of all addresses that have staked to a cohort
  */
 const Initiates = () => {
-  const { isConnected } = useAccount();
-  const graphClient = useGraphClient();
+  const { initiates, isLoading } = useInitiates();
 
   const localForm = useForm<FieldValues>();
   const { watch, getValues } = localForm;
   watch();
-  const searchResult = getValues().searchResult;
+  const searchResult = getValues("searchResult");
 
-  const { data: initiates, isLoading } = useQuery({
-    queryKey: ["initiates"],
-    queryFn: async () => graphClient.Initiates(),
-    enabled: isConnected,
-  });
-
-  const renderInitiates = initiates?.initiates.map((initiate) => {
-    const joinedAt = Number(initiate.joinedAt);
-    console.log(initiate);
-    return (
-      <InitiatesAll
-        address={initiate.address}
-        cohortName={initiate.cohort?.name || "N/A"}
-        cohortAddress={initiate.cohort?.address || zeroAddress}
-        stake={initiate.stakeAmount}
-        joinedAt={unixToUTC((joinedAt * 1000).toString())}
-        key={initiate.id}
-      />
-    );
-  });
-
-  const filteredInitiates = renderInitiates?.filter((initiate) => {
-    if (searchResult === "" || !searchResult) {
-      return initiate;
-    } else if (
-      initiate.props.address?.includes(searchResult) ||
-      initiate.props.cohortId?.includes(searchResult)
-    ) {
-      return initiate;
-    }
-  });
+  const filteredInitiates = initiates?.initiates
+    .filter((initiate) => {
+      if (
+        searchResult === "" ||
+        !searchResult ||
+        initiate.address?.includes(searchResult) ||
+        initiate.cohort.id?.includes(searchResult)
+      )
+        return initiate;
+    })
+    .map((initiate) => {
+      return (
+        <InitiatesAll
+          address={initiate.address}
+          cohortName={initiate.cohort?.name || "N/A"}
+          cohortAddress={initiate.cohort?.address}
+          stake={initiate.stakeAmount}
+          joinedAt={unixToUTC((initiate.joinedAt * 1000).toString())}
+          key={initiate.id}
+        />
+      );
+    });
 
   return (
     <>

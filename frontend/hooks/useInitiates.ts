@@ -1,28 +1,32 @@
-import { useEffect, useState } from "react";
 import { useGraphClient } from "./useGraphClient";
-import { InitiateDetailsFragment } from ".graphclient";
+import { useQuery } from "@tanstack/react-query";
 
-const useInitiates = (cohortAddress: string) => {
+const useInitiates = () => {
   const graphClient = useGraphClient();
-  const [initiates, setInitiates] = useState<InitiateDetailsFragment[]>();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    const getCohort = async () => {
-      setIsLoading(true);
-      const initiates = await graphClient.InitiatesByCohortId({
-        id: `gnosis-${cohortAddress}`,
-      });
-
-      if (initiates.initiates) {
-        setInitiates(initiates.initiates);
-      }
-      setIsLoading(false);
-    };
-    getCohort();
-  }, [cohortAddress]);
+  const { data: initiates, isLoading } = useQuery({
+    queryKey: ["initiates"],
+    queryFn: async () => await graphClient.Initiates(),
+    refetchInterval: 5000,
+  });
 
   return { initiates, isLoading };
 };
 
-export default useInitiates;
+const useInitiatesByCohort = (cohortAddress: string) => {
+  const graphClient = useGraphClient();
+
+  const { data: initiates, isLoading } = useQuery({
+    queryKey: ["initiatesByCohort", cohortAddress],
+    queryFn: async () =>
+      await graphClient.InitiatesByCohortId({
+        id: `gnosis-${cohortAddress}`,
+      }),
+    enabled: !!cohortAddress,
+    refetchInterval: 5000,
+  });
+
+  return { initiates, isLoading };
+};
+
+export { useInitiates, useInitiatesByCohort };

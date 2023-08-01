@@ -13,11 +13,12 @@ import { useAccount, useNetwork } from "wagmi";
 import { useRouter } from "next/router";
 import BackButton from "components/BackButton";
 import { useDecimalOf, useTokenSymbol } from "hooks/useERC20";
-import { useIsMember, useClaimStake } from "hooks/useRiteOfMoloch";
+import { useIsMember } from "hooks/useRiteOfMoloch";
 import BlockExplorerLink from "components/blockExplorer/BlockExplorerLink";
 import GridTemplate from "components/GridTemplate";
 import { useCohortByAddress } from "hooks/useCohort";
 import { DateTime } from "luxon";
+import useWriteContract from "hooks/useWriteContract";
 
 /**
  * Checks if msg.sender has staked to the cohort passed in by cohortAddress. Displays data about cohortAddress. msg.sender can re-claim stake, or redirect to page and
@@ -32,25 +33,29 @@ const CohortPage = () => {
   const router = useRouter();
   const { address: cohortAddress } = router.query;
 
-  const { cohort } = useCohortByAddress((cohortAddress as string) || "");
+  const { cohorts } = useCohortByAddress(cohortAddress as string);
 
-  const tokenSymbol = useTokenSymbol(cohort?.stakingToken);
+  const cohort = cohorts?.cohorts?.[0];
+
   const deadline = DateTime.fromSeconds(+cohort?.joinEndTime);
+  const { tokenSymbol } = useTokenSymbol(cohort?.stakingToken);
+  const { decimals } = useDecimalOf(cohort?.stakingToken);
+  const { isMember, isLoading: isMemberLoading } = useIsMember(
+    cohort?.address,
+    [address as string]
+  );
 
-  let decimalOf = useDecimalOf(cohort?.stakingToken);
-  if (!decimalOf) {
-    decimalOf = "0";
-  }
-
-  function userAddress(): string {
-    if (typeof address === "string") return address;
-    else return "";
-  }
-
-  const isMember = useIsMember(cohort?.address, [userAddress()]);
-
-  const { writeClaimStake, prepareErrorClaimStake, isLoadingClaimStake } =
-    useClaimStake(cohort?.address || "");
+  const {
+    write: writeClaimStake,
+    prepareError: prepareErrorClaimStake,
+    isLoading: isLoadingClaimStake,
+    isError,
+    error: errorClaimStake,
+  } = useWriteContract(
+    cohortAddress as `0x${string}`,
+    "riteOfMolochAddress",
+    "claimStake"
+  );
 
   // checks error message to see if usere has any stake
   const userHasNoStake =
@@ -97,9 +102,13 @@ const CohortPage = () => {
           column2={
             <Text>
               <span>
-                {+utils.formatUnits(cohort?.minimumStake || "0", decimalOf)}
+                {cohort?.minimumStake && decimals
+                  ? utils.formatUnits(cohort.minimumStake, decimals)
+                  : "N/A"}
               </span>
-              <span style={{ marginLeft: "0.25em" }}>{tokenSymbol}</span>
+              <span style={{ marginLeft: "0.25em" }}>
+                {`${tokenSymbol ?? "N/A"}`}
+              </span>
             </Text>
           }
           column3={deadline.toLocaleString()}

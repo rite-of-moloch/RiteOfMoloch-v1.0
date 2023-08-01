@@ -15,9 +15,6 @@ const useCreateCohort = (args: [InitDataDeployCohort, number]) => {
   const factoryAddress =
     CONTRACT_ADDRESSES[chain?.id || 5]["riteOfMolochFactoryAddress"];
 
-  console.log("factoryAddress", factoryAddress);
-  console.log("args", args);
-
   const {
     write: createCohort,
     prepareError: prepareErrorCreateCohort,
@@ -25,7 +22,7 @@ const useCreateCohort = (args: [InitDataDeployCohort, number]) => {
     isSuccess: isSuccessApprove,
     isError: isErrorApprove,
   } = useWriteContract(
-    factoryAddress,
+    factoryAddress as `0x${string}`,
     "riteOfMolochFactoryAddress",
     "createCohort",
     args

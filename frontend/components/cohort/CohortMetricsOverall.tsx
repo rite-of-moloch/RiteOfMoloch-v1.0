@@ -14,12 +14,13 @@ interface CohortMetricsOverallProps {
 const CohortMetricsOverall: React.FC<CohortMetricsOverallProps> = ({
   removeOption,
 }) => {
-  const metrics = useMetrics();
+  const { metrics } = useMetrics();
 
   const dataText = (text: string) => (
     <span style={{ color: "white", marginLeft: "0.25rem" }}>{text}</span>
   );
 
+  const metricsData = metrics?.metric;
   return (
     <Box border="red solid 1px" rounded="lg" bg="gradientSBTPrev" p={6}>
       {/* TODO: SETUP OVERALL COHORT METRICS */}
@@ -40,14 +41,16 @@ const CohortMetricsOverall: React.FC<CohortMetricsOverallProps> = ({
       >
         <Text>
           Average cohort size:
-          {dataText(numberDecimals(metrics?.averageCohortSize, 2))}
+          {dataText(numberDecimals(metricsData?.averageCohortSize, 2))}
         </Text>
-        <Text>Claim rate: {dataText(metrics?.slashedMembers)}</Text>
-        <Text>Claimed members: {dataText(metrics?.claimedMembers)}</Text>
-        <Text>Slashed members: {dataText(metrics?.slashedMembers)}</Text>
-        <Text>Slash rate: {dataText(Number(metrics?.slashRate).toFixed(2))}</Text>
-        <Text>Total cohorts: {dataText(metrics?.totalCohorts)}</Text>
-        <Text>Total members: {dataText(metrics?.totalMembers)}</Text>
+        <Text>Claim rate: {dataText(metricsData?.slashedMembers)}</Text>
+        <Text>Claimed members: {dataText(metricsData?.claimedMembers)}</Text>
+        <Text>Slashed members: {dataText(metricsData?.slashedMembers)}</Text>
+        <Text>
+          Slash rate: {dataText(Number(metricsData?.slashRate).toFixed(2))}
+        </Text>
+        <Text>Total cohorts: {dataText(metricsData?.totalCohorts)}</Text>
+        <Text>Total members: {dataText(metricsData?.totalMembers)}</Text>
       </VStack>
     </Box>
   );
