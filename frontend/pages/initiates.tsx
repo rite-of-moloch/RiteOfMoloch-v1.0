@@ -17,7 +17,6 @@ const Initiates = () => {
 
   const localForm = useForm<FieldValues>();
   const { watch, getValues } = localForm;
-  watch();
   const searchResult = getValues("searchResult");
 
   const filteredInitiates = initiates?.initiates

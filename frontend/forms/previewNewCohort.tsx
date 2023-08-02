@@ -99,13 +99,14 @@ const PreviewNewCohort = () => {
 
   const handleDeployCohort = (): void => {
     console.log(createCohort);
-    createCohort && createCohort();
+    createCohort?.();
   };
 
   let { decimals } = useDecimalOf(stakingAsset as `0x${string}`);
 
   let symbol = useTokenSymbol(stakingAsset);
 
+ 
   const amountString = assetAmount
     ? `${+utils.formatUnits(assetAmount || "0", decimals)} ${symbol}`
     : "0";
@@ -207,7 +208,7 @@ const PreviewNewCohort = () => {
               variant="solid"
               w="full"
               color="black"
-              onClick={() => handleDeployCohort && handleDeployCohort()}
+              onClick={handleDeployCohort}
               isLoading={isLoadingApprove}
               loadingText="creating cohort..."
               isDisabled={isSuccessApprove}

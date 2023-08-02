@@ -26,10 +26,10 @@ import { zeroAddress } from "utils/constants";
 const DeployCohortPt2 = () => {
   const {
     setAssetAmount,
-    setCohortSize,
-    setShareThreshold,
-    setOnboardingPeriod,
     setStakingAsset,
+    setCohortSize,
+    setOnboardingPeriod,
+    setShareThreshold,
     setStakeDuration,
     setDaoTreasury,
     setMembershipCriteria,
@@ -79,22 +79,22 @@ const DeployCohortPt2 = () => {
   let { tokenSymbol } = useTokenSymbol(values.stakingAsset || zeroAddress);
 
   // get DAO treasury (avatar)
-  let baalAvatar = useBaalAvatar(values.membershipCriteria as `0x${string}`);
-  if (!baalAvatar) {
-    baalAvatar = "0";
+  const { avatar } = useBaalAvatar(values.membershipCriteria as `0x${string}`);
+
+  if (avatar) {
+    setDaoTreasury(avatar);
   }
 
-  let baalShares = useBaalShares(values.membershipCriteria as `0x${string}`);
-  if (!baalShares) {
-    baalShares = "0";
-  } else {
-    setDaoTreasury(baalShares);
-  }
+  const { sharesToken } = useBaalShares(
+    values.membershipCriteria as `0x${string}`
+  );
 
   // share token info
-  let { decimals: decimalsOfShare } = useDecimalOf(baalShares as `0x${string}`);
+  let { decimals: decimalsOfShare } = useDecimalOf(
+    sharesToken as `0x${string}`
+  );
 
-  let symbolOfShare = useTokenSymbol(baalShares || zeroAddress);
+  let { tokenSymbol: symbolOfShare } = useTokenSymbol(sharesToken);
 
   const handleNext = async (): Promise<void> => {
     await trigger();

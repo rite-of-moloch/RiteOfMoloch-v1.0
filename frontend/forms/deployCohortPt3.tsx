@@ -17,6 +17,7 @@ import {
 import { useFormContext } from "context/FormContext";
 import { utils } from "ethers";
 import { BsQuestion } from "react-icons/bs";
+import { useBaalProposalOffering } from "hooks/useBaal";
 
 interface DeployCohortFormProps {
   children?: ReactNode;
@@ -43,7 +44,6 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
     setValue,
     trigger,
     handleSubmit,
-    watch,
     formState: { errors },
   } = localForm;
 
@@ -51,8 +51,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
   const hasTophat = values.hasTophat;
   const addAdmin = values.addAdmin;
   const shamanOn = values.shamanOn;
-
-  watch();
+  const membershipCriteria = values.membershipCriteria;
 
   console.log(values);
 
@@ -106,6 +105,10 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
       setShamanOn(shamanOn);
     }
   };
+
+  let { proposalOffering } = useBaalProposalOffering(
+    membershipCriteria as `0x${string}`
+  );
 
   const addAdminTooltip = (
     <Text>
@@ -293,6 +296,10 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
                   <BsQuestion />
                 </Box>
               </Tooltip>
+              <Text>
+                {`The Baal contract has a proposal offering of ${proposalOffering}. This
+      will be added to the transaction costs.`}
+              </Text>
             </Flex>
           </Box>
           <Box>
