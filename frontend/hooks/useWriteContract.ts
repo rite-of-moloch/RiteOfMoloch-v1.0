@@ -6,7 +6,7 @@ import {
 } from "wagmi";
 import useAbi from "./useAbi";
 import { useChakraToast } from "@raidguild/design-system";
-import { zeroAddress } from "utils/constants";
+import { BigNumber, BigNumberish } from "ethers";
 
 /**
  * @remarks hook to prepare wagmi hook contract instances
@@ -22,7 +22,8 @@ const useWriteContract = (
   contractAddress: `0x${string}`,
   abiName: string,
   functionName: string,
-  args?: any
+  args?: any,
+  msgValue?: BigNumberish
 ) => {
   const abi = useAbi(abiName);
   const toast = useChakraToast();
@@ -34,6 +35,9 @@ const useWriteContract = (
     args,
     cacheTime: 2_000,
     enabled: !!contractAddress,
+    overrides: {
+      value: msgValue ? BigNumber.from(msgValue) : undefined,
+    },
   });
 
   const { data, write } = useContractWrite({

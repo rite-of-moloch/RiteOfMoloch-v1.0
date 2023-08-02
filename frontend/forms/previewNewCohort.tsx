@@ -17,6 +17,7 @@ import BlockExplorerLink from "components/blockExplorer/BlockExplorerLink";
 import { zeroAddress } from "utils/constants";
 import { useDecimalOf, useTokenSymbol } from "hooks/useERC20";
 import { utils } from "ethers";
+import { useBaalProposalOffering } from "hooks/useBaal";
 
 /**
  * @remarks this component renders a preview of all 3 parts of form data. It also builds function handleDeployCohort, which submits data to riteOfMolochFactory contract and creates a new cohort
@@ -88,12 +89,17 @@ const PreviewNewCohort = () => {
   ];
 
   console.log("initData", initData);
+
+  const { proposalOffering } = useBaalProposalOffering(
+    membershipCriteria as `0x${string}`
+  );
+
   const {
     createCohort,
     prepareErrorCreateCohort,
     isLoadingApprove,
     isSuccessApprove,
-  } = useCreateCohort([initData, 0]);
+  } = useCreateCohort([initData, 0], proposalOffering);
 
   console.log(prepareErrorCreateCohort);
 
@@ -104,11 +110,10 @@ const PreviewNewCohort = () => {
 
   let { decimals } = useDecimalOf(stakingAsset as `0x${string}`);
 
-  let symbol = useTokenSymbol(stakingAsset);
+  let { tokenSymbol } = useTokenSymbol(stakingAsset);
 
- 
   const amountString = assetAmount
-    ? `${+utils.formatUnits(assetAmount || "0", decimals)} ${symbol}`
+    ? `${+utils.formatUnits(assetAmount || "0", decimals)} ${tokenSymbol}`
     : "0";
 
   return (

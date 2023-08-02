@@ -22,6 +22,8 @@ const useBaalAvatar = (contractAddress: `0x${string}`) => {
 };
 
 const useBaalProposalOffering = (contractAddress: `0x${string}`) => {
+  console.log("contractAddress", contractAddress);
+
   const { data, isLoading, error, isError } = useReadContract(
     contractAddress,
     "baalAddress",
@@ -30,7 +32,12 @@ const useBaalProposalOffering = (contractAddress: `0x${string}`) => {
 
   console.log("data", data);
 
-  return { proposalOffering: BigNumber.from(data), isLoading, error, isError };
+  return {
+    proposalOffering: data ? BigNumber.from(data) : undefined,
+    isLoading,
+    error,
+    isError,
+  };
 };
 
 export { useBaalShares, useBaalAvatar, useBaalProposalOffering };

@@ -4,6 +4,7 @@ import { ErrorMessage } from "@hookform/error-message";
 import {
   Box,
   Button,
+  Divider,
   Flex,
   FormControl,
   HStack,
@@ -34,6 +35,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
     setDisplayPart3,
     setDisplayPreviewNewCohort,
     setShamanOn,
+    membershipCriteria,
   } = useFormContext();
 
   const localForm = useForm<FieldValues>();
@@ -51,51 +53,20 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
   const hasTophat = values.hasTophat;
   const addAdmin = values.addAdmin;
   const shamanOn = values.shamanOn;
-  const membershipCriteria = values.membershipCriteria;
 
-  console.log(values);
-
-  const handleBack = (): void => {
+  const handleBack = () => {
     setDisplayPart2(true);
     setDisplayPart3(false);
   };
 
-  const handleNext = async (): Promise<void> => {
+  const handleNext = async () => {
     const validationsTopHat = await trigger(["topHatWearer", "tophatID"]);
     const validationsAddAdmin = await trigger(["admin1", "admin2"]);
-    if (hasTophat && !addAdmin) {
-      if (validationsTopHat) {
-        setTopHatWearer(values.topHatWearer);
-        setTophatID(values.tophatID);
-        setAdmin1(values.admin1);
-        setAdmin2(values.admin2);
-        setDisplayPart3(false);
-        setDisplayPreviewNewCohort(true);
-        setShamanOn(shamanOn);
-      } else console.log("validations fail");
-    } else if (!hasTophat && addAdmin) {
-      if (validationsAddAdmin) {
-        setTopHatWearer(values.topHatWearer);
-        setTophatID(values.tophatID);
-        setAdmin1(values.admin1);
-        setAdmin2(values.admin2);
-        setDisplayPart3(false);
-        setDisplayPreviewNewCohort(true);
-        setShamanOn(shamanOn);
-      } else {
-      }
-    } else if (hasTophat && addAdmin) {
-      if (validationsTopHat && validationsAddAdmin) {
-        setTopHatWearer(values.topHatWearer);
-        setTophatID(values.tophatID);
-        setAdmin1(values.admin1);
-        setAdmin2(values.admin2);
-        setDisplayPart3(false);
-        setDisplayPreviewNewCohort(true);
-        setShamanOn(shamanOn);
-      } else {
-      }
-    } else if (!hasTophat && !addAdmin) {
+    if (
+      (hasTophat && validationsTopHat) ||
+      (!hasTophat && !addAdmin) ||
+      (hasTophat && addAdmin && validationsTopHat && validationsAddAdmin)
+    ) {
       setTopHatWearer(values.topHatWearer);
       setTophatID(values.tophatID);
       setAdmin1(values.admin1);
@@ -106,7 +77,7 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
     }
   };
 
-  let { proposalOffering } = useBaalProposalOffering(
+  const { proposalOffering } = useBaalProposalOffering(
     membershipCriteria as `0x${string}`
   );
 
@@ -227,8 +198,8 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               {...(register("addAdmin"),
               {
                 onChange: () => {
-                  setValue("addAdmin", !addAdmin ? true : false);
-                  if (!!values.addAdmin) {
+                  setValue("addAdmin", !addAdmin);
+                  if (values.addAdmin) {
                     setValue("admin1", "");
                     setValue("admin2", "");
                   }
@@ -296,10 +267,6 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
                   <BsQuestion />
                 </Box>
               </Tooltip>
-              <Text>
-                {`The Baal contract has a proposal offering of ${proposalOffering}. This
-      will be added to the transaction costs.`}
-              </Text>
             </Flex>
           </Box>
           <Box>
@@ -310,12 +277,18 @@ const DeployCohortPt3: React.FC<DeployCohortFormProps> = ({ children }) => {
               {...(register("shamanOn"),
               {
                 onChange: () => {
-                  setValue("shamanOn", !shamanOn ? true : false);
+                  setValue("shamanOn", !shamanOn);
                 },
               })}
             />
           </Box>
         </HStack>
+        {proposalOffering?.gt("0") ? (
+          <Text size="sm" w={"350px"}>
+            {`The DAO has a proposal offering of ${proposalOffering} wei. If RoM is added as a Shaman this
+      will be added to the transaction costs.`}
+          </Text>
+        ) : undefined}
         {/* start buttons */}
         <SimpleGrid columns={2} spacingX={4} spacingY={3}>
           <Box>
