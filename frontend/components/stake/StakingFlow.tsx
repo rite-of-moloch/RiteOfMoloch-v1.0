@@ -91,11 +91,6 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     [cohort?.address, minimumStake]
   );
 
-  console.log("contractAddress", contractAddress);
-  console.log("willSponsor", willSponsor);
-  console.log("initiateAddress", initiateAddress);
-  console.log("address", address);
-
   const { config, error: prepareError } = usePrepareContractWrite({
     address: contractAddress,
     abi: abiROM,
@@ -104,8 +99,9 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     args: [willSponsor ? initiateAddress : address],
   });
 
-  console.log("error: prepareError", prepareError);
-
+  if (prepareError) {
+    console.log("prepareError", prepareError);
+  }
   const { data, write, isLoading } = useContractWrite(config);
 
   const handleJoinInitiation = () => {

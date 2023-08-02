@@ -85,7 +85,7 @@ const PreviewNewCohort = () => {
     nameSBT,
     symbolSBT,
     uriSBT,
-    Boolean(shamanOn),
+    shamanOn,
   ];
 
   console.log("initData", initData);
@@ -113,7 +113,7 @@ const PreviewNewCohort = () => {
   let { tokenSymbol } = useTokenSymbol(stakingAsset);
 
   const amountString = assetAmount
-    ? `${+utils.formatUnits(assetAmount || "0", decimals)} ${tokenSymbol}`
+    ? `${+utils.formatUnits(assetAmount, decimals)} ${tokenSymbol}`
     : "0";
 
   return (
@@ -140,7 +140,7 @@ const PreviewNewCohort = () => {
               {responseText("Symbol SBT", symbolSBT)}
               {responseText("Stake per member", amountString)}
               {responseText("Staking duration", stakeDuration, stakeDuration)}
-              {responseText("Cohort size", cohortSize)}
+              {responseText("Cohort size", `${cohortSize} apprentices`)}
               {responseText("Shares per member", shareThreshold)}
               {responseText(
                 "Onboarding period",

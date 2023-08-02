@@ -34,7 +34,7 @@ const useWriteContract = (
     functionName,
     args,
     cacheTime: 2_000,
-    enabled: !!contractAddress,
+    enabled: !!contractAddress && !!abi,
     overrides: {
       value: msgValue ? BigNumber.from(msgValue) : undefined,
     },
@@ -50,8 +50,6 @@ const useWriteContract = (
       console.log("err:", err);
     },
   });
-
-  console.log("data", data);
 
   const {
     data: txData,
@@ -71,7 +69,7 @@ const useWriteContract = (
   });
 
   const { data: txResponse } = useTransaction({
-    enabled: Boolean(txData),
+    enabled: !!txData,
     hash: (txData?.transactionHash as `0x${string}`) || "0x",
     onSettled(data, error) {
       console.log("Settled", { data, error });

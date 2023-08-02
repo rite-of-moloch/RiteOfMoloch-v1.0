@@ -19,14 +19,8 @@ export const canStake = (
   const _allowance = BigNumber.from(allowance);
   const _balanceOf = BigNumber.from(balanceOf);
 
-  console.log("minimumStake", _minimumStake.toString());
-  console.log("allowance", _allowance.toString());
-  console.log("balanceOf", _balanceOf.toString());
-
   let canStakeLogic =
     _allowance.gte(_minimumStake) && _balanceOf.gte(_minimumStake);
-
-  console.log("canStakeLogic", canStakeLogic);
 
   if (willSponsor) {
     return canStakeLogic && utils.isAddress(initiateAddress);
