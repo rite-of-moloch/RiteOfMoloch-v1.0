@@ -17,7 +17,11 @@ contract IsMemberTest is TestHelper {
      */
 
     function testIsMember(address initiate) public {
-        vm.assume(initiate != address(0));
+        assumePayable(initiate);
+        vm.assume(
+            initiate != address(0) || initiate != address(riteOfMoloch) || initiate != address(this)
+                || initiate != address(sharesToken) || initiate != address(dao)
+        );
 
         assertFalse(riteOfMoloch.isMember(initiate));
         vm.mockCall(dao, abi.encodeWithSelector(IBaal.sharesToken.selector), abi.encode(sharesToken));

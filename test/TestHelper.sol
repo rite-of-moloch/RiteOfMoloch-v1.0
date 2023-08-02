@@ -176,4 +176,9 @@ contract TestHelper is Test, IInitData {
         emit log_named_uint("Top       Hat", riteOfMoloch.topHat());
         emit log_named_uint("Admin     Hat", riteOfMoloch.adminHat());
     }
+
+    function assumePayable(address account) internal {
+        (bool success,) = payable(account).call{ value: 0 }("");
+        vm.assume(success);
+    }
 }

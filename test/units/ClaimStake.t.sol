@@ -17,6 +17,8 @@ contract ClaimStakeTest is TestHelper {
      */
 
     function testClaimStake(address initiate) public {
+        assumePayable(initiate);
+
         vm.assume(initiate != address(0));
 
         stakingAsset.mint(initiate, minStake);
@@ -39,6 +41,8 @@ contract ClaimStakeTest is TestHelper {
     }
 
     function testClaimStakeNoStake(address initiate) public {
+        assumePayable(initiate);
+
         vm.assume(initiate != address(0));
 
         vm.startPrank(initiate, initiate);
@@ -60,6 +64,8 @@ contract ClaimStakeTest is TestHelper {
     }
 
     function testClaimStakeNotAMember(address initiate) public {
+        assumePayable(initiate);
+
         vm.assume(initiate != address(0));
 
         stakingAsset.mint(initiate, minStake);

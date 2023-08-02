@@ -15,6 +15,7 @@ contract JoinInitiationTest is TestHelper {
      */
 
     function testJoinInitiation(address initiate) public {
+        assumePayable(initiate);
         vm.assume(initiate != address(0));
 
         //Happy: Pass on allowance and balance
@@ -30,6 +31,8 @@ contract JoinInitiationTest is TestHelper {
     }
 
     function testJoinInitiationInsuffientAllowance(address initiate) public {
+        assumePayable(initiate);
+
         vm.assume(initiate != address(0));
 
         stakingAsset.mint(initiate, minStake);
@@ -46,6 +49,8 @@ contract JoinInitiationTest is TestHelper {
     }
 
     function testJoinInitiationInsuffientBalance(address initiate) public {
+        assumePayable(initiate);
+
         vm.assume(initiate != address(0));
 
         vm.startPrank(initiate, initiate);
@@ -65,6 +70,8 @@ contract JoinInitiationTest is TestHelper {
     }
 
     function testJoinInitiationCohortClosed(address initiate) public {
+        assumePayable(initiate);
+
         vm.assume(initiate != address(0));
 
         vm.warp(riteOfMoloch.joinEndTime() + 1);
@@ -100,6 +107,8 @@ contract JoinInitiationTest is TestHelper {
     }
 
     function testJoinInitiationAlreadyJoined(address initiate) public {
+        assumePayable(initiate);
+
         vm.assume(initiate != address(0));
 
         mintTokens(initiate);
