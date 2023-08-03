@@ -1615,7 +1615,7 @@ const romGnosisTransforms = [];
 const additionalTypeDefs = [] as any[];
 const romGnosisHandler = new GraphqlHandler({
               name: "rom-gnosis",
-              config: {"endpoint":"https://api.thegraph.com/subgraphs/name/rite-of-moloch/rom-develop"},
+              config: {"endpoint":"https://api.thegraph.com/subgraphs/name/rite-of-moloch/rom-gnosis"},
               baseDir,
               cache,
               pubsub,
