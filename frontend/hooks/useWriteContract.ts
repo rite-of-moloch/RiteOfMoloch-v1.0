@@ -6,7 +6,7 @@ import {
 } from "wagmi";
 import useAbi from "./useAbi";
 import { useChakraToast } from "@raidguild/design-system";
-import { zeroAddress } from "utils/constants";
+import { BigNumber, BigNumberish } from "ethers";
 
 /**
  * @remarks hook to prepare wagmi hook contract instances
@@ -19,21 +19,25 @@ import { zeroAddress } from "utils/constants";
  */
 
 const useWriteContract = (
-  contractAddress: string,
+  contractAddress: `0x${string}`,
   abiName: string,
   functionName: string,
-  args?: any
+  args?: any,
+  msgValue?: BigNumberish
 ) => {
   const abi = useAbi(abiName);
   const toast = useChakraToast();
 
   const { config, error: prepareError } = usePrepareContractWrite({
-    address: (contractAddress as `0x${string}`) || zeroAddress,
+    address: contractAddress,
     abi,
     functionName,
     args,
     cacheTime: 2_000,
-    enabled: Boolean(contractAddress),
+    enabled: !!contractAddress && !!abi,
+    overrides: {
+      value: msgValue ? BigNumber.from(msgValue) : undefined,
+    },
   });
 
   const { data, write } = useContractWrite({
@@ -54,7 +58,7 @@ const useWriteContract = (
     isError,
     error,
   } = useWaitForTransaction({
-    enabled: Boolean(data),
+    enabled: !!data,
     hash: data?.hash,
     onError(error) {
       console.log("Error", error);
@@ -65,7 +69,7 @@ const useWriteContract = (
   });
 
   const { data: txResponse } = useTransaction({
-    enabled: Boolean(txData),
+    enabled: !!txData,
     hash: (txData?.transactionHash as `0x${string}`) || "0x",
     onSettled(data, error) {
       console.log("Settled", { data, error });

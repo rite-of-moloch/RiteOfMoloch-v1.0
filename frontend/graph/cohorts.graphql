@@ -16,7 +16,7 @@ fragment InitiateFragment on Initiate {
   deadline
   joinedAt
   sacrificed
-  stake
+  stakeAmount
 }
 
 fragment CohortFragment on Cohort {
@@ -26,19 +26,20 @@ fragment CohortFragment on Cohort {
   deployer
   id
   address
+  joinEndTime
   initiates {
     ...InitiateFragment
   }
   sbtUrl
-  sharesAmount
+  shareThreshold
   slashedMembers
   claimedMembers
   successPercentage
-  time
-  token
-  tokenAmount
+  stakeDuration
+  stakingToken
+  minimumStake
   totalMembers
-  treasury
+  daoTreasury
 }
 
 query CohortDataByAddress($address: Bytes = "") {

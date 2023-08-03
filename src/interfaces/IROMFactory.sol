@@ -2,15 +2,15 @@
 // @author huntrr / Raid Guild
 pragma solidity ^0.8.13;
 
-
-import {IInitData} from "src/interfaces/IInitData.sol";
+import { IInitData } from "src/interfaces/IInitData.sol";
 
 // todo: change this contract into an interface
 interface IRiteOfMolochFactory is IInitData {
-
-    /*************************
-     EVENTS
-     *************************/
+    /**
+     *
+     *  EVENTS
+     *
+     */
 
     event NewRiteOfMoloch(
         address cohortContract,
@@ -25,10 +25,17 @@ interface IRiteOfMolochFactory is IInitData {
         string sbtUrl
     );
 
-    /*************************
-     FUNCTIONS
-     *************************/
-     
+    event AddedImplementation(uint256 id, address romImplementation);
+    event UpdatedHatsProtocol(address oldHatsProtocol, address newHatsProtocol);
+    event UpdatedSustainabilityFee(uint256 oldSustainabilityFee, uint256 newSustainabilityFee);
+    event UpdatedSustainabilityTreasury(address oldSustainabilityTreasury, address newSustainabilityTreasury);
+
+    /**
+     *
+     *  FUNCTIONS
+     *
+     */
+
     /**
      * @dev Deploys a new clone proxy instance for cohort staking
      * @param initData the complete data for initializing a new cohort
@@ -37,7 +44,10 @@ interface IRiteOfMolochFactory is IInitData {
     function createCohort(
         InitData calldata initData,
         uint256 implementationSelector
-    ) external returns (address);
+    )
+        external
+        payable
+        returns (address);
 
     /**
      * @dev marks a deployed contract as a suitable implementation for additional cohort formats
@@ -46,5 +56,9 @@ interface IRiteOfMolochFactory is IInitData {
     function addImplementation(address implementation) external;
 
     // point to new Hats protocol implementation
-    function changeHatsProtocol(address _hatsProtocol) external;
+    function updateHatsProtocol(address _hatsProtocol) external;
+
+    function updateSustainabilityFee(uint256 _sustainabilityFee) external;
+
+    function updateSustainabilityTreasury(address _sustainabilityTreasury) external;
 }

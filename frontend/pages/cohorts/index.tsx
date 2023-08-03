@@ -22,35 +22,28 @@ const ReviewOngoingCohort: FC<ReviewOngoingCohortProps> = ({ children }) => {
   watch();
   const searchResult = getValues().searchResult;
 
-  const renderCohorts = cohorts?.map((cohort) => {
-    const deadline = DateTime.fromSeconds(+cohort?.createdAt).plus({
-      seconds: cohort?.time,
+  const filteredCohorts = cohorts?.cohorts
+    .filter((cohort) => {
+      if (
+        searchResult === "" ||
+        !searchResult ||
+        cohort.address?.includes(searchResult) ||
+        cohort.stakingToken?.includes(searchResult) ||
+        cohort.minimumStake?.includes(searchResult) ||
+        cohort.stakeDuration?.includes(searchResult)
+      ) {
+        return cohort;
+      }
+    })
+    .map((cohort) => {
+      return (
+        <CohortDetail
+          address={cohort.address}
+          key={cohort.id}
+          memberOrAdmin={"admin"}
+        />
+      );
     });
-    return (
-      <CohortDetail
-        address={cohort.address}
-        stake={cohort.tokenAmount}
-        stakingAsset={cohort.token}
-        stakingDate={deadline.toLocaleString()}
-        key={cohort.id}
-        memberOrAdmin={"admin"}
-      />
-    );
-  });
-
-  const filteredCohorts = renderCohorts?.filter((cohort) => {
-    if (searchResult === "" || !searchResult) {
-      return cohort;
-    } else if (
-      cohort.props.address?.includes(searchResult) ||
-      cohort.props.stakingAsset?.includes(searchResult) ||
-      cohort.props.stake?.includes(searchResult) ||
-      cohort.props.stakingAsset?.includes(searchResult) ||
-      cohort.props.stakingDate?.includes(searchResult)
-    ) {
-      return cohort;
-    }
-  });
 
   return (
     <>

@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import {TestHelperScript} from "script/test/utils/TestHelper.s.sol";
-import {RiteOfMoloch} from "src/RiteOfMoloch.sol";
+import { TestHelperScript } from "script/test/utils/TestHelper.s.sol";
+import { RiteOfMoloch } from "src/RiteOfMoloch.sol";
 
 // create with verify and broadcast
-// forge script script/test/Sacrifice.s.sol:SacrificeScript --rpc-url $RUS --broadcast --verify --etherscan-api-key $EK -vvvv
+// forge script script/test/Sacrifice.s.sol:SacrificeScript --rpc-url $RUS --broadcast --verify --etherscan-api-key $EK
+// -vvvv
 
 // test; no broadcast
 // forge script script/test/Sacrifice.s.sol:SacrificeScript --rpc-url $RUS -vvvv
@@ -20,7 +21,7 @@ contract SacrificeScript is TestHelperScript {
         createInitData(0, false);
 
         // deploy ROM-clone
-        ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
+        riteOfMoloch = RiteOfMoloch(romFactory.createCohort(cohortData, 1));
 
         // test joinInitiation multiple
         joinCohort(deployer);
@@ -35,7 +36,7 @@ contract SacrificeScript is TestHelperScript {
         vm.stopBroadcast();
 
         vm.startBroadcast(vm.envUint("PK1"));
-        ROM.sacrifice();
+        riteOfMoloch.sacrifice();
         vm.stopBroadcast();
     }
 }

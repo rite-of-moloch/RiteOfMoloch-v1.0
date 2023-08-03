@@ -1,12 +1,18 @@
 import React from "react";
-import { Box, Heading, HStack, Spinner, Stack, Spacer} from "@raidguild/design-system";
+import {
+  Box,
+  Heading,
+  HStack,
+  Spinner,
+  Stack,
+  Spacer,
+} from "@raidguild/design-system";
 import BackButton from "components/BackButton";
 import CohortDetail from "components/cohort/CohortDetail";
 import SearchCohorts from "components/cohort/SearchCohorts";
 import { FieldValues, useForm } from "react-hook-form";
 import GridTemplate from "components/GridTemplate";
 import { useCohorts } from "hooks/useCohort";
-import { DateTime } from "luxon";
 
 /**
  * @remarks Non-admin page. Page for prospective and cohort members
@@ -18,22 +24,14 @@ const JoinCohorts: React.FC = () => {
   const { watch } = localForm;
   watch();
 
-  const renderCohorts = cohorts?.map((cohort) => {
-    const deadline = DateTime.fromSeconds(+cohort?.createdAt).plus({
-      seconds: cohort?.time,
-    });
-    return (
-      <CohortDetail
-        address={cohort.address}
-        stake={cohort.tokenAmount}
-        stakingAsset={cohort.token}
-        stakingDate={deadline.toLocaleString()}
-        key={cohort.address}
-        memberOrAdmin={"member"}
-      />
-    );
-  });
-  
+  const renderCohorts = cohorts?.cohorts.map((cohort) => (
+    <CohortDetail
+      address={cohort.address}
+      key={cohort.id}
+      memberOrAdmin={"member"}
+    />
+  ));
+
   return (
     <>
       <Stack spacing={6} w={["full", "full", "80%"]} mb={6}>
@@ -50,7 +48,7 @@ const JoinCohorts: React.FC = () => {
           isHeading
           column1="Cohort"
           column2="Required Stake"
-          column3="Staking Date"
+          column3="Staking Deadline"
           column4="Cohort Details"
         />
         {!renderCohorts ||

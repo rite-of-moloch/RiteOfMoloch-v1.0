@@ -2,7 +2,7 @@
 pragma solidity ^0.8.13;
 
 import "test/TestHelper.sol";
-import {HatsAccessControl} from "hats-auth/HatsAccessControl.sol";
+import { HatsAccessControl } from "hats-auth/HatsAccessControl.sol";
 
 // forge test --match-contract AccessControl -vv
 
@@ -12,53 +12,67 @@ import {HatsAccessControl} from "hats-auth/HatsAccessControl.sol";
 contract AccessControl is TestHelper {
     bytes32 public constant SUPER_ADMIN = keccak256("SUPER_ADMIN");
     bytes32 public constant ADMIN = keccak256("ADMIN");
+    address admin;
+    address user;
+    address attacker;
 
     function setUp() public override {
-        // set and deploy ROM-Factory
-        setUpFactory();
-        // set initial data for ROM clone
-        createInitData();
-        // deploy ROM clone
-        ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
+        TestHelper.setUp();
+        admin = alice;
+        user = bob;
+        attacker = charlie;
     }
 
     /**
      * TESTS
      */
-    function testAdminPermissions() public {
-        changeSettings(deployer, 20);
-        changeSettings(alice, 30);
+    function testAdminPermissionsFuzz(uint256 deployerValue, uint256 adminValue) public {
+        address _deployer = deployer;
+        address _admin = admin;
+
+        vm.assume(deployerValue > 0);
+        vm.assume(adminValue > 0);
+
+        // Deployer wears the admin hat
+        changeSettings(_deployer, deployerValue);
+
+        assertEq(riteOfMoloch.minimumStake(), deployerValue);
+        assertEq(riteOfMoloch.shareThreshold(), deployerValue);
+        assertEq(riteOfMoloch.stakeDuration(), deployerValue);
+
+        // Admin wears the admin hat
+        changeSettings(_admin, adminValue);
+
+        assertEq(riteOfMoloch.minimumStake(), adminValue);
+        assertEq(riteOfMoloch.shareThreshold(), adminValue);
+        assertEq(riteOfMoloch.stakeDuration(), adminValue);
     }
 
-    function testAdminSecurity() public {
-        uint256 adminHat = ROM.adminHat();
+    function testAdminSecurityFuzz(address _attacker) public {
+        vm.assume(_attacker != deployer);
+        vm.assume(_attacker != admin);
+
+        uint256 adminHat = riteOfMoloch.adminHat();
 
         // charlie should not be able to call admin functions
-        vm.startPrank(charlie);
+        vm.startPrank(_attacker);
 
         vm.expectRevert(
-            abi.encodeWithSelector(
-                HatsAccessControl.NotWearingRoleHat.selector,
-                ADMIN,
-                adminHat,
-                charlie
-            )
+            abi.encodeWithSelector(HatsAccessControl.NotWearingRoleHat.selector, ADMIN, adminHat, _attacker)
         );
-        ROM.setMinimumStake(40);
+        riteOfMoloch.setMinimumStake(40);
+        assertEq(riteOfMoloch.minimumStake(), minStake);
 
         vm.stopPrank();
     }
 
     // UTILS
-    function changeSettings(address admin, uint256 n) public {
-        vm.startPrank(admin);
+    function changeSettings(address _admin, uint256 n) public {
+        vm.startPrank(_admin);
 
-        ROM.setMinimumStake(n);
-        ROM.setShareThreshold(n);
-        ROM.setMaxDuration(n);
-        emit log_named_uint("Min Share", ROM.minimumShare());
-        emit log_named_uint("Min Stake", ROM.minimumStake());
-        emit log_named_uint("Max  Time", ROM.maximumTime());
+        riteOfMoloch.setMinimumStake(n);
+        riteOfMoloch.setShareThreshold(n);
+        riteOfMoloch.setStakeDuration(n);
 
         vm.stopPrank();
     }

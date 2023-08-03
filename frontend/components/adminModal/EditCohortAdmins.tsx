@@ -8,22 +8,17 @@ import {
   VStack,
 } from "@raidguild/design-system";
 import { utils } from "ethers";
-import {useMintHatProp, useTransferHatProp} from "hooks/useHats";
+import { useMintHatProp, useTransferHatProp } from "hooks/useHats";
 import { FieldValues, useForm } from "react-hook-form";
 import { zeroAddress } from "utils/constants";
 import AdminModalAddresses from "./AdminModalAddresses";
 
 interface EditCohortAdminsProps {
-  address: string | undefined;
-  admin1: string;
-  admin2: string;
+  address: `0x${string}`;
+  admin1: `0x${string}`;
+  admin2: `0x${string}`;
   onClose: Function;
 }
-
-type FormValues = {
-  admin1: string;
-  admin2: string;
-};
 
 /**
  * @remarks This component renders on CohortAdminModal when editAdmins is true. Users can remove current admins and add new admins. Contract allows maximum of 2 HATS admins.
@@ -37,7 +32,7 @@ const EditCohortAdmins: React.FC<EditCohortAdminsProps> = ({
   address,
   admin1,
   admin2,
-  onClose
+  onClose,
 }) => {
   const [editAdmins, setEditAdmins] = useState(false);
 
@@ -53,21 +48,17 @@ const EditCohortAdmins: React.FC<EditCohortAdminsProps> = ({
   watch();
   const values = getValues();
 
-  const { writeMintHatProp: mintAdmin1, isLoadingMint: loadMint1 } = useMintHatProp(address || zeroAddress, 
-    values?.admin1
-  );
+  const { writeMintHatProp: mintAdmin1, isLoadingMint: loadMint1 } =
+    useMintHatProp(address, values?.admin1);
 
-  const { writeMintHatProp: mintAdmin2, isLoadingMint: loadMint2 } = useMintHatProp(address || zeroAddress, 
-    values?.admin2
-  );
+  const { writeMintHatProp: mintAdmin2, isLoadingMint: loadMint2 } =
+    useMintHatProp(address, values?.admin2);
 
-  const { writeTransferHatProp: transAdmin1, isLoadingTransfer: loadTrans1 } = useTransferHatProp(address || zeroAddress, 
-    [admin1, values?.admin1]
-  );
+  const { writeTransferHatProp: transAdmin1, isLoadingTransfer: loadTrans1 } =
+    useTransferHatProp(address, [admin1, values?.admin1]);
 
-  const { writeTransferHatProp: transAdmin2, isLoadingTransfer: loadTrans2 } = useTransferHatProp(address || zeroAddress, 
-      [admin2, values?.admin2]
-  );
+  const { writeTransferHatProp: transAdmin2, isLoadingTransfer: loadTrans2 } =
+    useTransferHatProp(address, [admin2, values?.admin2]);
 
   const handleHatsProp = () => {
     if (values?.admin1) {
@@ -128,7 +119,8 @@ const EditCohortAdmins: React.FC<EditCohortAdminsProps> = ({
         </HStack>
         <Box>
           <Text my="1rem" textAlign="center">
-            Each Rite of Moloch allows for a maximum of two HATS admin. Fill in one or both inputs to grant admin privileges to accounts.
+            Each Rite of Moloch allows for a maximum of two HATS admin. Fill in
+            one or both inputs to grant admin privileges to accounts.
           </Text>
         </Box>
         <HStack alignItems="end" w="full" mt="2rem" justifyContent="center">

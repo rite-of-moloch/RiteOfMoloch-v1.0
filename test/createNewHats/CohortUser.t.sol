@@ -9,29 +9,24 @@ import "test/TestHelper.sol";
  * @dev see note on TestHelper
  */
 contract CohortUser is TestHelper {
+    uint256 creationTime = block.timestamp;
+
     function setUp() public override {
-        // set and deploy ROM-Factory
-        setUpFactory();
+        TestHelper.setUp();
+
         // mint tokens to alice & bob
         mintTokens([alice, bob, charlie, deployer]);
-        // set initial data for ROM clone
-        createInitData();
-        // deploy ROM clone
-        ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
     }
 
     /**
      * TESTS
      */
     function testUserStake() public {
-        vm.startPrank(bob);
-        stakingAsset.approve(address(ROM), minStake);
-        ROM.joinInitiation(bob);
-        emit log_named_uint(
-            "Bob deadline",
-            ROM.getDeadline(bob) / DAY_IN_SECONDS
-        );
-        ROM.cryForHelp("Help me!");
+        vm.startPrank(bob, bob);
+        stakingAsset.approve(address(riteOfMoloch), minStake);
+        riteOfMoloch.joinInitiation(bob);
+        emit log_named_uint("Bob deadline", riteOfMoloch.getDeadline(bob) / 1 days);
+        riteOfMoloch.cryForHelp("Help me!");
         vm.stopPrank();
     }
 
@@ -43,11 +38,11 @@ contract CohortUser is TestHelper {
         prankJoinInititation(bob);
         prankJoinInititation(deployer);
 
-        vm.startPrank(charlie);
-        stakingAsset.approve(address(ROM), minStake);
+        vm.startPrank(charlie, charlie);
+        stakingAsset.approve(address(riteOfMoloch), minStake);
         // should revert becuase size limit is reached
         vm.expectRevert("This cohort is already full");
-        ROM.joinInitiation(charlie);
+        riteOfMoloch.joinInitiation(charlie);
         vm.stopPrank();
 
         emit log_named_uint("Alice tokenBal", stakingAsset.balanceOf(alice));
@@ -55,18 +50,18 @@ contract CohortUser is TestHelper {
     }
 
     function testJoinTimeRestriction() public {
-        vm.warp(7 days);
+        vm.warp(creationTime + 7 days);
         prankJoinInititation(alice);
 
-        vm.warp(13 days);
+        vm.warp(creationTime + 13 days);
         prankJoinInititation(bob);
 
-        vm.warp(15 days);
-        vm.startPrank(charlie);
-        stakingAsset.approve(address(ROM), minStake);
+        vm.warp(creationTime + 15 days);
+        vm.startPrank(charlie, charlie);
+        stakingAsset.approve(address(riteOfMoloch), minStake);
         // should revert becuase time limit is reached
         vm.expectRevert("This cohort is now closed");
-        ROM.joinInitiation(charlie);
+        riteOfMoloch.joinInitiation(charlie);
         vm.stopPrank();
     }
 }

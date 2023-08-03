@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useGraphClient } from "./useGraphClient";
 import { CohortFragmentFragment } from ".graphclient";
+import { useQuery } from "@tanstack/react-query";
+import { isAddress } from "ethers/lib/utils.js";
 
 /**
  * @remarks returns name of cohort
@@ -9,21 +11,14 @@ import { CohortFragmentFragment } from ".graphclient";
  */
 const useCohorts = () => {
   const graphClient = useGraphClient();
-  const [cohorts, setCohorts] = useState<CohortFragmentFragment[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    const getCohorts = async () => {
-      setIsLoading(true);
-      const cohorts = await graphClient.Cohorts();
+  const { data: cohorts, isLoading } = useQuery({
+    queryKey: ["cohorts"],
+    queryFn: async () => graphClient.Cohorts(),
+    refetchInterval: 5000,
+  });
 
-      setCohorts(cohorts.cohorts);
-      setIsLoading(false);
-    };
-    getCohorts();
-  }, []);
-
-  return {cohorts, isLoading};
+  return { cohorts, isLoading };
 };
 
 /**
@@ -33,25 +28,16 @@ const useCohorts = () => {
  */
 const useCohortByAddress = (cohortAddress: string) => {
   const graphClient = useGraphClient();
-  const [cohort, setCohort] = useState<CohortFragmentFragment>();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    const getCohort = async () => {
-      setIsLoading(true);
-      const cohort = await graphClient.CohortDataByAddress({
-        address: cohortAddress?.toLowerCase(),
-      });
+  const { data: cohorts, isLoading } = useQuery({
+    queryKey: ["cohortByAddress", cohortAddress],
+    queryFn: async () =>
+      graphClient.CohortDataByAddress({ address: cohortAddress }),
+    enabled: !!cohortAddress,
+    refetchInterval: 5000,
+  });
 
-      if (cohort) {
-        setCohort(cohort.cohorts[0]);
-      }
-      setIsLoading(false);
-    };
-    getCohort();
-  }, [cohortAddress]);
-
-  return { isLoading, cohort };
+  return { isLoading, cohorts };
 };
 
 /**
@@ -61,23 +47,17 @@ const useCohortByAddress = (cohortAddress: string) => {
  */
 const useCohortByID = (id: string) => {
   const graphClient = useGraphClient();
-  const [cohort, setCohort] = useState<CohortFragmentFragment>();
-
-  useEffect(() => {
-    const getCohort = async () => {
-      const cohort = await graphClient.CohortById({
+  const { data: cohorts, isLoading } = useQuery({
+    queryKey: ["cohortById", id],
+    queryFn: async () =>
+      await graphClient.CohortById({
         id,
-      });
+      }),
+    enabled: !!id,
+    refetchInterval: 5000,
+  });
 
-      if (cohort.cohort) {
-        setCohort(cohort.cohort);
-      }
-    };
-    getCohort();
-  }, []);
-
-  return cohort;
+  return { isLoading, cohorts };
 };
 
-
-export {useCohorts, useCohortByAddress, useCohortByID};
+export { useCohorts, useCohortByAddress, useCohortByID };

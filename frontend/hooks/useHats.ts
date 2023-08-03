@@ -1,5 +1,6 @@
 import useReadContract from "./useReadContract";
 import useWriteContract from "./useWriteContract";
+import abiROM from "../contracts/riteOfMoloch.json";
 
 /**
  * @remarks calls `hasRole` function to see if address has admin rights
@@ -10,7 +11,7 @@ import useWriteContract from "./useWriteContract";
 const keccak256 =
   "0xdf8b4c520ffe197c5343c6f5aec59570151ef9a492f2c624fd45ddde6135ec42";
 
-const useHasRole = (contractAddress: string, args: string) => {
+const useHasRole = (contractAddress: `0x${string}`, args: string) => {
   const { data, error, isError } = useReadContract(
     contractAddress as `0x${string}`,
     "riteOfMolochAddress",
@@ -26,37 +27,26 @@ const useHasRole = (contractAddress: string, args: string) => {
   return data as Boolean;
 };
 
-const useAdmin1 = (contractAddress: string) => {
-    const { data, error, isError } = useReadContract(
+const useAdmins = (contractAddress: string) => {
+  const { data: admin1, isLoading: isLoadingAdmin1 } = useReadContract(
     contractAddress as `0x${string}`,
     "riteOfMolochAddress",
-    "admin1",
+    "admin1"
   );
 
-    if (isError) {
-    console.log("Error: ", error);
-    return null;
-  }
-
-  return data as string;
-}
-
-const useAdmin2 = (contractAddress: string) => {
-    const { data, error, isError } = useReadContract(
+  const { data: admin2, isLoading: isLoadingAdmin2 } = useReadContract(
     contractAddress as `0x${string}`,
     "riteOfMolochAddress",
-    "admin2",
+    "admin2"
   );
 
-    if (isError) {
-    console.log("Error: ", error);
-    return null;
-  }
+  return {
+    admins: [admin1, admin2] as `0x${string}`[],
+    isLoading: isLoadingAdmin1 || isLoadingAdmin2,
+  };
+};
 
-  return data as string;
-}
-
-const useMintHatProp = (contractAddress: string, args: string) => {
+const useMintHatProp = (contractAddress: `0x${string}`, args: string) => {
   const {
     write: writeMintHatProp,
     isLoading: isLoadingMint,
@@ -86,7 +76,10 @@ const useMintHatProp = (contractAddress: string, args: string) => {
  * @param args1 - _from - address of current admin
  * @param args2 - _to - address of new admin
  */
-const useTransferHatProp = (contractAddress: string, args: [string, string]) => {
+const useTransferHatProp = (
+  contractAddress: `0x${string}`,
+  args: [`0x${string}`, `0x${string}`]
+) => {
   const {
     write: writeTransferHatProp,
     isLoading: isLoadingTransfer,
@@ -110,4 +103,4 @@ const useTransferHatProp = (contractAddress: string, args: [string, string]) => 
   };
 };
 
-export {useHasRole, useMintHatProp, useTransferHatProp, useAdmin1, useAdmin2};
+export { useHasRole, useMintHatProp, useTransferHatProp, useAdmins };

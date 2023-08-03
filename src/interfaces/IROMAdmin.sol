@@ -2,7 +2,7 @@
 // @author huntrr / Raid Guild
 pragma solidity ^0.8.13;
 
-import {IInitData} from "src/interfaces/IInitData.sol";
+import { IInitData } from "src/interfaces/IInitData.sol";
 
 // todo: change this contract into an interface
 interface IRiteOfMolochAdmin is IInitData {
@@ -12,14 +12,27 @@ interface IRiteOfMolochAdmin is IInitData {
         address caller_,
         address _sustainabilityTreasury,
         uint256 _sustainabilityFee
-    ) external;
+    )
+        external
+        payable;
 
-    function changeJoinTimeDuration(uint256 _joinDuration) external;
+    /**
+     * @dev Sets the duration of the join time window for new cohorts.
+     * @param _newJoinTimeDuration The new duration of the join time window, in seconds.
+     */
+    function setJoinTimeDuration(uint256 _newJoinTimeDuration) external;
 
+    /**
+     * @dev Extends the join time window for new cohorts by a specified amount.
+     * @param _extension The amount of time, in seconds, by which to extend the join time window.
+     */
     function extendJoinTimeLimit(uint256 _extension) external;
 
-    function changeJoinSizeLimit(uint256 _cohortSize) external;
-
+    /**
+     * @dev Sets the maximum size of a cohort.
+     * @param _newMaxCohortSize The new maximum size of a cohort.
+     */
+    function setMaxCohortSize(uint256 _newMaxCohortSize) external;
     /**
      * @dev Allows DAO members to change the staking requirement
      * @param newMinimumStake the minimum quantity of tokens a user must stake to join the cohort
@@ -34,9 +47,9 @@ interface IRiteOfMolochAdmin is IInitData {
 
     /**
      * @dev Allows changing the maximum initiation duration
-     * @param newMaxTime the length in seconds until an initiate's stake is forfeit
+     * @param newStakeDuration the length in seconds until an initiate's stake is forfeit
      */
-    function setMaxDuration(uint256 newMaxTime) external;
+    function setStakeDuration(uint256 newStakeDuration) external;
 
     /**
      * @dev If ROM is a Shaman: Allows minting shares of Baal DAO to become member

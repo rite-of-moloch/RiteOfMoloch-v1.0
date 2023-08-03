@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import {
   Flex,
@@ -14,18 +14,19 @@ import {
   SimpleGrid,
   GridItem,
 } from "@raidguild/design-system";
-import { useAccount } from "wagmi";
-import { BigNumber, utils } from "ethers";
+import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
+import { BigNumber, BigNumberish, utils } from "ethers";
 import { approveTooltip, canStake, stakeTooltip } from "utils/general";
-import { useApprove, useBalanceOf, useDecimalOf, useGetAllowance } from "hooks/useERC20";
-import { useJoinInitiation } from "hooks/useRiteOfMoloch";
+import { useBalanceOf, useDecimalOf, useGetAllowance } from "hooks/useERC20";
 import { FiAlertTriangle } from "react-icons/fi";
 import { useTokenSymbol } from "hooks/useERC20";
 import { useCohortByAddress } from "hooks/useCohort";
 import { zeroAddress } from "utils/constants";
+import useWriteContract from "hooks/useWriteContract";
+import abiROM from "../../contracts/riteOfMoloch.json";
 
 interface StakingFlowProps {
-  contractAddress: string;
+  contractAddress: `0x${string}`;
 }
 
 /**
@@ -42,7 +43,9 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     setWillSponsor(!willSponsor);
   };
 
-  const { cohort } = useCohortByAddress(contractAddress);
+  const { cohorts } = useCohortByAddress(contractAddress);
+
+  const cohort = cohorts?.cohorts?.[0];
   const localForm = useForm<FieldValues>();
 
   const {
@@ -53,57 +56,63 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     formState: { errors, isValid },
   } = localForm;
 
-  const values = getValues();
-  const initiateAddress: string = values?.initiateAddress;
+  const initiateAddress = getValues("initiateAddress");
+  const stakingToken = cohort?.stakingToken;
 
-  const userAddress = (): string => {
-    if (typeof address === "string") {
-      return address;
-    }
-    else return "";
-  };
-
-  let decimalOf = useDecimalOf((cohort?.token as `0x${string}`) || zeroAddress);
-  if (!decimalOf) {
-    decimalOf = "0";
+  let { decimals } = useDecimalOf(stakingToken);
+  if (!decimals) {
+    decimals = BigNumber.from("0");
   }
 
-  let balanceOf = useBalanceOf((cohort?.token as `0x${string}`) || zeroAddress, [
-    userAddress(),
-  ]);
+  let { balanceOf } = useBalanceOf(stakingToken, [address as string]);
   if (!balanceOf) {
-    balanceOf = BigNumber.from("0") || "0";
+    balanceOf = BigNumber.from("0");
   }
 
-  let tokenSymbol = useTokenSymbol(cohort?.token);
+  let { tokenSymbol } = useTokenSymbol(stakingToken);
   if (!tokenSymbol) {
     tokenSymbol = "N/A";
   }
 
-  let allowance = useGetAllowance((cohort?.token as `0x${string}`) || zeroAddress, [
-    userAddress(),
-    cohort?.address || zeroAddress,
+  let { allowance } = useGetAllowance(stakingToken, [
+    address as string,
+    cohort?.address,
   ]);
   if (!allowance) {
-    allowance = BigNumber.from("0") || "0";
+    allowance = BigNumber.from("0");
   }
 
-  const minimumStake = cohort?.tokenAmount || "0";
+  const minimumStake = cohort?.minimumStake || "0";
 
-  const { approve, isLoadingApprove } = useApprove(cohort?.token || zeroAddress, [
-    cohort?.address || zeroAddress,
-    minimumStake,
-  ]);
-
-  const { writeJoinInitiation, isLoadingStake } = useJoinInitiation(
-    cohort?.address || zeroAddress,
-    !willSponsor ? [userAddress()] : [initiateAddress]
+  const { write: approve, isLoading: isLoadingApprove } = useWriteContract(
+    stakingToken,
+    "erc20TokenAddress",
+    "approve",
+    [cohort?.address, minimumStake]
   );
+
+  const { config, error: prepareError } = usePrepareContractWrite({
+    address: contractAddress,
+    abi: abiROM,
+    functionName: "joinInitiation",
+    enabled: !!contractAddress,
+    args: [willSponsor ? initiateAddress : address],
+  });
+
+  if (prepareError) {
+    console.log("prepareError", prepareError);
+  }
+  const { data, write, isLoading } = useContractWrite(config);
+
+  const handleJoinInitiation = () => {
+    console.log("writeJoinInitiation", write);
+    write?.();
+  };
 
   const canUserStake = canStake(
     allowance,
     balanceOf,
-    minimumStake || "",
+    minimumStake,
     initiateAddress,
     willSponsor
   );
@@ -123,13 +132,19 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
     willSponsor
   );
 
-  const format = (num: string | BigNumber) => {
-    return Number(utils.formatUnits(num.toString(), decimalOf?.toString())).toFixed(4);
-  }
+  const format = (num: BigNumberish) => {
+    return Number(utils.formatUnits(num, decimals)).toFixed(4);
+  };
 
-  // useEffect re-renders component when user creates an allowance, defined writeJoinInitiation
-  useEffect(() => {
-  }, [allowance]);
+  if (cohort?.joinEndTime && cohort?.joinEndTime < Date.now() / 1000) {
+    return (
+      <>
+        <Flex w="100%" direction="column" alignItems="center" py={5}>
+          <Text color="white">Cohort has ended</Text>
+        </Flex>
+      </>
+    );
+  }
 
   return (
     <>
@@ -167,7 +182,7 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
               value="Sponsor an Initiate"
               options={["Sponsor an Initiate"]}
               isChecked={willSponsor}
-              onChange={() => handleWillSponsor()}
+              onChange={handleWillSponsor}
             />
             <Box w="full" hidden={!willSponsor ? true : false}>
               <Input
@@ -214,32 +229,34 @@ const StakingFlow: React.FC<StakingFlowProps> = ({ contractAddress }) => {
                 w="full"
                 isLoading={isLoadingApprove}
                 loadingText="Approving..."
-                isDisabled={balanceOf.lt(BigNumber.from(minimumStake))}
-                onClick={() => approve && approve()}
+                isDisabled={
+                  balanceOf.lt(BigNumber.from(minimumStake)) || !approve
+                }
+                onClick={approve}
               >
                 Approve
               </Button>
             </Tooltip>
           </GridItem>
           <GridItem>
-            <Tooltip
-              label={stakeToolTipLabel}
-              placement="top-start"
-            >
+            <Tooltip label={stakeToolTipLabel} placement="top-start">
               <Button
                 w="full"
                 variant="solid"
-                isLoading={isLoadingStake}
+                isLoading={isLoading}
                 loadingText="Staking..."
-                isDisabled={!canUserStake}
-                onClick={() => writeJoinInitiation && writeJoinInitiation()}
+                isDisabled={!canUserStake && !write}
+                onClick={handleJoinInitiation}
               >
                 Stake
               </Button>
             </Tooltip>
           </GridItem>
         </SimpleGrid>
-        <Text mt="1rem" fontSize="2xs">1% of stake will be collected for application maintanence and cannot be claimed back.</Text>
+        <Text mt="1rem" fontSize="2xs">
+          1% of stake will be collected for application maintanence and cannot
+          be claimed back.
+        </Text>
       </Flex>
     </>
   );

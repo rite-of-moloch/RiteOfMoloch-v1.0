@@ -13,12 +13,14 @@ interface IBaal {
         uint32 expiration,
         uint256 baalGas,
         string calldata details
-    ) external payable returns (uint256);
+    )
+        external
+        payable
+        returns (uint256);
 
     function sharesToken() external returns (address);
 
     function isManager(address shaman) external view returns (bool);
 
-    function mintShares(address[] calldata to, uint256[] calldata amount)
-        external;
+    function mintShares(address[] calldata to, uint256[] calldata amount) external;
 }

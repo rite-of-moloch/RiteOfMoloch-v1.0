@@ -18,6 +18,7 @@ import { BigNumberish } from "ethers";
 //   string baseUri;
 //   bool shamanOn;
 // }
+
 export type InitDataDeployCohort = [
   membershipCriteria: string,
   stakingAsset: string,
@@ -26,7 +27,7 @@ export type InitDataDeployCohort = [
   admin2: string,
   cohortSize: BigNumberish,
   joinDuration: BigNumberish,
-  threshold: BigNumberish,
+  shareThreshold: BigNumberish,
   assetAmount: BigNumberish,
   stakeDuration: BigNumberish,
   topHatId: BigNumberish,

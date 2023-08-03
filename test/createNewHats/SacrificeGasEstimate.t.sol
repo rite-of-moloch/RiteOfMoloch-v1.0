@@ -9,27 +9,19 @@ import "test/TestHelper.sol";
  * @dev see note on TestHelper
  */
 contract SacrificeGasEstimate is TestHelper {
+    uint256 creationTime = block.timestamp;
     uint256 constant cohortSize = 100;
-
-    uint256 susFee = (adminFee * minStake) / 100;
 
     address[] initiates = new address[](cohortSize);
 
     function setUp() public override {
-        // set and deploy ROM-Factory
-        setUpFactory();
-
-        // set initial data for ROM clone
-        createInitData();
-
-        // deploy ROM clone
-        ROM = RiteOfMoloch(ROMF.createCohort(Data, 1));
+        TestHelper.setUp();
 
         // cohort initiates stake
         generateStakes();
 
         // fast-forward past half of initiates' deadlines
-        vm.warp(8 days);
+        vm.warp(creationTime + 8 days);
     }
 
     /**
@@ -37,9 +29,7 @@ contract SacrificeGasEstimate is TestHelper {
      */
     function generateStakes() public {
         for (uint256 i = 0; i < cohortSize; i++) {
-            address randomish = address(
-                uint160(uint256(keccak256(abi.encodePacked(i))))
-            );
+            address randomish = address(uint160(uint256(keccak256(abi.encodePacked(i)))));
 
             initiates[i] = randomish;
         }
@@ -51,7 +41,7 @@ contract SacrificeGasEstimate is TestHelper {
             prankJoinInititation(initiates[i]);
         }
 
-        vm.warp(2 days);
+        vm.warp(creationTime + 2 days);
 
         for (uint256 i = breakPoint; i < cohortSize; i++) {
             stakingAsset.mint(initiates[i], 1000 * 1e18);
@@ -67,14 +57,14 @@ contract SacrificeGasEstimate is TestHelper {
      * @dev half of initiates should be sacrificed, other half carried over to new cohort
      * in this scenario, no initiates achieved membership / claimed thier stake
      */
-    function testSacrficeMore() public {
+    function testSacrificeMore() public {
         vm.startPrank(alice);
 
         // stakes before
         checkSampleOfStakesBefore();
 
         // sacrifice those that are eligible
-        ROM.sacrifice();
+        riteOfMoloch.sacrifice();
 
         // re-assert values of stakes
         checkSampleOfStakesAfter();
@@ -84,38 +74,39 @@ contract SacrificeGasEstimate is TestHelper {
 
     // UTILS
     function checkSampleOfStakesBefore() public {
-        assertEq(minStake - susFee, ROM.checkStake(initiates[0]));
-        assertEq(
-            minStake - susFee,
-            ROM.checkStake(initiates[(cohortSize / 2) - 1])
-        );
-        assertEq(minStake - susFee, ROM.checkStake(initiates[cohortSize / 2]));
-        assertEq(minStake - susFee, ROM.checkStake(initiates[cohortSize - 1]));
+        uint256 susFee = (riteOfMoloch.minimumStake() / riteOfMoloch.PERC_POINTS()) * sustainabilityFee;
+
+        assertEq(minStake - susFee, riteOfMoloch.checkStake(initiates[0]));
+        assertEq(minStake - susFee, riteOfMoloch.checkStake(initiates[(cohortSize / 2) - 1]));
+        assertEq(minStake - susFee, riteOfMoloch.checkStake(initiates[cohortSize / 2]));
+        assertEq(minStake - susFee, riteOfMoloch.checkStake(initiates[cohortSize - 1]));
     }
 
     function checkSampleOfStakesAfter() public {
-        assertEq(0, ROM.checkStake(initiates[0]));
-        assertEq(0, ROM.checkStake(initiates[(cohortSize / 2) - 1]));
-        assertEq(minStake - susFee, ROM.checkStake(initiates[cohortSize / 2]));
-        assertEq(minStake - susFee, ROM.checkStake(initiates[cohortSize - 1]));
+        uint256 susFee = (riteOfMoloch.minimumStake() / riteOfMoloch.PERC_POINTS()) * sustainabilityFee;
+
+        assertEq(0, riteOfMoloch.checkStake(initiates[0]));
+        assertEq(0, riteOfMoloch.checkStake(initiates[(cohortSize / 2) - 1]));
+        assertEq(minStake - susFee, riteOfMoloch.checkStake(initiates[cohortSize / 2]));
+        assertEq(minStake - susFee, riteOfMoloch.checkStake(initiates[cohortSize - 1]));
     }
 
     function createInitData() public override {
-        Data.membershipCriteria = dao;
-        Data.stakingAsset = address(stakingAsset);
-        Data.daoTreasury = dao;
-        Data.admin1 = alice;
-        Data.admin2 = address(0);
-        Data.cohortSize = 500;
-        Data.joinDuration = 2 weeks;
-        Data.threshold = 10;
-        Data.assetAmount = minStake;
-        Data.stakeDuration = 1 weeks;
-        Data.topHatId = 0;
-        Data.cohortName = "SeasonV";
-        Data.sbtName = "RiteOfMolochSBT";
-        Data.sbtSymbol = "SBTMoloch";
-        Data.baseUri = "x";
-        Data.shamanOn = false;
+        data.membershipCriteria = dao;
+        data.stakingAsset = address(stakingAsset);
+        data.daoTreasury = dao;
+        data.admin1 = alice;
+        data.admin2 = address(0);
+        data.cohortSize = 500;
+        data.joinDuration = 2 weeks;
+        data.shareThreshold = 10;
+        data.assetAmount = minStake;
+        data.stakeDuration = 1 weeks;
+        data.topHatId = 0;
+        data.cohortName = "SeasonV";
+        data.sbtName = "RiteOfMolochSBT";
+        data.sbtSymbol = "SBTMoloch";
+        data.baseUri = "x";
+        data.shamanOn = false;
     }
 }

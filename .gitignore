@@ -17,4 +17,7 @@ broadcast/
 
 .DS_Store
 
+# Line coverage report
+lcov.info
+
 

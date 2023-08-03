@@ -106,8 +106,8 @@ enum Claim_orderBy {
   initiate__id
   initiate__address
   initiate__benefactor
-  initiate__tokenId
-  initiate__stake
+  initiate__sbtId
+  initiate__stakeAmount
   initiate__deadline
   initiate__joinedAt
   initiate__claimed
@@ -115,18 +115,19 @@ enum Claim_orderBy {
   amount
   cohort
   cohort__id
-  cohort__name
   cohort__address
   cohort__chain
+  cohort__name
   cohort__deployer
-  cohort__dao
-  cohort__token
-  cohort__sbtUrl
   cohort__implementation
-  cohort__tokenAmount
-  cohort__sharesAmount
-  cohort__time
-  cohort__treasury
+  cohort__dao
+  cohort__daoTreasury
+  cohort__shareThreshold
+  cohort__stakeDuration
+  cohort__joinEndTime
+  cohort__stakingToken
+  cohort__minimumStake
+  cohort__sbtUrl
   cohort__createdAt
   cohort__totalMembers
   cohort__claimedMembers
@@ -136,18 +137,19 @@ enum Claim_orderBy {
 
 type Cohort {
   id: ID!
-  name: String
   address: Bytes!
   chain: String!
+  name: String!
   deployer: Bytes!
-  dao: Bytes!
-  token: Bytes!
-  sbtUrl: String!
   implementation: Bytes!
-  tokenAmount: BigInt!
-  sharesAmount: BigInt!
-  time: BigInt!
-  treasury: Bytes!
+  dao: Bytes!
+  daoTreasury: Bytes!
+  shareThreshold: BigInt!
+  stakeDuration: BigInt!
+  joinEndTime: BigInt!
+  stakingToken: Bytes!
+  minimumStake: BigInt!
+  sbtUrl: String!
   createdAt: BigInt!
   initiates(skip: Int = 0, first: Int = 100, orderBy: Initiate_orderBy, orderDirection: OrderDirection, where: Initiate_filter): [Initiate!]
   criesForHelp(skip: Int = 0, first: Int = 100, orderBy: CryForHelp_orderBy, orderDirection: OrderDirection, where: CryForHelp_filter): [CryForHelp!]
@@ -168,26 +170,6 @@ input Cohort_filter {
   id_lte: ID
   id_in: [ID!]
   id_not_in: [ID!]
-  name: String
-  name_not: String
-  name_gt: String
-  name_lt: String
-  name_gte: String
-  name_lte: String
-  name_in: [String!]
-  name_not_in: [String!]
-  name_contains: String
-  name_contains_nocase: String
-  name_not_contains: String
-  name_not_contains_nocase: String
-  name_starts_with: String
-  name_starts_with_nocase: String
-  name_not_starts_with: String
-  name_not_starts_with_nocase: String
-  name_ends_with: String
-  name_ends_with_nocase: String
-  name_not_ends_with: String
-  name_not_ends_with_nocase: String
   address: Bytes
   address_not: Bytes
   address_gt: Bytes
@@ -218,6 +200,26 @@ input Cohort_filter {
   chain_ends_with_nocase: String
   chain_not_ends_with: String
   chain_not_ends_with_nocase: String
+  name: String
+  name_not: String
+  name_gt: String
+  name_lt: String
+  name_gte: String
+  name_lte: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_contains: String
+  name_contains_nocase: String
+  name_not_contains: String
+  name_not_contains_nocase: String
+  name_starts_with: String
+  name_starts_with_nocase: String
+  name_not_starts_with: String
+  name_not_starts_with_nocase: String
+  name_ends_with: String
+  name_ends_with_nocase: String
+  name_not_ends_with: String
+  name_not_ends_with_nocase: String
   deployer: Bytes
   deployer_not: Bytes
   deployer_gt: Bytes
@@ -228,6 +230,16 @@ input Cohort_filter {
   deployer_not_in: [Bytes!]
   deployer_contains: Bytes
   deployer_not_contains: Bytes
+  implementation: Bytes
+  implementation_not: Bytes
+  implementation_gt: Bytes
+  implementation_lt: Bytes
+  implementation_gte: Bytes
+  implementation_lte: Bytes
+  implementation_in: [Bytes!]
+  implementation_not_in: [Bytes!]
+  implementation_contains: Bytes
+  implementation_not_contains: Bytes
   dao: Bytes
   dao_not: Bytes
   dao_gt: Bytes
@@ -238,16 +250,58 @@ input Cohort_filter {
   dao_not_in: [Bytes!]
   dao_contains: Bytes
   dao_not_contains: Bytes
-  token: Bytes
-  token_not: Bytes
-  token_gt: Bytes
-  token_lt: Bytes
-  token_gte: Bytes
-  token_lte: Bytes
-  token_in: [Bytes!]
-  token_not_in: [Bytes!]
-  token_contains: Bytes
-  token_not_contains: Bytes
+  daoTreasury: Bytes
+  daoTreasury_not: Bytes
+  daoTreasury_gt: Bytes
+  daoTreasury_lt: Bytes
+  daoTreasury_gte: Bytes
+  daoTreasury_lte: Bytes
+  daoTreasury_in: [Bytes!]
+  daoTreasury_not_in: [Bytes!]
+  daoTreasury_contains: Bytes
+  daoTreasury_not_contains: Bytes
+  shareThreshold: BigInt
+  shareThreshold_not: BigInt
+  shareThreshold_gt: BigInt
+  shareThreshold_lt: BigInt
+  shareThreshold_gte: BigInt
+  shareThreshold_lte: BigInt
+  shareThreshold_in: [BigInt!]
+  shareThreshold_not_in: [BigInt!]
+  stakeDuration: BigInt
+  stakeDuration_not: BigInt
+  stakeDuration_gt: BigInt
+  stakeDuration_lt: BigInt
+  stakeDuration_gte: BigInt
+  stakeDuration_lte: BigInt
+  stakeDuration_in: [BigInt!]
+  stakeDuration_not_in: [BigInt!]
+  joinEndTime: BigInt
+  joinEndTime_not: BigInt
+  joinEndTime_gt: BigInt
+  joinEndTime_lt: BigInt
+  joinEndTime_gte: BigInt
+  joinEndTime_lte: BigInt
+  joinEndTime_in: [BigInt!]
+  joinEndTime_not_in: [BigInt!]
+  stakingToken: Bytes
+  stakingToken_not: Bytes
+  stakingToken_gt: Bytes
+  stakingToken_lt: Bytes
+  stakingToken_gte: Bytes
+  stakingToken_lte: Bytes
+  stakingToken_in: [Bytes!]
+  stakingToken_not_in: [Bytes!]
+  stakingToken_contains: Bytes
+  stakingToken_not_contains: Bytes
+  minimumStake: BigInt
+  minimumStake_not: BigInt
+  minimumStake_gt: BigInt
+  minimumStake_lt: BigInt
+  minimumStake_gte: BigInt
+  minimumStake_lte: BigInt
+  minimumStake_in: [BigInt!]
+  minimumStake_not_in: [BigInt!]
   sbtUrl: String
   sbtUrl_not: String
   sbtUrl_gt: String
@@ -268,50 +322,6 @@ input Cohort_filter {
   sbtUrl_ends_with_nocase: String
   sbtUrl_not_ends_with: String
   sbtUrl_not_ends_with_nocase: String
-  implementation: Bytes
-  implementation_not: Bytes
-  implementation_gt: Bytes
-  implementation_lt: Bytes
-  implementation_gte: Bytes
-  implementation_lte: Bytes
-  implementation_in: [Bytes!]
-  implementation_not_in: [Bytes!]
-  implementation_contains: Bytes
-  implementation_not_contains: Bytes
-  tokenAmount: BigInt
-  tokenAmount_not: BigInt
-  tokenAmount_gt: BigInt
-  tokenAmount_lt: BigInt
-  tokenAmount_gte: BigInt
-  tokenAmount_lte: BigInt
-  tokenAmount_in: [BigInt!]
-  tokenAmount_not_in: [BigInt!]
-  sharesAmount: BigInt
-  sharesAmount_not: BigInt
-  sharesAmount_gt: BigInt
-  sharesAmount_lt: BigInt
-  sharesAmount_gte: BigInt
-  sharesAmount_lte: BigInt
-  sharesAmount_in: [BigInt!]
-  sharesAmount_not_in: [BigInt!]
-  time: BigInt
-  time_not: BigInt
-  time_gt: BigInt
-  time_lt: BigInt
-  time_gte: BigInt
-  time_lte: BigInt
-  time_in: [BigInt!]
-  time_not_in: [BigInt!]
-  treasury: Bytes
-  treasury_not: Bytes
-  treasury_gt: Bytes
-  treasury_lt: Bytes
-  treasury_gte: Bytes
-  treasury_lte: Bytes
-  treasury_in: [Bytes!]
-  treasury_not_in: [Bytes!]
-  treasury_contains: Bytes
-  treasury_not_contains: Bytes
   createdAt: BigInt
   createdAt_not: BigInt
   createdAt_gt: BigInt
@@ -364,18 +374,19 @@ input Cohort_filter {
 
 enum Cohort_orderBy {
   id
-  name
   address
   chain
+  name
   deployer
-  dao
-  token
-  sbtUrl
   implementation
-  tokenAmount
-  sharesAmount
-  time
-  treasury
+  dao
+  daoTreasury
+  shareThreshold
+  stakeDuration
+  joinEndTime
+  stakingToken
+  minimumStake
+  sbtUrl
   createdAt
   initiates
   criesForHelp
@@ -478,26 +489,27 @@ enum CryForHelp_orderBy {
   sender__id
   sender__address
   sender__benefactor
-  sender__tokenId
-  sender__stake
+  sender__sbtId
+  sender__stakeAmount
   sender__deadline
   sender__joinedAt
   sender__claimed
   sender__sacrificed
   cohort
   cohort__id
-  cohort__name
   cohort__address
   cohort__chain
+  cohort__name
   cohort__deployer
-  cohort__dao
-  cohort__token
-  cohort__sbtUrl
   cohort__implementation
-  cohort__tokenAmount
-  cohort__sharesAmount
-  cohort__time
-  cohort__treasury
+  cohort__dao
+  cohort__daoTreasury
+  cohort__shareThreshold
+  cohort__stakeDuration
+  cohort__joinEndTime
+  cohort__stakingToken
+  cohort__minimumStake
+  cohort__sbtUrl
   cohort__createdAt
   cohort__totalMembers
   cohort__claimedMembers
@@ -509,8 +521,8 @@ type Initiate {
   id: ID!
   address: Bytes!
   benefactor: Bytes!
-  tokenId: BigInt!
-  stake: BigInt!
+  sbtId: BigInt!
+  stakeAmount: BigInt!
   deadline: BigInt!
   joinedAt: BigInt!
   cohort: Cohort!
@@ -549,22 +561,22 @@ input Initiate_filter {
   benefactor_not_in: [Bytes!]
   benefactor_contains: Bytes
   benefactor_not_contains: Bytes
-  tokenId: BigInt
-  tokenId_not: BigInt
-  tokenId_gt: BigInt
-  tokenId_lt: BigInt
-  tokenId_gte: BigInt
-  tokenId_lte: BigInt
-  tokenId_in: [BigInt!]
-  tokenId_not_in: [BigInt!]
-  stake: BigInt
-  stake_not: BigInt
-  stake_gt: BigInt
-  stake_lt: BigInt
-  stake_gte: BigInt
-  stake_lte: BigInt
-  stake_in: [BigInt!]
-  stake_not_in: [BigInt!]
+  sbtId: BigInt
+  sbtId_not: BigInt
+  sbtId_gt: BigInt
+  sbtId_lt: BigInt
+  sbtId_gte: BigInt
+  sbtId_lte: BigInt
+  sbtId_in: [BigInt!]
+  sbtId_not_in: [BigInt!]
+  stakeAmount: BigInt
+  stakeAmount_not: BigInt
+  stakeAmount_gt: BigInt
+  stakeAmount_lt: BigInt
+  stakeAmount_gte: BigInt
+  stakeAmount_lte: BigInt
+  stakeAmount_in: [BigInt!]
+  stakeAmount_not_in: [BigInt!]
   deadline: BigInt
   deadline_not: BigInt
   deadline_gt: BigInt
@@ -622,24 +634,25 @@ enum Initiate_orderBy {
   id
   address
   benefactor
-  tokenId
-  stake
+  sbtId
+  stakeAmount
   deadline
   joinedAt
   cohort
   cohort__id
-  cohort__name
   cohort__address
   cohort__chain
+  cohort__name
   cohort__deployer
-  cohort__dao
-  cohort__token
-  cohort__sbtUrl
   cohort__implementation
-  cohort__tokenAmount
-  cohort__sharesAmount
-  cohort__time
-  cohort__treasury
+  cohort__dao
+  cohort__daoTreasury
+  cohort__shareThreshold
+  cohort__stakeDuration
+  cohort__joinEndTime
+  cohort__stakingToken
+  cohort__minimumStake
+  cohort__sbtUrl
   cohort__createdAt
   cohort__totalMembers
   cohort__claimedMembers
@@ -1011,8 +1024,8 @@ enum Sacrifice_orderBy {
   initiate__id
   initiate__address
   initiate__benefactor
-  initiate__tokenId
-  initiate__stake
+  initiate__sbtId
+  initiate__stakeAmount
   initiate__deadline
   initiate__joinedAt
   initiate__claimed
@@ -1021,18 +1034,19 @@ enum Sacrifice_orderBy {
   slasher
   cohort
   cohort__id
-  cohort__name
   cohort__address
   cohort__chain
+  cohort__name
   cohort__deployer
-  cohort__dao
-  cohort__token
-  cohort__sbtUrl
   cohort__implementation
-  cohort__tokenAmount
-  cohort__sharesAmount
-  cohort__time
-  cohort__treasury
+  cohort__dao
+  cohort__daoTreasury
+  cohort__shareThreshold
+  cohort__stakeDuration
+  cohort__joinEndTime
+  cohort__stakingToken
+  cohort__minimumStake
+  cohort__sbtUrl
   cohort__createdAt
   cohort__totalMembers
   cohort__claimedMembers

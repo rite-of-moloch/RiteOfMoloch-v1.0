@@ -6,9 +6,9 @@ import CohortMemberModal from "./cohort/CohortMemberModal";
 import GridTemplate from "./GridTemplate";
 
 interface InitiatesAllProps {
-  address: string;
+  address: `0x${string}`;
   cohortName: string;
-  cohortAddress: string;
+  cohortAddress: `0x${string}`;
   stake: string;
   joinedAt: string;
 }

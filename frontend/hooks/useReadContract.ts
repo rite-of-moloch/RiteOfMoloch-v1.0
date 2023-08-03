@@ -24,7 +24,7 @@ const useReadContract = (
     functionName,
     args,
     watch: true,
-    enabled: Boolean(address),
+    enabled: !!address,
   });
 
   return { data, error, isError, isLoading };

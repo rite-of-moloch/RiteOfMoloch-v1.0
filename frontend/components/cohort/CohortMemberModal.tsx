@@ -18,10 +18,11 @@ import BlockExplorerLink from "../blockExplorer/BlockExplorerLink";
 import { useSlaughter } from "hooks/useRiteOfMoloch";
 import GridTemplate from "../GridTemplate";
 import { useCohortByAddress } from "hooks/useCohort";
+import { DateTime } from "luxon";
 
 interface CohortMemberModalProps {
-  address: string;
-  cohortAddress: string;
+  address: `0x${string}`;
+  cohortAddress: `0x${string}`;
   joinedAt: string;
   stake: string;
 }
@@ -34,13 +35,13 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { chain } = useNetwork();
-  const { cohort } = useCohortByAddress(cohortAddress);
+  const { cohorts } = useCohortByAddress(cohortAddress);
 
-  const { writeSlaughter, isError } = useSlaughter(cohortAddress?.toString(),
-    [address]
-  );
+  const cohort = cohorts?.cohorts?.[0];
 
-  const deadline = Number(cohort?.createdAt) + Number(cohort?.time);
+  const { writeSlaughter, isError } = useSlaughter(cohortAddress, [address]);
+
+  const deadline = Number(cohort?.joinEndTime);
 
   const isPassedStakingDate = () => {
     const nowUnix = Math.round(new Date().getTime() / 1000);
@@ -101,7 +102,8 @@ const CohortMemberModal: React.FC<CohortMemberModalProps> = ({
                 Slash Stake
               </Button>
               <Text mt={1} fontSize="xx-small" color="red" textAlign="center">
-                Slashing is available on {deadline.toLocaleString()}
+                Slashing is available on{" "}
+                {DateTime.fromSeconds(deadline).toLocaleString()}
               </Text>
             </Box>
           </ModalFooter>

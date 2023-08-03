@@ -17,7 +17,8 @@ const gnosis: Chain = {
   id: 100,
   name: "Gnosis",
   network: "xdai",
-  iconUrl: "https://i.imgur.com/lL4RlAZ.png",
+  iconUrl:
+    "https://images.prismic.io/koinly-marketing/16d1deb7-e71f-48a5-9ee7-83eb0f7038e4_Gnosis+Chain+Logo.png",
   iconBackground: "white",
   nativeCurrency: {
     decimals: 18,
@@ -33,7 +34,7 @@ const gnosis: Chain = {
     },
   },
   blockExplorers: {
-    blockscount: {
+    blockscout: {
       name: "BlockScout",
       url: "https://blockscout.com/xdai/mainnet",
     },
@@ -53,16 +54,18 @@ export const { chains, provider } = configureChains(
   { stallTimeout: 5000 }
 );
 
+const PROJECT_ID = process.env.NEXT_PUBLIC_WALLETCONNECT_ID || "";
+
 const connectors = connectorsForWallets([
   {
     groupName: "Recommended",
     wallets: [
       injectedWallet({ chains }),
-      ledgerWallet({ chains }),
-      metaMaskWallet({ chains }),
+      ledgerWallet({ chains, projectId: PROJECT_ID }),
+      metaMaskWallet({ chains, projectId: PROJECT_ID }),
       coinbaseWallet({ chains, appName: "Rite Of Moloch" }),
-      walletConnectWallet({ chains }),
-      rainbowWallet({ chains }),
+      walletConnectWallet({ chains, projectId: PROJECT_ID }),
+      rainbowWallet({ chains, projectId: PROJECT_ID }),
     ],
   },
 ]);
